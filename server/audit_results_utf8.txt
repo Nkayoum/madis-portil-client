@@ -1,0 +1,14 @@
+--- 1. PROMOTION_SALE INFLOWS (Sales Volume) ---
+ID: 50 | Date: 2026-02-15 | Prop: Maison Bali | Amount: 8590000.00€
+TOTAL SALES VOLUME: 8590000.00€
+
+--- 2. SALE-RELATED COMMISSIONS (Admin Profit) ---
+ID: 51 | Prop: Maison Bali | Amount: 1718000.00€ | Parent Category: PROMOTION_SALE
+TOTAL SALE COMMISSIONS: 1718000.00€
+
+--- 3. CAPITAL INVEST (Purchase Cost for Buyer) ---
+ID: 52 | Prop: Maison Bali | Amount: 8590000.00€
+TOTAL CAPITAL INVEST: 8590000.00€
+
+--- ROI / MARGIN CALCULATION (Admin) ---
+Margin Rate (Comms / Volume): 20.00%
