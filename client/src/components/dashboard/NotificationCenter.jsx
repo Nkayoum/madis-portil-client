@@ -68,9 +68,9 @@ export default function NotificationCenter() {
             {isOpen && (
                 <>
                     <div className="fixed inset-0 z-[100]" onClick={() => setIsOpen(false)} />
-                    <div className="absolute right-0 mt-4 w-96 bg-white dark:bg-[#020817] solaris-glass rounded-[2rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)] z-[101] overflow-hidden animate-in fade-in zoom-in duration-300 border border-white/10">
-                        <div className="p-6 border-b border-white/10 flex items-center justify-between bg-white/5">
-                            <h3 className="text-xl font-black uppercase tracking-tighter">Notifications</h3>
+                    <div className="absolute right-[-1.5rem] sm:right-0 mt-4 w-[calc(100vw-2rem)] sm:w-80 md:w-96 bg-white dark:bg-[#020817] solaris-glass rounded-[1.5rem] sm:rounded-[2rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)] z-[101] overflow-hidden animate-in fade-in zoom-in duration-300 border border-white/10">
+                        <div className="p-3.5 sm:p-6 border-b border-white/10 flex items-center justify-between bg-white/5">
+                            <h3 className="text-sm sm:text-xl font-black uppercase tracking-widest sm:tracking-tighter">Notifications</h3>
                             {unreadCount > 0 && (
                                 <button
                                     onClick={markAllAsRead}
@@ -89,13 +89,13 @@ export default function NotificationCenter() {
                                     <div
                                         key={notification.id}
                                         className={cn(
-                                            "p-6 border-b border-white/5 last:border-0 hover:bg-white/5 transition-all relative group",
+                                            "p-4 sm:p-6 border-b border-white/5 last:border-0 hover:bg-white/5 transition-all relative group",
                                             !notification.is_read && "bg-primary/[0.03] border-l-4 border-l-primary"
                                         )}
                                     >
                                         <div className="flex justify-between items-start gap-4">
                                             <h4 className={cn(
-                                                "text-sm font-bold tracking-tight leading-snug",
+                                                "text-[13px] sm:text-sm font-bold tracking-tight leading-snug",
                                                 !notification.is_read ? "text-foreground" : "text-muted-foreground"
                                             )}>
                                                 {notification.title}
@@ -103,17 +103,17 @@ export default function NotificationCenter() {
                                             {!notification.is_read && (
                                                 <button
                                                     onClick={() => markAsRead(notification.id)}
-                                                    className="p-2 bg-primary/10 hover:bg-primary/20 rounded-full text-primary transition-colors opacity-0 group-hover:opacity-100"
+                                                    className="p-1.5 sm:p-2 bg-primary/10 hover:bg-primary/20 rounded-full text-primary transition-colors opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
                                                     title="Marquer comme lu"
                                                 >
-                                                    <Check className="h-3.5 w-3.5" />
+                                                    <Check className="h-3 sm:h-3.5 w-3 sm:w-3.5" />
                                                 </button>
                                             )}
                                         </div>
-                                        <p className="text-xs text-muted-foreground/80 mt-2 leading-relaxed line-clamp-2">
+                                        <p className="text-[11px] sm:text-xs text-muted-foreground/80 mt-1 sm:mt-2 leading-relaxed line-clamp-2">
                                             {notification.message}
                                         </p>
-                                        <div className="flex justify-between items-center mt-4">
+                                        <div className="flex justify-between items-center mt-3 sm:mt-4">
                                             <span className="text-[9px] font-black uppercase tracking-widest opacity-40">
                                                 {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true, locale: fr })}
                                             </span>
