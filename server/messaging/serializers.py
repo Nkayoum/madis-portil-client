@@ -13,6 +13,15 @@ class MessageSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['id', 'ticket', 'author', 'created_at']
 
+    def validate(self, attrs):
+        content = attrs.get('content')
+        attachment = attrs.get('attachment')
+        if not content and not attachment:
+            raise serializers.ValidationError(
+                "Vous devez fournir soit un message, soit une pièce jointe."
+            )
+        return attrs
+
     def create(self, validated_data):
         validated_data['author'] = self.context['request'].user
         return super().create(validated_data)

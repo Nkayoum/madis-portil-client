@@ -68,7 +68,7 @@ class Message(models.Model):
         related_name='ticket_messages',
         verbose_name='auteur',
     )
-    content = models.TextField('contenu')
+    content = models.TextField('contenu', blank=True)
     attachment = models.FileField(
         'pièce jointe', upload_to='messages/%Y/%m/', null=True, blank=True
     )
