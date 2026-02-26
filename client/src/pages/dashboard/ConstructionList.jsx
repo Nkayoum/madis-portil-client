@@ -75,12 +75,11 @@ export default function ConstructionList() {
                 )}
             </div>
 
-            {/* Navigation Tabs Solaris Style */}
             <div className="overflow-x-auto no-scrollbar -mx-4 px-4 md:mx-0 md:px-0">
                 <div className="solaris-glass rounded-full p-1.5 md:p-2 flex gap-2 md:gap-4 w-fit shadow-lg px-2 md:px-3 whitespace-nowrap">
                     {[
                         { id: 'CONSTRUCTION', label: "Chantiers", icon: HardHat, count: sites.filter(s => s.project_category === 'CONSTRUCTION').length },
-                        { id: 'MAINTENANCE', label: "Maintenance & Entretien", icon: ClipboardList, count: sites.filter(s => s.project_category === 'MAINTENANCE').length }
+                        { id: 'MAINTENANCE', label: "Maintenance", fullLabel: "Maintenance & Entretien", icon: ClipboardList, count: sites.filter(s => s.project_category === 'MAINTENANCE').length }
                     ].map((tab) => (
                         <button
                             key={tab.id}
@@ -93,7 +92,8 @@ export default function ConstructionList() {
                             )}
                         >
                             <tab.icon className={cn("h-3.5 w-3.5 md:h-4 md:w-4 transition-transform group-hover:scale-110", activeTab === tab.id ? "text-white" : "text-muted-foreground")} />
-                            {tab.label}
+                            <span className="hidden md:inline">{tab.fullLabel || tab.label}</span>
+                            <span className="md:hidden">{tab.label}</span>
                             <span className={cn(
                                 "ml-1.5 md:ml-2 px-1.5 md:px-2 py-0.5 rounded-full text-[8px] md:text-[9px] font-black tracking-normal transition-colors",
                                 activeTab === tab.id ? "bg-white/20 text-white" : "bg-black/5 dark:bg-white/10 text-black/40 dark:text-white/40"
