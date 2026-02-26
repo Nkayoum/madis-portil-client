@@ -86,7 +86,7 @@ class ConstructionSiteSerializer(serializers.ModelSerializer):
             'id', 'project', 'project_name', 'project_category', 'project_category_display',
             'property_id', 'property_name', 'chef_de_chantier', 'chef_de_chantier_name',
             'name', 'address', 'city', 'postal_code', 
-            'status', 'description', 'budget', 'budget_spent', 'budget_consumed_percentage',
+            'status', 'suspension_reason', 'description', 'budget', 'budget_spent', 'budget_consumed_percentage',
             'budget_by_category', 'progress_percentage', 'start_date', 'end_date',
             'journal_count', 'photos_count', 'created_at', 'updated_at',
         ]

@@ -40,6 +40,7 @@ class ConstructionSite(models.Model):
     )
     start_date = models.DateField('date de début', null=True, blank=True)
     end_date = models.DateField('date de fin', null=True, blank=True)
+    suspension_reason = models.TextField('motif de suspension', blank=True)
     created_at = models.DateTimeField('date de création', auto_now_add=True)
     updated_at = models.DateTimeField('dernière modification', auto_now=True)
 

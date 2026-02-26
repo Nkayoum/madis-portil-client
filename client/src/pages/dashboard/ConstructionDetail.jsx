@@ -37,6 +37,8 @@ export default function ConstructionDetail() {
     const [isDocumentModalOpen, setIsDocumentModalOpen] = useState(false);
     const [isJournalModalOpen, setIsJournalModalOpen] = useState(false);
     const [isEditJournalModalOpen, setIsEditJournalModalOpen] = useState(false);
+    const [isSuspensionModalOpen, setIsSuspensionModalOpen] = useState(false);
+    const [suspensionReason, setSuspensionReason] = useState('');
     const [selectedEntryId, setSelectedEntryId] = useState(null);
 
     // Get initial tab from URL query param
@@ -150,6 +152,16 @@ export default function ConstructionDetail() {
                                     <span>{site.address}, {site.city}</span>
                                 </div>
                             </div>
+
+                            {site.status === 'SUSPENDU' && site.suspension_reason && (
+                                <div className="mt-4 p-4 rounded-2xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300 animate-in slide-in-from-top-2 duration-500">
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <AlertCircle className="h-3 md:h-3.5 w-3 md:w-3.5" />
+                                        <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest">Motif de suspension</span>
+                                    </div>
+                                    <p className="text-[11px] md:text-[12px] font-bold leading-relaxed">{site.suspension_reason}</p>
+                                </div>
+                            )}
                         </div>
                     </div>
 
@@ -173,12 +185,7 @@ export default function ConstructionDetail() {
                             <div className="flex items-center gap-2 md:gap-3 w-full lg:w-auto overflow-x-auto no-scrollbar pb-1 lg:pb-0">
                                 {site.status === 'EN_COURS' && (
                                     <button
-                                        onClick={async () => {
-                                            if (window.confirm('Voulez-vous vraiment suspendre ce chantier ?')) {
-                                                await api.patch(`/construction/sites/${id}/`, { status: 'SUSPENDU' });
-                                                fetchSiteDetails();
-                                            }
-                                        }}
+                                        onClick={() => setIsSuspensionModalOpen(true)}
                                         className="inline-flex items-center justify-center rounded-xl md:rounded-2xl text-[8px] md:text-[10px] font-black uppercase tracking-widest transition-all bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 hover:bg-amber-200 dark:hover:bg-amber-900/50 h-9 md:h-11 px-3 md:px-6 shadow-sm whitespace-nowrap"
                                     >
                                         <Pause className="mr-1.5 md:mr-2 h-3 w-3 md:h-4 md:w-4" /> Suspendre
@@ -356,93 +363,93 @@ export default function ConstructionDetail() {
                                     )}
                                 </div>
                             </div>
-                        </div>
 
-                        <div className="space-y-6">
-                            {/* Budget Card Solaris Style */}
-                            <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-xl">
-                                <h3 className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] opacity-30 mb-6 md:mb-8 flex items-center gap-3">
-                                    <DollarSign className="h-4 w-4" />
-                                    Suivi Financier
-                                </h3>
-                                <div className="space-y-6 md:space-y-8">
-                                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3 sm:gap-0">
-                                        <div>
-                                            <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Budget consommé</p>
-                                            <p className="text-xl md:text-3xl font-black tracking-tighter">
-                                                {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(site.budget_spent || 0)}
-                                            </p>
+                            <div className="space-y-6">
+                                {/* Budget Card Solaris Style */}
+                                <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-xl">
+                                    <h3 className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] opacity-30 mb-6 md:mb-8 flex items-center gap-3">
+                                        <DollarSign className="h-4 w-4" />
+                                        Suivi Financier
+                                    </h3>
+                                    <div className="space-y-6 md:space-y-8">
+                                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3 sm:gap-0">
+                                            <div>
+                                                <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Budget consommé</p>
+                                                <p className="text-xl md:text-3xl font-black tracking-tighter">
+                                                    {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(site.budget_spent || 0)}
+                                                </p>
+                                            </div>
+                                            <div className="sm:text-right">
+                                                <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Total</p>
+                                                <p className="font-bold text-[10px] md:text-[12px]">
+                                                    {site.budget ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(site.budget) : 'Non défini'}
+                                                </p>
+                                            </div>
                                         </div>
-                                        <div className="sm:text-right">
-                                            <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Total</p>
-                                            <p className="font-bold text-[10px] md:text-[12px]">
-                                                {site.budget ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(site.budget) : 'Non défini'}
-                                            </p>
+                                        <div className="space-y-2 md:space-y-3">
+                                            <div className="w-full h-2.5 md:h-3 bg-black/[0.03] dark:bg-white/10 rounded-full overflow-hidden p-[2px] border border-black/5 dark:border-white/5 shadow-inner">
+                                                <div
+                                                    className={cn(
+                                                        "h-full rounded-full transition-all duration-1000 ease-out shadow-[0_0_10px_rgba(0,0,0,0.1)]",
+                                                        site.budget_consumed_percentage > 90 ? "bg-red-500" : site.budget_consumed_percentage > 70 ? "bg-amber-500" : "bg-emerald-500"
+                                                    )}
+                                                    style={{ width: `${Math.min(100, site.budget_consumed_percentage || 0)}%` }}
+                                                />
+                                            </div>
+                                            <div className="flex justify-between text-[7px] md:text-[9px] font-black uppercase tracking-widest text-muted-foreground opacity-40">
+                                                <span>0%</span>
+                                                <span>{site.budget_consumed_percentage || 0}% UTILISÉ</span>
+                                                <span>100%</span>
+                                            </div>
                                         </div>
+                                        {(user?.role === 'ADMIN_MADIS' || user?.role === 'CHEF_CHANTIER') && (
+                                            <div className="pt-4 border-t border-black/5 dark:border-white/5">
+                                                <Link
+                                                    to={`/dashboard/finance/transactions/new?site=${id}`}
+                                                    className="inline-flex items-center justify-center gap-2 h-10 px-4 md:px-5 rounded-xl md:rounded-2xl bg-primary text-white text-[9px] md:text-[10px] font-black uppercase tracking-widest shadow-lg shadow-primary/20 dark:shadow-[0_0_20px_rgba(236,72,153,0.3)] hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all w-full lg:w-auto"
+                                                >
+                                                    <Plus className="h-3.5 w-3.5" /> Dépense
+                                                </Link>
+                                            </div>
+                                        )}
                                     </div>
-                                    <div className="space-y-2 md:space-y-3">
-                                        <div className="w-full h-2.5 md:h-3 bg-black/[0.03] dark:bg-white/10 rounded-full overflow-hidden p-[2px] border border-black/5 dark:border-white/5 shadow-inner">
-                                            <div
-                                                className={cn(
-                                                    "h-full rounded-full transition-all duration-1000 ease-out shadow-[0_0_10px_rgba(0,0,0,0.1)]",
-                                                    site.budget_consumed_percentage > 90 ? "bg-red-500" : site.budget_consumed_percentage > 70 ? "bg-amber-500" : "bg-emerald-500"
-                                                )}
-                                                style={{ width: `${Math.min(100, site.budget_consumed_percentage || 0)}%` }}
-                                            />
-                                        </div>
-                                        <div className="flex justify-between text-[7px] md:text-[9px] font-black uppercase tracking-widest text-muted-foreground opacity-40">
-                                            <span>0%</span>
-                                            <span>{site.budget_consumed_percentage || 0}% UTILISÉ</span>
-                                            <span>100%</span>
-                                        </div>
-                                    </div>
-                                    {(user?.role === 'ADMIN_MADIS' || user?.role === 'CHEF_CHANTIER') && (
-                                        <div className="pt-4 border-t border-black/5 dark:border-white/5">
-                                            <Link
-                                                to={`/dashboard/finance/transactions/new?site=${id}`}
-                                                className="inline-flex items-center justify-center gap-2 h-10 px-4 md:px-5 rounded-xl md:rounded-2xl bg-primary text-white text-[9px] md:text-[10px] font-black uppercase tracking-widest shadow-lg shadow-primary/20 dark:shadow-[0_0_20px_rgba(236,72,153,0.3)] hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all w-full lg:w-auto"
-                                            >
-                                                <Plus className="h-3.5 w-3.5" /> Dépense
-                                            </Link>
-                                        </div>
-                                    )}
                                 </div>
-                            </div>
 
-                            {/* Logistic Details Solaris Style */}
-                            <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-xl">
-                                <h3 className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] opacity-30 mb-6 md:mb-8 flex items-center gap-3">
-                                    <MapIcon className="h-4 w-4" />
-                                    Paramètres Logistiques
-                                </h3>
-                                <dl className="space-y-4 md:space-y-6">
-                                    <div className="flex justify-between items-center pb-3 md:pb-4 border-b border-black/[0.03] dark:border-white/5">
-                                        <dt className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground">Chef de chantier</dt>
-                                        <dd className="text-[10px] md:text-[12px] font-black uppercase tracking-tighter text-black dark:text-white">
-                                            {site.chef_de_chantier_name || 'Non assigné'}
-                                        </dd>
-                                    </div>
-                                    <div className="flex justify-between items-center pb-3 md:pb-4 border-b border-black/[0.03] dark:border-white/5">
-                                        <dt className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground">Date de début</dt>
-                                        <dd className="text-[10px] md:text-[12px] font-bold font-mono">
-                                            {site.start_date ? format(new Date(site.start_date), 'd MMM yyyy', { locale: fr }) : '-'}
-                                        </dd>
-                                    </div>
-                                    <div className="flex justify-between items-center pb-3 md:pb-4 border-b border-black/[0.03] dark:border-white/5">
-                                        <dt className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground">Fin prévue</dt>
-                                        <dd className="text-[10px] md:text-[12px] font-bold font-mono text-amber-600">
-                                            {site.end_date ? format(new Date(site.end_date), 'd MMM yyyy', { locale: fr }) : '-'}
-                                        </dd>
-                                    </div>
-                                    <div className="flex justify-between items-center pb-3 md:pb-4 border-b border-black/[0.03] dark:border-white/5">
-                                        <dt className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground">Géolocalisation</dt>
-                                        <dd className="text-[10px] md:text-[12px] font-bold text-right max-w-[120px] md:max-w-[150px] truncate">{site.city || '-'}</dd>
-                                    </div>
-                                    <div className="flex justify-between items-center">
-                                        <dt className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground">Code Postal</dt>
-                                        <dd className="text-[10px] md:text-[12px] font-bold font-mono">{site.postal_code || '-'}</dd>
-                                    </div>
-                                </dl>
+                                {/* Logistic Details Solaris Style */}
+                                <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-xl">
+                                    <h3 className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] opacity-30 mb-6 md:mb-8 flex items-center gap-3">
+                                        <MapIcon className="h-4 w-4" />
+                                        Paramètres Logistiques
+                                    </h3>
+                                    <dl className="space-y-4 md:space-y-6">
+                                        <div className="flex justify-between items-center pb-3 md:pb-4 border-b border-black/[0.03] dark:border-white/5">
+                                            <dt className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground">Chef de chantier</dt>
+                                            <dd className="text-[10px] md:text-[12px] font-black uppercase tracking-tighter text-black dark:text-white">
+                                                {site.chef_de_chantier_name || 'Non assigné'}
+                                            </dd>
+                                        </div>
+                                        <div className="flex justify-between items-center pb-3 md:pb-4 border-b border-black/[0.03] dark:border-white/5">
+                                            <dt className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground">Date de début</dt>
+                                            <dd className="text-[10px] md:text-[12px] font-bold font-mono">
+                                                {site.start_date ? format(new Date(site.start_date), 'd MMM yyyy', { locale: fr }) : '-'}
+                                            </dd>
+                                        </div>
+                                        <div className="flex justify-between items-center pb-3 md:pb-4 border-b border-black/[0.03] dark:border-white/5">
+                                            <dt className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground">Fin prévue</dt>
+                                            <dd className="text-[10px] md:text-[12px] font-bold font-mono text-amber-600">
+                                                {site.end_date ? format(new Date(site.end_date), 'd MMM yyyy', { locale: fr }) : '-'}
+                                            </dd>
+                                        </div>
+                                        <div className="flex justify-between items-center pb-3 md:pb-4 border-b border-black/[0.03] dark:border-white/5">
+                                            <dt className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground">Géolocalisation</dt>
+                                            <dd className="text-[10px] md:text-[12px] font-bold text-right max-w-[120px] md:max-w-[150px] truncate">{site.city || '-'}</dd>
+                                        </div>
+                                        <div className="flex justify-between items-center">
+                                            <dt className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground">Code Postal</dt>
+                                            <dd className="text-[10px] md:text-[12px] font-bold font-mono">{site.postal_code || '-'}</dd>
+                                        </div>
+                                    </dl>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -629,6 +636,7 @@ export default function ConstructionDetail() {
                         )}
                     </div>
                 )}
+
                 {activeTab === 'finance' && (
                     <div className="space-y-6">
                         <div className="grid gap-6 lg:grid-cols-2">
@@ -869,6 +877,75 @@ export default function ConstructionDetail() {
                     setSelectedEntryId(null);
                 }}
             />
+
+            {/* Suspension Modal */}
+            {isSuspensionModalOpen && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
+                    <div className="bg-white dark:bg-[#0A0A0B] w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden border border-black/5 dark:border-white/5 animate-in zoom-in-95 duration-300">
+                        <div className="p-8 md:p-10 space-y-8">
+                            <div className="flex justify-between items-start">
+                                <div className="space-y-2">
+                                    <h3 className="text-2xl font-black tracking-tighter uppercase">Suspendre le chantier</h3>
+                                    <p className="text-[10px] font-bold uppercase tracking-widest opacity-40">Veuillez indiquer le motif de cette suspension</p>
+                                </div>
+                                <button
+                                    onClick={() => {
+                                        setIsSuspensionModalOpen(false);
+                                        setSuspensionReason('');
+                                    }}
+                                    className="p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors"
+                                >
+                                    <ArrowLeft className="h-5 w-5 rotate-90" />
+                                </button>
+                            </div>
+
+                            <div className="space-y-4">
+                                <textarea
+                                    value={suspensionReason}
+                                    onChange={(e) => setSuspensionReason(e.target.value)}
+                                    placeholder="Ex: En attente de matériaux, décision administrative, intempéries..."
+                                    className="w-full h-40 bg-black/[0.02] dark:bg-white/[0.02] rounded-3xl p-6 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-amber-500/50 transition-all border border-black/5 dark:border-white/5"
+                                />
+                            </div>
+
+                            <div className="flex flex-col md:flex-row gap-4">
+                                <button
+                                    onClick={() => {
+                                        setIsSuspensionModalOpen(false);
+                                        setSuspensionReason('');
+                                    }}
+                                    className="flex-1 h-14 rounded-full text-[10px] font-black uppercase tracking-widest border border-black/5 dark:border-white/5 hover:bg-black/5 dark:hover:bg-white/5 transition-all"
+                                >
+                                    Annuler
+                                </button>
+                                <button
+                                    onClick={async () => {
+                                        if (!suspensionReason.trim()) {
+                                            showToast({ message: 'Veuillez saisir un motif.', type: 'error' });
+                                            return;
+                                        }
+                                        try {
+                                            await api.patch(`/construction/sites/${id}/`, {
+                                                status: 'SUSPENDU',
+                                                suspension_reason: suspensionReason
+                                            });
+                                            setIsSuspensionModalOpen(false);
+                                            setSuspensionReason('');
+                                            showToast({ message: 'Chantier suspendu.', type: 'success' });
+                                            fetchSiteDetails();
+                                        } catch (err) {
+                                            showToast({ message: 'Erreur lors de la suspension.', type: 'error' });
+                                        }
+                                    }}
+                                    className="flex-1 h-14 rounded-full text-[10px] font-black uppercase tracking-widest bg-amber-500 text-white shadow-lg shadow-amber-500/20 hover:scale-[1.02] transition-all"
+                                >
+                                    Confirmer la suspension
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
