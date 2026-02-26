@@ -177,47 +177,47 @@ export default function AdminDashboard() {
                 activeTab === 'overview' ? (
                     <div className="space-y-12 animate-in fade-in duration-500">
                         {/* Stats Grid - Premium Solaris Cards */}
-                        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                        <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
                             {statCards.map((card, idx) => (
                                 <Link key={idx} to={card.link}
-                                    className="group relative overflow-hidden rounded-[2.5rem] solaris-glass border border-white/20 dark:border-white/5 p-8 shadow-sm transition-all duration-500 hover:scale-[1.05] hover:shadow-2xl hover:border-primary/20 dark:hover:solaris-neon-blue"
+                                    className="group relative overflow-hidden rounded-[2rem] md:rounded-[2.5rem] solaris-glass border border-white/20 dark:border-white/5 p-6 md:p-8 shadow-sm transition-all duration-500 hover:scale-[1.05] hover:shadow-2xl hover:border-primary/20 dark:hover:solaris-neon-blue"
                                 >
-                                    <div className="flex justify-between items-start mb-8">
-                                        <div className={cn("p-4 rounded-[1.25rem] shadow-inner", card.bg)}>
-                                            <card.icon className={cn("h-6 w-6", card.color)} />
+                                    <div className="flex justify-between items-start mb-6 md:mb-8">
+                                        <div className={cn("p-3 md:p-4 rounded-[1rem] md:rounded-[1.25rem] shadow-inner", card.bg)}>
+                                            <card.icon className={cn("h-5 w-5 md:h-6 md:w-6", card.color)} />
                                         </div>
                                         <ArrowRight className="h-4 w-4 text-muted-foreground opacity-20 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                                     </div>
                                     <div>
-                                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-1">{card.label}</p>
-                                        <div className="text-4xl font-black tracking-tighter">{card.value}</div>
+                                        <p className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-1">{card.label}</p>
+                                        <div className="text-3xl md:text-4xl font-black tracking-tighter">{card.value}</div>
                                     </div>
                                     <div className="absolute -bottom-6 -right-6 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity pointer-events-none">
-                                        <card.icon className="h-32 w-32 text-black" />
+                                        <card.icon className="h-24 w-24 md:h-32 md:w-32 text-black" />
                                     </div>
                                 </Link>
                             ))}
                         </div>
 
-                        <div className="grid gap-12 md:grid-cols-2">
+                        <div className="grid gap-8 md:gap-12 grid-cols-1 lg:grid-cols-2">
                             {/* Recent Activity - Solaris Industrial Style */}
                             <div className="space-y-6">
-                                <h3 className="text-xl font-black tracking-tighter flex items-center gap-3 px-2">
-                                    <Activity className="h-5 w-5 text-primary" />
+                                <h3 className="text-lg md:text-xl font-black tracking-tighter flex items-center gap-3 px-2">
+                                    <Activity className="h-4 w-4 md:h-5 md:w-5 text-primary" />
                                     FLUX OPÉRATIONNEL
                                 </h3>
-                                <div className="solaris-glass rounded-[2.5rem] border border-white/20 dark:border-white/5 overflow-hidden shadow-sm divide-y divide-black/5 dark:divide-white/5">
+                                <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] border border-white/20 dark:border-white/5 overflow-hidden shadow-sm divide-y divide-black/5 dark:divide-white/5">
                                     {recentActivity.length > 0 ? (
                                         recentActivity.map((act) => (
-                                            <div key={act.id} className="flex items-center gap-6 p-6 transition-colors hover:bg-white/40 dark:hover:bg-white/[0.03] group">
-                                                <div className={cn("h-12 w-12 rounded-2xl flex items-center justify-center shrink-0 shadow-inner group-hover:scale-110 transition-transform font-mono font-black", act.bg, act.color)}>
-                                                    <act.icon className="h-5 w-5" />
+                                            <div key={act.id} className="flex items-center gap-4 md:gap-6 p-4 md:p-6 transition-colors hover:bg-white/40 dark:hover:bg-white/[0.03] group">
+                                                <div className={cn("h-10 w-10 md:h-12 md:w-12 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 shadow-inner group-hover:scale-110 transition-transform font-mono font-black", act.bg, act.color)}>
+                                                    <act.icon className="h-4.5 w-4.5 md:h-5 md:w-5" />
                                                 </div>
                                                 <div className="flex-1 min-w-0">
-                                                    <p className="font-black text-sm tracking-tight mb-0.5 truncate uppercase">{act.title}</p>
-                                                    <p className="text-[10px] font-bold text-muted-foreground uppercase opacity-60 truncate">{act.subtitle}</p>
+                                                    <p className="font-black text-xs md:text-sm tracking-tight mb-0.5 truncate uppercase">{act.title}</p>
+                                                    <p className="text-[9px] md:text-[10px] font-bold text-muted-foreground uppercase opacity-60 truncate">{act.subtitle}</p>
                                                 </div>
-                                                <div className="text-[10px] font-black text-muted-foreground/40 whitespace-nowrap flex items-center gap-1.5 font-mono">
+                                                <div className="text-[9px] md:text-[10px] font-black text-muted-foreground/40 whitespace-nowrap flex items-center gap-1 md:gap-1.5 font-mono">
                                                     <Clock className="h-3 w-3" />
                                                     {act.date.split(' ').slice(-2).join(' ')}
                                                 </div>
@@ -234,30 +234,30 @@ export default function AdminDashboard() {
 
                             {/* Recent Users - Premium Solaris Contacts */}
                             <div className="space-y-6">
-                                <h3 className="text-xl font-black tracking-tighter flex items-center gap-3 px-2">
-                                    <Users className="h-5 w-5 text-primary dark:text-[#ff00e5]" />
+                                <h3 className="text-lg md:text-xl font-black tracking-tighter flex items-center gap-3 px-2">
+                                    <Users className="h-4 w-4 md:h-5 md:w-5 text-primary dark:text-[#ff00e5]" />
                                     NOUVEAUX ENTRANTS
                                 </h3>
-                                <div className="solaris-glass rounded-[2.5rem] border border-white/20 dark:border-white/5 overflow-hidden shadow-sm divide-y divide-black/5 dark:divide-white/5">
+                                <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] border border-white/20 dark:border-white/5 overflow-hidden shadow-sm divide-y divide-black/5 dark:divide-white/5">
                                     {recentUsers.length > 0 ? (
                                         recentUsers.map((u) => (
                                             <Link
                                                 key={u.id}
                                                 to={`/dashboard/users/${u.id}/edit`}
-                                                className="flex items-center gap-6 p-6 transition-all hover:bg-white/40 dark:hover:bg-white/[0.03] group"
+                                                className="flex items-center gap-4 md:gap-6 p-4 md:p-6 transition-all hover:bg-white/40 dark:hover:bg-white/[0.03] group"
                                             >
-                                                <div className="h-12 w-12 rounded-full bg-zinc-900 flex items-center justify-center font-black text-white text-sm shadow-xl group-hover:scale-110 transition-transform">
+                                                <div className="h-10 w-10 md:h-12 md:w-12 rounded-full bg-zinc-900 flex items-center justify-center font-black text-white text-xs md:text-sm shadow-xl group-hover:scale-110 transition-transform">
                                                     {u.first_name?.[0] || u.username?.[0] || 'U'}
                                                 </div>
                                                 <div className="flex-1 min-w-0">
-                                                    <p className="font-black text-sm tracking-tight mb-0.5 truncate">{u.first_name} {u.last_name}</p>
-                                                    <p className="text-[10px] font-bold text-muted-foreground uppercase opacity-60 truncate font-mono">{u.email}</p>
+                                                    <p className="font-black text-xs md:text-sm tracking-tight mb-0.5 truncate">{u.first_name} {u.last_name}</p>
+                                                    <p className="text-[9px] md:text-[10px] font-bold text-muted-foreground uppercase opacity-60 truncate font-mono">{u.email}</p>
                                                 </div>
-                                                <div className="flex items-center gap-4">
-                                                    <div className="px-3 py-1 rounded-full bg-primary/10 text-primary text-[9px] font-black uppercase tracking-widest border border-primary/10">
+                                                <div className="flex items-center gap-2 md:gap-4">
+                                                    <div className="px-2 md:px-3 py-1 rounded-full bg-primary/10 text-primary text-[8px] md:text-[9px] font-black uppercase tracking-widest border border-primary/10">
                                                         {u.role === 'ADMIN_MADIS' ? 'Admin' : u.role === 'CHEF_CHANTIER' ? 'Chantier' : 'Client'}
                                                     </div>
-                                                    <ArrowRight className="h-4 w-4 text-muted-foreground opacity-20 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
+                                                    <ArrowRight className="h-3.5 w-3.5 md:h-4 w-4 text-muted-foreground opacity-20 group-hover:opacity-100 transition-all -translate-x-1 md:-translate-x-2 group-hover:translate-x-0" />
                                                 </div>
                                             </Link>
                                         ))
@@ -272,16 +272,16 @@ export default function AdminDashboard() {
                         </div>
                     </div>
                 ) : (
-                    <div className="solaris-glass rounded-[3rem] border border-white/20 dark:border-white/5 dark:bg-black/60 p-12 shadow-2xl animate-in fade-in zoom-in-95 duration-700">
-                        <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <div className="solaris-glass rounded-[2rem] md:rounded-[3rem] border border-white/20 dark:border-white/5 dark:bg-black/60 p-6 md:p-12 shadow-2xl animate-in fade-in zoom-in-95 duration-700">
+                        <div className="mb-8 md:mb-12 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
                             <div>
                                 <div className="flex items-center gap-2 mb-2">
                                     <Activity className="h-4 w-4 text-primary" />
-                                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Intelligence MaDis</span>
+                                    <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] text-primary">Intelligence MaDis</span>
                                 </div>
-                                <h2 className="text-4xl font-black tracking-tighter">Flux Financier Holistique</h2>
+                                <h2 className="text-3xl md:text-4xl font-black tracking-tighter">Flux Financier Holistique</h2>
                             </div>
-                            <p className="text-muted-foreground font-medium max-w-sm">
+                            <p className="text-sm md:text-base text-muted-foreground font-medium max-w-sm">
                                 Consolidation de tous les actifs sous gestion et commissions agence.
                             </p>
                         </div>

@@ -908,45 +908,45 @@ export default function PropertyDetail() {
                                         } else {
                                             return (
                                                 <>
-                                                    <div className="solaris-glass rounded-[2rem] p-8 border-none shadow-xl">
+                                                    <div className="solaris-glass rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-8 border-none shadow-xl">
                                                         <div className="flex items-center justify-between mb-4">
-                                                            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Rendement Annuel</span>
+                                                            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Rendement Annuel</span>
                                                             <div className="p-2 rounded-xl bg-emerald-500 text-white shadow-lg shadow-emerald-200"><TrendingUp className="h-4 w-4" /></div>
                                                         </div>
-                                                        <div className="text-3xl font-black tracking-tighter text-emerald-600">{perfData?.property_summary?.theoretical_yield || 0}%</div>
-                                                        <p className="text-[10px] text-muted-foreground mt-2 font-bold uppercase tracking-widest">Objectif Cible</p>
+                                                        <div className="text-2xl md:text-3xl font-black tracking-tighter text-emerald-600">{perfData?.property_summary?.theoretical_yield || 0}%</div>
+                                                        <p className="text-[9px] md:text-[10px] text-muted-foreground mt-2 font-bold uppercase tracking-widest">Objectif Cible</p>
                                                     </div>
-                                                    <div className="solaris-glass rounded-[2rem] p-8 border-none shadow-xl">
+                                                    <div className="solaris-glass rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-8 border-none shadow-xl">
                                                         <div className="flex items-center justify-between mb-4">
-                                                            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Rendement Réel</span>
+                                                            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Rendement Réel</span>
                                                             <div className="p-2 rounded-xl bg-black text-white shadow-lg"><Activity className="h-4 w-4" /></div>
                                                         </div>
-                                                        <div className="text-3xl font-black tracking-tighter">{perfData?.property_summary?.yield || 0}%</div>
-                                                        <p className="text-[10px] text-muted-foreground mt-2 font-bold uppercase tracking-widest">Performance 12m</p>
+                                                        <div className="text-2xl md:text-3xl font-black tracking-tighter">{perfData?.property_summary?.yield || 0}%</div>
+                                                        <p className="text-[9px] md:text-[10px] text-muted-foreground mt-2 font-bold uppercase tracking-widest">Performance 12m</p>
                                                     </div>
-                                                    <div className="solaris-glass rounded-[2rem] p-8 border-none shadow-xl">
+                                                    <div className="solaris-glass rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-8 border-none shadow-xl">
                                                         <div className="flex items-center justify-between mb-4">
-                                                            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Cashflow Net</span>
+                                                            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Cashflow Net</span>
                                                             <div className={cn("p-2 rounded-xl text-white shadow-lg", (perfData?.property_summary?.net || 0) >= 0 ? "bg-emerald-500" : "bg-rose-500")}><Euro className="h-4 w-4" /></div>
                                                         </div>
-                                                        <div className={cn("text-3xl font-black tracking-tighter", (perfData?.property_summary?.net || 0) >= 0 ? "text-emerald-500" : "text-rose-600")}>
+                                                        <div className={cn("text-2xl md:text-3xl font-black tracking-tighter", (perfData?.property_summary?.net || 0) >= 0 ? "text-emerald-500" : "text-rose-600")}>
                                                             {(perfData?.property_summary?.net || 0).toLocaleString()}€
                                                         </div>
-                                                        <p className="text-[10px] text-muted-foreground mt-2 font-bold uppercase tracking-widest">Solde Encaissé</p>
+                                                        <p className="text-[9px] md:text-[10px] text-muted-foreground mt-2 font-bold uppercase tracking-widest">Solde Encaissé</p>
                                                     </div>
-                                                    <div className="solaris-glass rounded-[2rem] p-8 border-none shadow-xl">
+                                                    <div className="solaris-glass rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-8 border-none shadow-xl">
                                                         <div className="flex items-center justify-between mb-4">
-                                                            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Encaïssement</span>
+                                                            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Encaïssement</span>
                                                             <div className="p-2 rounded-xl bg-blue-500 text-white shadow-lg"><Activity className="h-4 w-4" /></div>
                                                         </div>
                                                         <div className={cn(
-                                                            "text-3xl font-black tracking-tighter",
+                                                            "text-2xl md:text-3xl font-black tracking-tighter",
                                                             (perfData.property_summary?.collection_rate || 0) >= 90 ? "text-emerald-500" :
                                                                 (perfData.property_summary?.collection_rate || 0) >= 50 ? "text-orange-500" : "text-rose-600"
                                                         )}>
                                                             {perfData.property_summary?.collection_rate !== null && perfData.property_summary?.collection_rate !== undefined ? `${perfData.property_summary.collection_rate}%` : 'N/A'}
                                                         </div>
-                                                        <p className="text-[10px] text-muted-foreground mt-2 font-bold uppercase tracking-widest">Loyer Collecté</p>
+                                                        <p className="text-[9px] md:text-[10px] text-muted-foreground mt-2 font-bold uppercase tracking-widest">Loyer Collecté</p>
                                                     </div>
                                                 </>
                                             );
@@ -958,14 +958,14 @@ export default function PropertyDetail() {
                                     (property.management_type === 'CONSTRUCTION' || (property.transaction_nature !== 'VENTE' && property.status !== 'VENDU')) && (
                                         <div className="grid gap-8 lg:grid-cols-3">
                                             {/* Evolution Chart Solaris Style */}
-                                            <div className="solaris-glass rounded-[2.5rem] p-10 border-none shadow-xl lg:col-span-2">
-                                                <h3 className="font-black text-xl mb-10 flex items-center gap-4 tracking-tighter uppercase">
-                                                    <div className="p-3 rounded-2xl bg-black text-white shadow-lg">
-                                                        <Calendar className="h-5 w-5" />
+                                            <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-xl lg:col-span-2">
+                                                <h3 className="font-black text-lg md:text-xl mb-6 md:mb-10 flex items-center gap-4 tracking-tighter uppercase">
+                                                    <div className="p-2.5 md:p-3 rounded-xl md:rounded-2xl bg-black text-white shadow-lg">
+                                                        <Calendar className="h-4 w-4 md:h-5 md:w-5" />
                                                     </div>
                                                     Évolution des Flux
                                                 </h3>
-                                                <div className="h-[300px] w-full">
+                                                <div className="h-[250px] md:h-[300px] w-full">
                                                     <ResponsiveContainer width="100%" height="100%">
                                                         {perfData?.monthly_data ? (
                                                             <AreaChart data={perfData.monthly_data}>
@@ -1099,19 +1099,19 @@ export default function PropertyDetail() {
                                 {/* Operations Table Solaris Style */}
                                 {
                                     (user?.role === 'ADMIN_MADIS' || cashCalls.length > 0 || settlements.length > 0) && (
-                                        <div className="solaris-glass rounded-[2.5rem] overflow-hidden border-none shadow-xl">
-                                            <div className="p-10 border-b border-black/5 flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white/30 backdrop-blur-md">
+                                        <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] overflow-hidden border-none shadow-xl">
+                                            <div className="p-6 md:p-10 border-b border-black/5 flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white/30 backdrop-blur-md">
                                                 <div className="space-y-1">
-                                                    <h3 className="font-black text-xl flex items-center gap-4 tracking-tighter uppercase">
-                                                        <div className="p-3 rounded-2xl bg-black text-white shadow-lg">
-                                                            <History className="h-5 w-5" />
+                                                    <h3 className="font-black text-lg md:text-xl flex items-center gap-4 tracking-tighter uppercase">
+                                                        <div className="p-2.5 md:p-3 rounded-xl md:rounded-2xl bg-black text-white shadow-lg">
+                                                            <History className="h-4 w-4 md:h-5 md:w-5" />
                                                         </div>
                                                         {property.transaction_nature === 'VENTE' ? "Opérations Financières" : "Opérations de Régie"}
                                                     </h3>
-                                                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60 ml-14">Appels de fonds & Reversements en cours</p>
+                                                    <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60 ml-0 md:ml-14">Appels de fonds & Reversements en cours</p>
                                                 </div>
-                                                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-black text-white text-[10px] font-black uppercase tracking-widest w-fit">
-                                                    <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                                                <div className="flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-full bg-black text-white text-[9px] md:text-[10px] font-black uppercase tracking-widest w-fit">
+                                                    <div className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-primary animate-pulse" />
                                                     Traitement en cours
                                                 </div>
                                             </div>
@@ -1237,16 +1237,16 @@ export default function PropertyDetail() {
                                 }
 
                                 {/* Financial Flows Solaris Style */}
-                                <div className="solaris-glass rounded-[2.5rem] overflow-hidden border-none shadow-xl mt-8">
-                                    <div className="p-10 border-b border-black/5 bg-white/30 backdrop-blur-md">
+                                <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] overflow-hidden border-none shadow-xl mt-8">
+                                    <div className="p-6 md:p-10 border-b border-black/5 bg-white/30 backdrop-blur-md">
                                         <div className="space-y-1">
-                                            <h3 className="font-black text-xl flex items-center gap-4 tracking-tighter uppercase">
-                                                <div className="p-3 rounded-2xl bg-black text-white shadow-lg">
-                                                    <Activity className="h-5 w-5" />
+                                            <h3 className="font-black text-lg md:text-xl flex items-center gap-4 tracking-tighter uppercase">
+                                                <div className="p-2.5 md:p-3 rounded-xl md:rounded-2xl bg-black text-white shadow-lg">
+                                                    <Activity className="h-4 w-4 md:h-5 md:w-5" />
                                                 </div>
                                                 Historique des Flux Financiers
                                             </h3>
-                                            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60 ml-14">Dernières transactions validées sur ce bien</p>
+                                            <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60 ml-0 md:ml-14">Dernières transactions validées sur ce bien</p>
                                         </div>
                                     </div>
                                     <div className="overflow-x-auto">
@@ -1330,25 +1330,25 @@ export default function PropertyDetail() {
 
 
                 {activeTab === 'projects' && (
-                    <div className="solaris-glass rounded-[2.5rem] p-10 border-none shadow-xl animate-fade-in">
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+                    <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-xl animate-fade-in">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 md:mb-12">
                             <div className="space-y-1">
-                                <h3 className="font-black text-xl flex items-center gap-4 tracking-tighter uppercase">
-                                    <div className="p-3 rounded-2xl bg-black text-white shadow-lg">
-                                        <HardHat className="h-5 w-5" />
+                                <h3 className="font-black text-lg md:text-xl flex items-center gap-4 tracking-tighter uppercase">
+                                    <div className="p-2.5 md:p-3 rounded-xl md:rounded-2xl bg-black text-white shadow-lg">
+                                        <HardHat className="h-4 w-4 md:h-5 md:w-5" />
                                     </div>
                                     {property.management_type === 'GESTION' ? 'Entretien & Maintenance' : 'Suivi des Projets'}
                                 </h3>
-                                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60 ml-14">
+                                <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60 ml-0 md:ml-14">
                                     {property.management_type === 'GESTION' ? 'Interventions techniques et maintenance préventive' : 'Projets de développement et travaux en cours'}
                                 </p>
                             </div>
                             {user?.role === 'ADMIN_MADIS' && (
                                 <Link
                                     to={`/dashboard/projects/new?propertyId=${id}`}
-                                    className="inline-flex items-center justify-center rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all bg-black text-white shadow-xl hover:scale-105 active:scale-95 h-12 px-10"
+                                    className="inline-flex items-center justify-center rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all bg-black text-white shadow-xl hover:scale-105 active:scale-95 h-10 md:h-12 px-6 md:px-10"
                                 >
-                                    <Plus className="mr-3 h-4 w-4" />
+                                    <Plus className="mr-2 md:mr-3 h-3.5 w-3.5 md:h-4 w-4" />
                                     {property.management_type === 'GESTION' ? 'Nouvelle Intervention' : 'Nouveau Projet'}
                                 </Link>
                             )}
@@ -1382,7 +1382,7 @@ export default function PropertyDetail() {
                                 </p>
                             </div>
                         ) : (
-                            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                            <div className="grid gap-4 md:gap-6 md:grid-cols-2 lg:grid-cols-3">
                                 {associatedProjects
                                     .filter(p => {
                                         if (property.management_type === 'CONSTRUCTION') return p.category === 'CONSTRUCTION';
@@ -1393,38 +1393,38 @@ export default function PropertyDetail() {
                                         <Link
                                             key={project.id}
                                             to={`/dashboard/projects/${project.id}`}
-                                            className="group relative solaris-glass rounded-[2rem] p-8 border-none shadow-lg hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98] transition-all flex flex-col bg-white/40"
+                                            className="group relative solaris-glass rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-8 border-none shadow-lg hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98] transition-all flex flex-col bg-white/40"
                                         >
-                                            <div className="flex justify-between items-start mb-6">
-                                                <h4 className="font-black text-lg tracking-tighter group-hover:text-primary transition-colors pr-2 line-clamp-1 truncate">{project.name}</h4>
-                                                <span className="shrink-0 px-4 py-1.5 rounded-full bg-black text-white text-[9px] font-black uppercase tracking-widest shadow-lg">
+                                            <div className="flex justify-between items-start mb-4 md:mb-6">
+                                                <h4 className="font-black text-base md:text-lg tracking-tighter group-hover:text-primary transition-colors pr-2 line-clamp-1 truncate">{project.name}</h4>
+                                                <span className="shrink-0 px-3 md:px-4 py-1.5 rounded-full bg-black text-white text-[8px] md:text-[9px] font-black uppercase tracking-widest shadow-lg">
                                                     {project.status_display || project.status}
                                                 </span>
                                             </div>
 
-                                            <p className="text-[11px] font-medium text-muted-foreground line-clamp-2 mb-8 leading-relaxed opacity-70">
+                                            <p className="text-[10px] md:text-[11px] font-medium text-muted-foreground line-clamp-2 mb-6 md:mb-8 leading-relaxed opacity-70">
                                                 {project.description || "Aucune description détaillée."}
                                             </p>
 
-                                            <div className="mt-auto pt-6 border-t border-black/5 flex items-center justify-between">
-                                                <div className="flex items-center gap-6">
-                                                    <div className="flex flex-col gap-1">
-                                                        <span className="text-[9px] font-black uppercase tracking-widest opacity-40">Budget</span>
-                                                        <div className="flex items-center gap-1.5 font-black text-xs tracking-tight">
-                                                            <Euro className="h-3 w-3 text-emerald-500" />
+                                            <div className="mt-auto pt-4 md:pt-6 border-t border-black/5 flex items-center justify-between">
+                                                <div className="flex items-center gap-4 md:gap-6">
+                                                    <div className="flex flex-col gap-0.5 md:gap-1">
+                                                        <span className="text-[8px] md:text-[9px] font-black uppercase tracking-widest opacity-40">Budget</span>
+                                                        <div className="flex items-center gap-1 font-black text-[10px] md:text-xs tracking-tight">
+                                                            <Euro className="h-2.5 w-2.5 md:h-3 w-3 text-emerald-500" />
                                                             <span>{project.budget ? `${Number(project.budget).toLocaleString('fr-FR')} €` : 'N/A'}</span>
                                                         </div>
                                                     </div>
-                                                    <div className="flex flex-col gap-1">
-                                                        <span className="text-[9px] font-black uppercase tracking-widest opacity-40">Début</span>
-                                                        <div className="flex items-center gap-1.5 font-black text-xs tracking-tight">
-                                                            <Clock className="h-3 w-3 text-blue-500" />
+                                                    <div className="flex flex-col gap-0.5 md:gap-1">
+                                                        <span className="text-[8px] md:text-[9px] font-black uppercase tracking-widest opacity-40">Début</span>
+                                                        <div className="flex items-center gap-1 font-black text-[10px] md:text-xs tracking-tight">
+                                                            <Clock className="h-2.5 w-2.5 md:h-3 w-3 text-blue-500" />
                                                             <span>{project.start_date ? format(new Date(project.start_date), 'd MMM yy', { locale: fr }).toUpperCase() : 'N/A'}</span>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div className="p-3 rounded-2xl bg-black/5 text-black opacity-0 group-hover:opacity-100 group-hover:bg-black group-hover:text-white transition-all transform translate-x-4 group-hover:translate-x-0">
-                                                    <ArrowRight className="h-4 w-4" />
+                                                <div className="p-2.5 md:p-3 rounded-xl md:rounded-2xl bg-black/5 text-black opacity-0 group-hover:opacity-100 group-hover:bg-black group-hover:text-white transition-all transform translate-x-4 group-hover:translate-x-0">
+                                                    <ArrowRight className="h-3.5 w-3.5 md:h-4 w-4" />
                                                 </div>
                                             </div>
                                         </Link>
@@ -1435,37 +1435,37 @@ export default function PropertyDetail() {
                 )}
 
                 {activeTab === 'transactions' && (
-                    <div className="solaris-glass rounded-[2.5rem] p-10 border-none shadow-xl animate-fade-in pb-20">
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+                    <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-xl animate-fade-in pb-20">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 md:mb-12">
                             <div className="space-y-1">
-                                <h3 className="font-black text-xl flex items-center gap-4 tracking-tighter uppercase">
-                                    <div className="p-3 rounded-2xl bg-black text-white shadow-lg">
-                                        <TrendingUp className="h-5 w-5" />
+                                <h3 className="font-black text-lg md:text-xl flex items-center gap-4 tracking-tighter uppercase">
+                                    <div className="p-2.5 md:p-3 rounded-xl md:rounded-2xl bg-black text-white shadow-lg">
+                                        <TrendingUp className="h-4 w-4 md:h-5 md:w-5" />
                                     </div>
                                     Pipeline Commercial
                                 </h3>
-                                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60 ml-14">
+                                <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60 ml-0 md:ml-14">
                                     Suivi des offres, candidatures et cycle de vente
                                 </p>
                             </div>
                             {user?.role === 'ADMIN_MADIS' && (
                                 <button
                                     onClick={() => setShowTxModal(true)}
-                                    className="inline-flex items-center justify-center rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all bg-black text-white shadow-xl hover:scale-105 active:scale-95 h-12 px-10"
+                                    className="inline-flex items-center justify-center rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all bg-black text-white shadow-xl hover:scale-105 active:scale-95 h-10 md:h-12 px-6 md:px-10"
                                 >
-                                    <Plus className="mr-3 h-4 w-4" />
-                                    Ajouter une offre hors ligne
+                                    <Plus className="mr-2 md:mr-3 h-3.5 w-3.5 md:h-4 w-4" />
+                                    Ajouter une offre
                                 </button>
                             )}
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-12 md:mb-16">
                             {['DISPONIBLE', 'NEGOCIATION', 'SIGNE', 'ANNULE'].map((status) => {
                                 const count = property.transactions?.filter(t => t.status === status).length || 0;
-                                const icon = status === 'DISPONIBLE' ? <ClipboardList className="h-4 w-4" /> :
-                                    status === 'NEGOCIATION' ? <MessageSquare className="h-4 w-4" /> :
-                                        status === 'SIGNE' ? <CheckCircle2 className="h-4 w-4" /> :
-                                            <XCircle className="h-4 w-4" />;
+                                const icon = status === 'DISPONIBLE' ? <ClipboardList className="h-3.5 w-3.5 md:h-4 w-4" /> :
+                                    status === 'NEGOCIATION' ? <MessageSquare className="h-3.5 w-3.5 md:h-4 w-4" /> :
+                                        status === 'SIGNE' ? <CheckCircle2 className="h-3.5 w-3.5 md:h-4 w-4" /> :
+                                            <XCircle className="h-3.5 w-3.5 md:h-4 w-4" />;
 
                                 const colorClass = status === 'DISPONIBLE' ? "bg-blue-500" :
                                     status === 'NEGOCIATION' ? "bg-orange-500" :
@@ -1473,17 +1473,17 @@ export default function PropertyDetail() {
                                             "bg-rose-500";
 
                                 return (
-                                    <div key={status} className="relative solaris-glass rounded-3xl p-6 border-none shadow-lg overflow-hidden group hover:scale-[1.05] transition-all duration-500">
-                                        <div className={cn("absolute top-0 right-0 w-24 h-24 -mt-8 -mr-8 opacity-[0.05] group-hover:opacity-[0.08] transition-opacity rounded-full", colorClass)} />
-                                        <div className="flex items-center gap-4 mb-4">
-                                            <div className={cn("p-2.5 rounded-xl text-white shadow-lg", colorClass)}>
+                                    <div key={status} className="relative solaris-glass rounded-2xl md:rounded-3xl p-4 md:p-6 border-none shadow-lg overflow-hidden group hover:scale-[1.05] transition-all duration-500">
+                                        <div className={cn("absolute top-0 right-0 w-16 md:w-24 h-16 md:h-24 -mt-4 md:-mt-8 -mr-4 md:-mr-8 opacity-[0.05] group-hover:opacity-[0.08] transition-opacity rounded-full", colorClass)} />
+                                        <div className="flex items-center gap-3 md:gap-4 mb-3 md:mb-4">
+                                            <div className={cn("p-2 md:p-2.5 rounded-lg md:rounded-xl text-white shadow-lg", colorClass)}>
                                                 {icon}
                                             </div>
-                                            <span className="text-[9px] font-black uppercase tracking-widest opacity-40">{status === 'DISPONIBLE' ? 'Offres' : status === 'NEGOCIATION' ? 'Négos' : status === 'SIGNE' ? 'Signées' : 'Annulées'}</span>
+                                            <span className="text-[8px] md:text-[9px] font-black uppercase tracking-widest opacity-40">{status === 'DISPONIBLE' ? 'Offres' : status === 'NEGOCIATION' ? 'Négos' : status === 'SIGNE' ? 'Signées' : 'Annulées'}</span>
                                         </div>
-                                        <div className="flex items-baseline gap-2">
-                                            <span className="text-4xl font-black tracking-tighter">{count}</span>
-                                            <span className="text-[10px] font-black uppercase tracking-widest opacity-20">Dossiers</span>
+                                        <div className="flex items-baseline gap-1.5 md:gap-2">
+                                            <span className="text-2xl md:text-4xl font-black tracking-tighter">{count}</span>
+                                            <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest opacity-20">Dossiers</span>
                                         </div>
                                     </div>
                                 );
@@ -1497,30 +1497,30 @@ export default function PropertyDetail() {
                                     {property.transactions
                                         .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
                                         .map((tx) => (
-                                            <div key={tx.id} className="group solaris-glass rounded-[2rem] p-8 border-none shadow-lg hover:shadow-2xl transition-all bg-white/40">
-                                                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
-                                                    <div className="flex items-center gap-6">
-                                                        <div className="h-16 w-16 rounded-3xl bg-black text-white flex items-center justify-center font-black text-xl shadow-xl">
+                                            <div key={tx.id} className="group solaris-glass rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-8 border-none shadow-lg hover:shadow-2xl transition-all bg-white/40">
+                                                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 md:gap-8">
+                                                    <div className="flex items-center gap-4 md:gap-6">
+                                                        <div className="h-12 w-12 md:h-16 md:w-16 rounded-2xl md:rounded-3xl bg-black text-white flex items-center justify-center font-black text-lg md:text-xl shadow-xl">
                                                             {tx.buyer_tenant_name?.split(' ').map(n => n[0]).join('')}
                                                         </div>
                                                         <div>
-                                                            <div className="font-black text-xl tracking-tighter flex items-center gap-3">
+                                                            <div className="font-black text-lg md:text-xl tracking-tighter flex items-center gap-2 md:gap-3">
                                                                 {tx.buyer_tenant_name}
-                                                                {tx.status === 'SIGNE' && <div className="p-1 rounded-full bg-emerald-500 text-white"><ShieldCheck className="h-3 w-3" /></div>}
+                                                                {tx.status === 'SIGNE' && <div className="p-1 rounded-full bg-emerald-500 text-white"><ShieldCheck className="h-2.5 w-2.5 md:h-3 w-3" /></div>}
                                                             </div>
-                                                            <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60 flex items-center gap-2 mt-2">
-                                                                <Clock className="h-3 w-3" />
-                                                                Reçue le {format(new Date(tx.created_at), 'dd MMMM yyyy', { locale: fr }).toUpperCase()}
+                                                            <div className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60 flex items-center gap-1.5 md:gap-2 mt-1 md:mt-2">
+                                                                <Clock className="h-2.5 w-2.5 md:h-3 w-3" />
+                                                                Reçue le {format(new Date(tx.created_at), 'dd MMM yyyy', { locale: fr }).toUpperCase()}
                                                             </div>
                                                         </div>
                                                     </div>
 
-                                                    <div className="flex items-center gap-10">
-                                                        <div className="text-right">
-                                                            <div className="text-[9px] font-black uppercase tracking-widest opacity-40 mb-1">Montant de l'offre</div>
-                                                            <div className="text-2xl font-black tracking-tighter text-black">{Number(tx.asking_price).toLocaleString('fr-FR')} €</div>
+                                                    <div className="flex flex-row md:items-center justify-between lg:justify-end gap-6 md:gap-10">
+                                                        <div className="text-left md:text-right">
+                                                            <div className="text-[8px] md:text-[9px] font-black uppercase tracking-widest opacity-40 mb-0.5 md:mb-1">Montant de l'offre</div>
+                                                            <div className="text-xl md:text-2xl font-black tracking-tighter text-black">{Number(tx.asking_price).toLocaleString('fr-FR')} €</div>
                                                             {tx.final_price && tx.status === 'SIGNE' && (
-                                                                <div className="text-[10px] font-black uppercase tracking-widest text-emerald-600 mt-1">Prix acté: {Number(tx.final_price).toLocaleString('fr-FR')} €</div>
+                                                                <div className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-emerald-600 mt-0.5 md:mt-1">Prix acté: {Number(tx.final_price).toLocaleString('fr-FR')} €</div>
                                                             )}
                                                         </div>
 
@@ -1529,7 +1529,7 @@ export default function PropertyDetail() {
                                                                 <button
                                                                     onClick={() => setStatusDropdown(statusDropdown === tx.id ? null : tx.id)}
                                                                     className={cn(
-                                                                        "h-12 px-6 rounded-2xl text-[10px] font-black uppercase tracking-widest flex items-center gap-3 transition-all shadow-xl",
+                                                                        "h-10 md:h-12 px-4 md:px-6 rounded-xl md:rounded-2xl text-[8px] md:text-[10px] font-black uppercase tracking-widest flex items-center gap-2 md:gap-3 transition-all shadow-xl",
                                                                         tx.status === 'SIGNE' ? "bg-emerald-500 text-white" :
                                                                             tx.status === 'NEGOCIATION' ? "bg-orange-500 text-white" :
                                                                                 tx.status === 'ANNULE' ? "bg-rose-500 text-white" :
@@ -1537,7 +1537,7 @@ export default function PropertyDetail() {
                                                                     )}
                                                                 >
                                                                     {tx.status_display || tx.status}
-                                                                    <ChevronDown className="h-4 w-4" />
+                                                                    <ChevronDown className="h-3.5 w-3.5 md:h-4 w-4" />
                                                                 </button>
 
                                                                 {statusDropdown === tx.id && (
@@ -1594,16 +1594,16 @@ export default function PropertyDetail() {
                 )}
 
                 {activeTab === 'documents' && (
-                    <div className="solaris-glass rounded-[2.5rem] p-10 border-none shadow-xl animate-fade-in pb-20">
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+                    <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-xl animate-fade-in pb-20">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 md:mb-12">
                             <div className="space-y-1">
-                                <h3 className="font-black text-xl flex items-center gap-4 tracking-tighter uppercase">
-                                    <div className="p-3 rounded-2xl bg-black text-white shadow-lg">
-                                        <FileText className="h-5 w-5" />
+                                <h3 className="font-black text-lg md:text-xl flex items-center gap-4 tracking-tighter uppercase">
+                                    <div className="p-2.5 md:p-3 rounded-xl md:rounded-2xl bg-black text-white shadow-lg">
+                                        <FileText className="h-4 w-4 md:h-5 md:w-5" />
                                     </div>
                                     Coffre-Fort Numérique
                                 </h3>
-                                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60 ml-14">
+                                <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60 ml-0 md:ml-14">
                                     Documents légaux, plans et justificatifs sécurisés
                                 </p>
                             </div>
@@ -1611,42 +1611,42 @@ export default function PropertyDetail() {
                                 {user?.role === 'ADMIN_MADIS' && (
                                     <>
                                         {isSelectionMode ? (
-                                            <div className="flex items-center gap-4 animate-in fade-in slide-in-from-right-2">
+                                            <div className="flex items-center gap-2 md:gap-4 animate-in fade-in slide-in-from-right-2">
                                                 <button
                                                     onClick={() => { setIsSelectionMode(false); setSelectedDocuments([]); }}
-                                                    className="text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-black px-4 py-2"
+                                                    className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-black px-2 md:px-4 py-2"
                                                 >
                                                     Annuler
                                                 </button>
                                                 <button
                                                     onClick={selectAllFiltered}
-                                                    className="text-[10px] font-black uppercase tracking-widest text-black hover:underline underline-offset-4 decoration-2 px-4 py-2"
+                                                    className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-black hover:underline underline-offset-4 decoration-2 px-2 md:px-4 py-2"
                                                 >
-                                                    Tout sélectionner
+                                                    Tout
                                                 </button>
                                                 <button
                                                     onClick={handleDeleteSelectedDocuments}
                                                     disabled={selectedDocuments.length === 0}
-                                                    className="bg-black text-white text-[10px] font-black uppercase tracking-widest px-6 py-3 rounded-2xl shadow-xl hover:scale-105 active:scale-95 disabled:opacity-30 flex items-center gap-3 transition-all"
+                                                    className="bg-black text-white text-[9px] md:text-[10px] font-black uppercase tracking-widest px-4 md:px-6 py-2.5 md:py-3 rounded-xl md:rounded-2xl shadow-xl hover:scale-105 active:scale-95 disabled:opacity-30 flex items-center gap-2 md:gap-3 transition-all"
                                                 >
-                                                    <Trash2 className="h-3.5 w-3.5" />
-                                                    Supprimer ({selectedDocuments.length})
+                                                    <Trash2 className="h-3 w-3 md:h-3.5 md:w-3.5" />
+                                                    {selectedDocuments.length}
                                                 </button>
                                             </div>
                                         ) : (
                                             <button
                                                 onClick={() => setIsSelectionMode(true)}
-                                                className="inline-flex items-center justify-center rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all bg-white text-black border-2 border-black/5 hover:border-black/20 h-12 px-8"
+                                                className="inline-flex items-center justify-center rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all bg-white text-black border-2 border-black/5 hover:border-black/20 h-10 md:h-12 px-4 md:px-8"
                                             >
-                                                <CheckCircle2 className="mr-3 h-4 w-4" />
+                                                <CheckCircle2 className="mr-2 md:mr-3 h-3.5 w-3.5 md:h-4 w-4" />
                                                 Sélectionner
                                             </button>
                                         )}
                                         <Link
                                             to={`/dashboard/documents/new?propertyId=${id}`}
-                                            className="inline-flex items-center justify-center rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all bg-black text-white shadow-xl hover:scale-105 active:scale-95 h-12 px-10"
+                                            className="inline-flex items-center justify-center rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all bg-black text-white shadow-xl hover:scale-105 active:scale-95 h-10 md:h-12 px-6 md:px-10"
                                         >
-                                            <Plus className="mr-3 h-4 w-4" />
+                                            <Plus className="mr-2 md:mr-3 h-3.5 w-3.5 md:h-4 w-4" />
                                             Ajouter
                                         </Link>
                                     </>
@@ -1654,7 +1654,7 @@ export default function PropertyDetail() {
                             </div>
                         </div>
 
-                        <div className="flex flex-wrap gap-3 mb-12">
+                        <div className="flex flex-wrap gap-2 md:gap-3 mb-8 md:mb-12">
                             {[
                                 { id: 'all', label: 'Tous' },
                                 { id: 'TITRE_PROPRIETE', label: 'Titres' },
@@ -1667,7 +1667,7 @@ export default function PropertyDetail() {
                                     key={f.id}
                                     onClick={() => setDocumentFilter(f.id)}
                                     className={cn(
-                                        "px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest border-2 transition-all",
+                                        "px-4 md:px-6 py-2 md:py-2.5 rounded-full text-[8px] md:text-[10px] font-black uppercase tracking-widest border-2 transition-all",
                                         documentFilter === f.id
                                             ? "bg-black text-white border-black shadow-xl scale-105"
                                             : "bg-white text-black/40 border-black/5 hover:border-black/20"
@@ -1692,55 +1692,55 @@ export default function PropertyDetail() {
                                 <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-40">Il n'y a pas encore de documents pour cette catégorie.</p>
                             </div>
                         ) : (
-                            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                            <div className="grid gap-4 md:gap-6 sm:grid-cols-2 lg:grid-cols-3">
                                 {filteredDocuments.map((doc) => (
-                                    <div key={doc.id} className="group relative solaris-glass rounded-[2rem] p-6 border-none shadow-lg hover:shadow-2xl transition-all bg-white/40 flex flex-col">
-                                        <div className="flex items-start gap-4 mb-6">
+                                    <div key={doc.id} className="group relative solaris-glass rounded-[1.5rem] md:rounded-[2rem] p-4 md:p-6 border-none shadow-lg hover:shadow-2xl transition-all bg-white/40 flex flex-col">
+                                        <div className="flex items-start gap-3 md:gap-4 mb-4 md:mb-6">
                                             {isSelectionMode && (
                                                 <div
                                                     onClick={() => toggleDocumentSelection(doc.id)}
                                                     className={cn(
-                                                        "mt-1 w-6 h-6 rounded-xl border-2 flex items-center justify-center cursor-pointer transition-all",
+                                                        "mt-1 w-5 h-5 md:w-6 md:h-6 rounded-lg md:rounded-xl border-2 flex items-center justify-center cursor-pointer transition-all",
                                                         selectedDocuments.includes(doc.id)
                                                             ? "bg-black border-black text-white shadow-lg"
                                                             : "bg-white border-black/10 hover:border-black/30"
                                                     )}
                                                 >
-                                                    {selectedDocuments.includes(doc.id) && <Check className="h-4 w-4 stroke-[4]" />}
+                                                    {selectedDocuments.includes(doc.id) && <Check className="h-3 md:h-4 w-3 md:w-4 stroke-[4]" />}
                                                 </div>
                                             )}
-                                            <div className="p-3 rounded-2xl bg-black/5 text-black shadow-sm group-hover:bg-black group-hover:text-white transition-all duration-500">
-                                                <FileText className="h-5 w-5" />
+                                            <div className="p-2 md:p-3 rounded-xl md:rounded-2xl bg-black/5 text-black shadow-sm group-hover:bg-black group-hover:text-white transition-all duration-500">
+                                                <FileText className="h-4 md:h-5 w-4 md:w-5" />
                                             </div>
                                             <div className="min-w-0 flex-1">
                                                 <div className="flex items-start justify-between gap-2">
-                                                    <h4 className="font-black text-sm tracking-tight truncate pr-4">{doc.title}</h4>
+                                                    <h4 className="font-black text-xs md:text-sm tracking-tight truncate pr-4">{doc.title}</h4>
                                                     {!isSelectionMode && user?.role === 'ADMIN_MADIS' && (
                                                         <button
                                                             onClick={(e) => { e.preventDefault(); handleDeleteDocument(doc.id); }}
                                                             className="text-muted-foreground hover:text-rose-600 opacity-0 group-hover:opacity-100 transition-all p-1"
                                                             title="Supprimer"
                                                         >
-                                                            <Trash2 className="h-4 w-4" />
+                                                            <Trash2 className="h-3.5 md:h-4 w-3.5 md:w-4" />
                                                         </button>
                                                     )}
                                                 </div>
-                                                <div className="flex items-center gap-2 mt-2">
-                                                    <span className="text-[9px] font-black uppercase tracking-widest text-black bg-black/5 px-2 py-0.5 rounded-lg">
+                                                <div className="flex items-center gap-2 mt-1 md:mt-2">
+                                                    <span className="text-[8px] md:text-[9px] font-black uppercase tracking-widest text-black bg-black/5 px-2 py-0.5 rounded-lg">
                                                         {doc.category_display || doc.category}
                                                     </span>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="mt-auto pt-6 border-t border-black/5 flex items-center justify-between">
-                                            <span className="text-[10px] font-black uppercase tracking-widest opacity-40">{format(new Date(doc.uploaded_at || new Date()), 'dd/MM/yy', { locale: fr })}</span>
+                                        <div className="mt-auto pt-4 md:pt-6 border-t border-black/5 flex items-center justify-between">
+                                            <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest opacity-40">{format(new Date(doc.uploaded_at || new Date()), 'dd/MM/yy', { locale: fr })}</span>
                                             <a
                                                 href={doc.file}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-black hover:underline underline-offset-4 decoration-2 transition-all"
+                                                className="inline-flex items-center gap-1.5 md:gap-2 text-[8px] md:text-[10px] font-black uppercase tracking-widest text-black hover:underline underline-offset-4 decoration-2 transition-all"
                                             >
-                                                <Download className="h-3.5 w-3.5" />
+                                                <Download className="h-3 w-3 md:h-3.5 md:w-3.5" />
                                                 Télécharger
                                             </a>
                                         </div>
