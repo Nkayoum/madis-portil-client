@@ -195,24 +195,29 @@ export default function ConstructionDetail() {
                                         <Clock className="mr-1.5 md:mr-2 h-3 w-3 md:h-4 md:w-4" /> Relancer
                                     </button>
                                 )}
-                                <Link
-                                    to={`/dashboard/construction/${id}/edit`}
-                                    className="inline-flex items-center justify-center rounded-xl md:rounded-2xl text-[8px] md:text-[10px] font-black uppercase tracking-widest transition-all bg-white dark:bg-white/10 border border-black/5 dark:border-white/10 shadow-sm hover:bg-black/5 dark:hover:bg-white/20 h-9 md:h-11 px-3 md:px-6 dark:text-white whitespace-nowrap"
-                                >
-                                    <Edit className="mr-1.5 md:mr-2 h-3 w-3 md:h-4 md:w-4" /> Modifier
-                                </Link>
-                                <button
-                                    onClick={async () => {
-                                        if (window.confirm('ATTENTION: Voulez-vous vraiment SUPPRIMER définitivement ce chantier et toutes ses données associées ?')) {
-                                            await api.delete(`/construction/sites/${id}/`);
-                                            showToast({ message: 'Chantier supprimé.', type: 'success' });
-                                            navigate('/dashboard/construction');
-                                        }
-                                    }}
-                                    className="inline-flex items-center justify-center rounded-xl md:rounded-2xl text-[8px] md:text-[10px] font-black uppercase tracking-widest transition-all bg-red-500 text-white hover:bg-red-600 h-9 md:h-11 px-3 md:px-6 shadow-[0_4px_15px_rgba(239,68,68,0.4)] dark:shadow-[0_0_20px_rgba(239,68,68,0.6)] whitespace-nowrap"
-                                >
-                                    <Trash2 className="mr-1.5 md:mr-2 h-3 w-3 md:h-4 md:w-4" /> Supprimer
-                                </button>
+
+                                {user?.role === 'ADMIN_MADIS' && (
+                                    <>
+                                        <Link
+                                            to={`/dashboard/construction/${id}/edit`}
+                                            className="inline-flex items-center justify-center rounded-xl md:rounded-2xl text-[8px] md:text-[10px] font-black uppercase tracking-widest transition-all bg-white dark:bg-white/10 border border-black/5 dark:border-white/10 shadow-sm hover:bg-black/5 dark:hover:bg-white/20 h-9 md:h-11 px-3 md:px-6 dark:text-white whitespace-nowrap"
+                                        >
+                                            <Edit className="mr-1.5 md:mr-2 h-3 w-3 md:h-4 md:w-4" /> Modifier
+                                        </Link>
+                                        <button
+                                            onClick={async () => {
+                                                if (window.confirm('ATTENTION: Voulez-vous vraiment SUPPRIMER définitivement ce chantier et toutes ses données associées ?')) {
+                                                    await api.delete(`/construction/sites/${id}/`);
+                                                    showToast({ message: 'Chantier supprimé.', type: 'success' });
+                                                    navigate('/dashboard/construction');
+                                                }
+                                            }}
+                                            className="inline-flex items-center justify-center rounded-xl md:rounded-2xl text-[8px] md:text-[10px] font-black uppercase tracking-widest transition-all bg-red-500 text-white hover:bg-red-600 h-9 md:h-11 px-3 md:px-6 shadow-[0_4px_15_rgba(239,68,68,0.4)] dark:shadow-[0_0_20px_rgba(239,68,68,0.6)] whitespace-nowrap"
+                                        >
+                                            <Trash2 className="mr-1.5 md:mr-2 h-3 w-3 md:h-4 md:w-4" /> Supprimer
+                                        </button>
+                                    </>
+                                )}
                             </div>
                         )}
                     </div>

@@ -64,7 +64,7 @@ export default function ConstructionList() {
                             : "Gestion centralisée des interventions de maintenance et d'entretien technique."}
                     </p>
                 </div>
-                {(user?.role === 'ADMIN_MADIS' || user?.role === 'CHEF_CHANTIER') && (
+                {user?.role === 'ADMIN_MADIS' && (
                     <Link
                         to="/dashboard/construction/new"
                         className="inline-flex items-center justify-center rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all bg-black text-white dark:bg-primary dark:solaris-neon-pink hover:bg-black/90 h-11 md:h-14 px-6 md:px-10 shadow-xl shadow-black/10 group whitespace-nowrap"
