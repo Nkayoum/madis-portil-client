@@ -157,7 +157,7 @@ export default function TicketDetail() {
     const statusConfig = getStatusConfig(ticket.status);
 
     return (
-        <div className="max-w-[1600px] mx-auto flex flex-col h-[calc(100vh-8rem)] animate-fade-in pb-10 px-4 md:px-10">
+        <div className="max-w-[1600px] mx-auto flex flex-col h-[calc(100vh-8rem)] animate-fade-in px-4 md:px-10">
             <div className="mb-4 md:mb-8">
                 <Link to="/dashboard/tickets" className="inline-flex items-center text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-black dark:hover:text-white transition-all group">
                     <ArrowLeft className="mr-3 h-4 w-4 group-hover:-translate-x-1 transition-transform" />
