@@ -1,0 +1,70 @@
+﻿Found 6 test(s).
+Operations to perform:
+  Synchronize unmigrated apps: corsheaders, django_filters, drf_spectacular, messages, rest_framework, staticfiles
+  Apply all migrations: accounts, admin, auth, authtoken, construction, contenttypes, documents, finance, messaging, properties, sessions
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0001_initial... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying accounts.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying authtoken.0001_initial... OK
+  Applying authtoken.0002_auto_20160226_1747... OK
+  Applying authtoken.0003_tokenproxy... OK
+  Applying authtoken.0004_alter_tokenproxy_options... OK
+  Applying properties.0001_initial... OK
+  Applying construction.0001_initial... OK
+  Applying construction.0002_constructionsite_city_constructionsite_description_and_more... OK
+  Applying construction.0003_constructionsite_budget... OK
+  Applying construction.0004_milestone... OK
+  Applying construction.0005_constructionsite_chef_de_chantier_and_more... OK
+  Applying construction.0006_remove_milestone_assigned_to_milestone_responsible... OK
+  Applying construction.0007_alter_constructionsite_status... OK
+  Applying documents.0001_initial... OK
+  Applying documents.0002_document_site_alter_document_category... OK
+  Applying properties.0002_remove_property_country_property_bedroom_count_and_more... OK
+  Applying properties.0003_property_category_property_transaction_nature_and_more... OK
+  Applying properties.0004_alter_property_owner_transaction... OK
+  Applying properties.0005_property_loyer_mensuel_property_prix_nuitee_and_more... OK
+  Applying properties.0006_property_commission_fixe_property_commission_rate_and_more... OK
+  Applying properties.0007_property_budget_total_property_charges_mensuelles_and_more... OK
+  Applying properties.0008_property_date_acquisition... OK
+  Applying properties.0009_property_prix_acquisition... OK
+  Applying properties.0010_remove_property_frais_notaire_inclus_and_more... OK
+  Applying properties.0011_property_devise_origine_and_more... OK
+  Applying properties.0012_alter_project_status_alter_property_status... OK
+  Applying properties.0013_property_pending_decision_alter_property_status... OK
+  Applying properties.0014_project_category... OK
+  Applying finance.0001_initial... OK
+  Applying finance.0002_financialtransaction_period_month_and_more... OK
+  Applying finance.0003_financialtransaction_parent_transaction_and_more... OK
+  Applying finance.0004_alter_financialtransaction_category_cashcall_and_more... OK
+  Applying finance.0005_financialtransaction_owner... OK
+  Applying finance.0006_financialtransaction_site... OK
+  Applying finance.0007_alter_financialtransaction_category... OK
+  Applying finance.0008_financialtransaction_project... OK
+  Applying messaging.0001_initial... OK
+  Applying messaging.0002_notification... OK
+  Applying messaging.0003_ticket_attachment_ticket_description... OK
+  Applying messaging.0004_message_is_internal... OK
+  Applying properties.0015_alter_property_devise_origine... OK
+  Applying properties.0016_property_country... OK
+  Applying properties.0017_remove_property_country... OK
+  Applying sessions.0001_initial... OK
+System check identified no issues (0 silenced).

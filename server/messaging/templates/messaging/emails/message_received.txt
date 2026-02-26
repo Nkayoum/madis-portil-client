@@ -1,0 +1,14 @@
+[NOUVEAU MESSAGE] Ticket #{{ ticket.id }} : {{ ticket.subject }}
+
+Bonjour {{ user.first_name }},
+
+Vous avez reçu un nouveau message concernant votre ticket "{{ ticket.subject }}".
+
+Message :
+{{ message.content }}
+{% if message.attachment %}📎 Pièce jointe disponible : {{ attachment_url }}{% endif %}
+
+Vous pouvez consulter et répondre ici : {{ detail_url }}
+
+Cordialement,
+L'équipe MaDis

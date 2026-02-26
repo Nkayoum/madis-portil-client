@@ -50,12 +50,13 @@ class MilestoneSerializer(serializers.ModelSerializer):
 
 class JournalEntrySerializer(serializers.ModelSerializer):
     author_name = serializers.CharField(source='author.get_full_name', read_only=True)
+    site_name = serializers.CharField(source='site.name', read_only=True)
     photos = SitePhotoSerializer(many=True, read_only=True)
 
     class Meta:
         model = JournalEntry
         fields = [
-            'id', 'site', 'author', 'author_name', 'date', 'content',
+            'id', 'site', 'site_name', 'author', 'author_name', 'date', 'content',
             'weather', 'workers_count', 'photos', 'created_at',
         ]
         read_only_fields = ['id', 'author', 'created_at']

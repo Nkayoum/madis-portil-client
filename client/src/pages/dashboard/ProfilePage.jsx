@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '@/context/AuthContext';
-import api from '@/lib/axios';
-import { useToast } from '@/context/ToastContext';
+import { useAuth } from '../../context/AuthContext';
+import api from '../../lib/axios';
+import { useToast } from '../../context/ToastContext';
 import { User, Mail, Shield, Loader2, Save } from 'lucide-react';
 
 export default function ProfilePage() {

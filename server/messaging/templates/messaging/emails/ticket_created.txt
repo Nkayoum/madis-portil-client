@@ -1,0 +1,22 @@
+[NOUVEAU TICKET] {{ ticket.subject }}
+
+Bonjour l'équipe MaDis,
+
+Un nouveau ticket de support vient d'être ouvert par {{ ticket.created_by.get_full_name }}.
+
+Contact du client :
+- Email : {{ ticket.created_by.email }}
+- Téléphone : {{ ticket.created_by.phone|default:"Non renseigné" }}
+
+Sujet : {{ ticket.subject }}
+Priorité : {{ ticket.get_priority_display }}
+Bien concerné : {{ ticket.property.name|default:"Non spécifié" }}
+
+Description :
+{{ ticket.description }}
+{% if ticket.attachment %}📎 Pièce jointe incluse : {{ attachment_url }}{% endif %}
+
+Vous pouvez répondre au ticket ici : {{ detail_url }}
+
+Cordialement,
+Le Portail MaDis

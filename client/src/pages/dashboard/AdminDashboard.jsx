@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
-import api from '@/lib/axios';
+import api from '../../lib/axios';
 import {
     Users, Building, FileText, MessageSquare,
     ArrowRight, Activity, TrendingUp, Wallet,
-    Clock, HardHat
+    Clock, HardHat, Plus, LayoutDashboard
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import FinancialDashboard from '@/components/dashboard/FinancialDashboard';
+import FinancialDashboard from '../../components/dashboard/FinancialDashboard';
 import { formatDistanceToNow, isValid } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import { cn } from '../../lib/utils';
 
 export default function AdminDashboard() {
     const [stats, setStats] = useState({
@@ -109,159 +110,185 @@ export default function AdminDashboard() {
     }, []);
 
     const statCards = [
-        { label: 'Clients', value: stats.usersCount, icon: Users, color: 'text-primary', bg: 'bg-primary/10', link: '/dashboard/users' },
-        { label: 'Biens', value: stats.propertiesCount, icon: Building, color: 'text-primary', bg: 'bg-primary/10', link: '/dashboard/properties' },
-        { label: 'Tickets', value: stats.ticketsCount, icon: MessageSquare, color: 'text-orange-600 dark:text-orange-400', bg: 'bg-orange-100 dark:bg-orange-900/20', link: '/dashboard/tickets' },
-        { label: 'Documents', value: stats.documentsCount, icon: FileText, color: 'text-primary', bg: 'bg-primary/10', link: '/dashboard/documents' },
+        { label: 'Clients', value: stats.usersCount, icon: Users, color: 'text-primary', bg: 'bg-primary/10 dark:bg-primary/20', link: '/dashboard/users' },
+        { label: 'Biens', value: stats.propertiesCount, icon: Building, color: 'text-primary', bg: 'bg-primary/10 dark:bg-primary/20', link: '/dashboard/properties' },
+        { label: 'Tickets', value: stats.ticketsCount, icon: MessageSquare, color: 'text-orange-600 dark:text-orange-400', bg: 'bg-orange-100 dark:bg-orange-900/40', link: '/dashboard/tickets' },
+        { label: 'Documents', value: stats.documentsCount, icon: FileText, color: 'text-primary', bg: 'bg-primary/10 dark:bg-primary/20', link: '/dashboard/documents' },
     ];
 
     const [activeTab, setActiveTab] = useState('overview');
 
     return (
-        <div className="space-y-8 animate-fade-in pb-10">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="space-y-12 pb-24 animate-fade-in">
+            {/* Standard Solaris Header Area */}
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 pb-8 border-b border-black/5 dark:border-white/5">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight mb-1">
-                        Portail <span className="text-primary">Admin</span>
+                    <div className="flex items-center gap-2 mb-2">
+                        <Activity className="h-4 w-4 text-primary" />
+                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Administration MaDis</span>
+                    </div>
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter leading-tight md:leading-none">
+                        Portail <span className="opacity-40">Global</span>
                     </h1>
-                    <p className="text-muted-foreground">Gestion globale et suivi financier MaDis.</p>
                 </div>
-                <div className="flex gap-3">
-                    <Link to="/dashboard/users/new" className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2">
-                        <Users className="mr-2 h-4 w-4" />
-                        Client
+                <div className="flex flex-col sm:flex-row gap-4">
+                    <Link to="/dashboard/users/new" className="h-11 md:h-12 px-6 md:px-8 rounded-2xl solaris-glass border border-slate-200 dark:border-white/10 dark:bg-white/5 text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-white/10 transition-all flex items-center justify-center gap-2 shadow-sm">
+                        <Users className="h-4 w-4" />
+                        Inscrire Client
                     </Link>
-                    <Link to="/dashboard/properties/new" className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2">
-                        <Building className="mr-2 h-4 w-4" />
-                        Bien
+                    <Link to="/dashboard/properties/new" className="h-11 md:h-12 px-6 md:px-8 rounded-2xl bg-black text-white dark:bg-primary dark:solaris-neon-pink text-[10px] font-black uppercase tracking-widest hover:bg-zinc-800 transition-all flex items-center justify-center gap-2 shadow-2xl">
+                        <Plus className="h-4 w-4" />
+                        Nouveau Bien
                     </Link>
                 </div>
             </div>
 
-            <div className="flex border-b">
-                <button
-                    onClick={() => setActiveTab('overview')}
-                    className={`pb-4 px-6 text-sm font-medium transition-colors relative ${activeTab === 'overview' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
-                >
-                    Vue d'ensemble
-                    {activeTab === 'overview' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary animate-in fade-in slide-in-from-bottom-1" />}
-                </button>
-                <button
-                    onClick={() => setActiveTab('finance')}
-                    className={`pb-4 px-6 text-sm font-medium transition-colors relative ${activeTab === 'finance' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
-                >
-                    <div className="flex items-center gap-2">
+            {/* Solaris Tab Switcher */}
+            <div className="flex justify-center md:justify-start overflow-x-auto no-scrollbar -mx-4 px-4 md:mx-0 md:px-0">
+                <div className="flex p-1.5 solaris-glass dark:bg-black/40 dark:border-white/5 rounded-[1.5rem] border border-white/40 shadow-xl whitespace-nowrap">
+                    <button
+                        onClick={() => setActiveTab('overview')}
+                        className={cn(
+                            "px-4 sm:px-8 py-3 text-[10px] font-black uppercase tracking-[0.2em] rounded-xl transition-all duration-300 flex items-center gap-2",
+                            activeTab === 'overview'
+                                ? "bg-black text-white shadow-2xl dark:solaris-neon-blue dark:bg-white/10 dark:text-white"
+                                : "text-muted-foreground hover:text-foreground hover:bg-white/40 dark:hover:bg-white/5"
+                        )}
+                    >
+                        <LayoutDashboard className="h-4 w-4" />
+                        Aperçu Holistique
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('finance')}
+                        className={cn(
+                            "px-4 sm:px-8 py-3 text-[10px] font-black uppercase tracking-[0.2em] rounded-xl transition-all duration-300 flex items-center gap-2",
+                            activeTab === 'finance'
+                                ? "bg-black text-white shadow-2xl dark:solaris-neon-blue dark:bg-white/5 dark:text-white"
+                                : "text-muted-foreground hover:text-foreground hover:bg-white/40 dark:hover:bg-white/5"
+                        )}
+                    >
                         <Wallet className="h-4 w-4" />
-                        Finance & Commissions
-                    </div>
-                    {activeTab === 'finance' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary animate-in fade-in slide-in-from-bottom-1" />}
-                </button>
+                        Gestion Commerciale
+                    </button>
+                </div>
             </div>
 
-            {activeTab === 'overview' ? (
-                <>
-                    {/* Stats Grid */}
-                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                        {statCards.map((card, idx) => (
-                            <Link key={idx} to={card.link}
-                                className="group relative overflow-hidden rounded-xl border bg-card text-card-foreground shadow-sm hover:shadow-md transition-all duration-200 p-6"
-                            >
-                                <div className="flex items-center justify-between mb-4">
-                                    <div>
-                                        <p className="text-sm font-medium text-muted-foreground">{card.label}</p>
-                                        <h3 className="text-3xl font-bold mt-2">{card.value}</h3>
-                                    </div>
-                                    <div className={`p-3 rounded-lg ${card.bg}`}>
-                                        <card.icon className={`h-6 w-6 ${card.color}`} />
-                                    </div>
-                                </div>
-                                <div className="flex items-center text-xs font-medium text-muted-foreground group-hover:text-primary transition-colors">
-                                    Voir la liste
-                                    <ArrowRight className="ml-1 h-3 w-3 transition-transform group-hover:translate-x-1" />
-                                </div>
-                            </Link>
-                        ))}
-                    </div>
-
-                    <div className="grid gap-6 md:grid-cols-2 mt-8">
-                        {/* Recent Activity */}
-                        <div className="rounded-xl border bg-card p-6 shadow-sm">
-                            <h3 className="font-semibold text-lg mb-6 flex items-center gap-2">
-                                <Activity className="h-5 w-5 text-primary" />
-                                Activité récente
-                            </h3>
-                            <div className="space-y-4">
-                                {recentActivity.length > 0 ? (
-                                    recentActivity.map((act) => (
-                                        <div key={act.id} className="flex items-center gap-4 p-3 rounded-lg border hover:bg-muted/50 transition-all group">
-                                            <div className={`h-10 w-10 min-w-[40px] rounded-lg flex items-center justify-center ${act.bg} ${act.color}`}>
-                                                <act.icon className="h-5 w-5" />
-                                            </div>
-                                            <div className="flex-1 min-w-0">
-                                                <p className="font-medium text-sm truncate">{act.title}</p>
-                                                <p className="text-xs text-muted-foreground truncate">{act.subtitle}</p>
-                                            </div>
-                                            <div className="text-[10px] text-muted-foreground whitespace-nowrap flex items-center gap-1">
-                                                <Clock className="h-3 w-3" />
-                                                {act.date}
-                                            </div>
+            {
+                activeTab === 'overview' ? (
+                    <div className="space-y-12 animate-in fade-in duration-500">
+                        {/* Stats Grid - Premium Solaris Cards */}
+                        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                            {statCards.map((card, idx) => (
+                                <Link key={idx} to={card.link}
+                                    className="group relative overflow-hidden rounded-[2.5rem] solaris-glass border border-white/20 dark:border-white/5 p-8 shadow-sm transition-all duration-500 hover:scale-[1.05] hover:shadow-2xl hover:border-primary/20 dark:hover:solaris-neon-blue"
+                                >
+                                    <div className="flex justify-between items-start mb-8">
+                                        <div className={cn("p-4 rounded-[1.25rem] shadow-inner", card.bg)}>
+                                            <card.icon className={cn("h-6 w-6", card.color)} />
                                         </div>
-                                    ))
-                                ) : (
-                                    <div className="flex flex-col items-center justify-center h-48 text-center text-muted-foreground border border-dashed rounded-lg">
-                                        <Activity className="h-10 w-10 mb-2 opacity-20" />
-                                        <p className="text-sm">Aucune activité récente.</p>
+                                        <ArrowRight className="h-4 w-4 text-muted-foreground opacity-20 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                                     </div>
-                                )}
-                            </div>
+                                    <div>
+                                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-1">{card.label}</p>
+                                        <div className="text-4xl font-black tracking-tighter">{card.value}</div>
+                                    </div>
+                                    <div className="absolute -bottom-6 -right-6 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity pointer-events-none">
+                                        <card.icon className="h-32 w-32 text-black" />
+                                    </div>
+                                </Link>
+                            ))}
                         </div>
 
-                        {/* Recent Users */}
-                        <div className="rounded-xl border bg-card p-6 shadow-sm">
-                            <h3 className="font-semibold text-lg mb-6 flex items-center gap-2">
-                                <Users className="h-5 w-5 text-primary" />
-                                Derniers inscrits
-                            </h3>
-                            <div className="space-y-4">
-                                {recentUsers.length > 0 ? (
-                                    recentUsers.map((u) => (
-                                        <Link
-                                            key={u.id}
-                                            to={`/dashboard/users/${u.id}/edit`}
-                                            className="flex items-center gap-4 p-3 rounded-lg border hover:bg-muted/50 transition-all group"
-                                        >
-                                            <div className="h-10 w-10 min-w-[40px] rounded-full bg-secondary flex items-center justify-center font-bold text-secondary-foreground">
-                                                {u.first_name?.[0] || u.username?.[0] || 'U'}
+                        <div className="grid gap-12 md:grid-cols-2">
+                            {/* Recent Activity - Solaris Industrial Style */}
+                            <div className="space-y-6">
+                                <h3 className="text-xl font-black tracking-tighter flex items-center gap-3 px-2">
+                                    <Activity className="h-5 w-5 text-primary" />
+                                    FLUX OPÉRATIONNEL
+                                </h3>
+                                <div className="solaris-glass rounded-[2.5rem] border border-white/20 dark:border-white/5 overflow-hidden shadow-sm divide-y divide-black/5 dark:divide-white/5">
+                                    {recentActivity.length > 0 ? (
+                                        recentActivity.map((act) => (
+                                            <div key={act.id} className="flex items-center gap-6 p-6 transition-colors hover:bg-white/40 dark:hover:bg-white/[0.03] group">
+                                                <div className={cn("h-12 w-12 rounded-2xl flex items-center justify-center shrink-0 shadow-inner group-hover:scale-110 transition-transform font-mono font-black", act.bg, act.color)}>
+                                                    <act.icon className="h-5 w-5" />
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="font-black text-sm tracking-tight mb-0.5 truncate uppercase">{act.title}</p>
+                                                    <p className="text-[10px] font-bold text-muted-foreground uppercase opacity-60 truncate">{act.subtitle}</p>
+                                                </div>
+                                                <div className="text-[10px] font-black text-muted-foreground/40 whitespace-nowrap flex items-center gap-1.5 font-mono">
+                                                    <Clock className="h-3 w-3" />
+                                                    {act.date.split(' ').slice(-2).join(' ')}
+                                                </div>
                                             </div>
-                                            <div className="flex-1 min-w-0">
-                                                <p className="font-medium text-sm truncate">{u.first_name} {u.last_name}</p>
-                                                <p className="text-xs text-muted-foreground truncate">{u.email}</p>
-                                            </div>
-                                            <div className="text-[10px] bg-primary/10 text-primary px-2 py-1 rounded-full font-medium">
-                                                {u.role === 'ADMIN_MADIS' ? 'Admin' : u.role === 'CHEF_CHANTIER' ? 'Chantier' : 'Client'}
-                                            </div>
-                                            <ArrowRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-                                        </Link>
-                                    ))
-                                ) : (
-                                    <div className="flex flex-col items-center justify-center h-48 text-center text-muted-foreground border border-dashed rounded-lg">
-                                        <Users className="h-10 w-10 mb-2 opacity-20" />
-                                        <p className="text-sm">Aucun client inscrit récemment.</p>
-                                    </div>
-                                )}
+                                        ))
+                                    ) : (
+                                        <div className="flex flex-col items-center justify-center py-24 text-center opacity-30">
+                                            <Activity className="h-12 w-12 mb-4" />
+                                            <p className="text-[10px] font-black uppercase tracking-widest">Aucun événement critique</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Recent Users - Premium Solaris Contacts */}
+                            <div className="space-y-6">
+                                <h3 className="text-xl font-black tracking-tighter flex items-center gap-3 px-2">
+                                    <Users className="h-5 w-5 text-primary dark:text-[#ff00e5]" />
+                                    NOUVEAUX ENTRANTS
+                                </h3>
+                                <div className="solaris-glass rounded-[2.5rem] border border-white/20 dark:border-white/5 overflow-hidden shadow-sm divide-y divide-black/5 dark:divide-white/5">
+                                    {recentUsers.length > 0 ? (
+                                        recentUsers.map((u) => (
+                                            <Link
+                                                key={u.id}
+                                                to={`/dashboard/users/${u.id}/edit`}
+                                                className="flex items-center gap-6 p-6 transition-all hover:bg-white/40 dark:hover:bg-white/[0.03] group"
+                                            >
+                                                <div className="h-12 w-12 rounded-full bg-zinc-900 flex items-center justify-center font-black text-white text-sm shadow-xl group-hover:scale-110 transition-transform">
+                                                    {u.first_name?.[0] || u.username?.[0] || 'U'}
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="font-black text-sm tracking-tight mb-0.5 truncate">{u.first_name} {u.last_name}</p>
+                                                    <p className="text-[10px] font-bold text-muted-foreground uppercase opacity-60 truncate font-mono">{u.email}</p>
+                                                </div>
+                                                <div className="flex items-center gap-4">
+                                                    <div className="px-3 py-1 rounded-full bg-primary/10 text-primary text-[9px] font-black uppercase tracking-widest border border-primary/10">
+                                                        {u.role === 'ADMIN_MADIS' ? 'Admin' : u.role === 'CHEF_CHANTIER' ? 'Chantier' : 'Client'}
+                                                    </div>
+                                                    <ArrowRight className="h-4 w-4 text-muted-foreground opacity-20 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
+                                                </div>
+                                            </Link>
+                                        ))
+                                    ) : (
+                                        <div className="flex flex-col items-center justify-center py-24 text-center opacity-30">
+                                            <Users className="h-12 w-12 mb-4" />
+                                            <p className="text-[10px] font-black uppercase tracking-widest">Registre statique</p>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </>
-            ) : (
-                <div className="bg-card rounded-xl border p-6 shadow-sm animate-in fade-in zoom-in-95">
-                    <div className="mb-6">
-                        <h2 className="text-2xl font-bold tracking-tight">Suivi Financier Global</h2>
-                        <p className="text-muted-foreground">Visualisez les performances de tous les biens et les commissions MaDis.</p>
+                ) : (
+                    <div className="solaris-glass rounded-[3rem] border border-white/20 dark:border-white/5 dark:bg-black/60 p-12 shadow-2xl animate-in fade-in zoom-in-95 duration-700">
+                        <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+                            <div>
+                                <div className="flex items-center gap-2 mb-2">
+                                    <Activity className="h-4 w-4 text-primary" />
+                                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Intelligence MaDis</span>
+                                </div>
+                                <h2 className="text-4xl font-black tracking-tighter">Flux Financier Holistique</h2>
+                            </div>
+                            <p className="text-muted-foreground font-medium max-w-sm">
+                                Consolidation de tous les actifs sous gestion et commissions agence.
+                            </p>
+                        </div>
+                        <FinancialDashboard isAdmin={true} />
                     </div>
-                    <FinancialDashboard isAdmin={true} />
-                </div>
-            )}
-        </div>
+                )
+            }
+        </div >
     );
 }

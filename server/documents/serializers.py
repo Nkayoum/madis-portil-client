@@ -7,13 +7,15 @@ class DocumentSerializer(serializers.ModelSerializer):
         source='uploaded_by.get_full_name', read_only=True
     )
     property_name = serializers.CharField(source='property.name', read_only=True)
+    project_name = serializers.CharField(source='project.name', read_only=True)
+    site_name = serializers.CharField(source='site.name', read_only=True)
 
     class Meta:
         model = Document
         fields = [
             'id', 'title', 'file', 'category', 'property', 'property_name',
-            'project', 'site', 'uploaded_by', 'uploaded_by_name', 'description',
-            'uploaded_at',
+            'project', 'project_name', 'site', 'site_name', 'uploaded_by', 
+            'uploaded_by_name', 'description', 'uploaded_at',
         ]
         read_only_fields = ['id', 'uploaded_by', 'uploaded_at']
 

@@ -30,7 +30,9 @@ class CashCall(models.Model):
     class Status(models.TextChoices):
         DRAFT = 'DRAFT', 'Brouillon'
         SENT = 'SENT', 'Envoyé'
+        PENDING = 'PENDING', 'En attente de confirmation'
         PAID = 'PAID', 'Payé / Reçu'
+        REJECTED = 'REJECTED', 'Justificatif Refusé'
         OVERDUE = 'OVERDUE', 'En retard'
         CANCELLED = 'CANCELLED', 'Annulé'
 
@@ -49,6 +51,12 @@ class CashCall(models.Model):
         max_length=20,
         choices=Status.choices,
         default=Status.DRAFT
+    )
+    proof = models.FileField(
+        'justificatif de paiement',
+        upload_to='finance/cash_calls/proofs/',
+        null=True,
+        blank=True
     )
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -94,6 +102,12 @@ class Settlement(models.Model):
     )
     reference = models.CharField('référence virement', max_length=100, blank=True)
     note = models.TextField('note interne', blank=True)
+    proof = models.FileField(
+        'justificatif de virement',
+        upload_to='finance/settlements/proofs/',
+        null=True,
+        blank=True
+    )
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,

@@ -1,6 +1,6 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import Transaction, Property
+from .models import Transaction, Property, Project
 
 @receiver(post_save, sender=Transaction)
 def update_property_status_on_sale(sender, instance, **kwargs):
@@ -118,3 +118,57 @@ def update_property_status_on_sale(sender, instance, **kwargs):
                 prop.status = 'DISPONIBLE'
                 prop.save()
                 print(f"DEBUG: Property {prop.id} reverted to DISPONIBLE (Marketplace restated).")
+
+@receiver(post_save, sender=Property)
+def create_property_context(sender, instance, created, **kwargs):
+    """
+    Automates the creation of management context when a property is created.
+    1. Wallet (Always)
+    2. Project (Based on management type)
+    3. ConstructionSite (If CONSTRUCTION)
+    """
+    if created:
+        from finance.models import Wallet
+        from construction.models import ConstructionSite
+
+        # 1. Create Wallet
+        Wallet.objects.get_or_create(property=instance)
+        print(f"DEBUG: Wallet created for property {instance.id}")
+
+        # 2. Create Project & Site based on management_type
+        if instance.management_type == 'GESTION':
+            Project.objects.create(
+                name=f"Gestion: {instance.name}",
+                property=instance,
+                category=Project.ProjectCategory.MAINTENANCE,
+                status=Project.Status.EN_COURS,
+                description=f"Projet automatique pour le suivi de la gestion locative de {instance.name}."
+            )
+            print(f"DEBUG: Maintenance project created for property {instance.id}")
+
+        elif instance.management_type == 'CONSTRUCTION':
+            # Create Project
+            project = Project.objects.create(
+                name=f"Développement: {instance.name}",
+                property=instance,
+                category=Project.ProjectCategory.CONSTRUCTION,
+                status=Project.Status.EN_COURS,
+                budget=instance.budget_total,
+                start_date=instance.date_debut_travaux,
+                estimated_end_date=instance.date_fin_prevue,
+                description=f"Projet automatique pour le suivi du chantier de {instance.name}."
+            )
+            print(f"DEBUG: Construction project created for property {instance.id}")
+
+            # Create Construction Site
+            ConstructionSite.objects.create(
+                project=project,
+                name=f"Chantier: {instance.name}",
+                address=instance.address,
+                city=instance.city,
+                budget=instance.budget_total,
+                start_date=instance.date_debut_travaux,
+                end_date=instance.date_fin_prevue,
+                status=ConstructionSite.Status.PREPARATION
+            )
+            print(f"DEBUG: Construction site created for property {instance.id}")

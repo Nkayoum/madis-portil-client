@@ -1,11 +1,18 @@
-from rest_framework import viewsets, mixins
+from django.conf import settings
+from django.contrib.auth import get_user_model
+from rest_framework import viewsets, mixins, permissions, status
+from rest_framework.decorators import action
+from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from accounts.permissions import IsAdminMaDis
 from .models import Ticket, Message, Notification
 from .serializers import (
-    TicketSerializer, TicketDetailSerializer, 
+    TicketSerializer, TicketDetailSerializer,
     MessageSerializer, NotificationSerializer
 )
+from .utils import send_ticket_notification
+
+User = get_user_model()
 
 
 class TicketViewSet(viewsets.ModelViewSet):
@@ -15,7 +22,7 @@ class TicketViewSet(viewsets.ModelViewSet):
     - Admins MaDis see all tickets and can update status.
     """
 
-    filterset_fields = ['status', 'priority', 'property']
+    filterset_fields = ['status', 'priority', 'property', 'created_by']
     search_fields = ['subject']
     ordering_fields = ['created_at', 'priority', 'status']
 
@@ -37,6 +44,28 @@ class TicketViewSet(viewsets.ModelViewSet):
             return [IsAdminMaDis()]
         return [IsAuthenticated()]
 
+    def perform_create(self, serializer):
+        ticket = serializer.save()
+
+        # Notify Admin
+        admin_email = getattr(settings, 'ADMIN_EMAIL', 'admin@madis.fr')
+        admin_user = User.objects.filter(email=admin_email).first()
+        if admin_user:
+            # Email Notification
+            send_ticket_notification(
+                user=admin_user,
+                ticket=ticket,
+                template_prefix='ticket_created'
+            )
+            
+            # Internal UI Notification
+            Notification.objects.create(
+                user=admin_user,
+                title="Nouveau ticket",
+                message=f"Le client {ticket.created_by.get_full_name()} a créé un ticket : {ticket.subject}",
+                link=f"/dashboard/tickets/{ticket.id}"
+            )
+
 
 class MessageViewSet(
     mixins.CreateModelMixin,
@@ -52,13 +81,49 @@ class MessageViewSet(
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Message.objects.filter(ticket_id=self.kwargs['ticket_pk'])
+        user = self.request.user
+        queryset = Message.objects.filter(ticket_id=self.kwargs['ticket_pk'])
+        if user.role != 'ADMIN_MADIS':
+            queryset = queryset.filter(is_internal=False)
+        return queryset
 
     def perform_create(self, serializer):
-        serializer.save(
-            author=self.request.user,
+        user = self.request.user
+        message = serializer.save(
+            author=user,
             ticket_id=self.kwargs['ticket_pk'],
         )
+        
+        # 1. Notify Client if a STAFF member replies and NOT an internal note
+        if user.role in ['ADMIN_MADIS', 'CHEF_CHANTIER'] and not message.is_internal:
+            client = message.ticket.created_by
+            if client and client != user:
+                # Email
+                send_ticket_notification(
+                    user=client,
+                    ticket=message.ticket,
+                    template_prefix='message_received',
+                    message=message
+                )
+                # Internal UI Notification
+                Notification.objects.create(
+                    user=client,
+                    title="Nouveau message",
+                    message=f"L'équipe MaDis a répondu à votre ticket : {message.ticket.subject}",
+                    link=f"/dashboard/tickets/{message.ticket.id}"
+                )
+        
+        # 2. Notify Admin if a CLIENT replies
+        elif user.role == 'CLIENT':
+            admin_email = getattr(settings, 'ADMIN_EMAIL', 'admin@madis.fr')
+            admin_user = User.objects.filter(email=admin_email).first()
+            if admin_user:
+                Notification.objects.create(
+                    user=admin_user,
+                    title="Message client",
+                    message=f"Le client {user.get_full_name()} a répondu au ticket : {message.ticket.subject}",
+                    link=f"/dashboard/tickets/{message.ticket.id}"
+                )
 
 
 class NotificationViewSet(
@@ -75,3 +140,17 @@ class NotificationViewSet(
 
     def get_queryset(self):
         return Notification.objects.filter(user=self.request.user)
+
+    @action(detail=False, methods=['get'])
+    def unread_count(self, request):
+        count = self.get_queryset().filter(is_read=False).count()
+        return Response({'unread_count': count})
+
+    @action(detail=False, methods=['post'])
+    def mark_as_read_by_link(self, request):
+        link = request.data.get('link')
+        if not link:
+            return Response({'error': 'Link parameter is required'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        updated_count = self.get_queryset().filter(link=link, is_read=False).update(is_read=True)
+        return Response({'updated_count': updated_count})

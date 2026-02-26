@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import api from '@/lib/axios';
-import { useToast } from '@/context/ToastContext';
+import api from '../../lib/axios';
+import { useToast } from '../../context/ToastContext';
 import {
     ArrowLeft, Building, Loader2, Save, Ruler, MapPin,
     Image as ImageIcon, X, Tag, ShoppingBag, Briefcase,
     Euro, Settings, HardHat, Home, Percent, User,
-    Calendar, Wrench, Sofa, ShieldCheck, Globe, Coins, Hash, Bed
+    Calendar, Wrench, Sofa, ShieldCheck, Globe, Coins, Hash, Bed,
+    Building2, Warehouse, Store, Trees, Hotel
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 
 const PROPERTY_CATEGORIES = [
     { value: 'RESIDENTIEL', label: 'Résidentiel', icon: Building },
@@ -251,17 +252,48 @@ export default function EditProperty() {
         }
     };
 
+    const validateStep = (step) => {
+        if (mainCategory === 'CONSTRUCTION' && step === 'FINANCE') return true; // Construction has its own optional fields
+
+        const requiredFields = {
+            INFO: ['name', 'owner', 'address', 'city'],
+            SPECS: ['surface'],
+            FINANCE: formData.transaction_nature === 'VENTE' ? ['prix_vente'] : ['loyer_mensuel']
+        };
+
+        const fieldsToValidate = requiredFields[step] || [];
+        const missingFields = fieldsToValidate.filter(field => !formData[field] || formData[field] === '');
+
+        if (missingFields.length > 0) {
+            const fieldLabels = {
+                name: 'Nom du bien',
+                owner: 'Propriétaire',
+                address: 'Adresse',
+                city: 'Ville',
+                surface: 'Surface',
+                prix_vente: 'Prix de vente',
+                loyer_mensuel: 'Loyer mensuel'
+            };
+            const labels = missingFields.map(f => fieldLabels[f]).join(', ');
+            showToast({
+                message: `Champs obligatoires manquants : ${labels}`,
+                type: 'error'
+            });
+            return false;
+        }
+        return true;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Prevent submission if not on final tab
-        if (activeTab !== 'MEDIA') {
-            const currentIndex = TABS.findIndex(t => t.id === activeTab);
-            if (currentIndex < TABS.length - 1) {
-                setActiveTab(TABS[currentIndex + 1].id);
-            }
+        // Final validation of all required steps before final submission
+        if (!validateStep('INFO') || !validateStep('SPECS') || !validateStep('FINANCE')) {
             return;
         }
+
+        // Double security: prevent submission if not on final tab
+        if (activeTab !== 'MEDIA') return;
 
         setLoading(true);
 
@@ -338,7 +370,26 @@ export default function EditProperty() {
                             <button
                                 key={tab.id}
                                 type="button"
-                                onClick={() => setActiveTab(tab.id)}
+                                onClick={() => {
+                                    const targetIndex = TABS.findIndex(t => t.id === tab.id);
+                                    const currentIndex = TABS.findIndex(t => t.id === activeTab);
+
+                                    // Always allowed to go backwards
+                                    if (targetIndex < currentIndex) {
+                                        setActiveTab(tab.id);
+                                        return;
+                                    }
+
+                                    // Check all steps from current up to target-1
+                                    for (let i = currentIndex; i < targetIndex; i++) {
+                                        if (!validateStep(TABS[i].id)) {
+                                            setActiveTab(TABS[i].id);
+                                            return;
+                                        }
+                                    }
+
+                                    setActiveTab(tab.id);
+                                }}
                                 className={cn(
                                     "flex-1 min-w-[150px] flex items-center justify-center gap-3 py-6 text-xs font-black uppercase tracking-widest transition-all relative group",
                                     isActive ? "text-primary bg-background/50" : "text-muted-foreground hover:text-foreground hover:bg-muted/30"
@@ -575,30 +626,59 @@ export default function EditProperty() {
                                                     </div>
                                                 </div>
 
-                                                <div className="grid grid-cols-2 gap-6">
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                     <div className="grid gap-3">
-                                                        <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Type de bien</label>
-                                                        <div className="relative">
-                                                            <select name="property_type" className={inputClasses} value={formData.property_type} onChange={handleChange}>
-                                                                <optgroup label="Spécifique">
-                                                                    {(PROPERTY_TYPES_BY_CATEGORY[formData.category] || []).map(t => (
-                                                                        <option key={t.value} value={t.value}>{t.label}</option>
-                                                                    ))}
-                                                                </optgroup>
-                                                                <optgroup label="Global">
-                                                                    {PROPERTY_TYPES_BY_CATEGORY.GLOBAL.map(t => (
-                                                                        <option key={t.value} value={t.value}>{t.label}</option>
-                                                                    ))}
-                                                                </optgroup>
-                                                            </select>
-                                                            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-50">
-                                                                <ArrowLeft className="h-4 w-4 -rotate-90" />
-                                                            </div>
-                                                        </div>
+                                                        <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Surface (m²) <span className="text-primary">*</span></label>
+                                                        <input type="number" name="surface" required className={inputClasses} placeholder="0.00" value={formData.surface} onChange={handleChange} />
                                                     </div>
-                                                    <div className="grid gap-3">
-                                                        <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Surface (m²)</label>
-                                                        <input type="number" name="surface" className={inputClasses} placeholder="0.00" value={formData.surface} onChange={handleChange} />
+                                                </div>
+
+                                                <div className="grid gap-3">
+                                                    <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Type de bien</label>
+                                                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+                                                        {[...(PROPERTY_TYPES_BY_CATEGORY[formData.category] || []), ...PROPERTY_TYPES_BY_CATEGORY.GLOBAL].map(t => {
+                                                            const Icon = {
+                                                                APPARTEMENT: Building2,
+                                                                MAISON: Home,
+                                                                VILLA: Hotel,
+                                                                BOUTIQUE: Store,
+                                                                ENTREPOT: Warehouse,
+                                                                LOCAL_ACTIVITE: Briefcase,
+                                                                BUREAU: Briefcase,
+                                                                TERRAIN: Trees,
+                                                                IMMEUBLE: Building,
+                                                                AUTRE: Settings
+                                                            }[t.value] || Building;
+
+                                                            const isSelected = formData.property_type === t.value;
+
+                                                            return (
+                                                                <button
+                                                                    key={t.value}
+                                                                    type="button"
+                                                                    onClick={() => handleChange({ target: { name: 'property_type', value: t.value } })}
+                                                                    className={cn(
+                                                                        "relative flex flex-col items-center justify-center gap-2 p-2.5 rounded-xl border-2 transition-all hover:scale-[1.02] min-h-[90px]",
+                                                                        isSelected
+                                                                            ? "border-primary bg-primary/10 text-primary shadow-lg shadow-primary/10"
+                                                                            : "border-border/50 bg-background text-muted-foreground hover:bg-muted/30 hover:border-border"
+                                                                    )}
+                                                                >
+                                                                    <div className={cn(
+                                                                        "p-2 rounded-full transition-colors",
+                                                                        isSelected ? "bg-primary text-white" : "bg-muted text-muted-foreground"
+                                                                    )}>
+                                                                        <Icon className="h-4 w-4" />
+                                                                    </div>
+                                                                    <span className="text-[9px] font-bold uppercase text-center leading-tight tracking-tighter px-0.5">{t.label}</span>
+                                                                    {isSelected && (
+                                                                        <div className="absolute top-1.5 right-1.5">
+                                                                            <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+                                                                        </div>
+                                                                    )}
+                                                                </button>
+                                                            );
+                                                        })}
                                                     </div>
                                                 </div>
                                             </div>
@@ -690,7 +770,7 @@ export default function EditProperty() {
                                                 ) : formData.transaction_nature === 'VENTE' ? (
                                                     <div className="grid gap-6">
                                                         <div className="grid gap-3">
-                                                            <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Prix de vente</label>
+                                                            <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Prix de vente <span className="text-primary">*</span></label>
                                                             <div className="relative">
                                                                 <input type="number" name="prix_vente" required className={cn(inputClasses, "pl-12 text-lg font-bold shadow-inner")} placeholder="0.00" value={formData.prix_vente} onChange={handleChange} />
                                                                 <div className="absolute left-4 top-1/2 -translate-y-1/2 font-black text-primary text-sm flex items-center gap-1">
@@ -706,7 +786,7 @@ export default function EditProperty() {
                                                 ) : (
                                                     <div className="grid gap-6">
                                                         <div className="grid gap-3">
-                                                            <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Loyer Mensuel</label>
+                                                            <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Loyer Mensuel <span className="text-primary">*</span></label>
                                                             <div className="relative">
                                                                 <input type="number" name="loyer_mensuel" required className={cn(inputClasses, "pl-12 text-lg font-bold shadow-inner")} placeholder="0.00" value={formData.loyer_mensuel} onChange={handleChange} />
                                                                 <div className="absolute left-4 top-1/2 -translate-y-1/2 font-black text-primary text-sm flex items-center gap-1">
@@ -839,9 +919,12 @@ export default function EditProperty() {
                         {activeTab !== 'MEDIA' ? (
                             <button
                                 type="button"
-                                onClick={() => {
-                                    const currentIndex = TABS.findIndex(t => t.id === activeTab);
-                                    setActiveTab(TABS[currentIndex + 1].id);
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    if (validateStep(activeTab)) {
+                                        const currentIndex = TABS.findIndex(t => t.id === activeTab);
+                                        setActiveTab(TABS[currentIndex + 1].id);
+                                    }
                                 }}
                                 className="inline-flex items-center justify-center rounded-xl text-xs font-black uppercase tracking-widest bg-foreground text-background hover:bg-foreground/90 shadow-lg hover:shadow-xl hover:translate-y-[-2px] transition-all h-12 px-10"
                             >

@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import {
     X, TrendingUp, Home, CheckCircle2, Loader2, AlertCircle
 } from 'lucide-react';
-import api from '@/lib/axios';
-import { useToast } from '@/context/ToastContext';
+import api from '../../lib/axios';
+import { useToast } from '../../context/ToastContext';
 
 export default function DecisionModal() {
     const [pendingProperties, setPendingProperties] = useState([]);

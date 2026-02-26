@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '@/context/AuthContext';
-import { Loader2, Mail, Lock } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
+import { Loader2, Mail, Lock, ArrowRight } from 'lucide-react';
+import { cn } from '../../lib/utils';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -12,6 +13,11 @@ export default function LoginPage() {
     const { login } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
+
+    const fillDemo = (demoEmail) => {
+        setEmail(demoEmail);
+        setPassword('password123'); // Assuming standard demo password
+    };
 
     const from = location.state?.from?.pathname || '/dashboard';
 
@@ -31,82 +37,108 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="w-full max-w-md mx-auto">
-            <div className="text-center mb-8">
-                <h2 className="text-2xl font-bold mb-2">Connexion</h2>
-                <p className="text-muted-foreground text-sm">
-                    Accédez à votre espace sécurisé MaDis
+        <div className="w-full">
+            <div className="text-center mb-10 md:mb-12">
+                <h2 className="text-3xl md:text-4xl font-black tracking-tighter mb-3 md:mb-4 uppercase">Connexion</h2>
+                <p className="text-muted-foreground font-medium text-[12px] md:text-sm tracking-tight opacity-70 uppercase">
+                    Accédez à votre protocole MaDis sécurisé
                 </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} className="space-y-8">
                 {error && (
-                    <div className="p-3 rounded-md bg-destructive/10 text-destructive text-sm font-medium border border-destructive/20 flex items-center gap-2">
-                        <span className="h-2 w-2 rounded-full bg-destructive flex-shrink-0" />
+                    <div className="p-5 rounded-2xl bg-rose-500/10 text-rose-600 text-[11px] font-black uppercase tracking-wider border border-rose-200/20 flex items-center gap-4 animate-shake">
+                        <div className="h-2 w-2 rounded-full bg-rose-500 shrink-0 shadow-sm shadow-rose-500/50" />
                         {error}
                     </div>
                 )}
 
-                <div className="grid gap-2">
-                    <label className="text-sm font-medium leading-none">
-                        Email
-                    </label>
-                    <div className="relative">
-                        <Mail className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                        <input
-                            type="email"
-                            required
-                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 pl-9 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                            placeholder="votre@email.com"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
+                <div className="space-y-6">
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">
+                            Identifiant Email
+                        </label>
+                        <div className="relative group">
+                            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground transition-colors group-focus-within:text-primary" />
+                            <input
+                                type="email"
+                                required
+                                className="w-full h-14 bg-foreground/5 dark:bg-white/5 border border-foreground/10 dark:border-white/5 rounded-2xl pl-12 pr-4 text-sm font-bold tracking-tight transition-all focus:bg-foreground/10 dark:focus:bg-white/10 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none placeholder:text-muted-foreground/40 placeholder:uppercase placeholder:text-[9px] placeholder:font-black placeholder:tracking-widest"
+                                placeholder="votre@email.com"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                        </div>
                     </div>
-                </div>
 
-                <div className="grid gap-2">
-                    <label className="text-sm font-medium leading-none">
-                        Mot de passe
-                    </label>
-                    <div className="relative">
-                        <Lock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                        <input
-                            type="password"
-                            required
-                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 pl-9 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                            placeholder="••••••••"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">
+                            Clé d'Accès
+                        </label>
+                        <div className="relative group">
+                            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground transition-colors group-focus-within:text-primary" />
+                            <input
+                                type="password"
+                                required
+                                className="w-full h-14 bg-foreground/5 dark:bg-white/5 border border-foreground/10 dark:border-white/5 rounded-2xl pl-12 pr-4 text-sm font-bold tracking-tight transition-all focus:bg-foreground/10 dark:focus:bg-white/10 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none placeholder:text-muted-foreground/40 placeholder:uppercase"
+                                placeholder="••••••••"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                        </div>
                     </div>
                 </div>
 
                 <button
                     type="submit"
                     disabled={loading}
-                    className="w-full inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+                    className="w-full h-14 bg-black text-white rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] transition-all hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed shadow-2xl flex items-center justify-center gap-3 active:scale-95"
                 >
                     {loading ? (
-                        <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Connexion...
-                        </>
+                        <Loader2 className="h-5 w-5 animate-spin" />
                     ) : (
-                        'Se connecter'
+                        <>
+                            Initialiser Session
+                            <ArrowRight className="h-4 w-4" />
+                        </>
                     )}
                 </button>
             </form>
 
-            <div className="mt-6 text-center text-sm">
-                <span className="text-muted-foreground">Pas encore de compte ? </span>
-                <a href="/contact" className="font-medium text-primary hover:underline transition-colors">
-                    Contactez-nous
-                </a>
-            </div>
+            <div className="mt-12 pt-8 border-t border-foreground/5 text-center">
+                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 mb-8">
+                    Nouveau Partenaire ? <a href="/contact" className="text-primary hover:underline transition-all">Contacter MaDis</a>
+                </p>
 
-            <div className="mt-6 text-center text-xs text-muted-foreground">
-                <p>Demo Admin: admin@madis.com / adminpass</p>
-                <p>Demo Client: tech@tech.com / techpass</p>
+                <div className="bg-foreground/5 rounded-3xl p-6 border border-foreground/5 flex flex-col gap-4">
+                    <p className="text-[8px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 mb-1">Architecture de Démonstration</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <button
+                            type="button"
+                            onClick={() => fillDemo('admin@madis.com')}
+                            className="text-left p-4 rounded-xl bg-background/50 border border-foreground/10 hover:border-primary/50 hover:bg-primary/5 transition-all group"
+                        >
+                            <p className="text-[9px] font-black text-primary uppercase tracking-tighter mb-1 transition-transform group-hover:translate-x-1">Administrateur</p>
+                            <p className="text-[10px] font-bold text-muted-foreground truncate">admin@madis.com</p>
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => fillDemo('ivanmpondo9@gmail.com')}
+                            className="text-left p-4 rounded-xl bg-background/50 border border-foreground/10 hover:border-primary/50 hover:bg-primary/5 transition-all group"
+                        >
+                            <p className="text-[9px] font-black text-primary uppercase tracking-tighter mb-1 transition-transform group-hover:translate-x-1">Partenaire (Client)</p>
+                            <p className="text-[10px] font-bold text-muted-foreground truncate">ivanmpondo9@gmail.com</p>
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => fillDemo('osg@test.fr')}
+                            className="text-left p-4 rounded-xl bg-background/50 border border-foreground/10 hover:border-primary/50 hover:bg-primary/5 transition-all group"
+                        >
+                            <p className="text-[9px] font-black text-primary uppercase tracking-tighter mb-1 transition-transform group-hover:translate-x-1">Opérations (Chef)</p>
+                            <p className="text-[10px] font-bold text-muted-foreground truncate">osg@test.fr</p>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     );

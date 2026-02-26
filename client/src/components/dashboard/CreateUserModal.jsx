@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import api from '@/lib/axios';
-import { useToast } from '@/context/ToastContext';
+import api from '../../lib/axios';
+import { useToast } from '../../context/ToastContext';
 import { UserPlus, Loader2, Mail, Lock, Shield, X, User } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 
 export default function CreateUserModal({ isOpen, onClose, onSuccess }) {
     const { showToast } = useToast();

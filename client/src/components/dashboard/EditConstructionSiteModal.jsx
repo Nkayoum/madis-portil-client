@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import api from '@/lib/axios';
-import { useToast } from '@/context/ToastContext';
+import api from '../../lib/axios';
+import { useToast } from '../../context/ToastContext';
 import { HardHat, MapPin, Calendar, Loader2, X, Save, User as UserIcon } from 'lucide-react';
 
 export default function EditConstructionSiteModal({ isOpen, onClose, siteId, onSuccess }) {
@@ -127,6 +127,10 @@ export default function EditConstructionSiteModal({ isOpen, onClose, siteId, onS
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div className="space-y-5">
                                     <div className="grid gap-2">
+                                        <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Nom du chantier *</label>
+                                        <input type="text" name="name" required className={inputClasses} value={formData.name} onChange={handleChange} />
+                                    </div>
+                                    <div className="grid gap-2">
                                         <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Projet associé *</label>
                                         <select name="project" required className={inputClasses} value={formData.project} onChange={handleChange}>
                                             <option value="">-- Sélectionner un projet --</option>
@@ -134,10 +138,6 @@ export default function EditConstructionSiteModal({ isOpen, onClose, siteId, onS
                                                 <option key={p.id} value={p.id}>{p.name}</option>
                                             ))}
                                         </select>
-                                    </div>
-                                    <div className="grid gap-2">
-                                        <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Nom du chantier *</label>
-                                        <input type="text" name="name" required className={inputClasses} value={formData.name} onChange={handleChange} />
                                     </div>
                                     <div className="grid gap-2">
                                         <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
@@ -160,26 +160,62 @@ export default function EditConstructionSiteModal({ isOpen, onClose, siteId, onS
                                             <option value="TERMINE">Terminé</option>
                                         </select>
                                     </div>
+                                    <div className="grid gap-2">
+                                        <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Budget estimé (€)</label>
+                                        <input
+                                            type="number"
+                                            name="budget"
+                                            placeholder="0.00"
+                                            className={inputClasses}
+                                            value={formData.budget}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
                                 </div>
 
                                 <div className="space-y-5">
-                                    <div className="grid gap-2">
-                                        <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                                    <div className="space-y-4 border rounded-xl p-4 bg-muted/20">
+                                        <h3 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                                             <MapPin className="h-3 w-3 text-primary" />
-                                            Adresse *
-                                        </label>
-                                        <input type="text" name="address" required className={inputClasses} value={formData.address} onChange={handleChange} />
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div className="grid gap-2">
-                                            <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Ville</label>
-                                            <input type="text" name="city" className={inputClasses} value={formData.city} onChange={handleChange} />
+                                            Localisation
+                                        </h3>
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Adresse</label>
+                                            <input
+                                                type="text"
+                                                name="address"
+                                                placeholder="Numéro et nom de rue"
+                                                className={inputClasses}
+                                                value={formData.address}
+                                                onChange={handleChange}
+                                            />
                                         </div>
-                                        <div className="grid gap-2">
-                                            <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Code postal</label>
-                                            <input type="text" name="postal_code" className={inputClasses} value={formData.postal_code} onChange={handleChange} />
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-2">
+                                                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Ville</label>
+                                                <input
+                                                    type="text"
+                                                    name="city"
+                                                    placeholder="Ville"
+                                                    className={inputClasses}
+                                                    value={formData.city}
+                                                    onChange={handleChange}
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Code postal</label>
+                                                <input
+                                                    type="text"
+                                                    name="postal_code"
+                                                    placeholder="CP"
+                                                    className={inputClasses}
+                                                    value={formData.postal_code}
+                                                    onChange={handleChange}
+                                                />
+                                            </div>
                                         </div>
                                     </div>
+
                                     <div className="grid grid-cols-2 gap-4">
                                         <div className="grid gap-2">
                                             <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
@@ -191,14 +227,10 @@ export default function EditConstructionSiteModal({ isOpen, onClose, siteId, onS
                                         <div className="grid gap-2">
                                             <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
                                                 <Calendar className="h-3 w-3 text-primary" />
-                                                Fin
+                                                Fin (est.)
                                             </label>
                                             <input type="date" name="end_date" className={inputClasses} value={formData.end_date} onChange={handleChange} />
                                         </div>
-                                    </div>
-                                    <div className="grid gap-2">
-                                        <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Budget estimé (€)</label>
-                                        <input type="number" name="budget" className={inputClasses} value={formData.budget} onChange={handleChange} />
                                     </div>
                                 </div>
                             </div>

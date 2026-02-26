@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import api from '@/lib/axios';
-import { useToast } from '@/context/ToastContext';
+import api from '../../lib/axios';
+import { useToast } from '../../context/ToastContext';
 import {
     X, Loader2, Save, Building2,
     Calendar, Euro, ClipboardList, LayoutDashboard
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 
 export default function CreateProjectModal({ isOpen, onClose, onSuccess, propertyId: propertyIdFromProps }) {
     const { showToast } = useToast();

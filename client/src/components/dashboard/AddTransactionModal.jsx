@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import api from '@/lib/axios';
-import { useToast } from '@/context/ToastContext';
+import api from '../../lib/axios';
+import { useToast } from '../../context/ToastContext';
 import {
     Wallet, Loader2, Save,
     Building2, Euro, Calendar, FileText,
     TrendingUp, HardHat, X, Info
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 
 export default function AddTransactionModal({ isOpen, onClose, site, onSuccess }) {
     const { showToast } = useToast();

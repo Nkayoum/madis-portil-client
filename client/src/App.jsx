@@ -35,7 +35,6 @@ import ConstructionDetail from './pages/dashboard/ConstructionDetail';
 import CreateConstructionSite from './pages/dashboard/CreateConstructionSite';
 import EditConstructionSite from './pages/dashboard/EditConstructionSite';
 import ManageMilestones from './pages/dashboard/ManageMilestones';
-import EditJournalEntry from './pages/dashboard/EditJournalEntry';
 
 import ProfilePage from './pages/dashboard/ProfilePage';
 import UsersList from './pages/dashboard/UsersList';
@@ -47,12 +46,12 @@ import EditProject from './pages/dashboard/EditProject';
 import ProjectDetail from './pages/dashboard/ProjectDetail';
 
 import PropertyDetail from './pages/dashboard/PropertyDetail';
+import MandateLedger from './pages/dashboard/MandateLedger';
 import DashboardMarketplace from './pages/dashboard/DashboardMarketplace';
 
 import FinanceHome from './pages/dashboard/FinanceHome';
 import TransactionsList from './pages/dashboard/TransactionsList';
 import AddTransaction from './pages/dashboard/AddTransaction';
-import EditTransaction from './pages/dashboard/EditTransaction';
 
 // The original file had TicketDetail imported twice. Assuming the second one was a copy-paste error and not intended to be a different component.
 // import TicketDetail from './pages/dashboard/TicketDetail';
@@ -90,6 +89,7 @@ function App() {
                   <Route path="new" element={<CreateProperty />} />
                   <Route path=":id" element={<PropertyDetail />} />
                   <Route path=":id/edit" element={<EditProperty />} />
+                  <Route path=":id/ledger" element={<MandateLedger />} />
                 </Route>
 
                 {/* Documents */}
@@ -112,7 +112,6 @@ function App() {
                   <Route path=":id" element={<ConstructionDetail />} />
                   <Route path=":id/edit" element={<EditConstructionSite />} />
                   <Route path=":id/milestones" element={<ManageMilestones />} />
-                  <Route path="journal/:id/edit" element={<EditJournalEntry />} />
                 </Route>
 
                 {/* Users */}
@@ -131,7 +130,6 @@ function App() {
                   <Route path="transactions">
                     <Route index element={<TransactionsList />} />
                     <Route path="new" element={<AddTransaction />} />
-                    <Route path=":id/edit" element={<EditTransaction />} />
                   </Route>
                 </Route>
 

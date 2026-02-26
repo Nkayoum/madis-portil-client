@@ -1,10 +1,11 @@
-
 import { useState, useEffect } from 'react';
-import api from '@/lib/axios';
+import { useNavigate } from 'react-router-dom';
+import api from '../../lib/axios';
 import { Wallet, ArrowDownLeft, ArrowUpRight, Loader2, History, PlusSquare, ExternalLink } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 
 export default function WalletCard({ propertyId, onCashCall, onSettlement }) {
+    const navigate = useNavigate();
     const [wallet, setWallet] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -63,7 +64,7 @@ export default function WalletCard({ propertyId, onCashCall, onSettlement }) {
     const balance = Number(wallet.balance);
 
     return (
-        <div className="group bg-card border rounded-2xl overflow-hidden shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border-t-4 border-t-primary">
+        <div className="solaris-glass group rounded-[2rem] overflow-hidden shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-primary/10">
             <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-3">
@@ -121,7 +122,10 @@ export default function WalletCard({ propertyId, onCashCall, onSettlement }) {
                     </span>
                 </div>
                 <div className="flex items-center justify-center">
-                    <button className="text-[10px] font-black text-primary hover:text-primary/80 transition-colors flex items-center gap-1.5 uppercase tracking-wide">
+                    <button
+                        onClick={() => navigate(`/dashboard/properties/${propertyId}/ledger`)}
+                        className="text-[10px] font-black text-primary hover:text-primary/80 transition-colors flex items-center gap-1.5 uppercase tracking-wide"
+                    >
                         Voir le Grand Livre
                         <ExternalLink className="h-3 w-3" />
                     </button>

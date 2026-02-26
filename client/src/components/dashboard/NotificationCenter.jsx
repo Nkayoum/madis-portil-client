@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Bell, Check, ExternalLink, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import api from '@/lib/axios';
-import { cn } from '@/lib/utils';
+import api from '../../lib/axios';
+import { cn } from '../../lib/utils';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
@@ -67,15 +67,15 @@ export default function NotificationCenter() {
 
             {isOpen && (
                 <>
-                    <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-                    <div className="absolute right-0 mt-2 w-80 bg-card border rounded-xl shadow-lg z-50 overflow-hidden animate-in fade-in zoom-in duration-200">
-                        <div className="p-4 border-b flex items-center justify-between">
-                            <h3 className="font-semibold">Notifications</h3>
+                    <div className="fixed inset-0 z-[100]" onClick={() => setIsOpen(false)} />
+                    <div className="absolute right-0 mt-4 w-96 bg-white dark:bg-[#020817] solaris-glass rounded-[2rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)] z-[101] overflow-hidden animate-in fade-in zoom-in duration-300 border border-white/10">
+                        <div className="p-6 border-b border-white/10 flex items-center justify-between bg-white/5">
+                            <h3 className="text-xl font-black uppercase tracking-tighter">Notifications</h3>
                             {unreadCount > 0 && (
                                 <button
                                     onClick={markAllAsRead}
                                     disabled={loading}
-                                    className="text-xs text-primary hover:underline flex items-center gap-1"
+                                    className="text-[10px] font-black uppercase tracking-[0.2em] text-primary hover:text-primary/80 transition-colors flex items-center gap-2"
                                 >
                                     {loading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Check className="h-3 w-3" />}
                                     Tout lire
@@ -83,35 +83,38 @@ export default function NotificationCenter() {
                             )}
                         </div>
 
-                        <div className="max-h-96 overflow-y-auto">
+                        <div className="max-h-[32rem] overflow-y-auto custom-scrollbar">
                             {notifications.length > 0 ? (
                                 notifications.map((notification) => (
                                     <div
                                         key={notification.id}
                                         className={cn(
-                                            "p-4 border-b last:border-0 hover:bg-accent/50 transition-colors relative group",
-                                            !notification.is_read && "bg-primary/5"
+                                            "p-6 border-b border-white/5 last:border-0 hover:bg-white/5 transition-all relative group",
+                                            !notification.is_read && "bg-primary/[0.03] border-l-4 border-l-primary"
                                         )}
                                     >
-                                        <div className="flex justify-between items-start gap-2">
-                                            <h4 className={cn("text-xs font-bold leading-tight", !notification.is_read ? "text-foreground" : "text-muted-foreground")}>
+                                        <div className="flex justify-between items-start gap-4">
+                                            <h4 className={cn(
+                                                "text-sm font-bold tracking-tight leading-snug",
+                                                !notification.is_read ? "text-foreground" : "text-muted-foreground"
+                                            )}>
                                                 {notification.title}
                                             </h4>
                                             {!notification.is_read && (
                                                 <button
                                                     onClick={() => markAsRead(notification.id)}
-                                                    className="p-1 hover:bg-primary/10 rounded-full text-primary transition-colors"
+                                                    className="p-2 bg-primary/10 hover:bg-primary/20 rounded-full text-primary transition-colors opacity-0 group-hover:opacity-100"
                                                     title="Marquer comme lu"
                                                 >
-                                                    <Check className="h-3 w-3" />
+                                                    <Check className="h-3.5 w-3.5" />
                                                 </button>
                                             )}
                                         </div>
-                                        <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                                        <p className="text-xs text-muted-foreground/80 mt-2 leading-relaxed line-clamp-2">
                                             {notification.message}
                                         </p>
-                                        <div className="flex justify-between items-center mt-2">
-                                            <span className="text-[10px] text-muted-foreground">
+                                        <div className="flex justify-between items-center mt-4">
+                                            <span className="text-[9px] font-black uppercase tracking-widest opacity-40">
                                                 {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true, locale: fr })}
                                             </span>
                                             {notification.link && (
@@ -121,18 +124,20 @@ export default function NotificationCenter() {
                                                         markAsRead(notification.id);
                                                         setIsOpen(false);
                                                     }}
-                                                    className="text-[10px] text-primary hover:underline flex items-center gap-1"
+                                                    className="text-[10px] font-black uppercase tracking-widest text-primary hover:text-primary/80 flex items-center gap-1.5 transition-colors"
                                                 >
-                                                    Voir <ExternalLink className="h-2 w-2" />
+                                                    Voir <ExternalLink className="h-3 w-3" />
                                                 </Link>
                                             )}
                                         </div>
                                     </div>
                                 ))
                             ) : (
-                                <div className="p-8 text-center text-muted-foreground">
-                                    <Bell className="h-8 w-8 mx-auto mb-2 opacity-20" />
-                                    <p className="text-sm">Aucune notification</p>
+                                <div className="p-12 text-center">
+                                    <div className="h-16 w-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <Bell className="h-8 w-8 text-muted-foreground opacity-20" />
+                                    </div>
+                                    <p className="text-[10px] font-black uppercase tracking-widest opacity-40">Aucune notification</p>
                                 </div>
                             )}
                         </div>

@@ -1,3 +1,4 @@
+from django.db.models import Q
 from rest_framework import viewsets, status as http_status
 from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -119,6 +120,8 @@ class ProjectViewSet(viewsets.ModelViewSet):
             return Project.objects.none()
         if user.role == 'ADMIN_MADIS':
             return Project.objects.all()
+        if user.role == 'CHEF_CHANTIER':
+            return Project.objects.filter(construction_sites__chef_de_chantier=user).distinct()
         return Project.objects.filter(property__owner=user)
 
     def get_permissions(self):
@@ -164,12 +167,17 @@ class PublicPropertyViewSet(viewsets.ReadOnlyModelViewSet):
     ordering_fields = ['created_at', 'prix_vente', 'loyer_mensuel']
 
     def get_queryset(self):
-        # Only show properties available for initial sale (MANDAT)
-        # Exclude properties already signed/finished (VENDU)
-        # Properties in GESTION (Rental) are managed separately and leave the marketplace.
+        # Show both sale (MANDAT) and rental (GESTION) properties
+        # Exclude properties already sold (VENDU)
+        # For rentals (LOCATION), exclude properties already rented (LOUE)
+        # For sales (VENTE), we allow LOUE status because it can be an investment property
         return Property.objects.filter(
-            management_type='MANDAT'
-        ).exclude(status='VENDU').order_by('-created_at')
+            management_type__in=['MANDAT', 'GESTION']
+        ).exclude(
+            status='VENDU'
+        ).exclude(
+            Q(transaction_nature='LOCATION', status='LOUE')
+        ).order_by('-created_at')
 
 
 @api_view(['POST'])

@@ -76,11 +76,14 @@ class IsOwnerOrAdmin(permissions.BasePermission):
                 if hasattr(prop, 'owner') and prop.owner == request.user:
                     return True
 
-        # 4. Milestone / JournalEntry -> Site -> Project -> Property -> Owner
+        # 4. Milestone / JournalEntry / FinancialTransaction -> Site -> Chef de Chantier
         if hasattr(obj, 'site') and obj.site:
-            site = obj.site
-            if hasattr(site, 'project') and site.project:
-                proj = site.project
+            if obj.site.chef_de_chantier == request.user:
+                return True
+            
+            # Fallback to owner if site logic above didn't match
+            if hasattr(obj.site, 'project') and obj.site.project:
+                proj = obj.site.project
                 if hasattr(proj, 'property') and proj.property:
                     prop = proj.property
                     if hasattr(prop, 'owner') and prop.owner == request.user:

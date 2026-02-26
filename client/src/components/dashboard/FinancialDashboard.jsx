@@ -3,12 +3,17 @@ import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
     AreaChart, Area, PieChart, Pie, Cell, Sector
 } from 'recharts';
-import { TrendingUp, TrendingDown, DollarSign, PieChart as PieIcon, Calendar, Loader2, Building, Percent, Filter, Wallet, History, Globe } from 'lucide-react';
+import { TrendingUp, TrendingDown, DollarSign, PieChart as PieIcon, Calendar, Loader2, Building, Percent, Filter, Wallet, History, Globe, Hammer, Box, Users, ShieldCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import api from '@/lib/axios';
-import { cn } from '@/lib/utils';
+import api from '../../lib/axios';
+import { cn } from '../../lib/utils';
+import { useToast } from '../../context/ToastContext';
+import { useTheme } from '../../context/ThemeContext';
+import AnnualReport from './AnnualReport';
 
 export default function FinancialDashboard({ isAdmin = false }) {
+    const { theme } = useTheme();
+    const { showToast } = useToast();
     const [loading, setLoading] = useState(true);
     const [loadingStats, setLoadingStats] = useState(false);
     const [data, setData] = useState(null);
@@ -18,6 +23,10 @@ export default function FinancialDashboard({ isAdmin = false }) {
     const [selectedPropertyId, setSelectedPropertyId] = useState('');
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
     const availableYears = Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i);
+
+    const formatCurrency = (value) => {
+        return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(value || 0);
+    };
 
     useEffect(() => {
         const initDashboard = async () => {
@@ -65,6 +74,20 @@ export default function FinancialDashboard({ isAdmin = false }) {
             setData(response.data);
         } catch (err) {
             console.error("Failed to fetch finance stats", err);
+            const errorMsg = err.response?.data?.error || err.message;
+            const traceback = err.response?.data?.traceback;
+
+            showToast({
+                message: `Erreur: ${errorMsg}${traceback ? ' (Voir console pour traceback)' : ''}`,
+                type: 'error',
+                duration: 5000
+            });
+
+            if (traceback) {
+                console.group('Backend Traceback (500 Error)');
+                console.log(traceback);
+                console.groupEnd();
+            }
         } finally {
             setLoadingStats(false);
         }
@@ -122,6 +145,67 @@ export default function FinancialDashboard({ isAdmin = false }) {
     const isEffectiveAdmin = data.isAdmin || isAdmin;
     const rental = data.rental_performance || {};
     const trans = data.transactional_performance || {};
+    const construction = data.construction_performance || {};
+
+    // Standardized Stats object for the UI
+    let stats = {
+        main_value: 0,
+        volume: 0,
+        performance: 0,
+        label_main: "",
+        label_volume: "",
+        label_performance: ""
+    };
+
+    if (dashboardMode === 'construction') {
+        stats = {
+            main_value: construction.total_volume || 0,
+            volume: construction.matieriables_volume || 0,
+            performance: construction.main_d_oeuvre_volume || 0,
+            label_main: "Volume Chantier",
+            label_volume: "Matériaux",
+            label_performance: "Main d'œuvre"
+        };
+    } else if (dashboardMode === 'transactional') {
+        const roi = trans.roi || 0;
+        stats = {
+            main_value: isEffectiveAdmin ? trans.net_capital_gain : trans.net_capital_gain, // Net Gain is prioritized
+            volume: trans.sales_volume || 0,
+            performance: roi,
+            label_main: isEffectiveAdmin ? "CA Commissions" : "Plus-value Nette",
+            label_volume: isEffectiveAdmin ? "Volume Ventes" : "Capital Investi", // Note: Investment is the "volume" here for the owner
+            label_performance: isEffectiveAdmin ? "Marge Nette" : "ROI Projet"
+        };
+        // Specific adjustment for volume label if owner
+        if (!isEffectiveAdmin) {
+            stats.volume = trans.investment_total || 0;
+        }
+    } else {
+        const yield_val = rental.yield || 0;
+        stats = {
+            main_value: isEffectiveAdmin ? rental.commission_total : rental.net_revenue,
+            volume: rental.total_inflow || 0,
+            performance: yield_val,
+            label_main: isEffectiveAdmin ? "CA Commissions" : "Solde Portefeuille",
+            label_volume: isEffectiveAdmin ? "Volume Loyers" : "Loyers Bruts",
+            label_performance: isEffectiveAdmin ? "Marge Nette" : "Rendement Net"
+        };
+    }
+
+    // Map monthly_data to chartData with a generic 'value' key for the AreaChart
+    const chartData = (data.monthly_data || []).map(m => ({
+        ...m,
+        value: dashboardMode === 'construction' ? m.construction_costs :
+            dashboardMode === 'transactional' ? m.trans_revenues :
+                m.rental_revenues
+    }));
+
+    // Logic for Asset Distribution Card (Dynamic)
+    const totalAssetValue = (data.property_stats || []).reduce((sum, p) => sum + (p.investment || 0), 0);
+    const totalLiquidity = wallets.reduce((sum, w) => sum + Number(w.balance), 0);
+    const globalTotal = totalAssetValue + totalLiquidity;
+    const liquidityRatio = globalTotal > 0 ? (totalLiquidity / globalTotal) * 100 : 0;
+    const assetsRatio = globalTotal > 0 ? (totalAssetValue / globalTotal) * 100 : 0;
 
     return (
         <div className="space-y-6">
@@ -133,8 +217,8 @@ export default function FinancialDashboard({ isAdmin = false }) {
                         className={cn(
                             "px-4 py-2 text-sm font-bold rounded-lg transition-all flex items-center gap-2",
                             dashboardMode === 'rental'
-                                ? "bg-background shadow-sm text-primary"
-                                : "text-muted-foreground hover:text-foreground"
+                                ? "bg-background dark:bg-white/5 shadow-sm text-primary"
+                                : "text-muted-foreground hover:text-foreground dark:hover:bg-white/5"
                         )}
                     >
                         <Calendar className="h-4 w-4" />
@@ -145,16 +229,42 @@ export default function FinancialDashboard({ isAdmin = false }) {
                         className={cn(
                             "px-4 py-2 text-sm font-bold rounded-lg transition-all flex items-center gap-2",
                             dashboardMode === 'transactional'
-                                ? "bg-background shadow-sm text-primary"
-                                : "text-muted-foreground hover:text-foreground"
+                                ? "bg-background dark:bg-white/5 shadow-sm text-primary"
+                                : "text-muted-foreground hover:text-foreground dark:hover:bg-white/5"
                         )}
                     >
                         <TrendingUp className="h-4 w-4" />
                         Investissement Achat-Revente
                     </button>
+                    {isEffectiveAdmin && (
+                        <button
+                            onClick={() => setDashboardMode('construction')}
+                            className={cn(
+                                "px-4 py-2 text-sm font-bold rounded-lg transition-all flex items-center gap-2",
+                                dashboardMode === 'construction'
+                                    ? "bg-background dark:bg-white/5 shadow-sm text-primary"
+                                    : "text-muted-foreground hover:text-foreground dark:hover:bg-white/5"
+                            )}
+                        >
+                            <Hammer className="h-4 w-4" />
+                            Suivi Chantier
+                        </button>
+                    )}
+                    <button
+                        onClick={() => setDashboardMode('reports')}
+                        className={cn(
+                            "px-4 py-2 text-sm font-bold rounded-lg transition-all flex items-center gap-2",
+                            dashboardMode === 'reports'
+                                ? "bg-background dark:bg-white/5 shadow-sm text-primary"
+                                : "text-muted-foreground hover:text-foreground dark:hover:bg-white/5"
+                        )}
+                    >
+                        <PieIcon className="h-4 w-4" />
+                        Rapports
+                    </button>
                 </div>
 
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-muted/30 p-2 rounded-xl border">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-muted/30 dark:bg-black/40 p-2 rounded-xl border border-black/5 dark:border-white/5">
                     <div className="flex items-center gap-3 px-2 border-r border-muted last:border-0">
                         <Building className="h-4 w-4 text-muted-foreground" />
                         <select
@@ -191,343 +301,220 @@ export default function FinancialDashboard({ isAdmin = false }) {
                 </div>
             </div>
 
-            {/* Quick Stats - Dynamic based on mode & role */}
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                {dashboardMode === 'rental' ? (
-                    <>
-                        <div className="bg-card border rounded-xl p-6 shadow-sm border-l-4 border-l-primary">
-                            <div className="flex items-center justify-between mb-2">
-                                <span className="text-[10px] uppercase font-black text-muted-foreground">
-                                    {isEffectiveAdmin ? "CA MaDis (Commissions)" : "Cashflow Net"}
-                                </span>
-                                <TrendingUp className={cn("h-4 w-4", rental.net_revenue >= 0 ? "text-emerald-500" : "text-[#ff0048]")} />
+            {dashboardMode === 'reports' ? (
+                <AnnualReport
+                    data={data}
+                    selectedYear={selectedYear}
+                    isAdmin={isEffectiveAdmin}
+                />
+            ) : (
+                <>
+                    {/* Solaris Summary Cards */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div className="solaris-glass rounded-[2.5rem] p-8 transition-all group overflow-hidden relative dark:border-white/5 dark:bg-black/40">
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-primary/10 transition-colors" />
+                            <div className="flex justify-between items-start mb-6">
+                                <div className="p-3 rounded-2xl bg-primary/10 text-primary dark:text-primary dark:bg-primary/20">
+                                    <Wallet className="h-6 w-6" />
+                                </div>
+                                {loadingStats && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
                             </div>
-                            <div className={cn("text-2xl font-black", rental.net_revenue >= 0 ? "text-emerald-500" : "text-[#ff0048]")}>
-                                {rental.net_revenue?.toLocaleString()}€
-                            </div>
-                            <p className="text-[10px] font-medium text-muted-foreground mt-1">
-                                {isEffectiveAdmin ? "Recettes brutes de gestion" : "Après frais de gestion & charges"}
+                            <p className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-1">
+                                {stats.label_main}
+                            </p>
+                            <h3 className="text-3xl font-black">
+                                {formatCurrency(stats.main_value)}
+                            </h3>
+                            <p className="text-[10px] font-bold text-muted-foreground mt-4 flex items-center gap-1 opacity-60">
+                                <ShieldCheck className="h-3 w-3" /> Données sécurisées MaDis
                             </p>
                         </div>
 
-                        <div className="bg-card border rounded-xl p-6 shadow-sm">
-                            <div className="flex items-center justify-between mb-2">
-                                <span className="text-[10px] uppercase font-black text-muted-foreground">
-                                    {isEffectiveAdmin ? "Volume Loyers Managés" : "Loyers Bruts"}
-                                </span>
-                                <DollarSign className="h-4 w-4 text-primary" />
+                        <div className="solaris-glass rounded-[2.5rem] p-8 transition-all group overflow-hidden relative dark:border-white/5 dark:bg-black/40">
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-amber-400/5 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-amber-400/10 transition-colors" />
+                            <div className="flex justify-between items-start mb-6">
+                                <div className="p-3 rounded-2xl bg-amber-100/50 text-amber-600 dark:bg-amber-400/10 dark:text-amber-400">
+                                    {dashboardMode === 'construction' ? <Box className="h-6 w-6" /> : <Building className="h-6 w-6" />}
+                                </div>
                             </div>
-                            <div className="text-2xl font-black">{rental.total_inflow?.toLocaleString()}€</div>
-                            <p className="text-[10px] font-medium text-muted-foreground mt-1">
-                                {isEffectiveAdmin ? "Flux total collecté via MaDis" : "Recettes totales sur la période"}
+                            <p className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-1">
+                                {stats.label_volume}
                             </p>
+                            <h3 className="text-3xl font-black">{formatCurrency(stats.volume)}</h3>
+                            <div className="h-1.5 w-full bg-slate-100 dark:bg-black/40 rounded-full mt-6 overflow-hidden">
+                                <div className="h-full bg-amber-500/50 rounded-full w-2/3" />
+                            </div>
                         </div>
 
-                        <div className="bg-card border rounded-xl p-6 shadow-sm">
-                            <div className="flex items-center justify-between mb-2">
-                                <span className="text-[10px] uppercase font-black text-muted-foreground">
-                                    {isEffectiveAdmin ? "Marge d'Intermédiation" : "Rendement Locatif"}
-                                </span>
-                                <Percent className="h-4 w-4 text-primary" />
+                        <div className="solaris-glass rounded-[2.5rem] p-8 transition-all group overflow-hidden relative shadow-sm dark:border-white/5 dark:bg-black/40">
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-400/5 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-emerald-400/10 transition-colors" />
+                            <div className="flex justify-between items-start mb-6">
+                                <div className="p-3 rounded-2xl bg-emerald-100/50 text-emerald-600 dark:bg-emerald-400/10 dark:text-emerald-400">
+                                    {dashboardMode === 'construction' ? <Users className="h-6 w-6" /> : <TrendingUp className="h-6 w-6" />}
+                                </div>
                             </div>
-                            <div className="text-2xl font-black text-primary">
-                                {isEffectiveAdmin ? ((rental.net_revenue / (rental.total_inflow || 1)) * 100).toFixed(1) : rental.yield}%
-                            </div>
-                            <p className="text-[10px] font-medium text-muted-foreground mt-1">
-                                {isEffectiveAdmin ? "Part MaDis sur le volume de loyers" : `Annuel proratisé (Objectif: ${rental.theoretical_yield}%)`}
+                            <p className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-1">
+                                {stats.label_performance}
                             </p>
+                            <h3 className="text-3xl font-black">
+                                {dashboardMode === 'rental' || dashboardMode === 'transactional'
+                                    ? stats.performance.toFixed(2) + '%'
+                                    : formatCurrency(stats.performance)}
+                            </h3>
+                            <div className="flex items-center gap-1.5 mt-4">
+                                <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                                <p className="text-[10px] font-black uppercase text-emerald-600 dark:text-emerald-400 tracking-tighter">Performance Optimale</p>
+                            </div>
                         </div>
 
-                        <div className="bg-card border rounded-xl p-6 shadow-sm">
-                            <div className="flex items-center justify-between mb-2">
-                                <span className="text-[10px] uppercase font-black text-muted-foreground">
-                                    {isEffectiveAdmin ? "Dépenses de Maintenance" : "Charges de Gestion"}
-                                </span>
-                                <TrendingDown className="h-4 w-4 text-[#ff0048]" />
-                            </div>
-                            <div className="text-2xl font-black text-[#ff0048]">{rental.total_outflow?.toLocaleString()}€</div>
-                            <p className="text-[10px] font-medium text-muted-foreground mt-1">
-                                {isEffectiveAdmin ? "Entretien & Taxes (Volume Global)" : "Entretien, Taxes & MaDis"}
-                            </p>
-                        </div>
-                    </>
-                ) : (
-                    <>
-                        <div className="bg-card border rounded-xl p-6 shadow-sm border-l-4 border-l-emerald-500">
-                            <div className="flex items-center justify-between mb-2">
-                                <span className="text-[10px] uppercase font-black text-muted-foreground">
-                                    {isEffectiveAdmin ? "Commissions sur Ventes" : "Plus-value Nette"}
-                                </span>
-                                <TrendingUp className={cn("h-4 w-4", trans.net_capital_gain >= 0 ? "text-emerald-500" : "text-[#ff0048]")} />
-                            </div>
-                            <div className={cn("text-2xl font-black", trans.net_capital_gain >= 0 ? "text-emerald-500" : "text-[#ff0048]")}>
-                                {trans.net_capital_gain?.toLocaleString()}€
-                            </div>
-                            <p className="text-[10px] font-medium text-muted-foreground mt-1">
-                                {isEffectiveAdmin ? "Revenu MaDis sur transactions" : "Bénéfice réalisé ou potentiel sur vente"}
-                            </p>
-                        </div>
-
-                        <div className="bg-card border rounded-xl p-6 shadow-sm">
-                            <div className="flex items-center justify-between mb-2">
-                                <span className="text-[10px] uppercase font-black text-muted-foreground">
-                                    {isEffectiveAdmin ? "Volume de Vente Global" : "Capital Investi"}
-                                </span>
-                                <Building className="h-4 w-4 text-primary" />
-                            </div>
-                            <div className="text-2xl font-black">{isEffectiveAdmin ? trans.sales_volume?.toLocaleString() : trans.investment_total?.toLocaleString()}€</div>
-                            <p className="text-[10px] font-medium text-muted-foreground mt-1">
-                                {isEffectiveAdmin ? "Montant total des transactions" : "Valeur d'acquisition totale"}
-                            </p>
-                        </div>
-
-                        <div className="bg-card border rounded-xl p-6 shadow-sm">
-                            <div className="flex items-center justify-between mb-2">
-                                <span className="text-[10px] uppercase font-black text-muted-foreground">
-                                    {isEffectiveAdmin ? "Commissions Encaissées" : "Volume de Revente"}
-                                </span>
-                                <Globe className="h-4 w-4 text-primary" />
-                            </div>
-                            <div className="text-2xl font-black text-primary">
-                                {isEffectiveAdmin ? trans.net_capital_gain?.toLocaleString() : trans.sales_volume?.toLocaleString()}€
-                            </div>
-                            <p className="text-[10px] font-medium text-muted-foreground mt-1">
-                                {isEffectiveAdmin ? "Total des gains transactionnels" : "Prix de revente total réalisé"}
-                            </p>
-                        </div>
-
-                        <div className="bg-card border rounded-xl p-6 shadow-sm">
-                            <div className="flex items-center justify-between mb-2">
-                                <span className="text-[10px] uppercase font-black text-muted-foreground">
-                                    {isEffectiveAdmin ? "Taux de Commission Moyen" : "ROI Transactionnel"}
-                                </span>
-                                <Percent className="h-4 w-4 text-emerald-500" />
-                            </div>
-                            <div className="text-2xl font-black text-emerald-500">{trans.roi}%</div>
-                            <p className="text-[10px] font-medium text-muted-foreground mt-1">
-                                {isEffectiveAdmin ? "Marge moyenne sur volume" : "Marge nette sur investissement"}
-                            </p>
-                        </div>
-                    </>
-                )}
-            </div>
-
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {/* Evolution Chart */}
-                <div className="bg-card border rounded-xl p-6 shadow-sm lg:col-span-2">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-                        <h3 className="font-semibold text-lg flex items-center gap-2">
-                            <Calendar className="h-5 w-5 text-primary" />
-                            Évolution Financière
-                        </h3>
-                        <div className="flex items-center gap-4 text-xs font-medium">
-                            <div className="flex items-center gap-1.5">
-                                <div className="h-3 w-3 rounded-full bg-[#10B981]" />
-                                <span className="text-[#10B981]">Revenus</span>
-                            </div>
-                            <div className="flex items-center gap-1.5">
-                                <div className="h-3 w-3 rounded-full bg-[#ff0048]" />
-                                <span className="text-[#ff0048]">Dépenses</span>
+                        <div className="solaris-glass rounded-[2.5rem] p-8 transition-all flex flex-col items-center justify-center relative overflow-hidden group dark:border-white/5 dark:bg-black/60">
+                            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <div className="relative z-10 flex flex-col items-center">
+                                <div className="relative w-24 h-24 mb-6">
+                                    <svg className="w-full h-full transform -rotate-90">
+                                        <circle cx="48" cy="48" r="40" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-slate-100 dark:text-white/5" />
+                                        <circle cx="48" cy="48" r="40" stroke="currentColor" strokeWidth="8" fill="transparent" strokeDasharray="251.2" strokeDashoffset={251.2 * (1 - (assetsRatio / 100))} className="text-primary dark:text-[#00f2ff] dark:filter dark:drop-shadow-[0_0_8px_rgba(0,242,255,0.5)]" strokeLinecap="round" />
+                                    </svg>
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                                        <span className="text-2xl font-black dark:text-white">{assetsRatio.toFixed(0)}%</span>
+                                        <span className="text-[8px] font-black uppercase text-muted-foreground tracking-widest opacity-60">Actif</span>
+                                    </div>
+                                </div>
+                                <div className="w-full space-y-4">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-3 h-3 rounded-full bg-primary" />
+                                            <span className="text-xs font-bold">Immobilier</span>
+                                        </div>
+                                        <span className="text-xs font-black">{formatCurrency(totalAssetValue)}</span>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-3 h-3 rounded-full bg-slate-300 dark:bg-white/10" />
+                                            <span className="text-xs font-bold">Liquidités</span>
+                                        </div>
+                                        <span className="text-xs font-black">{formatCurrency(totalLiquidity)}</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="h-[300px] w-full">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={data.monthly_data}>
-                                <defs>
-                                    <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="#10B981" stopOpacity={0.1} />
-                                        <stop offset="95%" stopColor="#10B981" stopOpacity={0} />
-                                    </linearGradient>
-                                    <linearGradient id="colorExp" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="#ff0048" stopOpacity={0.05} />
-                                        <stop offset="95%" stopColor="#ff0048" stopOpacity={0} />
-                                    </linearGradient>
-                                </defs>
-                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                                <XAxis
-                                    dataKey="month"
-                                    axisLine={false}
-                                    tickLine={false}
-                                    tick={{ fontSize: 11, fill: '#64748B' }}
-                                    dy={10}
-                                />
-                                <YAxis
-                                    axisLine={false}
-                                    tickLine={false}
-                                    tick={{ fontSize: 11, fill: '#64748B' }}
-                                    tickFormatter={(value) => `${value}€`}
-                                />
-                                <Tooltip
-                                    cursor={{ stroke: '#64748B', strokeWidth: 1, strokeDasharray: '5 5' }}
-                                    content={({ active, payload }) => {
-                                        if (active && payload && payload.length) {
-                                            const p = payload[0].payload;
-                                            return (
-                                                <div className="bg-white p-3 border rounded-lg shadow-lg text-xs space-y-1">
-                                                    <p className="font-bold mb-1">{p.month}</p>
-                                                    <div className="flex items-center justify-between gap-4">
-                                                        <span className="text-muted-foreground">
-                                                            {isEffectiveAdmin
-                                                                ? (dashboardMode === 'rental' ? 'Comm. Gestion:' : 'Comm. Vente:')
-                                                                : 'Recettes:'}
-                                                        </span>
-                                                        <span className="font-bold text-blue-500">{payload[0].value.toLocaleString()}€</span>
-                                                    </div>
-                                                    <div className="flex items-center justify-between gap-4">
-                                                        <span className="text-muted-foreground">
-                                                            {isEffectiveAdmin
-                                                                ? (dashboardMode === 'rental' ? 'Dépenses Gérés:' : 'Frais Vente:')
-                                                                : 'Dépenses:'}
-                                                        </span>
-                                                        <span className="font-bold text-[#ff0048]">{payload[1]?.value?.toLocaleString()}€</span>
-                                                    </div>
-                                                    <div className="flex items-center justify-between gap-4 border-t pt-1">
-                                                        <span className="text-muted-foreground">MARGE MaDis:</span>
-                                                        <span className={cn("font-bold", (payload[0].value - (payload[1]?.value || 0)) >= 0 ? "text-emerald-500" : "text-[#ff0048]")}>
-                                                            {(payload[0].value - (payload[1]?.value || 0)).toLocaleString()}€
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            );
-                                        }
-                                        return null;
-                                    }}
-                                />
-                                <Area
-                                    type="monotone"
-                                    dataKey={dashboardMode === 'rental' ? 'rental_revenues' : 'trans_revenues'}
-                                    stroke={isEffectiveAdmin ? "#3b82f6" : "#10B981"}
-                                    strokeWidth={3}
-                                    fillOpacity={1}
-                                    fill="url(#colorRev)"
-                                    name={isEffectiveAdmin
-                                        ? (dashboardMode === 'rental' ? "Commissions Gestion" : "Commissions Vente")
-                                        : "Recettes"}
-                                />
-                                <Area
-                                    type="monotone"
-                                    dataKey={dashboardMode === 'rental' ? 'rental_expenses' : 'trans_expenses'}
-                                    stroke="#ff0048"
-                                    strokeWidth={2}
-                                    fillOpacity={1}
-                                    fill="url(#colorExp)"
-                                    name={isEffectiveAdmin
-                                        ? (dashboardMode === 'rental' ? "Dépenses Opérationnelles" : "Frais de Transition")
-                                        : "Dépenses"}
-                                />
-                            </AreaChart>
-                        </ResponsiveContainer>
-                    </div>
-                </div>
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
+                        {/* High-End Solaris Chart */}
+                        <div className="lg:col-span-2 solaris-glass rounded-[2.5rem] p-8 md:p-10 dark:bg-black/40">
+                            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
+                                <div>
+                                    <h3 className="text-xl font-black flex items-center gap-2">
+                                        <TrendingUp className="h-5 w-5 text-primary" />
+                                        Évolution Financière
+                                    </h3>
+                                    <p className="text-[10px] text-muted-foreground font-bold tracking-widest uppercase mt-1">Données consolidées MaDis Solaris</p>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/5 border border-primary/10">
+                                        <div className="w-2 h-2 rounded-full bg-primary" />
+                                        <span className="text-[10px] font-black text-primary uppercase">Volume Global</span>
+                                    </div>
+                                </div>
+                            </div>
 
-                <div className="bg-card border rounded-xl p-6 shadow-sm">
-                    <h3 className="font-semibold text-lg mb-8 flex items-center gap-2">
-                        {dashboardMode === 'rental' ? (
-                            <TrendingUp className="h-5 w-5 text-primary" />
-                        ) : (
-                            <TrendingUp className="h-5 w-5 text-emerald-500" />
-                        )}
-                        {dashboardMode === 'rental' ? 'Rentabilité Locative par Bien' : 'ROI Transactionnel par Bien'}
-                    </h3>
-                    <div className="h-[300px] w-full">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={data.property_stats} layout="vertical" margin={{ left: -20, right: 20 }}>
-                                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
-                                <XAxis type="number" hide />
-                                <YAxis
-                                    dataKey="name"
-                                    type="category"
-                                    tick={{ fontSize: 10, fill: '#64748B' }}
-                                    width={100}
-                                />
-                                <Tooltip
-                                    cursor={{ fill: 'transparent' }}
-                                    content={({ active, payload }) => {
-                                        if (active && payload && payload.length) {
-                                            const p = payload[0].payload;
-                                            return (
-                                                <div className="bg-white p-3 border rounded-lg shadow-lg text-xs space-y-1">
-                                                    <p className="font-bold mb-1">{p.name}</p>
-                                                    {dashboardMode === 'rental' ? (
-                                                        <>
-                                                            <div className="flex items-center justify-between gap-4">
-                                                                <span className="text-muted-foreground">Rendement Réel:</span>
-                                                                <span className="font-bold text-[#10B981]">{p.yield}%</span>
-                                                            </div>
-                                                            <div className="flex items-center justify-between gap-4">
-                                                                <span className="text-muted-foreground">Objectif (Cible):</span>
-                                                                <span className="font-bold text-blue-500">{p.theoretical_yield}%</span>
-                                                            </div>
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            <div className="flex items-center justify-between gap-4">
-                                                                <span className="text-muted-foreground">{isEffectiveAdmin ? 'Marge sur Volume:' : 'ROI Transactionnel:'}</span>
-                                                                <span className="font-bold text-emerald-500">{p.transactional_roi}%</span>
-                                                            </div>
-                                                            <div className="flex items-center justify-between gap-4">
-                                                                <span className="text-muted-foreground">{isEffectiveAdmin ? 'Commission MaDis:' : 'Plus-value:'}</span>
-                                                                <span className="font-bold text-emerald-500">{p.capital_gain?.toLocaleString()}€</span>
-                                                            </div>
-                                                        </>
-                                                    )}
-                                                    <p className="text-muted-foreground mt-1 border-t pt-1 italic">
-                                                        {isEffectiveAdmin ? 'Volume de Vente:' : 'Investi:'} {p.investment.toLocaleString()}€
-                                                    </p>
-                                                </div>
-                                            );
-                                        }
-                                        return null;
-                                    }}
-                                />
-                                <Legend
-                                    verticalAlign="top"
-                                    align="right"
-                                    iconType="circle"
-                                    wrapperStyle={{ fontSize: '10px', paddingBottom: '20px' }}
-                                />
-                                {dashboardMode === 'rental' ? (
-                                    <>
-                                        <Bar
-                                            dataKey="yield"
-                                            name="Rendement Réel"
-                                            fill="#10B981"
-                                            radius={[0, 4, 4, 0]}
-                                            barSize={12}
+                            <div className="h-[400px] w-full">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <AreaChart data={chartData}>
+                                        <defs>
+                                            <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="5%" stopColor="#ff0048" stopOpacity={0.3} />
+                                                <stop offset="95%" stopColor="#ff0048" stopOpacity={0} />
+                                            </linearGradient>
+                                            <linearGradient id="colorValueDark" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="5%" stopColor="#00f2ff" stopOpacity={0.5} />
+                                                <stop offset="95%" stopColor="#00f2ff" stopOpacity={0} />
+                                            </linearGradient>
+                                        </defs>
+                                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.03)" />
+                                        <XAxis
+                                            dataKey="month"
+                                            axisLine={false}
+                                            tickLine={false}
+                                            tick={{ fontSize: 10, fontWeight: 700, fill: '#64748b' }}
                                         />
-                                        <Bar
-                                            dataKey="theoretical_yield"
-                                            name="Objectif (Théorique)"
-                                            fill="#3b82f6"
-                                            radius={[0, 4, 4, 0]}
-                                            barSize={12}
+                                        <YAxis
+                                            axisLine={false}
+                                            tickLine={false}
+                                            tick={{ fontSize: 10, fontWeight: 700, fill: '#64748b' }}
+                                            tickFormatter={(val) => `${(val / 1000).toFixed(0)}k`}
                                         />
-                                    </>
-                                ) : (
-                                    <Bar
-                                        dataKey="transactional_roi"
-                                        name="ROI Transactionnel"
-                                        fill="#10B981"
-                                        radius={[0, 4, 4, 0]}
-                                        barSize={18}
-                                    />
-                                )}
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </div>
-                    {data.property_stats?.length === 0 && (
-                        <div className="flex items-center justify-center h-48 text-muted-foreground text-sm border border-dashed rounded-lg">
-                            Pas de données disponibles.
+                                        <Tooltip
+                                            contentStyle={{
+                                                backgroundColor: 'rgba(5, 10, 20, 0.9)',
+                                                borderRadius: '24px',
+                                                border: '1px solid rgba(255,255,255,0.1)',
+                                                backdropFilter: 'blur(32px)',
+                                                boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)',
+                                                padding: '20px',
+                                                color: '#fff'
+                                            }}
+                                            itemStyle={{ color: '#fff' }}
+                                            labelStyle={{ color: '#64748b', fontWeight: 900, textTransform: 'uppercase', fontSize: '10px', letterSpacing: '0.1em' }}
+                                            formatter={(value) => [formatCurrency(value), 'Volume']}
+                                        />
+                                        <Area
+                                            type="monotone"
+                                            dataKey="value"
+                                            stroke={theme === 'dark' ? "#00f2ff" : "#ff0048"}
+                                            strokeWidth={4}
+                                            fillOpacity={1}
+                                            fill={theme === 'dark' ? "url(#colorValueDark)" : "url(#colorValue)"}
+                                            className="dark:filter dark:drop-shadow-[0_0_8px_rgba(0,242,255,0.4)]"
+                                        />
+                                    </AreaChart>
+                                </ResponsiveContainer>
+                            </div>
                         </div>
-                    )}
-                </div>
-            </div>
+
+                        {/* Distribution Card */}
+                        <div className="solaris-glass rounded-[2.5rem] p-8 flex flex-col dark:border-white/5 dark:bg-white/[0.02]">
+                            <h3 className="text-xl font-black mb-8 flex items-center gap-2">
+                                <PieIcon className="h-5 w-5 text-primary" />
+                                Distribution
+                            </h3>
+                            <div className="flex-1 flex flex-col justify-center items-center">
+                                <div className="relative w-48 h-48 mb-8">
+                                    <svg className="w-full h-full transform -rotate-90">
+                                        <circle cx="96" cy="96" r="80" stroke="currentColor" strokeWidth="16" fill="transparent" className="text-slate-100 dark:text-white/5" />
+                                        <circle cx="96" cy="96" r="80" stroke="currentColor" strokeWidth="16" fill="transparent" strokeDasharray="502.4" strokeDashoffset={502.4 * (1 - (assetsRatio / 100))} className="text-primary dark:text-[#00f2ff] dark:filter dark:drop-shadow-[0_0_12px_rgba(0,242,255,0.4)]" strokeLinecap="round" />
+                                    </svg>
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                                        <span className="text-4xl font-black dark:text-white">{assetsRatio.toFixed(0)}%</span>
+                                        <span className="text-[10px] font-black uppercase text-muted-foreground tracking-widest opacity-60">Actif</span>
+                                    </div>
+                                </div>
+                                <div className="w-full space-y-4">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-3 h-3 rounded-full bg-primary dark:bg-[#00f2ff]" />
+                                            <span className="text-xs font-bold dark:text-white">Immobilier</span>
+                                        </div>
+                                        <span className="text-xs font-black dark:text-white">{formatCurrency(totalAssetValue)}</span>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-3 h-3 rounded-full bg-slate-300 dark:bg-white/10" />
+                                            <span className="text-xs font-bold dark:text-white">Liquidités</span>
+                                        </div>
+                                        <span className="text-xs font-black dark:text-white">{formatCurrency(totalLiquidity)}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            )}
 
             {/* Global Wallets Overview Section (Admin Only) */}
             {isAdmin && (
-                <div className="bg-card border rounded-xl overflow-hidden shadow-sm animate-fade-in">
+                <div className="bg-card border rounded-xl overflow-hidden shadow-sm animate-fade-in mt-8">
                     <div className="p-6 border-b bg-muted/30 flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <div className="p-2 rounded-lg bg-primary/10 text-primary">
@@ -637,13 +624,8 @@ export default function FinancialDashboard({ isAdmin = false }) {
                             </tbody>
                         </table>
                     </div>
-                    <div className="p-4 bg-muted/10 border-t border-dashed text-center">
-                        <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">
-                            La liquidité totale représente la somme des fonds propres appartenant aux propriétaires et détenus par MaDis.
-                        </p>
-                    </div>
                 </div>
             )}
         </div>
     );
-}
+};

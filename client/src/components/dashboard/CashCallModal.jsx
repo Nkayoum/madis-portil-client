@@ -1,7 +1,6 @@
-
 import { useState } from 'react';
-import { X, DollarSign, StickyNote, Calendar, Loader2, Plus, Info } from 'lucide-react';
-import api from '@/lib/axios';
+import { X, DollarSign, StickyNote, Calendar, Loader2, Plus, Info, Upload } from 'lucide-react';
+import api from '../../lib/axios';
 
 export default function CashCallModal({ propertyId, onClose, onSuccess }) {
     const [loading, setLoading] = useState(false);
@@ -9,17 +8,27 @@ export default function CashCallModal({ propertyId, onClose, onSuccess }) {
         amount: '',
         reason: '',
         description: '',
-        due_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] // Default 7 days from now
+        due_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // Default 7 days from now
+        proof: null
     });
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         try {
-            await api.post('/finance/cash-calls/', {
-                property: propertyId,
-                ...form,
-                status: 'SENT' // Auto-send for now
+            const formData = new FormData();
+            formData.append('property', propertyId);
+            formData.append('amount', form.amount);
+            formData.append('reason', form.reason);
+            formData.append('description', form.description);
+            formData.append('due_date', form.due_date);
+            formData.append('status', 'SENT');
+            if (form.proof) {
+                formData.append('proof', form.proof);
+            }
+
+            await api.post('/finance/cash-calls/', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
             });
             onSuccess?.();
             onClose();
@@ -104,11 +113,23 @@ export default function CashCallModal({ propertyId, onClose, onSuccess }) {
                                 Détails & Instructions
                             </label>
                             <textarea
-                                rows={3}
+                                rows={2}
                                 placeholder="Précisez ici les détails pour le propriétaire..."
                                 value={form.description}
                                 onChange={e => setForm(p => ({ ...p, description: e.target.value }))}
-                                className="w-full rounded-xl border bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none transition-all"
+                                className="w-full rounded-xl border bg-background px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none transition-all"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1.5 block">
+                                <Upload className="h-3 w-3 inline mr-1" />
+                                Justificatif de Paiement (Optionnel)
+                            </label>
+                            <input
+                                type="file"
+                                onChange={e => setForm(p => ({ ...p, proof: e.target.files[0] }))}
+                                className="w-full text-xs text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-black file:uppercase file:tracking-wider file:bg-primary/10 file:text-primary hover:file:bg-primary/20 transition-all cursor-pointer"
                             />
                         </div>
                     </div>

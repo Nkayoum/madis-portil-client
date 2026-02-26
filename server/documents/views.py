@@ -23,4 +23,6 @@ class DocumentViewSet(viewsets.ModelViewSet):
             return Document.objects.none()
         if user.role == 'ADMIN_MADIS':
             return Document.objects.all()
+        if user.role == 'CHEF_CHANTIER':
+            return Document.objects.filter(site__chef_de_chantier=user)
         return Document.objects.filter(property__owner=user)

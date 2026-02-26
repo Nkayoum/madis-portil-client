@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import api from '@/lib/axios';
-import { useToast } from '@/context/ToastContext';
+import api from '../../lib/axios';
+import { useToast } from '../../context/ToastContext';
 import { UserPlus, Loader2, Mail, Lock, Shield, X, User, ArrowLeft } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 
 export default function CreateUser() {
     const navigate = useNavigate();
@@ -42,82 +42,89 @@ export default function CreateUser() {
         }
     };
 
-    const ic = "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 outline-none transition-all";
+    const ic = "h-14 w-full rounded-2xl solaris-glass border border-white/20 bg-white/40 px-6 text-[10px] font-black uppercase tracking-widest placeholder:text-muted-foreground/40 focus:bg-white focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-sm";
 
     return (
-        <div className="max-w-2xl mx-auto space-y-6 animate-fade-in">
-            <Link to="/dashboard/users" className="flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors group">
-                <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-                Retour aux clients
+        <div className="max-w-3xl mx-auto space-y-12 pb-24 animate-fade-in">
+            <Link
+                to="/dashboard/users"
+                className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-all group"
+            >
+                <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
+                Retour au Registre
             </Link>
 
-            <div className="bg-card border rounded-2xl shadow-sm overflow-hidden">
-                <div className="p-6 border-b bg-muted/30">
-                    <div className="flex items-center gap-3">
-                        <div className="p-2 bg-primary/10 rounded-lg">
-                            <UserPlus className="h-5 w-5 text-primary" />
+            <div className="solaris-glass rounded-[3rem] border border-white/20 overflow-hidden shadow-2xl">
+                <div className="p-12 border-b border-black/5 bg-black/[0.02]">
+                    <div className="flex items-center gap-4">
+                        <div className="h-12 w-12 rounded-2xl bg-zinc-900 flex items-center justify-center text-white shadow-xl">
+                            <UserPlus className="h-6 w-6" />
                         </div>
                         <div>
-                            <h1 className="text-2xl font-bold tracking-tight">Nouvel <span className="text-primary tracking-tight">Client</span></h1>
-                            <p className="text-sm text-muted-foreground">Créez un nouveau compte avec les accès appropriés.</p>
+                            <div className="flex items-center gap-2 mb-1">
+                                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Onboarding MaDis</span>
+                            </div>
+                            <h1 className="text-4xl font-black tracking-tighter">
+                                Inscrire <span className="opacity-40">Client</span>
+                            </h1>
                         </div>
                     </div>
                 </div>
 
-                <form onSubmit={handleSubmit} className="p-6 space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                            <label className="text-sm font-bold text-muted-foreground uppercase flex items-center gap-2">
+                <form onSubmit={handleSubmit} className="p-12 space-y-10">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="space-y-3">
+                            <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-2 px-1">
                                 <User className="h-3.5 w-3.5" />
-                                Prénom *
+                                Prénom
                             </label>
                             <input
                                 type="text"
                                 name="first_name"
                                 required
                                 className={ic}
-                                placeholder="Jean"
+                                placeholder="JEAN"
                                 value={formData.first_name}
                                 onChange={handleChange}
                             />
                         </div>
-                        <div className="space-y-2">
-                            <label className="text-sm font-bold text-muted-foreground uppercase flex items-center gap-2">
+                        <div className="space-y-3">
+                            <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-2 px-1">
                                 <User className="h-3.5 w-3.5" />
-                                Nom *
+                                Nom
                             </label>
                             <input
                                 type="text"
                                 name="last_name"
                                 required
                                 className={ic}
-                                placeholder="Dupont"
+                                placeholder="DUPONT"
                                 value={formData.last_name}
                                 onChange={handleChange}
                             />
                         </div>
                     </div>
 
-                    <div className="space-y-2">
-                        <label className="text-sm font-bold text-muted-foreground uppercase flex items-center gap-2">
+                    <div className="space-y-3">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-2 px-1">
                             <Mail className="h-3.5 w-3.5" />
-                            Email de connexion *
+                            Email de Connexion
                         </label>
                         <input
                             type="email"
                             name="email"
                             required
                             className={ic}
-                            placeholder="jean@email.com"
+                            placeholder="ADMIN@MADIS.COM"
                             value={formData.email}
                             onChange={handleChange}
                         />
                     </div>
 
-                    <div className="space-y-2">
-                        <label className="text-sm font-bold text-muted-foreground uppercase flex items-center gap-2">
+                    <div className="space-y-3">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-2 px-1">
                             <Lock className="h-3.5 w-3.5" />
-                            Mot de passe *
+                            Mot de Passe
                         </label>
                         <input
                             type="password"
@@ -129,11 +136,11 @@ export default function CreateUser() {
                             value={formData.password}
                             onChange={handleChange}
                         />
-                        <p className="text-[10px] text-muted-foreground italic">Minimum 8 caractères.</p>
+                        <p className="text-[9px] font-black uppercase tracking-[0.1em] text-muted-foreground/40 px-1">Minimum 8 caractères requis.</p>
                     </div>
 
-                    <div className="space-y-2">
-                        <label className="text-sm font-bold text-muted-foreground uppercase flex items-center gap-2">
+                    <div className="space-y-3">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-2 px-1">
                             <Shield className="h-3.5 w-3.5" />
                             Rôle & Permissions
                         </label>
@@ -149,19 +156,23 @@ export default function CreateUser() {
                         </select>
                     </div>
 
-                    <div className="flex items-center justify-end gap-3 pt-6 border-t">
+                    <div className="flex items-center justify-end gap-6 pt-10 border-t border-black/5">
                         <Link
                             to="/dashboard/users"
-                            className="inline-flex items-center justify-center rounded-md text-sm font-medium border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-11 px-6 transition-all"
+                            className="h-14 px-10 rounded-2xl solaris-glass border border-slate-200 text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all flex items-center justify-center shadow-sm"
                         >
                             Annuler
                         </Link>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="inline-flex items-center justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground shadow hover:bg-primary/90 h-11 px-8 disabled:opacity-50 transition-all font-bold"
+                            className="h-14 px-12 rounded-2xl bg-black text-white text-[10px] font-black uppercase tracking-widest hover:bg-zinc-800 transition-all flex items-center justify-center gap-2 shadow-2xl disabled:opacity-50"
                         >
-                            {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Création...</> : <><UserPlus className="mr-2 h-4 w-4" /> Créer le client</>}
+                            {loading ? (
+                                <><Loader2 className="h-4 w-4 animate-spin" /> Inscription...</>
+                            ) : (
+                                <><UserPlus className="h-4 w-4" /> Créer le Client</>
+                            )}
                         </button>
                     </div>
                 </form>

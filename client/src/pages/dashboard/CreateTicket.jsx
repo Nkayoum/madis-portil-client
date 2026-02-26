@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import api from '@/lib/axios';
-import { useToast } from '@/context/ToastContext';
+import api from '../../lib/axios';
+import { useToast } from '../../context/ToastContext';
 import { MessageSquare, Loader2, ArrowLeft } from 'lucide-react';
 
 export default function CreateTicket() {
@@ -14,17 +14,34 @@ export default function CreateTicket() {
         priority: 'MEDIUM',
         category: 'GENERAL',
     });
+    const [selectedFile, setSelectedFile] = useState(null);
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        const { name, value, files } = e.target;
+        if (name === 'attachment') {
+            setSelectedFile(files[0]);
+        } else {
+            setFormData(prev => ({ ...prev, [name]: value }));
+        }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         try {
-            await api.post('/tickets/', formData);
+            const data = new FormData();
+            Object.keys(formData).forEach(key => {
+                data.append(key, formData[key]);
+            });
+            if (selectedFile) {
+                data.append('attachment', selectedFile);
+            }
+
+            await api.post('/tickets/', data, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
             showToast({ message: 'Ticket créé avec succès !', type: 'success' });
             navigate('/dashboard/tickets');
         } catch (err) {
@@ -80,6 +97,12 @@ export default function CreateTicket() {
                     <div className="grid gap-2">
                         <label className="text-sm font-medium leading-none">Description *</label>
                         <textarea name="description" required rows="6" className={`${inputClasses} min-h-[120px] resize-y`} placeholder="Expliquez votre demande en détail..." value={formData.description} onChange={handleChange} />
+                    </div>
+
+                    <div className="grid gap-2">
+                        <label className="text-sm font-medium leading-none">Pièce jointe</label>
+                        <input type="file" name="attachment" className={inputClasses} onChange={handleChange} />
+                        <p className="text-xs text-muted-foreground">Formats acceptés : Images, PDF, Word (max 10 Mo)</p>
                     </div>
 
                     <div className="flex justify-end gap-3 pt-4 border-t">

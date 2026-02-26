@@ -36,6 +36,19 @@ class PropertySerializer(serializers.ModelSerializer):
     )
 
     verification_documents = serializers.SerializerMethodField()
+    first_project_id = serializers.SerializerMethodField()
+    first_site_id = serializers.SerializerMethodField()
+
+    def get_first_project_id(self, obj):
+        project = obj.projects.first()
+        return project.id if project else None
+
+    def get_first_site_id(self, obj):
+        project = obj.projects.first()
+        if project:
+            site = project.construction_sites.first()
+            return site.id if site else None
+        return None
 
     def get_verification_documents(self, obj):
         from documents.models import Document
@@ -65,7 +78,7 @@ class PropertySerializer(serializers.ModelSerializer):
             'budget_total', 'date_debut_travaux', 'date_fin_prevue', 'nom_entrepreneur', 'date_acquisition',
             'commission_type', 'commission_type_display', 'commission_rate', 'commission_fixe',
             'status', 'status_display', 'description', 'images', 'uploaded_images',
-            'pending_decision',
+            'pending_decision', 'first_project_id', 'first_site_id',
             'transactions', 'created_at', 'updated_at',
         ]
         read_only_fields = ['id', 'created_at', 'updated_at']

@@ -33,8 +33,10 @@ class ConstructionSiteViewSet(viewsets.ModelViewSet):
         user = self.request.user
         if not user or not user.is_authenticated:
             return ConstructionSite.objects.none()
-        if user.role in ('ADMIN_MADIS', 'CHEF_CHANTIER'):
+        if user.role == 'ADMIN_MADIS':
             return ConstructionSite.objects.all()
+        if user.role == 'CHEF_CHANTIER':
+            return ConstructionSite.objects.filter(chef_de_chantier=user)
         return ConstructionSite.objects.filter(project__property__owner=user)
 
     def get_permissions(self):
@@ -59,8 +61,10 @@ class JournalEntryViewSet(viewsets.ModelViewSet):
         user = self.request.user
         if not user or not user.is_authenticated:
             return JournalEntry.objects.none()
-        if user.role in ('ADMIN_MADIS', 'CHEF_CHANTIER'):
+        if user.role == 'ADMIN_MADIS':
             return JournalEntry.objects.all()
+        if user.role == 'CHEF_CHANTIER':
+            return JournalEntry.objects.filter(site__chef_de_chantier=user)
         return JournalEntry.objects.filter(site__project__property__owner=user)
 
     def perform_create(self, serializer):
@@ -94,8 +98,10 @@ class SitePhotoViewSet(viewsets.ModelViewSet):
         user = self.request.user
         if not user or not user.is_authenticated:
             return SitePhoto.objects.none()
-        if user.role in ('ADMIN_MADIS', 'CHEF_CHANTIER'):
+        if user.role == 'ADMIN_MADIS':
             return SitePhoto.objects.all()
+        if user.role == 'CHEF_CHANTIER':
+            return SitePhoto.objects.filter(site__chef_de_chantier=user)
         return SitePhoto.objects.filter(site__project__property__owner=user)
 
     def perform_create(self, serializer):
@@ -129,8 +135,10 @@ class ProgressUpdateViewSet(viewsets.ModelViewSet):
         user = self.request.user
         if not user or not user.is_authenticated:
             return ProgressUpdate.objects.none()
-        if user.role in ('ADMIN_MADIS', 'CHEF_CHANTIER'):
+        if user.role == 'ADMIN_MADIS':
             return ProgressUpdate.objects.all()
+        if user.role == 'CHEF_CHANTIER':
+            return ProgressUpdate.objects.filter(site__chef_de_chantier=user)
         return ProgressUpdate.objects.filter(site__project__property__owner=user)
 
     def perform_create(self, serializer):
@@ -164,8 +172,10 @@ class MilestoneViewSet(viewsets.ModelViewSet):
         user = self.request.user
         if not user or not user.is_authenticated:
             return Milestone.objects.none()
-        if user.role in ('ADMIN_MADIS', 'CHEF_CHANTIER'):
+        if user.role == 'ADMIN_MADIS':
             return Milestone.objects.all()
+        if user.role == 'CHEF_CHANTIER':
+            return Milestone.objects.filter(site__chef_de_chantier=user)
         return Milestone.objects.filter(site__project__property__owner=user)
 
     def perform_create(self, serializer):

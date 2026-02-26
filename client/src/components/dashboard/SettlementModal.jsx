@@ -1,7 +1,6 @@
-
 import { useState } from 'react';
-import { X, DollarSign, StickyNote, Calendar, Loader2, ArrowUpRight, Info } from 'lucide-react';
-import api from '@/lib/axios';
+import { X, DollarSign, StickyNote, Calendar, Loader2, ArrowUpRight, Info, Upload } from 'lucide-react';
+import api from '../../lib/axios';
 
 export default function SettlementModal({ propertyId, onClose, onSuccess }) {
     const [loading, setLoading] = useState(false);
@@ -9,17 +8,27 @@ export default function SettlementModal({ propertyId, onClose, onSuccess }) {
         amount: '',
         period_start: new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0],
         period_end: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).toISOString().split('T')[0],
-        note: ''
+        note: '',
+        proof: null
     });
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         try {
-            await api.post('/finance/settlements/', {
-                property: propertyId,
-                ...form,
-                status: 'PROCESSING' // Default status
+            const formData = new FormData();
+            formData.append('property', propertyId);
+            formData.append('amount', form.amount);
+            formData.append('period_start', form.period_start);
+            formData.append('period_end', form.period_end);
+            formData.append('note', form.note);
+            formData.append('status', 'PROCESSING');
+            if (form.proof) {
+                formData.append('proof', form.proof);
+            }
+
+            await api.post('/finance/settlements/', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
             });
             onSuccess?.();
             onClose();
@@ -104,11 +113,23 @@ export default function SettlementModal({ propertyId, onClose, onSuccess }) {
                                 Note Interne / Référence
                             </label>
                             <textarea
-                                rows={3}
+                                rows={2}
                                 placeholder="Référence virement ou note explicative..."
                                 value={form.note}
                                 onChange={e => setForm(p => ({ ...p, note: e.target.value }))}
-                                className="w-full rounded-xl border bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none transition-all"
+                                className="w-full rounded-xl border bg-background px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none transition-all"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1.5 block">
+                                <Upload className="h-3 w-3 inline mr-1" />
+                                Justificatif de Virement (Optionnel)
+                            </label>
+                            <input
+                                type="file"
+                                onChange={e => setForm(p => ({ ...p, proof: e.target.files[0] }))}
+                                className="w-full text-xs text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-black file:uppercase file:tracking-wider file:bg-primary/10 file:text-primary hover:file:bg-primary/20 transition-all cursor-pointer"
                             />
                         </div>
                     </div>

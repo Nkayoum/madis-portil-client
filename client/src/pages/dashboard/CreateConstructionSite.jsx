@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
-import api from '@/lib/axios';
-import { useToast } from '@/context/ToastContext';
+import api from '../../lib/axios';
+import { useToast } from '../../context/ToastContext';
 import {
     HardHat, ArrowLeft, Loader2, Save,
     Building2, Layout, Calendar, FileText,
-    Briefcase
+    Briefcase, User
 } from 'lucide-react';
 
 export default function CreateConstructionSite() {
@@ -18,32 +18,94 @@ export default function CreateConstructionSite() {
     const [loading, setLoading] = useState(false);
     const [properties, setProperties] = useState([]);
     const [projects, setProjects] = useState([]);
+    const [chefs, setChefs] = useState([]);
 
     const [formData, setFormData] = useState({
         name: '',
         property: propertyId || '',
         project: projectId || '',
         description: '',
+        address: '',
+        city: '',
+        postal_code: '',
+        budget: '',
         start_date: new Date().toISOString().split('T')[0],
         end_date: '',
-        category: 'CONSTRUCTION'
+        category: 'CONSTRUCTION',
+        chef_de_chantier: ''
     });
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [propsRes, projsRes] = await Promise.all([
+                const [propsRes, projsRes, usersRes] = await Promise.all([
                     api.get('/properties/'),
-                    api.get('/projects/')
+                    api.get('/projects/'),
+                    api.get('/auth/users/?role=CHEF_CHANTIER')
                 ]);
-                setProperties(propsRes.data.results || []);
-                setProjects(projsRes.data.results || []);
+                const allProps = propsRes.data.results || [];
+                const allProjs = projsRes.data.results || [];
+                const allChefs = usersRes.data.results || usersRes.data || [];
+
+                setProperties(allProps);
+                setProjects(allProjs);
+                setChefs(allChefs);
+
+                // If projectId or propertyId is in URL, ensure property and its address are pre-selected
+                const currentPropertyId = propertyId || (projectId && allProjs.find(p => p.id === parseInt(projectId))?.property);
+
+                if (currentPropertyId) {
+                    const prop = allProps.find(p => p.id === parseInt(currentPropertyId));
+                    if (prop) {
+                        setFormData(prev => ({
+                            ...prev,
+                            property: currentPropertyId.toString(),
+                            address: prop.address || '',
+                            city: prop.city || '',
+                            postal_code: prop.postal_code || ''
+                        }));
+                    }
+                }
             } catch (err) {
                 console.error(err);
             }
         };
         fetchData();
-    }, []);
+    }, [projectId, propertyId]);
+
+    // Auto-link property and location when project is selected
+    useEffect(() => {
+        if (formData.project) {
+            const proj = projects.find(p => p.id === parseInt(formData.project));
+            if (proj && proj.property) {
+                const prop = properties.find(p => p.id === proj.property);
+                if (prop) {
+                    setFormData(prev => ({
+                        ...prev,
+                        property: proj.property.toString(),
+                        address: prev.address || prop.address || '',
+                        city: prev.city || prop.city || '',
+                        postal_code: prev.postal_code || prop.postal_code || ''
+                    }));
+                }
+            }
+        }
+    }, [formData.project, projects, properties]);
+
+    // Auto-fill location when property is selected manually
+    useEffect(() => {
+        if (formData.property && !propertyId && !projectId) {
+            const prop = properties.find(p => p.id === parseInt(formData.property));
+            if (prop) {
+                setFormData(prev => ({
+                    ...prev,
+                    address: prop.address || '',
+                    city: prop.city || '',
+                    postal_code: prop.postal_code || ''
+                }));
+            }
+        }
+    }, [formData.property, properties, propertyId, projectId]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -67,118 +129,215 @@ export default function CreateConstructionSite() {
     };
 
     return (
-        <div className="max-w-2xl mx-auto py-8 animate-fade-in">
-            <div className="flex items-center gap-4 mb-8">
-                <Link to="/dashboard/construction" className="p-2 hover:bg-muted rounded-full transition-colors">
-                    <ArrowLeft className="h-5 w-5" />
+        <div className="max-w-[1000px] mx-auto py-12 px-6 animate-fade-in pb-20">
+            <div className="flex items-center gap-6 mb-12">
+                <Link to="/dashboard/construction" className="p-3 hover:bg-black hover:text-white dark:hover:bg-primary dark:hover:text-white rounded-2xl transition-all shadow-sm border border-black/5 dark:border-white/5 bg-white dark:bg-white/5 group">
+                    <ArrowLeft className="h-5 w-5 group-hover:-translate-x-1 transition-transform" />
                 </Link>
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight mb-1">Nouveau <span className="text-primary">Chantier</span></h1>
-                    <p className="text-muted-foreground">Créez un nouveau suivi de chantier ou intervention.</p>
+                    <h1 className="text-4xl font-black tracking-tighter uppercase leading-none mb-2">
+                        Nouveau <span className="text-red-600">Chantier</span>
+                    </h1>
+                    <p className="text-[11px] font-bold uppercase tracking-wider opacity-60">Initialisation d'un nouveau suivi opérationnel ou intervention.</p>
                 </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="bg-card border rounded-xl p-6 shadow-sm space-y-6">
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium flex items-center gap-2">
-                            <HardHat className="h-4 w-4 text-muted-foreground" />
-                            Nom du chantier
+            <form onSubmit={handleSubmit} className="space-y-10">
+                <div className="solaris-glass rounded-[2.5rem] p-10 border-none shadow-xl space-y-10 dark:bg-black/60">
+                    <div className="space-y-3">
+                        <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1 flex items-center gap-2">
+                            <HardHat className="h-3.5 w-3.5" />
+                            Désignation du Chantier *
                         </label>
                         <input
                             type="text"
                             name="name"
                             required
-                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                            placeholder="Ex: Rénovation Façade Sud"
+                            className="ic w-full p-4 rounded-2xl bg-black/[0.01] border-black/5 focus:bg-white transition-all text-[12px] font-bold"
                             value={formData.name}
                             onChange={handleChange}
                         />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium flex items-center gap-2">
-                                <Building2 className="h-4 w-4 text-muted-foreground" />
-                                Bien immobilier
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="space-y-3">
+                            <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1 flex items-center gap-2">
+                                <Building2 className="h-3.5 w-3.5" />
+                                Bien Immobilier Associé *
                             </label>
                             <select
                                 name="property"
                                 required
-                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                disabled={!!propertyId || !!projectId}
+                                className="ic w-full p-4 rounded-2xl bg-black/[0.01] border-black/5 focus:bg-white transition-all text-[12px] font-bold disabled:opacity-50"
                                 value={formData.property}
                                 onChange={handleChange}
                             >
-                                <option value="">Sélectionnez...</option>
+                                <option value="" className="dark:bg-[#0d121f] dark:text-white">Sélectionnez un bien...</option>
                                 {properties.map(p => (
-                                    <option key={p.id} value={p.id}>{p.name}</option>
+                                    <option key={p.id} value={p.id} className="dark:bg-[#0d121f] dark:text-white">{p.name}</option>
                                 ))}
                             </select>
                         </div>
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium flex items-center gap-2">
-                                <Briefcase className="h-4 w-4 text-muted-foreground" />
-                                Projet (optionnel)
+                        <div className="space-y-3">
+                            <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1 flex items-center gap-2">
+                                <Briefcase className="h-3.5 w-3.5" />
+                                Projet de Référence (Optionnel)
                             </label>
                             <select
                                 name="project"
-                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                disabled={!!projectId}
+                                className="ic w-full p-4 rounded-2xl bg-black/[0.01] border-black/5 focus:bg-white transition-all text-[12px] font-bold disabled:opacity-50"
                                 value={formData.project}
                                 onChange={handleChange}
                             >
-                                <option value="">Aucun...</option>
+                                <option value="" className="dark:bg-[#0d121f] dark:text-white">Aucun projet lié</option>
                                 {projects
                                     .filter(p => !formData.property || p.property === parseInt(formData.property))
                                     .map(p => (
-                                        <option key={p.id} value={p.id}>{p.name}</option>
+                                        <option key={p.id} value={p.id} className="dark:bg-[#0d121f] dark:text-white">{p.name}</option>
                                     ))
                                 }
                             </select>
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium">Date de début</label>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="space-y-3">
+                            <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1 flex items-center gap-2">
+                                <User className="h-3.5 w-3.5" />
+                                Chef de Chantier Responsable *
+                            </label>
+                            <select
+                                name="chef_de_chantier"
+                                required
+                                className="ic w-full p-4 rounded-2xl bg-black/[0.01] dark:bg-white/5 border border-black/5 dark:border-white/10 focus:bg-white dark:focus:bg-white/10 transition-all text-[12px] font-bold dark:text-white dark:[color-scheme:dark]"
+                                value={formData.chef_de_chantier}
+                                onChange={handleChange}
+                            >
+                                <option value="" className="dark:bg-[#0d121f] dark:text-white">Sélectionnez un chef...</option>
+                                {chefs.map(chef => (
+                                    <option key={chef.id} value={chef.id} className="dark:bg-[#0d121f] dark:text-white">
+                                        {chef.first_name} {chef.last_name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="space-y-3">
+                            <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1 flex items-center gap-2">
+                                <FileText className="h-3.5 w-3.5" />
+                                Budget Prévisionnel (€)
+                            </label>
+                            <input
+                                type="number"
+                                name="budget"
+                                placeholder="0.00"
+                                className="ic w-full p-4 rounded-2xl bg-black/[0.01] dark:bg-white/5 border border-black/5 dark:border-white/10 focus:bg-white dark:focus:bg-white/10 transition-all text-[12px] font-bold font-mono dark:text-white"
+                                value={formData.budget}
+                                onChange={handleChange}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="space-y-8 pt-6 border-t border-black/5">
+                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] opacity-30">Localisation Technique</h3>
+
+                        <div className="space-y-3">
+                            <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Adresse de l'Intervention</label>
+                            <input
+                                type="text"
+                                name="address"
+                                placeholder="Numéro et nom de rue"
+                                className="ic w-full p-4 rounded-2xl bg-black/[0.01] border-black/5 focus:bg-white transition-all text-[12px] font-bold"
+                                value={formData.address}
+                                onChange={handleChange}
+                            />
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div className="space-y-3">
+                                <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Ville</label>
+                                <input
+                                    type="text"
+                                    name="city"
+                                    placeholder="Ville"
+                                    className="ic w-full p-4 rounded-2xl bg-black/[0.01] border-black/5 focus:bg-white transition-all text-[12px] font-bold"
+                                    value={formData.city}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            <div className="space-y-3">
+                                <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Code Postal</label>
+                                <input
+                                    type="text"
+                                    name="postal_code"
+                                    placeholder="CP"
+                                    className="ic w-full p-4 rounded-2xl bg-black/[0.01] border-black/5 focus:bg-white transition-all text-[12px] font-bold font-mono"
+                                    value={formData.postal_code}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="space-y-3">
+                            <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1 flex items-center gap-2">
+                                <Calendar className="h-3.5 w-3.5" />
+                                Date de Lancement *
+                            </label>
                             <input
                                 type="date"
                                 name="start_date"
                                 required
-                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                className="ic w-full p-4 rounded-2xl bg-black/[0.01] border-black/5 focus:bg-white transition-all text-[12px] font-bold font-mono"
                                 value={formData.start_date}
                                 onChange={handleChange}
                             />
                         </div>
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium">Date de fin (est.)</label>
+                        <div className="space-y-3">
+                            <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1 flex items-center gap-2">
+                                <Calendar className="h-3.5 w-3.5" />
+                                Livraison Estimée
+                            </label>
                             <input
                                 type="date"
                                 name="end_date"
-                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                className="ic w-full p-4 rounded-2xl bg-black/[0.01] border-black/5 focus:bg-white transition-all text-[12px] font-bold font-mono"
                                 value={formData.end_date}
                                 onChange={handleChange}
                             />
                         </div>
                     </div>
 
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium">Description</label>
+                    <div className="space-y-3">
+                        <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1 flex items-center gap-2">
+                            <Layout className="h-3.5 w-3.5" />
+                            Notes de Chantier & Cahier des Charges
+                        </label>
                         <textarea
                             name="description"
-                            rows="4"
-                            className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-none"
+                            rows="5"
+                            placeholder="Détails techniques, contraintes, objectifs..."
+                            className="ic w-full p-4 rounded-2xl bg-black/[0.01] border-black/5 focus:bg-white transition-all text-[12px] font-bold resize-none"
                             value={formData.description}
                             onChange={handleChange}
                         ></textarea>
                     </div>
                 </div>
 
-                <div className="flex justify-end gap-3">
-                    <Link to="/dashboard/construction" className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-10 px-6">
+                <div className="flex justify-end gap-4">
+                    <Link to="/dashboard/construction" className="inline-flex items-center justify-center rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all bg-white dark:bg-white/5 border border-black/5 dark:border-white/5 shadow-sm hover:bg-black/5 dark:hover:bg-white/10 h-14 px-10">
                         Annuler
                     </Link>
-                    <button type="submit" disabled={loading} className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors bg-primary text-primary-foreground shadow hover:bg-primary/90 h-10 px-8 disabled:opacity-50">
-                        {loading && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-                        Créer le Chantier
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="inline-flex items-center justify-center rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all bg-black dark:bg-primary text-white hover:bg-black/90 dark:hover:bg-primary/90 h-14 px-12 disabled:opacity-50 shadow-xl shadow-black/10 dark:shadow-primary/20 group"
+                    >
+                        {loading ? <Loader2 className="h-5 w-5 animate-spin mr-3" /> : <Save className="h-5 w-5 mr-3 group-hover:scale-110 transition-transform" />}
+                        Déployer le Chantier
                     </button>
                 </div>
             </form>

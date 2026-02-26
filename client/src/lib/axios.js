@@ -28,7 +28,12 @@ api.interceptors.response.use(
     (error) => {
         // Handle HTML error responses (common in Django debug mode or server errors)
         if (error.response?.headers?.['content-type']?.includes('text/html')) {
-            console.error('HTML Error Response detected (first 500 chars):', error.response.data.substring(0, 500));
+            const errorData = error.response.data;
+            if (typeof errorData === 'string') {
+                console.error('HTML Error Response detected (first 500 chars):', errorData.substring(0, 500));
+            } else {
+                console.error('HTML Error Response detected (Binary/Blob data). Status:', error.response.status);
+            }
             const customError = new Error('Une erreur serveur est survenue (Format HTML non supporté).');
             customError.response = {
                 ...error.response,

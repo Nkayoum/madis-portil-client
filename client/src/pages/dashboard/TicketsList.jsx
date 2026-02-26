@@ -1,22 +1,64 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import api from '@/lib/axios';
+import api from '../../lib/axios';
+import { useAuth } from '../../context/AuthContext';
 import { MessageSquare, Plus, Loader2, Clock, CheckCircle2, AlertCircle, ArrowRight } from 'lucide-react';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import { cn } from '../../lib/utils';
 
 export default function TicketsList() {
     const [tickets, setTickets] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const { user } = useAuth();
+    const [properties, setProperties] = useState([]);
+    const [clients, setClients] = useState([]);
+    const [search, setSearch] = useState('');
+    const [filters, setFilters] = useState({
+        status: '',
+        priority: '',
+        property: '',
+        created_by: ''
+    });
 
     useEffect(() => {
-        fetchTickets();
-    }, []);
+        if (user?.role === 'ADMIN_MADIS') {
+            fetchFilterData();
+        }
+    }, [user]);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            fetchTickets();
+        }, 300);
+        return () => clearTimeout(timer);
+    }, [filters, search]);
+
+    const fetchFilterData = async () => {
+        try {
+            const [propRes, userRes] = await Promise.all([
+                api.get('/properties/'),
+                api.get('/auth/users/?role=CLIENT')
+            ]);
+            setProperties(propRes.data.results || propRes.data);
+            setClients(userRes.data.results || userRes.data);
+        } catch (err) {
+            console.error('Failed to fetch filter options:', err);
+        }
+    };
 
     const fetchTickets = async () => {
         try {
-            const response = await api.get('/tickets/');
+            setLoading(true);
+            const params = new URLSearchParams();
+            if (filters.status) params.append('status', filters.status);
+            if (filters.priority) params.append('priority', filters.priority);
+            if (filters.property) params.append('property', filters.property);
+            if (filters.created_by) params.append('created_by', filters.created_by);
+            if (search) params.append('search', search);
+
+            const response = await api.get(`/tickets/?${params.toString()}`);
             setTickets(response.data.results || []);
         } catch (err) {
             setError('Impossible de charger les tickets.');
@@ -24,6 +66,21 @@ export default function TicketsList() {
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleFilterChange = (e) => {
+        const { name, value } = e.target;
+        setFilters(prev => ({ ...prev, [name]: value }));
+    };
+
+    const resetFilters = () => {
+        setFilters({
+            status: '',
+            priority: '',
+            property: '',
+            created_by: ''
+        });
+        setSearch('');
     };
 
     const getStatusConfig = (status) => {
@@ -48,7 +105,7 @@ export default function TicketsList() {
         }
     };
 
-    if (loading) {
+    if (loading && tickets.length === 0) {
         return (
             <div className="flex h-[50vh] items-center justify-center">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -57,30 +114,106 @@ export default function TicketsList() {
     }
 
     return (
-        <div className="space-y-6 animate-fade-in">
-            <div className="flex items-center justify-between">
+        <div className="max-w-[1600px] mx-auto space-y-10 animate-fade-in pb-20 px-4 md:px-10">
+            {/* Header Solaris Style */}
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight mb-1">Messagerie</h1>
-                    <p className="text-muted-foreground">Suivez vos échanges avec l'équipe MaDis.</p>
+                    <h1 className="text-3xl md:text-4xl font-black tracking-tighter uppercase leading-tight md:leading-none mb-3">Messagerie</h1>
+                    <p className="text-[10px] md:text-[11px] font-bold uppercase tracking-wider opacity-60">Gestion et suivi des protocoles de communication avec l'assistance MaDis.</p>
                 </div>
                 <Link
                     to="/dashboard/tickets/new"
-                    className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2"
+                    className="inline-flex items-center justify-center rounded-full text-[10px] font-black uppercase tracking-widest transition-all bg-black dark:bg-primary text-white hover:bg-black/90 dark:hover:bg-primary/90 h-12 md:h-14 px-8 md:px-10 shadow-xl shadow-black/10 dark:shadow-[0_0_30px_rgba(255,0,72,0.4),0_0_60px_rgba(255,0,72,0.15)] dark:hover:shadow-[0_0_40px_rgba(255,0,72,0.6),0_0_80px_rgba(255,0,72,0.2)] group whitespace-nowrap"
                 >
-                    <Plus className="mr-2 h-4 w-4" />
+                    <Plus className="mr-3 h-4 w-4 md:h-5 md:w-5 group-hover:rotate-90 transition-transform duration-500" />
                     Nouveau ticket
                 </Link>
             </div>
 
-            <div className="space-y-3">
+            {/* Filters Bar Solaris Style */}
+            <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-xl space-y-8">
+                <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] opacity-30">
+                    <MessageSquare className="h-4 w-4" />
+                    Console de Recherche et Filtrage
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-6">
+                    <div className="space-y-3 lg:col-span-4">
+                        <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Sujet / Recherche</label>
+                        <input
+                            type="text"
+                            placeholder="Rechercher une conversation..."
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            className="ic w-full p-3.5 rounded-2xl bg-black/[0.01] dark:bg-white/5 border-black/5 dark:border-white/5 focus:bg-white dark:focus:bg-white/10 transition-all text-[12px] font-bold dark:text-white"
+                        />
+                    </div>
+
+                    <div className="space-y-3 lg:col-span-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">État</label>
+                        <select
+                            name="status"
+                            value={filters.status}
+                            onChange={handleFilterChange}
+                            className="ic w-full p-3.5 rounded-2xl bg-black/[0.01] dark:bg-white/5 border-black/5 dark:border-white/5 focus:bg-white dark:focus:bg-white/10 transition-all text-[12px] font-bold dark:text-white"
+                        >
+                            <option value="">Tous les statuts</option>
+                            <option value="OPEN">Ouvert</option>
+                            <option value="IN_PROGRESS">En cours</option>
+                            <option value="CLOSED">Fermé</option>
+                        </select>
+                    </div>
+
+                    <div className="space-y-3 lg:col-span-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Niveau d'Urgence</label>
+                        <select
+                            name="priority"
+                            value={filters.priority}
+                            onChange={handleFilterChange}
+                            className="ic w-full p-3.5 rounded-2xl bg-black/[0.01] dark:bg-white/5 border-black/5 dark:border-white/5 focus:bg-white dark:focus:bg-white/10 transition-all text-[12px] font-bold dark:text-white"
+                        >
+                            <option value="">Toutes priorités</option>
+                            <option value="LOW">Basse (Low)</option>
+                            <option value="MEDIUM">Moyenne (Medium)</option>
+                            <option value="HIGH">Haute (High)</option>
+                            <option value="URGENT">Critique (Urgent)</option>
+                        </select>
+                    </div>
+
+                    <div className="space-y-3 lg:col-span-3">
+                        <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Actif Immobilier</label>
+                        <select
+                            name="property"
+                            value={filters.property}
+                            onChange={handleFilterChange}
+                            className="ic w-full p-3.5 rounded-2xl bg-black/[0.01] dark:bg-white/5 border-black/5 dark:border-white/5 focus:bg-white dark:focus:bg-white/10 transition-all text-[12px] font-bold dark:text-white"
+                        >
+                            <option value="">Tous les biens</option>
+                            {properties.map(p => (
+                                <option key={p.id} value={p.id}>{p.name}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div className="flex items-end lg:col-span-1">
+                        <button
+                            onClick={resetFilters}
+                            className="inline-flex items-center justify-center p-3.5 rounded-2xl bg-white dark:bg-white/10 border border-black/5 dark:border-white/10 shadow-sm hover:bg-black dark:hover:bg-white/20 hover:text-white transition-all text-[10px] font-black uppercase tracking-widest w-full h-[46px] dark:text-white"
+                        >
+                            Reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div className="space-y-6">
                 {tickets.length === 0 ? (
-                    <div className="text-center py-16 bg-card rounded-xl border border-dashed">
-                        <div className="mx-auto h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
-                            <MessageSquare className="h-8 w-8 text-muted-foreground" />
+                    <div className="solaris-glass rounded-[2.5rem] p-32 text-center border-none shadow-xl mt-10">
+                        <div className="mx-auto h-24 w-24 rounded-full bg-black/[0.03] flex items-center justify-center mb-10">
+                            <MessageSquare className="h-10 w-10 text-black/10" />
                         </div>
-                        <h3 className="text-lg font-semibold mb-2">Aucun message</h3>
-                        <p className="text-muted-foreground max-w-md mx-auto text-sm">
-                            Vous n'avez pas encore de conversation en cours. Créez un ticket pour commencer.
+                        <h3 className="text-[14px] font-black uppercase tracking-[0.2em] mb-4">Archives Vierges</h3>
+                        <p className="text-[10px] font-black uppercase tracking-widest opacity-30 max-w-xs mx-auto leading-relaxed">
+                            Aucun protocole de communication n'est actuellement actif dans votre registre.
                         </p>
                     </div>
                 ) : (
@@ -90,51 +223,79 @@ export default function TicketsList() {
                             <Link
                                 key={ticket.id}
                                 to={`/dashboard/tickets/${ticket.id}`}
-                                className="group flex flex-col md:flex-row md:items-center justify-between p-5 rounded-xl border bg-card shadow-sm hover:shadow-md transition-all duration-200"
+                                className={cn(
+                                    "solaris-glass rounded-[1.5rem] md:rounded-[2rem] border-none shadow-xl p-6 md:p-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8 group hover:shadow-2xl transition-all duration-500 relative overflow-hidden",
+                                    ticket.unread_messages_count > 0 && "before:absolute before:inset-y-0 before:left-0 before:w-1.5 before:bg-red-600 before:shadow-[0_0_15px_rgba(220,38,38,0.5)]"
+                                )}
                             >
-                                <div className="flex items-start gap-4">
-                                    <div className={`p-2.5 rounded-lg ${status.bg} ${status.color} mt-0.5`}>
-                                        <status.icon className="h-5 w-5" />
+                                <div className="flex flex-col sm:flex-row sm:items-center gap-6 md:gap-10 flex-1 min-w-0">
+                                    <div className={cn(
+                                        "h-14 w-14 md:h-16 md:w-16 rounded-2xl flex items-center justify-center text-white shadow-xl transition-transform group-hover:scale-110 duration-500 shrink-0",
+                                        ticket.status === 'OPEN' ? "bg-black" : "bg-black/40"
+                                    )}>
+                                        <status.icon className="h-6 w-6 md:h-7 md:w-7" />
                                     </div>
-                                    <div>
-                                        <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                                            <h3 className="font-semibold group-hover:text-primary transition-colors">
+
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex flex-wrap items-center gap-3 mb-3">
+                                            <h3 className="text-lg md:text-xl font-black uppercase tracking-tight group-hover:text-red-600 transition-colors truncate">
                                                 {ticket.subject}
                                             </h3>
-                                            <span className={`px-2 py-0.5 rounded-full text-xs font-medium border ${status.bg} ${status.color} ${status.border}`}>
+                                            <span className={cn(
+                                                "px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest whitespace-nowrap",
+                                                status.bg, status.color
+                                            )}>
                                                 {status.label}
                                             </span>
+                                            {ticket.unread_messages_count > 0 && (
+                                                <span className="flex items-center gap-2 px-3 py-1 bg-red-600 text-white rounded-full text-[8px] font-black uppercase tracking-wider animate-pulse">
+                                                    {ticket.unread_messages_count} Nouveau(x)
+                                                </span>
+                                            )}
                                         </div>
 
-                                        <p className="text-sm text-muted-foreground line-clamp-1 mb-2">
-                                            {ticket.last_message ? (
-                                                <>
-                                                    <span className="font-medium">Dernier message : </span>
-                                                    {ticket.last_message}
-                                                </>
-                                            ) : (
-                                                "Aucun message"
-                                            )}
+                                        <p className="text-[11px] font-bold text-black/40 dark:text-white/40 line-clamp-1 mb-6 uppercase tracking-wider">
+                                            {ticket.last_message || "En attente de communication..."}
                                         </p>
 
-                                        <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                                            <span className="font-mono bg-muted px-1.5 py-0.5 rounded">#{ticket.id}</span>
-                                            <span>•</span>
-                                            <span className="flex items-center gap-1">
-                                                <Clock className="h-3 w-3" />
-                                                {format(new Date(ticket.created_at), 'd MMM yyyy', { locale: fr })}
-                                            </span>
-                                            <span>•</span>
-                                            <span className={`${getPriorityColor(ticket.priority)} px-1.5 py-0.5 rounded bg-muted`}>
-                                                Priorité {ticket.priority_display || ticket.priority}
-                                            </span>
+                                        <div className="flex flex-wrap items-center gap-6">
+                                            <div className="flex items-center gap-2 bg-black/[0.03] dark:bg-white/5 px-3 py-1.5 rounded-lg border border-black/5 dark:border-white/5">
+                                                <span className="text-[9px] font-black uppercase tracking-widest opacity-20">ID</span>
+                                                <span className="text-[11px] font-black font-mono">#{ticket.id}</span>
+                                            </div>
+
+                                            {ticket.property_name && (
+                                                <div className="flex items-center gap-2 opacity-60">
+                                                    <AlertCircle className="h-3.5 w-3.5" />
+                                                    <span className="text-[10px] font-black uppercase tracking-widest">{ticket.property_name}</span>
+                                                </div>
+                                            )}
+
+                                            <div className="flex items-center gap-2 opacity-60">
+                                                <Clock className="h-3.5 w-3.5" />
+                                                <span className="text-[10px] font-black uppercase tracking-widest">
+                                                    {format(new Date(ticket.created_at), 'd MMM yyyy', { locale: fr })}
+                                                </span>
+                                            </div>
+
+                                            <div className={cn(
+                                                "flex items-center gap-2 px-3 py-1.5 rounded-lg bg-black/5 dark:bg-white/5",
+                                                getPriorityColor(ticket.priority)
+                                            )}>
+                                                <span className="text-[9px] font-black uppercase tracking-[0.2em] opacity-40">Priorité</span>
+                                                <span className="text-[9px] font-black uppercase tracking-widest">
+                                                    {ticket.priority_display || ticket.priority}
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="mt-3 md:mt-0 md:ml-4 flex items-center text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <span className="text-sm font-medium mr-2">Ouvrir</span>
-                                    <ArrowRight className="h-4 w-4" />
+                                <div className="flex items-center justify-end">
+                                    <div className="flex items-center gap-3 text-black dark:text-white lg:opacity-0 lg:group-hover:opacity-100 transition-all duration-500 lg:group-hover:translate-x-2">
+                                        <span className="text-[10px] font-black uppercase tracking-widest">Ouvrir le registre</span>
+                                        <ArrowRight className="h-4 w-4" />
+                                    </div>
                                 </div>
                             </Link>
                         );

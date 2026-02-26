@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
-import api from '@/lib/axios';
-import { useToast } from '@/context/ToastContext';
+import api from '../../lib/axios';
+import { useToast } from '../../context/ToastContext';
 import {
     Plus, ArrowLeft, Loader2, Save,
     Building2, Layout, Euro, Calendar,
     FileText, Briefcase
 } from 'lucide-react';
+import { cn } from '../../lib/utils';
 
 export default function EditProject() {
     const { id } = useParams();
@@ -75,160 +76,168 @@ export default function EditProject() {
         }
     };
 
+    const ic = "flex h-12 w-full rounded-2xl border-none bg-black/[0.03] px-4 py-3 text-[12px] font-bold outline-none ring-0 placeholder:text-muted-foreground focus:bg-black/[0.05] transition-all duration-300";
+
     if (loading) {
         return (
-            <div className="flex h-[50vh] items-center justify-center">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <div className="flex flex-col items-center justify-center p-32 gap-6 animate-fade-in">
+                <Loader2 className="h-12 w-12 animate-spin text-black opacity-10" />
+                <p className="text-[10px] font-black uppercase tracking-widest opacity-30">Chargement du configurateur...</p>
             </div>
         );
     }
 
     return (
-        <div className="max-w-2xl mx-auto py-8 animate-fade-in">
-            <div className="flex items-center gap-4 mb-8">
-                <Link to={`/dashboard/projects/${id}`} className="p-2 hover:bg-muted rounded-full transition-colors">
-                    <ArrowLeft className="h-5 w-5" />
-                </Link>
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight mb-1">Modifier le <span className="text-primary">Projet</span></h1>
-                    <p className="text-muted-foreground">Mettez à jour les détails du projet ou de l'intervention.</p>
+        <div className="max-w-4xl mx-auto py-12 px-6 animate-fade-in pb-32">
+            <div className="flex items-center justify-between mb-16">
+                <div className="flex items-center gap-6">
+                    <Link
+                        to={`/dashboard/projects/${id}`}
+                        className="p-3.5 bg-black text-white rounded-2xl shadow-xl hover:scale-110 active:scale-95 transition-all"
+                    >
+                        <ArrowLeft className="h-6 w-6" />
+                    </Link>
+                    <div>
+                        <h1 className="text-4xl font-black tracking-tighter uppercase leading-none">Modifier le Projet</h1>
+                        <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-30 mt-2">Édition des paramètres industriels</p>
+                    </div>
                 </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="bg-card border rounded-xl p-6 shadow-sm space-y-6">
-                    {/* Project Name */}
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium flex items-center gap-2">
-                            <Briefcase className="h-4 w-4 text-muted-foreground" />
-                            Nom du projet
-                        </label>
-                        <input
-                            type="text"
-                            name="name"
-                            required
-                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
-                            value={formData.name}
-                            onChange={handleChange}
-                        />
-                    </div>
+            <form onSubmit={handleSubmit} className="space-y-10">
+                <div className="solaris-glass rounded-[2.5rem] p-10 border-none shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] space-y-10">
+                    <div className="grid gap-10 md:grid-cols-2">
+                        <div className="space-y-8">
+                            {/* Project Name */}
+                            <div className="grid gap-3">
+                                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">Nom du projet *</label>
+                                <div className="relative group">
+                                    <Briefcase className="absolute left-4 top-[14px] h-5 w-5 text-muted-foreground opacity-30 group-focus-within:opacity-100 transition-opacity" />
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        required
+                                        className={cn(ic, "pl-11")}
+                                        placeholder="Ex: Rénovation Façade"
+                                        value={formData.name}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+                            </div>
 
-                    {/* Property Selection */}
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium flex items-center gap-2">
-                            <Building2 className="h-4 w-4 text-muted-foreground" />
-                            Bien immobilier associé
-                        </label>
-                        <select
-                            name="property"
-                            required
-                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
-                            value={formData.property}
-                            onChange={handleChange}
-                        >
-                            {properties.map(p => (
-                                <option key={p.id} value={p.id}>{p.name}</option>
-                            ))}
-                        </select>
-                    </div>
+                            {/* Property Selection */}
+                            <div className="grid gap-3">
+                                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">Bien immobilier associé *</label>
+                                <div className="relative group">
+                                    <Building2 className="absolute left-4 top-[14px] h-5 w-5 text-muted-foreground opacity-30 group-focus-within:opacity-100 transition-opacity" />
+                                    <select
+                                        name="property"
+                                        required
+                                        className={cn(ic, "pl-11 appearance-none")}
+                                        value={formData.property}
+                                        onChange={handleChange}
+                                    >
+                                        {properties.map(p => (
+                                            <option key={p.id} value={p.id}>{p.name}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
 
-                    <div className="grid grid-cols-2 gap-4">
-                        {/* Category */}
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium flex items-center gap-2">
-                                <Layout className="h-4 w-4 text-muted-foreground" />
-                                Type
-                            </label>
-                            <select
-                                name="category"
-                                required
-                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
-                                value={formData.category}
-                                onChange={handleChange}
-                            >
-                                <option value="CONSTRUCTION">Développement / Chantier</option>
-                                <option value="MAINTENANCE">Entretien / Maintenance</option>
-                            </select>
+                            <div className="grid gap-3">
+                                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">Type de projet *</label>
+                                <div className="relative group">
+                                    <Layout className="absolute left-4 top-[14px] h-5 w-5 text-muted-foreground opacity-30 group-focus-within:opacity-100 transition-opacity" />
+                                    <select
+                                        name="category"
+                                        required
+                                        className={cn(ic, "pl-11 appearance-none")}
+                                        value={formData.category}
+                                        onChange={handleChange}
+                                    >
+                                        <option value="CONSTRUCTION">Développement / Chantier</option>
+                                        <option value="MAINTENANCE">Entretien / Maintenance</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
 
-                        {/* Budget */}
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium flex items-center gap-2">
-                                <Euro className="h-4 w-4 text-muted-foreground" />
-                                Budget estimé (€)
-                            </label>
-                            <input
-                                type="number"
-                                name="budget"
-                                required
-                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
-                                value={formData.budget}
-                                onChange={handleChange}
-                            />
-                        </div>
-                    </div>
+                        <div className="space-y-8">
+                            <div className="grid gap-3">
+                                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">Budget estimé (€)</label>
+                                <div className="relative group">
+                                    <Euro className="absolute left-4 top-[14px] h-5 w-5 text-muted-foreground opacity-30 group-focus-within:opacity-100 transition-opacity" />
+                                    <input
+                                        type="number"
+                                        name="budget"
+                                        required
+                                        className={cn(ic, "pl-11")}
+                                        placeholder="0.00"
+                                        value={formData.budget}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+                            </div>
 
-                    {/* Dates */}
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium flex items-center gap-2">
-                                <Calendar className="h-4 w-4 text-muted-foreground" />
-                                Date de début
-                            </label>
-                            <input
-                                type="date"
-                                name="start_date"
-                                required
-                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
-                                value={formData.start_date}
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium flex items-center gap-2">
-                                <Calendar className="h-4 w-4 text-muted-foreground" />
-                                Date de fin (estimée)
-                            </label>
-                            <input
-                                type="date"
-                                name="end_date"
-                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
-                                value={formData.end_date}
-                                onChange={handleChange}
-                            />
-                        </div>
-                    </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="grid gap-3">
+                                    <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">Début</label>
+                                    <input
+                                        type="date"
+                                        name="start_date"
+                                        required
+                                        className={cn(ic, "font-mono")}
+                                        value={formData.start_date}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+                                <div className="grid gap-3">
+                                    <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">Fin estimée</label>
+                                    <input
+                                        type="date"
+                                        name="end_date"
+                                        className={cn(ic, "font-mono text-amber-600")}
+                                        value={formData.end_date}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+                            </div>
 
-                    {/* Description */}
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium flex items-center gap-2">
-                            <FileText className="h-4 w-4 text-muted-foreground" />
-                            Description
-                        </label>
-                        <textarea
-                            name="description"
-                            rows="4"
-                            className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-none"
-                            value={formData.description}
-                            onChange={handleChange}
-                        ></textarea>
+                            <div className="grid gap-3">
+                                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">Description</label>
+                                <div className="relative group">
+                                    <FileText className="absolute left-4 top-[14px] h-5 w-5 text-muted-foreground opacity-30 group-focus-within:opacity-100 transition-opacity" />
+                                    <textarea
+                                        name="description"
+                                        rows="4"
+                                        className={cn(ic, "pl-11 h-auto py-4 min-h-[120px] leading-relaxed resize-none")}
+                                        placeholder="Détails techniques du projet..."
+                                        value={formData.description}
+                                        onChange={handleChange}
+                                    ></textarea>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div className="flex justify-end gap-3">
+                <div className="flex justify-end items-center gap-8 pt-4">
                     <Link
                         to={`/dashboard/projects/${id}`}
-                        className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-10 px-6"
+                        className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-black transition-all px-4"
                     >
                         Annuler
                     </Link>
                     <button
                         type="submit"
                         disabled={saving}
-                        className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors bg-primary text-primary-foreground shadow hover:bg-primary/90 h-10 px-8 disabled:opacity-50"
+                        className="inline-flex items-center justify-center rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all bg-black text-white hover:bg-black/90 h-14 px-12 shadow-[0_12px_24px_-8px_rgba(0,0,0,0.3)] disabled:opacity-50 group"
                     >
-                        {saving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
-                        Mettre à jour
+                        {saving ? (
+                            <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> Mise à jour...</>
+                        ) : (
+                            <><Save className="mr-3 h-5 w-5 group-hover:scale-110 transition-transform" /> Mettre à jour le projet</>
+                        )}
                     </button>
                 </div>
             </form>

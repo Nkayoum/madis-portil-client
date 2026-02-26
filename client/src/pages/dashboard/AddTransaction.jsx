@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import api from '@/lib/axios';
-import { useToast } from '@/context/ToastContext';
+import api from '../../lib/axios';
+import { useToast } from '../../context/ToastContext';
+import { cn } from '../../lib/utils';
 import {
     Wallet, ArrowLeft, Loader2, Save,
     Building2, Euro, Calendar, FileText,
@@ -33,12 +34,16 @@ export default function AddTransaction() {
     const urlParams = new URLSearchParams(window.location.search);
     const siteIdFromUrl = urlParams.get('site');
     const projectIdFromUrl = urlParams.get('projectId');
+    const propertyIdFromUrl = urlParams.get('propertyId');
+    const returnToProperty = urlParams.get('returnToProperty') === 'true';
 
     const returnPath = siteIdFromUrl
         ? `/dashboard/construction/${siteIdFromUrl}?tab=finance`
         : projectIdFromUrl
             ? `/dashboard/projects/${projectIdFromUrl}`
-            : '/dashboard/finance/transactions';
+            : (propertyIdFromUrl || returnToProperty)
+                ? `/dashboard/properties/${propertyIdFromUrl || formData.property}?tab=performance`
+                : '/dashboard/finance/transactions';
 
     useEffect(() => {
         const fetchData = async () => {
@@ -48,25 +53,38 @@ export default function AddTransaction() {
                     api.get('/construction/sites/'),
                     api.get('/projects/')
                 ]);
-                setProperties(propsRes.data.results || []);
+                const allProps = propsRes.data.results || [];
+                setProperties(allProps);
                 setSites(sitesRes.data.results || sitesRes.data || []);
                 setProjects(projectsRes.data.results || projectsRes.data || []);
 
-                // If there's a site in URL, pre-select it and its property
+                // 1. If propertyId in URL, pre-select it
+                if (propertyIdFromUrl) {
+                    setFormData(prev => ({ ...prev, property: propertyIdFromUrl }));
+                }
+
+                // 2. If there's a site in URL, pre-select it and its property/project
                 if (siteIdFromUrl) {
+                    console.log("DEBUG: siteIdFromUrl found:", siteIdFromUrl);
+                    console.log("DEBUG: Available sites:", sitesRes.data.results || sitesRes.data);
                     const site = (sitesRes.data.results || sitesRes.data || []).find(s => s.id === parseInt(siteIdFromUrl));
                     if (site) {
+                        console.log("DEBUG: Found site object:", site);
                         setFormData(prev => ({
                             ...prev,
-                            site: siteIdFromUrl,
-                            property: site.property_id || site.project_property_id || '',
-                            type: 'OUTFLOW'
+                            site: siteIdFromUrl.toString(),
+                            project: (site.project || site.project_id)?.toString() || '',
+                            property: (site.property || site.property_id || site.project_property)?.toString() || '',
+                            type: 'OUTFLOW',
+                            category: 'MATERIAUX'
                         }));
+                    } else {
+                        console.log("DEBUG: Site NOT found in list");
                     }
                 }
 
-                // If there's a project in URL, pre-select it and its property
-                if (projectIdFromUrl) {
+                // 3. If there's a project in URL, pre-select it and its property
+                if (projectIdFromUrl && !siteIdFromUrl) {
                     const proj = (projectsRes.data.results || projectsRes.data || []).find(p => p.id === parseInt(projectIdFromUrl));
                     if (proj) {
                         setFormData(prev => ({
@@ -82,7 +100,7 @@ export default function AddTransaction() {
             }
         };
         fetchData();
-    }, [siteIdFromUrl, projectIdFromUrl]);
+    }, [siteIdFromUrl, projectIdFromUrl, propertyIdFromUrl]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -116,6 +134,25 @@ export default function AddTransaction() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Client-side validation
+        if (!formData.property) {
+            showToast({ message: 'Veuillez sélectionner un bien immobilier.', type: 'error' });
+            return;
+        }
+        if (!formData.amount) {
+            showToast({ message: 'Veuillez saisir un montant.', type: 'error' });
+            return;
+        }
+        if (!formData.date) {
+            showToast({ message: 'Veuillez sélectionner une date de paiement.', type: 'error' });
+            return;
+        }
+        if (!formData.invoice) {
+            showToast({ message: 'Un justificatif est obligatoire pour enregistrer une transaction.', type: 'error' });
+            return;
+        }
+
         setLoading(true);
 
         const data = new FormData();
@@ -145,49 +182,50 @@ export default function AddTransaction() {
     };
 
     return (
-        <div className="max-w-2xl mx-auto py-8 animate-fade-in">
-            <div className="flex items-center gap-4 mb-8">
-                <Link to={returnPath} className="p-2 hover:bg-muted rounded-full transition-colors">
-                    <ArrowLeft className="h-5 w-5" />
+        <div className="max-w-[1200px] mx-auto py-12 px-6 animate-fade-in">
+            <div className="flex items-center gap-8 mb-12">
+                <Link to={returnPath} className="h-12 w-12 flex items-center justify-center rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-white/10 shadow-sm hover:shadow-md transition-all group dark:text-white">
+                    <ArrowLeft className="h-5 w-5 group-hover:-translate-x-1 transition-transform" />
                 </Link>
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight mb-1">Enregistrer une <span className="text-primary">Transaction</span></h1>
-                    <p className="text-muted-foreground">Ajoutez un mouvement financier manuel.</p>
+                    <h1 className="text-5xl font-black tracking-tighter uppercase leading-none mb-2">Enregistrer une <span className="text-primary">Transaction</span></h1>
+                    <p className="text-[11px] font-black uppercase tracking-widest opacity-40">Protocole de saisie financière • Mouvement manuel</p>
                 </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="bg-card border rounded-xl p-6 shadow-sm space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-10">
+                <div className="solaris-glass rounded-[2.5rem] p-10 shadow-2xl space-y-10 border-none">
                     {/* Property Selection */}
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium flex items-center gap-2">
-                            <Building2 className="h-4 w-4 text-muted-foreground" />
-                            Bien immobilier
+                    <div className="space-y-4">
+                        <label className="text-[10px] font-black uppercase tracking-widest flex items-center gap-3 opacity-60">
+                            <Building2 className="h-4 w-4" />
+                            Bien immobilier concerné
                         </label>
                         <select
                             name="property"
                             required
-                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                            disabled={!!propertyIdFromUrl || !!siteIdFromUrl || !!projectIdFromUrl}
+                            className="flex h-14 w-full rounded-2xl bg-black/[0.02] dark:bg-white/5 border-black/5 dark:border-white/5 px-6 py-2 text-[14px] font-bold focus:bg-white dark:focus:bg-white/10 focus:ring-4 focus:ring-primary/10 outline-none transition-all disabled:opacity-50 dark:text-white"
                             value={formData.property}
                             onChange={handleChange}
                         >
-                            <option value="">Sélectionnez un bien...</option>
+                            <option value="">Sélectionnez un actif...</option>
                             {properties.map(p => (
                                 <option key={p.id} value={p.id}>{p.name}</option>
                             ))}
                         </select>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                         {/* Type */}
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium flex items-center gap-2">
-                                <TrendingUp className="h-4 w-4 text-muted-foreground" />
-                                Type de mouvement
+                        <div className="space-y-4">
+                            <label className="text-[10px] font-black uppercase tracking-widest flex items-center gap-3 opacity-60">
+                                <TrendingUp className="h-4 w-4" />
+                                Nature du flux
                             </label>
                             <select
                                 name="type"
-                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                className="flex h-14 w-full rounded-2xl bg-black/[0.02] dark:bg-white/5 border-black/5 dark:border-white/5 px-6 py-2 text-[14px] font-bold focus:bg-white dark:focus:bg-white/10 focus:ring-4 focus:ring-primary/10 outline-none transition-all dark:text-white"
                                 value={formData.type}
                                 onChange={handleChange}
                             >
@@ -197,14 +235,14 @@ export default function AddTransaction() {
                         </div>
 
                         {/* Category */}
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium flex items-center gap-2">
-                                <FileText className="h-4 w-4 text-muted-foreground" />
-                                Catégorie
+                        <div className="space-y-4">
+                            <label className="text-[10px] font-black uppercase tracking-widest flex items-center gap-3 opacity-60">
+                                <FileText className="h-4 w-4" />
+                                Nomenclature comptable
                             </label>
                             <select
                                 name="category"
-                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                className="flex h-14 w-full rounded-2xl bg-black/[0.02] dark:bg-white/5 border-black/5 dark:border-white/5 px-6 py-2 text-[14px] font-bold focus:bg-white dark:focus:bg-white/10 focus:ring-4 focus:ring-primary/10 outline-none transition-all dark:text-white"
                                 value={formData.category}
                                 onChange={handleChange}
                             >
@@ -221,64 +259,67 @@ export default function AddTransaction() {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                         {/* Amount */}
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium flex items-center gap-2">
-                                <Euro className="h-4 w-4 text-muted-foreground" />
-                                Montant (€)
+                        <div className="space-y-4">
+                            <label className="text-[10px] font-black uppercase tracking-widest flex items-center gap-3 opacity-60">
+                                <Euro className="h-4 w-4" />
+                                Valeur nominale (€)
                             </label>
-                            <input
-                                type="number"
-                                step="0.01"
-                                name="amount"
-                                required
-                                placeholder="0.00"
-                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
-                                value={formData.amount}
-                                onChange={handleChange}
-                            />
+                            <div className="relative">
+                                <input
+                                    type="number"
+                                    step="0.01"
+                                    name="amount"
+                                    required
+                                    placeholder="0.00"
+                                    className="flex h-14 w-full rounded-2xl bg-black/[0.02] dark:bg-white/5 border-black/5 dark:border-white/5 px-6 py-2 text-[18px] font-black focus:bg-white dark:focus:bg-white/10 focus:ring-4 focus:ring-primary/10 outline-none transition-all dark:text-white dark:placeholder:text-white/30"
+                                    value={formData.amount}
+                                    onChange={handleChange}
+                                />
+                                <div className="absolute right-6 top-1/2 -translate-y-1/2 text-[10px] font-black opacity-20 uppercase tracking-widest">EUR</div>
+                            </div>
                         </div>
 
                         {/* Date de Transaction */}
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium flex items-center gap-2">
-                                <Calendar className="h-4 w-4 text-muted-foreground" />
-                                Date de paiement
+                        <div className="space-y-4">
+                            <label className="text-[10px] font-black uppercase tracking-widest flex items-center gap-3 opacity-60">
+                                <Calendar className="h-4 w-4" />
+                                Date d'exécution
                             </label>
                             <input
                                 type="date"
                                 name="date"
                                 required
-                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                className="flex h-14 w-full rounded-2xl bg-black/[0.02] dark:bg-white/5 border-black/5 dark:border-white/5 px-6 py-2 text-[14px] font-bold focus:bg-white dark:focus:bg-white/10 focus:ring-4 focus:ring-primary/10 outline-none transition-all dark:text-white dark:[color-scheme:dark]"
                                 value={formData.date}
                                 onChange={handleChange}
                             />
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                         {/* Performance Period */}
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium">Performance : Mois concerné</label>
+                        <div className="space-y-4">
+                            <label className="text-[10px] font-black uppercase tracking-widest opacity-60">Affection temporelle : Mois</label>
                             <select
                                 name="period_month"
-                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                className="flex h-14 w-full rounded-2xl bg-black/[0.02] dark:bg-white/5 border-black/5 dark:border-white/5 px-6 py-2 text-[14px] font-bold focus:bg-white dark:focus:bg-white/10 focus:ring-4 focus:ring-primary/10 outline-none transition-all dark:text-white"
                                 value={formData.period_month}
                                 onChange={handleChange}
                             >
                                 {[...Array(12)].map((_, i) => (
                                     <option key={i + 1} value={i + 1}>
-                                        {new Date(2000, i).toLocaleString('fr-FR', { month: 'long' })}
+                                        {new Date(2000, i).toLocaleString('fr-FR', { month: 'long' }).toUpperCase()}
                                     </option>
                                 ))}
                             </select>
                         </div>
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium">Performance : Année concernée</label>
+                        <div className="space-y-4">
+                            <label className="text-[10px] font-black uppercase tracking-widest opacity-60">Affection temporelle : Année</label>
                             <select
                                 name="period_year"
-                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                className="flex h-14 w-full rounded-2xl bg-black/[0.02] dark:bg-white/5 border-black/5 dark:border-white/5 px-6 py-2 text-[14px] font-bold focus:bg-white dark:focus:bg-white/10 focus:ring-4 focus:ring-primary/10 outline-none transition-all dark:text-white"
                                 value={formData.period_year}
                                 onChange={handleChange}
                             >
@@ -292,93 +333,118 @@ export default function AddTransaction() {
 
                     {/* Project & Site (Conditional) */}
                     {formData.property && (
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium flex items-center gap-2">
-                                    <ClipboardList className="h-4 w-4 text-muted-foreground" />
-                                    Projet associé (optionnel)
-                                </label>
-                                <select
-                                    name="project"
-                                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
-                                    value={formData.project}
-                                    onChange={handleChange}
-                                >
-                                    <option value="">Aucun projet...</option>
-                                    {projects
-                                        .filter(p => p.property === parseInt(formData.property))
-                                        .map(p => (
-                                            <option key={p.id} value={p.id}>{p.name}</option>
-                                        ))
-                                    }
-                                </select>
+                        <div className="space-y-8 p-8 bg-black/[0.02] dark:bg-white/[0.03] rounded-3xl border border-black/5 dark:border-white/5">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                                <div className="space-y-4">
+                                    <label className="text-[10px] font-black uppercase tracking-widest flex items-center gap-3 opacity-60">
+                                        <ClipboardList className="h-4 w-4" />
+                                        Indexation Projet (Optionnel)
+                                    </label>
+                                    <select
+                                        name="project"
+                                        disabled={!!siteIdFromUrl || !!projectIdFromUrl}
+                                        className="flex h-14 w-full rounded-2xl bg-white dark:bg-white/10 border-black/5 dark:border-white/5 px-6 py-2 text-[13px] font-bold shadow-sm focus:ring-4 focus:ring-primary/10 outline-none transition-all disabled:opacity-50 dark:text-white"
+                                        value={formData.project}
+                                        onChange={handleChange}
+                                    >
+                                        <option value="">Aucune liaison projet...</option>
+                                        {projects
+                                            .filter(p => p.property === parseInt(formData.property))
+                                            .map(p => (
+                                                <option key={p.id} value={p.id}>{p.name}</option>
+                                            ))
+                                        }
+                                    </select>
+                                </div>
+                                <div className="space-y-4">
+                                    <label className="text-[10px] font-black uppercase tracking-widest flex items-center gap-3 opacity-60">
+                                        <HardHat className="h-4 w-4" />
+                                        Indexation Chantier (Optionnel)
+                                    </label>
+                                    <select
+                                        name="site"
+                                        disabled={!!siteIdFromUrl}
+                                        className="flex h-14 w-full rounded-2xl bg-white dark:bg-white/10 border-black/5 dark:border-white/5 px-6 py-2 text-[13px] font-bold shadow-sm focus:ring-4 focus:ring-primary/10 outline-none transition-all disabled:opacity-50 dark:text-white"
+                                        value={formData.site}
+                                        onChange={handleChange}
+                                    >
+                                        <option value="">Aucune liaison chantier...</option>
+                                        {sites
+                                            .filter(s => {
+                                                if (siteIdFromUrl && s.id === parseInt(siteIdFromUrl)) return true;
+                                                const propMatch = s.property === parseInt(formData.property) || s.project_property === parseInt(formData.property);
+                                                const projectMatch = !formData.project || s.project === parseInt(formData.project);
+                                                return propMatch && projectMatch;
+                                            })
+                                            .map(s => (
+                                                <option key={s.id} value={s.id}>{s.name}</option>
+                                            ))
+                                        }
+                                    </select>
+                                </div>
                             </div>
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium flex items-center gap-2">
-                                    <HardHat className="h-4 w-4 text-muted-foreground" />
-                                    Chantier associé (optionnel)
-                                </label>
-                                <select
-                                    name="site"
-                                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
-                                    value={formData.site}
-                                    onChange={handleChange}
-                                >
-                                    <option value="">Aucun chantier...</option>
-                                    {sites
-                                        .filter(s => {
-                                            const propMatch = s.property === parseInt(formData.property) || s.project_property === parseInt(formData.property);
-                                            const projectMatch = !formData.project || s.project === parseInt(formData.project);
-                                            return propMatch && projectMatch;
-                                        })
-                                        .map(s => (
-                                            <option key={s.id} value={s.id}>{s.name}</option>
-                                        ))
-                                    }
-                                </select>
-                            </div>
-                            <p className="col-span-2 text-[10px] text-muted-foreground">Lier cette transaction à un projet ou un chantier spécifique pour le suivi budgétaire.</p>
+                            <p className="text-[9px] font-black uppercase tracking-widest opacity-30 text-center">Lier cette transaction à un programme spécifique pour l'intégration budgétaire analytique.</p>
                         </div>
                     )}
 
                     {/* Description */}
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium">Description (optionnel)</label>
+                    <div className="space-y-4">
+                        <label className="text-[10px] font-black uppercase tracking-widest opacity-60 text-sm font-medium">Note documentaire (Optionnel)</label>
                         <textarea
                             name="description"
-                            rows="3"
-                            placeholder="Détails de la transaction..."
-                            className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-none"
+                            rows="4"
+                            placeholder="Détails techniques du flux..."
+                            className="flex w-full rounded-3xl bg-black/[0.02] dark:bg-white/5 border-black/5 dark:border-white/5 px-6 py-4 text-[14px] font-medium focus:bg-white dark:focus:bg-white/10 focus:ring-4 focus:ring-primary/10 outline-none transition-all resize-none shadow-inner dark:text-white dark:placeholder:text-white/30"
                             value={formData.description}
                             onChange={handleChange}
                         ></textarea>
                     </div>
 
-                    {/* Invoice Upload */}
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium">Justificatif / Facture (optionnel)</label>
-                        <input
-                            type="file"
-                            onChange={handleFileChange}
-                            className="flex w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
-                        />
+                    {/* Invoice Upload Solaris style */}
+                    <div className="space-y-6">
+                        <label className="text-[10px] font-black uppercase tracking-widest opacity-60">Justificatif de transfert (Audit)</label>
+                        <div className="relative group cursor-pointer">
+                            <input
+                                type="file"
+                                onChange={handleFileChange}
+                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                            />
+                            <div className="flex items-center justify-between p-6 rounded-2xl bg-black/[0.03] dark:bg-white/5 border-2 border-dashed border-black/10 dark:border-white/10 group-hover:border-primary group-hover:bg-primary/5 transition-all">
+                                <div className="flex items-center gap-4">
+                                    <div className="h-12 w-12 rounded-xl bg-black text-white flex items-center justify-center">
+                                        <FileText className="h-6 w-6" />
+                                    </div>
+                                    <div className="text-left">
+                                        <div className="text-[12px] font-black uppercase tracking-tight">
+                                            {formData.invoice ? formData.invoice.name : "Sélectionner un fichier justificatif"}
+                                        </div>
+                                        <div className="text-[10px] font-black uppercase tracking-widest opacity-30">
+                                            PDF, JPG, PNG • Max 10MB
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="h-10 px-6 rounded-full bg-white dark:bg-white/10 text-black dark:text-white text-[10px] font-black uppercase tracking-widest flex items-center shadow-sm">
+                                    Parcourir
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div className="flex justify-end gap-3">
+                <div className="flex justify-end items-center gap-6 pt-4">
                     <Link
                         to={returnPath}
-                        className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-10 px-6"
+                        className="text-[10px] font-black uppercase tracking-widest opacity-40 hover:opacity-100 hover:text-black dark:hover:text-white transition-all"
                     >
-                        Annuler
+                        Abandonner la saisie
                     </Link>
                     <button
                         type="submit"
                         disabled={loading}
-                        className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors bg-primary text-primary-foreground shadow hover:bg-primary/90 h-10 px-8 disabled:opacity-50"
+                        className="h-16 px-12 rounded-[1.5rem] bg-primary text-white text-[12px] font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center gap-4"
                     >
-                        {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
-                        Enregistrer
+                        {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" />}
+                        Valider l'enregistrement
                     </button>
                 </div>
             </form>

@@ -17,6 +17,10 @@ class Ticket(models.Model):
         URGENT = 'URGENT', 'Urgente'
 
     subject = models.CharField('sujet', max_length=255)
+    description = models.TextField('description', blank=True)
+    attachment = models.FileField(
+        'pièce jointe', upload_to='tickets/%Y/%m/', null=True, blank=True
+    )
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -68,6 +72,7 @@ class Message(models.Model):
     attachment = models.FileField(
         'pièce jointe', upload_to='messages/%Y/%m/', null=True, blank=True
     )
+    is_internal = models.BooleanField('note interne', default=False)
     created_at = models.DateTimeField('date de création', auto_now_add=True)
 
     class Meta:

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import api from '@/lib/axios';
-import { useToast } from '@/context/ToastContext';
+import api from '../../lib/axios';
+import { useToast } from '../../context/ToastContext';
 import { ArrowLeft, Building, Loader2, Save, Ruler, Bed, Hash, MapPin, Image as ImageIcon, X, Tag, ShoppingBag, Briefcase, Euro, Settings, HardHat, Home, Percent, User, Calendar, Wrench, Sofa, Shield, Check, ShieldCheck, Globe } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 
 const PROPERTY_CATEGORIES = [
     { value: 'RESIDENTIEL', label: 'Résidentiel', icon: Building },

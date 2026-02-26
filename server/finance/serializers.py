@@ -25,10 +25,29 @@ class CashCallSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'property', 'property_name',
             'amount', 'reason', 'description', 'due_date',
-            'status', 'status_display',
+            'status', 'status_display', 'proof',
             'created_by', 'created_by_name', 'created_at', 'updated_at'
         ]
         read_only_fields = ['id', 'created_by', 'created_at', 'updated_at']
+        extra_kwargs = {
+            'property': {'required': False},
+            'amount': {'required': False},
+            'reason': {'required': False},
+            'due_date': {'required': False},
+        }
+
+    def validate(self, data):
+        user = self.context['request'].user
+        status = data.get('status')
+        proof = data.get('proof') or self.instance.proof if self.instance else data.get('proof')
+
+        if status == CashCall.Status.PAID and user.role != 'ADMIN_MADIS':
+            raise serializers.ValidationError({"status": "Seul un administrateur peut marquer un appel de fonds comme payé."})
+        
+        if status == CashCall.Status.PENDING and not proof:
+            raise serializers.ValidationError({"proof": "Un justificatif est obligatoire pour valider le paiement."})
+
+        return data
 
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
@@ -47,10 +66,23 @@ class SettlementSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'property', 'property_name',
             'amount', 'period_start', 'period_end',
-            'status', 'status_display', 'reference', 'note',
+            'status', 'status_display', 'reference', 'note', 'proof',
             'created_by', 'created_by_name', 'created_at', 'updated_at'
         ]
         read_only_fields = ['id', 'created_by', 'created_at', 'updated_at']
+        extra_kwargs = {
+            'property': {'required': False},
+            'amount': {'required': False},
+            'period_start': {'required': False},
+            'period_end': {'required': False},
+        }
+
+    def validate(self, data):
+        user = self.context['request'].user
+        status = data.get('status')
+        if status == Settlement.Status.PAID and user.role != 'ADMIN_MADIS':
+            raise serializers.ValidationError({"status": "Seul un administrateur peut valider un virement."})
+        return data
 
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
@@ -107,6 +139,13 @@ class FinancialTransactionSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({
                     "amount": f"Le montant ({amount}€) dépasse le loyer mensuel attendu ({target_rent}€) pour ce bien. Veuillez vérifier votre saisie ou modifier l'objectif sur la fiche du bien."
                 })
+
+        # Require invoice for all transactions
+        invoice = data.get('invoice') or (self.instance.invoice if self.instance else None)
+        if not invoice:
+            raise serializers.ValidationError({
+                "invoice": "Un justificatif est obligatoire pour enregistrer une transaction."
+            })
 
         return data
 

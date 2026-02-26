@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import api from '@/lib/axios';
-import { useToast } from '@/context/ToastContext';
+import api from '../../lib/axios';
+import { useToast } from '../../context/ToastContext';
 import {
     ArrowLeft, Building, Loader2, Save, Ruler, Bed, Hash,
     MapPin, Image as ImageIcon, X, Tag, ShoppingBag,
@@ -9,7 +9,7 @@ import {
     User, Calendar, Wrench, Sofa, Shield, Check,
     ShieldCheck, Globe, Coins, Building2, Warehouse, Store, Trees, Hotel
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 
 const PROPERTY_CATEGORIES = [
     { value: 'RESIDENTIEL', label: 'Résidentiel', icon: Building },
@@ -192,17 +192,48 @@ export default function CreateProperty() {
         });
     };
 
+    const validateStep = (step) => {
+        if (mainCategory === 'CONSTRUCTION' && step === 'FINANCE') return true;
+
+        const requiredFields = {
+            INFO: ['name', 'owner', 'address', 'city'],
+            SPECS: ['surface'],
+            FINANCE: formData.transaction_nature === 'VENTE' ? ['prix_vente'] : ['loyer_mensuel']
+        };
+
+        const fieldsToValidate = requiredFields[step] || [];
+        const missingFields = fieldsToValidate.filter(field => !formData[field] || formData[field] === '');
+
+        if (missingFields.length > 0) {
+            const fieldLabels = {
+                name: 'Nom du bien',
+                owner: 'Propriétaire',
+                address: 'Adresse',
+                city: 'Ville',
+                surface: 'Surface',
+                prix_vente: 'Prix de vente',
+                loyer_mensuel: 'Loyer mensuel'
+            };
+            const labels = missingFields.map(f => fieldLabels[f]).join(', ');
+            showToast({
+                message: `Champs obligatoires manquants : ${labels}`,
+                type: 'error'
+            });
+            return false;
+        }
+        return true;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Prevent submission if not on final tab
-        if (activeTab !== 'MEDIA') {
-            const currentIndex = TABS.findIndex(t => t.id === activeTab);
-            if (currentIndex < TABS.length - 1) {
-                setActiveTab(TABS[currentIndex + 1].id);
-            }
+        // Final validation
+        if (!validateStep('INFO') || !validateStep('SPECS') || !validateStep('FINANCE')) {
             return;
         }
+
+        // Double security: prevent submission if not on final tab
+        if (activeTab !== 'MEDIA') return;
 
         setLoading(true);
 
@@ -222,11 +253,29 @@ export default function CreateProperty() {
         });
 
         try {
-            await api.post('/properties/', data, {
+            const response = await api.post('/properties/', data, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
-            showToast({ message: 'Bien immobilier créé avec succès !', type: 'success' });
-            navigate('/dashboard/properties');
+
+            const newId = response.data.id;
+            const projectId = response.data.first_project_id;
+            const siteId = response.data.first_site_id;
+
+            let successMessage = 'Bien immobilier créé avec succès !';
+            let targetPath = `/dashboard/properties/${newId}`;
+
+            if (formData.management_type === 'GESTION') {
+                successMessage = 'Bien créé ! Un compte mandat et un projet d\'entretien ont été générés.';
+                if (projectId) targetPath = `/dashboard/projects/${projectId}`;
+            } else if (formData.management_type === 'CONSTRUCTION') {
+                successMessage = 'Bien créé ! Un compte mandat, un projet et un chantier ont été générés.';
+                if (siteId) targetPath = `/dashboard/construction/${siteId}`;
+            } else {
+                successMessage = 'Bien créé ! Un compte mandat a été initialisé.';
+            }
+
+            showToast({ message: successMessage, type: 'success' });
+            navigate(targetPath);
         } catch (err) {
             console.error('Submission error:', err);
             const errorMessage = err.response?.data
@@ -268,11 +317,11 @@ export default function CreateProperty() {
                 </div>
             </div>
 
-            <div className="bg-card border border-border/50 rounded-3xl shadow-2xl overflow-hidden backdrop-blur-sm relative">
+            <div className="bg-card dark:bg-zinc-900/40 border border-border/50 dark:border-white/5 rounded-3xl shadow-2xl overflow-hidden backdrop-blur-sm relative">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-50"></div>
 
                 {/* Tab Navigation */}
-                <div className="flex border-b border-border/50 bg-muted/20 overflow-x-auto">
+                <div className="flex border-b border-border/50 dark:border-white/5 bg-muted/20 dark:bg-black/20 overflow-x-auto">
                     {TABS.map((tab) => {
                         const isActive = activeTab === tab.id;
                         const Icon = tab.icon;
@@ -280,10 +329,27 @@ export default function CreateProperty() {
                             <button
                                 key={tab.id}
                                 type="button"
-                                onClick={() => setActiveTab(tab.id)}
+                                onClick={() => {
+                                    const targetIndex = TABS.findIndex(t => t.id === tab.id);
+                                    const currentIndex = TABS.findIndex(t => t.id === activeTab);
+
+                                    if (targetIndex < currentIndex) {
+                                        setActiveTab(tab.id);
+                                        return;
+                                    }
+
+                                    for (let i = currentIndex; i < targetIndex; i++) {
+                                        if (!validateStep(TABS[i].id)) {
+                                            setActiveTab(TABS[i].id);
+                                            return;
+                                        }
+                                    }
+
+                                    setActiveTab(tab.id);
+                                }}
                                 className={cn(
                                     "flex-1 min-w-[150px] flex items-center justify-center gap-3 py-6 text-xs font-black uppercase tracking-widest transition-all relative group",
-                                    isActive ? "text-primary bg-background/50" : "text-muted-foreground hover:text-foreground hover:bg-muted/30"
+                                    isActive ? "text-primary bg-background/50 dark:bg-white/5" : "text-muted-foreground hover:text-foreground hover:bg-muted/30 dark:hover:bg-white/5"
                                 )}
                             >
                                 <div className={cn(
@@ -324,7 +390,7 @@ export default function CreateProperty() {
                                                         onClick={() => handleMainCategorySelect(cat.value)}
                                                         className={cn(
                                                             "group flex items-center gap-6 rounded-2xl border transition-all p-6 text-left relative overflow-hidden hover:border-foreground/20",
-                                                            isActive ? activeStyle : "border-border/50 bg-muted/20"
+                                                            isActive ? activeStyle : "border-border/50 dark:border-white/5 bg-muted/20 dark:bg-white/[0.02]"
                                                         )}
                                                     >
                                                         <div className={cn(
@@ -381,7 +447,7 @@ export default function CreateProperty() {
                                                 Identification
                                             </h3>
 
-                                            <div className="bg-muted/10 rounded-3xl p-8 space-y-8 border border-border/50 relative overflow-hidden group hover:border-primary/20 transition-colors">
+                                            <div className="bg-muted/10 dark:bg-white/[0.02] rounded-3xl p-8 space-y-8 border border-border/50 dark:border-white/5 relative overflow-hidden group hover:border-primary/20 transition-colors">
                                                 <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-[100px] -mr-10 -mt-10 transition-transform group-hover:scale-110 duration-700" />
 
                                                 {/* Owner Selection - Premium Card Style */}
@@ -455,7 +521,7 @@ export default function CreateProperty() {
                                                 Localisation
                                             </h3>
 
-                                            <div className="bg-muted/10 rounded-3xl p-8 space-y-6 border border-border/50 relative overflow-hidden group hover:border-primary/20 transition-colors">
+                                            <div className="bg-muted/10 dark:bg-white/[0.02] rounded-3xl p-8 space-y-6 border border-border/50 dark:border-white/5 relative overflow-hidden group hover:border-primary/20 transition-colors">
                                                 <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-bl-[100px] -mr-10 -mt-10 transition-transform group-hover:scale-110 duration-700" />
 
                                                 <div className="grid gap-3 relative z-10">
@@ -517,58 +583,59 @@ export default function CreateProperty() {
                                                     </div>
                                                 </div>
 
-                                                <div className="grid grid-cols-2 gap-6">
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                     <div className="grid gap-3">
-                                                        <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Type de bien</label>
-                                                        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-                                                            {(PROPERTY_TYPES_BY_CATEGORY[formData.category] || []).map(t => {
-                                                                const Icon = {
-                                                                    APPARTEMENT: Building2,
-                                                                    MAISON: Home,
-                                                                    VILLA: Hotel,
-                                                                    BOUTIQUE: Store,
-                                                                    ENTREPOT: Warehouse,
-                                                                    LOCAL_ACTIVITE: Briefcase,
-                                                                    BUREAU: Briefcase,
-                                                                    TERRAIN: Trees,
-                                                                    IMMEUBLE: Building,
-                                                                    AUTRE: Settings
-                                                                }[t.value] || Building;
-
-                                                                const isSelected = formData.property_type === t.value;
-
-                                                                return (
-                                                                    <button
-                                                                        key={t.value}
-                                                                        type="button"
-                                                                        onClick={() => handleChange({ target: { name: 'property_type', value: t.value } })}
-                                                                        className={cn(
-                                                                            "relative flex flex-col items-center justify-center gap-3 p-4 rounded-xl border-2 transition-all hover:scale-[1.02]",
-                                                                            isSelected
-                                                                                ? "border-primary bg-primary/10 text-primary shadow-lg shadow-primary/10"
-                                                                                : "border-border/50 bg-background text-muted-foreground hover:bg-muted/30 hover:border-border"
-                                                                        )}
-                                                                    >
-                                                                        <div className={cn(
-                                                                            "p-3 rounded-full transition-colors",
-                                                                            isSelected ? "bg-primary text-white" : "bg-muted text-muted-foreground"
-                                                                        )}>
-                                                                            <Icon className="h-5 w-5" />
-                                                                        </div>
-                                                                        <span className="text-xs font-black uppercase text-center">{t.label}</span>
-                                                                        {isSelected && (
-                                                                            <div className="absolute top-2 right-2">
-                                                                                <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
-                                                                            </div>
-                                                                        )}
-                                                                    </button>
-                                                                );
-                                                            })}
-                                                        </div>
+                                                        <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Surface (m²) <span className="text-primary">*</span></label>
+                                                        <input type="number" name="surface" required className={inputClasses} placeholder="0.00" value={formData.surface} onChange={handleChange} />
                                                     </div>
-                                                    <div className="grid gap-3">
-                                                        <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Surface (m²)</label>
-                                                        <input type="number" name="surface" className={inputClasses} placeholder="0.00" value={formData.surface} onChange={handleChange} />
+                                                </div>
+
+                                                <div className="grid gap-3">
+                                                    <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Type de bien</label>
+                                                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+                                                        {(PROPERTY_TYPES_BY_CATEGORY[formData.category] || []).map(t => {
+                                                            const Icon = {
+                                                                APPARTEMENT: Building2,
+                                                                MAISON: Home,
+                                                                VILLA: Hotel,
+                                                                BOUTIQUE: Store,
+                                                                ENTREPOT: Warehouse,
+                                                                LOCAL_ACTIVITE: Briefcase,
+                                                                BUREAU: Briefcase,
+                                                                TERRAIN: Trees,
+                                                                IMMEUBLE: Building,
+                                                                AUTRE: Settings
+                                                            }[t.value] || Building;
+
+                                                            const isSelected = formData.property_type === t.value;
+
+                                                            return (
+                                                                <button
+                                                                    key={t.value}
+                                                                    type="button"
+                                                                    onClick={() => handleChange({ target: { name: 'property_type', value: t.value } })}
+                                                                    className={cn(
+                                                                        "relative flex flex-col items-center justify-center gap-2 p-2.5 rounded-xl border-2 transition-all hover:scale-[1.02] min-h-[90px]",
+                                                                        isSelected
+                                                                            ? "border-primary bg-primary/10 text-primary shadow-lg shadow-primary/10"
+                                                                            : "border-border/50 bg-background text-muted-foreground hover:bg-muted/30 hover:border-border"
+                                                                    )}
+                                                                >
+                                                                    <div className={cn(
+                                                                        "p-2 rounded-full transition-colors",
+                                                                        isSelected ? "bg-primary text-white" : "bg-muted text-muted-foreground"
+                                                                    )}>
+                                                                        <Icon className="h-4 w-4" />
+                                                                    </div>
+                                                                    <span className="text-[9px] font-bold uppercase text-center leading-tight tracking-tighter px-0.5">{t.label}</span>
+                                                                    {isSelected && (
+                                                                        <div className="absolute top-1.5 right-1.5">
+                                                                            <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+                                                                        </div>
+                                                                    )}
+                                                                </button>
+                                                            );
+                                                        })}
                                                     </div>
                                                 </div>
                                             </div>
@@ -630,7 +697,7 @@ export default function CreateProperty() {
                                                 Données Financières
                                             </h3>
 
-                                            <div className="bg-muted/10 rounded-3xl p-8 border border-border/50">
+                                            <div className="bg-muted/10 dark:bg-black/60 rounded-3xl p-8 border border-border/50 dark:border-white/5">
                                                 {formData.management_type === 'CONSTRUCTION' ? (
                                                     <div className="grid gap-6">
                                                         <div className="grid gap-3">
@@ -660,7 +727,7 @@ export default function CreateProperty() {
                                                 ) : formData.transaction_nature === 'VENTE' ? (
                                                     <div className="grid gap-6">
                                                         <div className="grid gap-3">
-                                                            <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Prix de vente</label>
+                                                            <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Prix de vente <span className="text-primary">*</span></label>
                                                             <div className="relative">
                                                                 <input type="number" name="prix_vente" required className={cn(inputClasses, "pl-12 text-lg font-bold shadow-inner")} placeholder="0.00" value={formData.prix_vente} onChange={handleChange} />
                                                                 <div className="absolute left-4 top-1/2 -translate-y-1/2 font-black text-primary text-sm flex items-center gap-1">
@@ -676,7 +743,7 @@ export default function CreateProperty() {
                                                 ) : (
                                                     <div className="grid gap-6">
                                                         <div className="grid gap-3">
-                                                            <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Loyer Mensuel</label>
+                                                            <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Loyer Mensuel <span className="text-primary">*</span></label>
                                                             <div className="relative">
                                                                 <input type="number" name="loyer_mensuel" required className={cn(inputClasses, "pl-12 text-lg font-bold shadow-inner")} placeholder="0.00" value={formData.loyer_mensuel} onChange={handleChange} />
                                                                 <div className="absolute left-4 top-1/2 -translate-y-1/2 font-black text-primary text-sm flex items-center gap-1">
@@ -704,7 +771,7 @@ export default function CreateProperty() {
                                                 Commission MaDis
                                             </h3>
 
-                                            <div className="bg-muted/10 rounded-3xl p-8 border border-border/50 space-y-6">
+                                            <div className="bg-muted/10 dark:bg-black/60 rounded-3xl p-8 border border-border/50 dark:border-white/5 space-y-6">
                                                 <div className="p-1 bg-background border border-border/50 rounded-xl flex gap-1">
                                                     <button type="button" onClick={() => setFormData(p => ({ ...p, commission_type: 'POURCENTAGE' }))} className={cn("flex-1 py-2.5 rounded-lg text-[10px] font-black tracking-widest uppercase transition-all", formData.commission_type === 'POURCENTAGE' ? "bg-primary text-white shadow-md" : "text-muted-foreground hover:bg-muted")}>Pourcentage</button>
                                                     <button type="button" onClick={() => setFormData(p => ({ ...p, commission_type: 'FIXE' }))} className={cn("flex-1 py-2.5 rounded-lg text-[10px] font-black tracking-widest uppercase transition-all", formData.commission_type === 'FIXE' ? "bg-primary text-white shadow-md" : "text-muted-foreground hover:bg-muted")}>Montant Fixe</button>
@@ -799,9 +866,12 @@ export default function CreateProperty() {
                         {activeTab !== 'MEDIA' ? (
                             <button
                                 type="button"
-                                onClick={() => {
-                                    const currentIndex = TABS.findIndex(t => t.id === activeTab);
-                                    setActiveTab(TABS[currentIndex + 1].id);
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    if (validateStep(activeTab)) {
+                                        const currentIndex = TABS.findIndex(t => t.id === activeTab);
+                                        setActiveTab(TABS[currentIndex + 1].id);
+                                    }
                                 }}
                                 className="inline-flex items-center justify-center rounded-xl text-xs font-black uppercase tracking-widest bg-foreground text-background hover:bg-foreground/90 shadow-lg hover:shadow-xl hover:translate-y-[-2px] transition-all h-12 px-10"
                             >

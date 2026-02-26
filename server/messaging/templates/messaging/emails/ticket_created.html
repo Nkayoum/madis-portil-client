@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+
+        .header {
+            border-bottom: 2px solid #5b21b6;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .priority-URGENT {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .priority-HIGH {
+            color: #ea580c;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #777;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #5b21b6;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Nouveau Ticket de Support</h2>
+        </div>
+        <p>Bonjour l'équipe MaDis,</p>
+        <p>Un nouveau ticket a été créé par <strong>{{ ticket.created_by.get_full_name }}</strong>.</p>
+
+        <div style="background-color: #f1f5f9; padding: 12px; border-radius: 6px; margin: 15px 0; font-size: 13px;">
+            <strong>Coordonnées du client :</strong><br />
+            📧 {{ ticket.created_by.email }}<br />
+            📞 {{ ticket.created_by.phone|default:"Non renseigné" }}
+        </div>
+
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid #f9f9f9;"><strong>Sujet :</strong></td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #f9f9f9;">{{ ticket.subject }}</td>
+            </tr>
+            <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid #f9f9f9;"><strong>Priorité :</strong></td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #f9f9f9;"><span
+                        class="priority-{{ ticket.priority }}">{{ ticket.get_priority_display }}</span></td>
+            </tr>
+            <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid #f9f9f9;"><strong>Bien :</strong></td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #f9f9f9;">{{ ticket.property.name|default:"Non
+                    spécifié" }}</td>
+            </tr>
+        </table>
+
+        <div style="background-color: #f8fafc; padding: 15px; border-radius: 6px; margin-top: 20px;">
+            <p style="margin-top: 0;"><strong>Description :</strong></p>
+            <p style="white-space: pre-wrap; font-size: 14px; color: #475569;">{{ ticket.description }}</p>
+            {% if ticket.attachment %}
+            <div style="margin-top: 10px; font-size: 12px; color: #64748b;">
+                📎 1 pièce jointe incluse :
+                <a href="{{ attachment_url }}" style="color: #5b21b6; text-decoration: underline;">Consulter le
+                    fichier</a>
+            </div>
+            {% endif %}
+        </div>
+
+        <a href="{{ detail_url }}" class="button" style="color: white;">Voir le ticket</a>
+
+        <div class="footer">
+            Ceci est un message automatique envoyé par le Portail MaDis.
+        </div>
+    </div>
+</body>
+
+</html>

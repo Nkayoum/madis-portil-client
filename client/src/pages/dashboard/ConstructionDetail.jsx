@@ -1,21 +1,25 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
-import api from '@/lib/axios';
+import api from '../../lib/axios';
 import {
     ArrowLeft, HardHat, Calendar, MapPin, Map as MapIcon,
     Image, FileText, Loader2, CheckCircle2, Clock,
     AlertCircle, Edit, User as UserIcon, Sun, Cloud,
     CloudRain, Wind, Snowflake, Zap, Plus,
-    DollarSign, Trash2, Ban, Pause, Download, Upload, File
+    DollarSign, Trash2, Ban, Pause, Download, Upload, File,
+    Layout, Users, Eye
 } from 'lucide-react';
-import { useAuth } from '@/context/AuthContext';
-import { useToast } from '@/context/ToastContext';
+import { useAuth } from '../../context/AuthContext';
+import { useToast } from '../../context/ToastContext';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 import {
     PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend
 } from 'recharts';
+import UploadDocumentModal from '../../components/dashboard/UploadDocumentModal';
+import JournalEntryModal from '../../components/dashboard/JournalEntryModal';
+import EditJournalEntryModal from '../../components/dashboard/EditJournalEntryModal';
 
 export default function ConstructionDetail() {
     const { id } = useParams();
@@ -30,6 +34,10 @@ export default function ConstructionDetail() {
     const [transactions, setTransactions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isDocumentModalOpen, setIsDocumentModalOpen] = useState(false);
+    const [isJournalModalOpen, setIsJournalModalOpen] = useState(false);
+    const [isEditJournalModalOpen, setIsEditJournalModalOpen] = useState(false);
+    const [selectedEntryId, setSelectedEntryId] = useState(null);
 
     // Get initial tab from URL query param
     const queryTab = new URLSearchParams(location.search).get('tab');
@@ -86,21 +94,23 @@ export default function ConstructionDetail() {
 
     if (loading) {
         return (
-            <div className="flex h-[50vh] items-center justify-center">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <div className="flex flex-col items-center justify-center p-32 gap-6 animate-fade-in">
+                <Loader2 className="h-12 w-12 animate-spin text-black opacity-10" />
+                <p className="text-[10px] font-black uppercase tracking-widest opacity-30">Chargement de la console de supervision...</p>
             </div>
         );
     }
 
     if (error || !site) {
         return (
-            <div className="space-y-4">
-                <Link to="/dashboard/construction" className="flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
-                    <ArrowLeft className="mr-2 h-4 w-4" />
+            <div className="max-w-4xl mx-auto py-12 px-6 animate-fade-in">
+                <Link to="/dashboard/construction" className="flex items-center text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-black transition-all mb-8 group">
+                    <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" />
                     Retour aux chantiers
                 </Link>
-                <div className="p-4 rounded-lg bg-destructive/10 text-destructive border border-destructive/20">
-                    {error || "Chantier non trouvé."}
+                <div className="solaris-glass rounded-[2.5rem] p-10 border-none shadow-xl text-red-600 flex items-center gap-4">
+                    <AlertCircle className="h-6 w-6" />
+                    <span className="font-bold">{error || "Chantier non trouvé."}</span>
                 </div>
             </div>
         );
@@ -109,123 +119,128 @@ export default function ConstructionDetail() {
     const status = getStatusConfig(site.status);
 
     return (
-        <div className="space-y-6 animate-fade-in">
-            <Link to="/dashboard/construction" className="flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors group w-fit">
+        <div className="space-y-10 animate-fade-in pb-32">
+            <Link to="/dashboard/construction" className="flex items-center text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-black transition-all group w-fit">
                 <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" />
                 Retour aux chantiers
             </Link>
 
-            {/* Header */}
-            <div className="bg-card border rounded-xl p-6 shadow-sm">
-                <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
-                    <div>
-                        <h1 className="text-3xl font-bold tracking-tight mb-2">{site.name}</h1>
-                        <div className="flex flex-wrap items-center gap-3 text-muted-foreground">
-                            <div className="flex items-center gap-1.5">
-                                <MapPin className="h-4 w-4 text-primary" />
-                                <span>{site.address}, {site.city} {site.postal_code}</span>
+            {/* Header Solaris Style */}
+            <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] relative overflow-hidden">
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 md:gap-10">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 md:gap-8">
+                        <div className="p-4 md:p-5 bg-black text-white rounded-[1.5rem] md:rounded-[2rem] shadow-2xl relative group shrink-0">
+                            <HardHat className="h-6 w-6 md:h-8 md:h-8 group-hover:scale-110 transition-transform duration-500" />
+                            <div className="absolute -inset-2 bg-black/5 rounded-[2.2rem] -z-10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </div>
+                        <div>
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-3 md:gap-4 mb-2">
+                                <h1 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tighter uppercase leading-tight">Chantier: {site.name}</h1>
+                                <span className={cn(
+                                    "flex items-center gap-1.5 px-3 md:px-4 py-1.5 rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-widest shadow-sm whitespace-nowrap w-fit",
+                                    status.bg, status.color
+                                )}>
+                                    <status.icon className="h-3 w-3 shrink-0" />
+                                    <span>{status.label}</span>
+                                </span>
                             </div>
-                            <span className={`flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium ${status.bg} ${status.color}`}>
-                                <status.icon className="h-3 w-3" />
-                                <span>{status.label}</span>
-                            </span>
+                            <div className="flex items-center gap-4 text-muted-foreground">
+                                <div className="flex items-center gap-1.5 font-bold text-[10px] md:text-[11px] uppercase tracking-wider opacity-60">
+                                    <MapPin className="h-3.5 w-3.5" />
+                                    <span>{site.address}, {site.city}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    {site.status !== 'SUSPENDU' && (
+
+                    <div className="flex flex-col lg:items-end gap-6 lg:border-l lg:pl-10 border-black/5 dark:border-white/5">
                         <div className="flex flex-col items-end">
-                            <span className="text-sm font-medium text-muted-foreground mb-2">
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] opacity-30 mb-3">
                                 Progression globale
                             </span>
-                            <div className="flex items-center gap-3">
-                                <div className="w-48 h-2.5 bg-muted rounded-full overflow-hidden">
+                            <div className="flex items-center gap-6">
+                                <div className="w-64 h-3 bg-black/[0.03] dark:bg-white/10 rounded-full overflow-hidden p-[2px] border border-black/5 dark:border-white/5 shadow-inner">
                                     <div
-                                        className="h-full bg-primary transition-all duration-1000 ease-out rounded-full"
+                                        className="h-full bg-black dark:bg-white rounded-full shadow-[0_0_15px_rgba(0,0,0,0.2)] transition-all duration-1000 ease-out"
                                         style={{ width: `${site.progress_percentage}%` }}
                                     />
                                 </div>
-                                <span className="font-bold text-xl">{site.progress_percentage}%</span>
+                                <span className="font-black text-3xl tracking-tighter leading-none">{site.progress_percentage}%</span>
                             </div>
                         </div>
-                    )}
-                    {site.status === 'ANNULE' ? (
-                        <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 font-bold text-sm">
-                            <Ban className="h-4 w-4" />
-                            CHANTIER ANNULÉ
-                        </div>
-                    ) : (user?.role === 'ADMIN_MADIS' || user?.role === 'CHEF_CHANTIER') && (
-                        <div className="flex flex-wrap gap-2">
-                            {site.status === 'EN_COURS' && (
+
+                        {(user?.role === 'ADMIN_MADIS' || user?.role === 'CHEF_CHANTIER') && site.status !== 'ANNULE' && (
+                            <div className="flex items-center gap-3">
+                                {site.status === 'EN_COURS' && (
+                                    <button
+                                        onClick={async () => {
+                                            if (window.confirm('Voulez-vous vraiment suspendre ce chantier ?')) {
+                                                await api.patch(`/construction/sites/${id}/`, { status: 'SUSPENDU' });
+                                                fetchSiteDetails();
+                                            }
+                                        }}
+                                        className="inline-flex items-center justify-center rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 hover:bg-amber-200 dark:hover:bg-amber-900/50 h-11 px-6"
+                                    >
+                                        <Pause className="mr-2 h-4 w-4" /> Suspendre
+                                    </button>
+                                )}
+                                {(site.status === 'SUSPENDU' || site.status === 'PREPARATION') && (
+                                    <button
+                                        onClick={async () => {
+                                            await api.patch(`/construction/sites/${id}/`, { status: 'EN_COURS' });
+                                            fetchSiteDetails();
+                                        }}
+                                        className="inline-flex items-center justify-center rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 h-11 px-6"
+                                    >
+                                        <Clock className="mr-2 h-4 w-4" /> Relancer
+                                    </button>
+                                )}
+                                <Link
+                                    to={`/dashboard/construction/${id}/edit`}
+                                    className="inline-flex items-center justify-center rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all bg-white dark:bg-white/10 border border-black/5 dark:border-white/10 shadow-sm hover:bg-black/5 dark:hover:bg-white/20 h-11 px-6 dark:text-white"
+                                >
+                                    <Edit className="mr-2 h-4 w-4" /> Modifier
+                                </Link>
                                 <button
                                     onClick={async () => {
-                                        if (window.confirm('Voulez-vous vraiment suspendre ce chantier ?')) {
-                                            await api.patch(`/construction/sites/${id}/`, { status: 'SUSPENDU' });
-                                            fetchSiteDetails();
+                                        if (window.confirm('ATTENTION: Voulez-vous vraiment SUPPRIMER définitivement ce chantier et toutes ses données associées ?')) {
+                                            await api.delete(`/construction/sites/${id}/`);
+                                            showToast({ message: 'Chantier supprimé.', type: 'success' });
+                                            navigate('/dashboard/construction');
                                         }
                                     }}
-                                    className="inline-flex items-center justify-center rounded-md text-xs font-medium transition-colors border border-yellow-200 bg-yellow-50 text-yellow-700 hover:bg-yellow-100 h-9 px-3"
+                                    className="inline-flex items-center justify-center rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all bg-red-500 text-white hover:bg-red-600 h-11 px-6 shadow-[0_4px_15px_rgba(239,68,68,0.4)] dark:shadow-[0_0_20px_rgba(239,68,68,0.6),0_0_50px_rgba(239,68,68,0.15)] dark:hover:shadow-[0_0_25px_rgba(239,68,68,0.8),0_0_60px_rgba(239,68,68,0.25)] dark:border dark:border-red-400/30"
                                 >
-                                    <Pause className="mr-2 h-3 w-3" /> Suspendre
+                                    <Trash2 className="mr-2 h-4 w-4" /> Supprimer
                                 </button>
-                            )}
-                            {(site.status === 'SUSPENDU' || site.status === 'PREPARATION') && (
-                                <button
-                                    onClick={async () => {
-                                        await api.patch(`/construction/sites/${id}/`, { status: 'EN_COURS' });
-                                        fetchSiteDetails();
-                                    }}
-                                    className="inline-flex items-center justify-center rounded-md text-xs font-medium transition-colors border border-primary/20 bg-primary/5 text-primary hover:bg-primary/10 h-9 px-3"
-                                >
-                                    <Clock className="mr-2 h-3 w-3" /> (Re)Démarrer
-                                </button>
-                            )}
-                            <button
-                                onClick={async () => {
-                                    if (window.confirm('Voulez-vous vraiment annuler ce chantier ? Cette action est irréversible.')) {
-                                        await api.patch(`/construction/sites/${id}/`, { status: 'ANNULE' });
-                                        fetchSiteDetails();
-                                    }
-                                }}
-                                className="inline-flex items-center justify-center rounded-md text-xs font-medium transition-colors border border-red-200 bg-red-50 text-red-700 hover:bg-red-100 h-9 px-3"
-                            >
-                                <Ban className="mr-2 h-3 w-3" /> Annuler
-                            </button>
-                            <button
-                                onClick={async () => {
-                                    if (window.confirm('ATTENTION: Voulez-vous vraiment SUPPRIMER définitivement ce chantier et toutes ses données associées ?')) {
-                                        await api.delete(`/construction/sites/${id}/`);
-                                        showToast({ message: 'Chantier supprimé.', type: 'success' });
-                                        navigate('/dashboard/construction');
-                                    }
-                                }}
-                                className="inline-flex items-center justify-center rounded-md text-xs font-medium transition-colors bg-red-600 text-white hover:bg-red-700 h-9 px-3 shadow-sm"
-                            >
-                                <Trash2 className="mr-2 h-3 w-3" /> Supprimer
-                            </button>
-                            <Link
-                                to={`/dashboard/construction/${id}/edit`}
-                                className="inline-flex items-center justify-center rounded-md text-xs font-medium transition-colors border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-3"
-                            >
-                                <Edit className="mr-1.5 h-3.5 w-3.5" />
-                                Modifier
-                            </Link>
-                        </div>
-                    )}
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
 
-            {/* Tabs */}
-            <div className="border-b">
-                <div className="flex gap-6">
-                    {['overview', 'journal', 'photos', 'documents', 'finance'].map((tab) => (
+            {/* Navigation Tabs Solaris Style */}
+            <div className="overflow-x-auto no-scrollbar -mx-4 px-4 md:mx-0 md:px-0">
+                <div className="solaris-glass rounded-full p-2 flex gap-2 md:gap-4 w-fit shadow-lg px-3 whitespace-nowrap">
+                    {[
+                        { id: 'overview', label: "Vue d'ensemble", icon: Layout },
+                        { id: 'journal', label: "Journal", icon: FileText },
+                        { id: 'photos', label: "Photos", icon: Image },
+                        { id: 'documents', label: "Documents", icon: File },
+                        { id: 'finance', label: "Finance", icon: DollarSign }
+                    ].map((tab) => (
                         <button
-                            key={tab}
-                            onClick={() => setActiveTab(tab)}
-                            className={`pb-3 text-sm font-medium border-b-2 transition-all px-1 ${activeTab === tab
-                                ? 'border-primary text-primary'
-                                : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'
-                                }`}
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id)}
+                            className={cn(
+                                "flex items-center gap-2 md:gap-3 px-4 md:px-8 py-2.5 md:py-3.5 rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-[0.1em] transition-all duration-500 group",
+                                activeTab === tab.id
+                                    ? "bg-black text-white shadow-xl scale-105"
+                                    : "text-muted-foreground hover:text-black dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/5"
+                            )}
                         >
-                            {tab === 'overview' ? 'Vue d\'ensemble' : tab === 'journal' ? 'Journal' : tab === 'photos' ? 'Photos' : tab === 'documents' ? 'Documents' : 'Finance'}
+                            <tab.icon className={cn("h-3.5 w-3.5 md:h-4 md:w-4 transition-transform group-hover:scale-110", activeTab === tab.id ? "text-white" : "text-muted-foreground")} />
+                            {tab.label}
                         </button>
                     ))}
                 </div>
@@ -234,44 +249,39 @@ export default function ConstructionDetail() {
             {/* Tab Content */}
             <div className="mt-2">
                 {activeTab === 'overview' && (
-                    <div className="grid gap-6 md:grid-cols-3">
-                        <div className="md:col-span-2 space-y-6">
-                            {/* Description */}
-                            <div className="bg-card border rounded-xl p-6 shadow-sm">
-                                <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
-                                    <FileText className="h-5 w-5 text-primary" />
-                                    Description
+                    <div className="grid gap-6 lg:grid-cols-3">
+                        <div className="lg:col-span-2 space-y-6">
+                            {/* Description Solaris Style */}
+                            <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-xl">
+                                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] opacity-30 mb-6 flex items-center gap-3">
+                                    <FileText className="h-4 w-4" />
+                                    Description Technique
                                 </h3>
-                                <p className="text-muted-foreground whitespace-pre-wrap leading-relaxed">
+                                <p className="text-[12px] md:text-[13px] font-bold text-muted-foreground whitespace-pre-wrap leading-relaxed">
                                     {site.description || "Aucune description fournie pour ce chantier."}
                                 </p>
                             </div>
 
-                            {/* Milestones (Jalons) */}
-                            <div className="bg-card border rounded-xl p-6 shadow-sm">
-                                <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
-                                    <CheckCircle2 className="h-5 w-5 text-primary" />
-                                    Jalons du chantier
-                                </h3>
+                            {/* Milestones (Jalons) Solaris Style */}
+                            <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-xl">
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10">
+                                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] opacity-30 flex items-center gap-3">
+                                        <CheckCircle2 className="h-4 w-4" />
+                                        Jalons Industriels
+                                    </h3>
 
-                                {user?.role === 'ADMIN_MADIS' || user?.role === 'CHEF_CHANTIER' ? (
-                                    <div className="mb-4 flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-lg bg-primary/5 border border-primary/10">
-                                        <div className="text-sm text-muted-foreground italic">
-                                            Dates obligatoires et responsables assignés.
-                                        </div>
-                                        {site.status !== 'SUSPENDU' && (
-                                            <Link
-                                                to={`/dashboard/construction/${id}/milestones`}
-                                                className="inline-flex items-center justify-center rounded-md text-xs font-medium transition-colors bg-primary text-primary-foreground shadow hover:bg-primary/90 h-8 px-3 py-1"
-                                            >
-                                                <Edit className="mr-1.5 h-3.5 w-3.5" />
-                                                Gérer les jalons
-                                            </Link>
-                                        )}
-                                    </div>
-                                ) : null}
+                                    {(user?.role === 'ADMIN_MADIS' || user?.role === 'CHEF_CHANTIER') && site.status !== 'SUSPENDU' && (
+                                        <Link
+                                            to={`/dashboard/construction/${id}/milestones`}
+                                            className="inline-flex items-center justify-center rounded-xl text-[9px] font-black uppercase tracking-widest transition-all bg-black text-white hover:bg-black/90 h-9 px-5 shadow-lg"
+                                        >
+                                            <Edit className="mr-2 h-3.5 w-3.5" />
+                                            Configurer
+                                        </Link>
+                                    )}
+                                </div>
 
-                                <div className="space-y-3">
+                                <div className="space-y-4">
                                     {milestones.length > 0 ? (
                                         milestones.map((milestone) => {
                                             const isOverdue = !milestone.completed && new Date(milestone.end_date) < new Date().setHours(0, 0, 0, 0);
@@ -279,9 +289,8 @@ export default function ConstructionDetail() {
                                                 <div
                                                     key={milestone.id}
                                                     className={cn(
-                                                        "flex items-start gap-3 p-4 rounded-lg border bg-muted/5 transition-all",
-                                                        milestone.completed ? "opacity-60" : "hover:border-primary/30",
-                                                        isOverdue && !milestone.completed && "border-red-500/30 bg-red-500/5"
+                                                        "flex items-center gap-6 p-5 rounded-2xl border border-black/[0.03] dark:border-white/5 bg-black/[0.01] dark:bg-white/[0.02] transition-all duration-300 group",
+                                                        milestone.completed ? "opacity-50" : "hover:bg-black/[0.02] dark:hover:bg-white/5 hover:border-black/5 dark:hover:border-white/10"
                                                     )}
                                                 >
                                                     <button
@@ -299,35 +308,35 @@ export default function ConstructionDetail() {
                                                         }}
                                                         disabled={user?.role !== 'ADMIN_MADIS' && user?.role !== 'CHEF_CHANTIER' || site.status === 'SUSPENDU'}
                                                         className={cn(
-                                                            "h-5 w-5 mt-0.5 rounded border-2 flex items-center justify-center shrink-0",
+                                                            "h-6 w-6 rounded-lg border-2 flex items-center justify-center shrink-0 transition-all duration-300",
                                                             milestone.completed
-                                                                ? 'bg-primary border-primary text-white'
-                                                                : site.status === 'SUSPENDU'
-                                                                    ? 'border-muted-foreground/20 cursor-not-allowed'
-                                                                    : 'border-muted-foreground/30 hover:border-primary cursor-pointer'
+                                                                ? 'bg-black border-black text-white'
+                                                                : 'border-black/10 dark:border-white/20 hover:border-black/30 dark:hover:border-white/40 bg-white dark:bg-white/10 shadow-sm'
                                                         )}
                                                     >
-                                                        {milestone.completed && <CheckCircle2 className="h-3.5 w-3.5" />}
+                                                        {milestone.completed && <CheckCircle2 className="h-4 w-4" />}
                                                     </button>
                                                     <div className="flex-1 min-w-0">
-                                                        <div className="flex items-start justify-between gap-2">
-                                                            <p className={cn("text-sm font-semibold leading-tight", milestone.completed ? 'text-muted-foreground line-through' : 'text-foreground')}>
+                                                        <div className="flex items-center justify-between gap-4">
+                                                            <p className={cn("text-[12px] font-black uppercase tracking-tight", milestone.completed ? 'text-muted-foreground line-through' : 'text-black dark:text-white')}>
                                                                 {milestone.description}
                                                             </p>
-                                                            {isOverdue && !milestone.completed && (
-                                                                <span className="text-[10px] font-bold text-red-600 bg-red-600/10 px-1.5 py-0.5 rounded shrink-0">RETARD</span>
-                                                            )}
-                                                            {milestone.completed && (
-                                                                <span className="text-[10px] font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded shrink-0">TERMINE</span>
-                                                            )}
+                                                            <div className="flex items-center gap-2">
+                                                                {isOverdue && !milestone.completed && (
+                                                                    <span className="text-[9px] font-black text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 px-2 py-1 rounded-[4px] border border-red-100 dark:border-red-800 uppercase tracking-widest transition-all">RETARD</span>
+                                                                )}
+                                                                {milestone.completed && (
+                                                                    <span className="text-[9px] font-black text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 px-2 py-1 rounded-[4px] border border-emerald-100 dark:border-emerald-800 uppercase tracking-widest">TERMINE</span>
+                                                                )}
+                                                            </div>
                                                         </div>
-                                                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-[11px] text-muted-foreground">
-                                                            <div className="flex items-center gap-1">
-                                                                <Calendar className="h-3 w-3" />
+                                                        <div className="flex items-center gap-4 mt-2">
+                                                            <div className="flex items-center gap-1.5 text-[10px] font-bold text-muted-foreground opacity-60">
+                                                                <Calendar className="h-3.5 w-3.5" />
                                                                 {milestone.end_date ? format(new Date(milestone.end_date), 'd MMM yyyy', { locale: fr }) : 'Non déterm.'}
                                                             </div>
-                                                            <div className="flex items-center gap-1">
-                                                                <UserIcon className="h-3 w-3" />
+                                                            <div className="flex items-center gap-1.5 text-[10px] font-bold text-muted-foreground opacity-60">
+                                                                <UserIcon className="h-3.5 w-3.5" />
                                                                 {milestone.responsible || 'Non renseigné'}
                                                             </div>
                                                         </div>
@@ -336,92 +345,97 @@ export default function ConstructionDetail() {
                                             );
                                         })
                                     ) : (
-                                        <p className="text-sm text-muted-foreground italic p-4 text-center border border-dashed rounded-lg">
-                                            Aucun jalon défini pour ce chantier.
-                                        </p>
+                                        <div className="p-12 text-center border-2 border-dashed border-black/5 dark:border-white/5 rounded-3xl">
+                                            <p className="text-[10px] font-black uppercase tracking-widest opacity-20">Aucun jalon défini</p>
+                                        </div>
                                     )}
                                 </div>
                             </div>
                         </div>
 
                         <div className="space-y-6">
-                            {/* Budget Card */}
-                            <div className="bg-card border rounded-xl p-6 shadow-sm">
-                                <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
-                                    <DollarSign className="h-5 w-5 text-primary" />
-                                    Suivi Budgétaire
+                            {/* Budget Card Solaris Style */}
+                            <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-xl">
+                                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] opacity-30 mb-8 flex items-center gap-3">
+                                    <DollarSign className="h-4 w-4" />
+                                    Suivi Financier
                                 </h3>
-                                <div className="space-y-4">
+                                <div className="space-y-8">
                                     <div className="flex justify-between items-end">
                                         <div>
-                                            <p className="text-sm text-muted-foreground">Budget consommé</p>
-                                            <p className="text-2xl font-bold">
+                                            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Budget consommé</p>
+                                            <p className="text-2xl md:text-3xl font-black tracking-tighter">
                                                 {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(site.budget_spent || 0)}
                                             </p>
                                         </div>
                                         <div className="text-right">
-                                            <p className="text-sm text-muted-foreground">Budget total</p>
-                                            <p className="font-semibold">
+                                            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Total</p>
+                                            <p className="font-bold text-[11px] md:text-[12px]">
                                                 {site.budget ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(site.budget) : 'Non défini'}
                                             </p>
                                         </div>
                                     </div>
-                                    <div className="space-y-2">
-                                        <div className="w-full h-3 bg-muted rounded-full overflow-hidden border">
+                                    <div className="space-y-3">
+                                        <div className="w-full h-3 bg-black/[0.03] dark:bg-white/10 rounded-full overflow-hidden p-[2px] border border-black/5 dark:border-white/5 shadow-inner">
                                             <div
                                                 className={cn(
-                                                    "h-full transition-all duration-1000 ease-out rounded-full",
-                                                    site.budget_consumed_percentage > 90 ? "bg-red-500" : site.budget_consumed_percentage > 70 ? "bg-yellow-500" : "bg-green-500"
+                                                    "h-full rounded-full transition-all duration-1000 ease-out shadow-[0_0_10px_rgba(0,0,0,0.1)]",
+                                                    site.budget_consumed_percentage > 90 ? "bg-red-500" : site.budget_consumed_percentage > 70 ? "bg-amber-500" : "bg-emerald-500"
                                                 )}
                                                 style={{ width: `${Math.min(100, site.budget_consumed_percentage || 0)}%` }}
                                             />
                                         </div>
-                                        <div className="flex justify-between text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                                        <div className="flex justify-between text-[8px] md:text-[9px] font-black uppercase tracking-widest text-muted-foreground opacity-40">
                                             <span>0%</span>
                                             <span>{site.budget_consumed_percentage || 0}% UTILISÉ</span>
                                             <span>100%</span>
                                         </div>
                                     </div>
                                     {(user?.role === 'ADMIN_MADIS' || user?.role === 'CHEF_CHANTIER') && (
-                                        <div className="pt-2">
+                                        <div className="pt-4 border-t border-black/5 dark:border-white/5">
                                             <Link
                                                 to={`/dashboard/finance/transactions/new?site=${id}`}
-                                                className="text-xs text-primary hover:underline flex items-center gap-1"
+                                                className="inline-flex items-center justify-center gap-2 h-10 px-5 rounded-2xl bg-primary text-white text-[10px] font-black uppercase tracking-widest shadow-lg shadow-primary/20 dark:shadow-[0_0_20px_rgba(236,72,153,0.3)] hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all w-full sm:w-auto"
                                             >
-                                                <Plus className="h-3 w-3" /> Ajouter une dépense pour ce chantier
+                                                <Plus className="h-3.5 w-3.5" /> Enregistrer une dépense
                                             </Link>
                                         </div>
                                     )}
                                 </div>
                             </div>
 
-                            <div className="bg-card border rounded-xl p-6 shadow-sm">
-                                <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
-                                    <MapIcon className="h-5 w-5 text-primary" />
-                                    Détails logistiques
+                            {/* Logistic Details Solaris Style */}
+                            <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-xl">
+                                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] opacity-30 mb-8 flex items-center gap-3">
+                                    <MapIcon className="h-4 w-4" />
+                                    Paramètres Logistiques
                                 </h3>
-                                <dl className="space-y-4 text-sm">
-                                    <div className="flex justify-between items-center py-2 border-b">
-                                        <dt className="text-muted-foreground">Chef de chantier</dt>
-                                        <dd className="font-semibold text-primary text-right">
+                                <dl className="space-y-6">
+                                    <div className="flex justify-between items-center pb-4 border-b border-black/[0.03] dark:border-white/5">
+                                        <dt className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Chef de chantier</dt>
+                                        <dd className="text-[11px] md:text-[12px] font-black uppercase tracking-tighter text-black dark:text-white">
                                             {site.chef_de_chantier_name || 'Non assigné'}
                                         </dd>
                                     </div>
-                                    <div className="flex justify-between items-center py-2 border-b">
-                                        <dt className="text-muted-foreground">Date de début</dt>
-                                        <dd className="font-medium">
+                                    <div className="flex justify-between items-center pb-4 border-b border-black/[0.03] dark:border-white/5">
+                                        <dt className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Date de début</dt>
+                                        <dd className="text-[11px] md:text-[12px] font-bold font-mono">
                                             {site.start_date ? format(new Date(site.start_date), 'd MMM yyyy', { locale: fr }) : '-'}
                                         </dd>
                                     </div>
-                                    <div className="flex justify-between items-center py-2 border-b">
-                                        <dt className="text-muted-foreground">Date de fin prévue</dt>
-                                        <dd className="font-medium">
+                                    <div className="flex justify-between items-center pb-4 border-b border-black/[0.03] dark:border-white/5">
+                                        <dt className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Fin prévue</dt>
+                                        <dd className="text-[11px] md:text-[12px] font-bold font-mono text-amber-600">
                                             {site.end_date ? format(new Date(site.end_date), 'd MMM yyyy', { locale: fr }) : '-'}
                                         </dd>
                                     </div>
-                                    <div className="flex justify-between items-center py-2">
-                                        <dt className="text-muted-foreground">Ville</dt>
-                                        <dd className="font-medium">{site.city || '-'}</dd>
+                                    <div className="flex justify-between items-center pb-4 border-b border-black/[0.03] dark:border-white/5">
+                                        <dt className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Géolocalisation</dt>
+                                        <dd className="text-[11px] md:text-[12px] font-bold text-right max-w-[150px] truncate">{site.city || '-'}</dd>
+                                    </div>
+                                    <div className="flex justify-between items-center">
+                                        <dt className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Code Postal</dt>
+                                        <dd className="text-[11px] md:text-[12px] font-bold font-mono">{site.postal_code || '-'}</dd>
                                     </div>
                                 </dl>
                             </div>
@@ -432,68 +446,73 @@ export default function ConstructionDetail() {
                 {activeTab === 'journal' && (
                     <div className="space-y-6">
                         {(user?.role === 'ADMIN_MADIS' || user?.role === 'CHEF_CHANTIER') && site.status !== 'SUSPENDU' && (
-                            <div className="flex justify-end">
-                                <Link
-                                    to={`/dashboard/construction/${id}/journal/new`}
-                                    className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors bg-primary text-primary-foreground shadow hover:bg-primary/90 h-10 px-6"
+                            <div className="flex justify-end mb-8">
+                                <button
+                                    onClick={() => setIsJournalModalOpen(true)}
+                                    className="inline-flex items-center justify-center rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all bg-primary text-white hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] h-12 px-8 shadow-lg shadow-primary/20 dark:shadow-[0_0_20px_rgba(236,72,153,0.3)]"
                                 >
-                                    <Plus className="mr-2 h-4 w-4" />
-                                    Nouvelle entrée
-                                </Link>
+                                    <Plus className="mr-3 h-5 w-5" />
+                                    Nouveau Rapport
+                                </button>
                             </div>
                         )}
 
                         {journalEntries.length > 0 ? (
-                            <div className="space-y-4">
+                            <div className="space-y-6">
                                 {journalEntries.map((entry) => {
                                     const WeatherIcon = getWeatherIcon(entry.weather);
                                     return (
-                                        <div key={entry.id} className="bg-card border rounded-xl overflow-hidden shadow-sm">
-                                            <div className="p-4 border-b bg-muted/30 flex items-center justify-between">
-                                                <div className="flex items-center gap-4">
+                                        <div key={entry.id} className="solaris-glass rounded-[2.5rem] overflow-hidden border-none shadow-xl">
+                                            <div className="p-8 border-b border-black/[0.03] dark:border-white/5 bg-black/[0.01] dark:bg-white/[0.02] flex items-center justify-between">
+                                                <div className="flex items-center gap-6">
                                                     <div className="flex flex-col">
-                                                        <span className="text-sm font-bold capitalize">
+                                                        <span className="text-[12px] font-black uppercase tracking-tighter">
                                                             {format(new Date(entry.date), 'EEEE d MMMM yyyy', { locale: fr })}
                                                         </span>
-                                                        <span className="text-xs text-muted-foreground flex items-center gap-1">
-                                                            <UserIcon className="h-3 w-3" /> Par {entry.author_name}
+                                                        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest opacity-60 flex items-center gap-2 mt-1">
+                                                            <UserIcon className="h-3 w-3" /> {entry.author_name}
                                                         </span>
                                                     </div>
                                                 </div>
-                                                <div className="flex items-center gap-3">
+                                                <div className="flex items-center gap-4">
                                                     {(user?.role === 'ADMIN_MADIS' || user?.role === 'CHEF_CHANTIER') && site.status !== 'SUSPENDU' && (
-                                                        <Link
-                                                            to={`/dashboard/construction/journal/${entry.id}/edit`}
-                                                            className="text-muted-foreground hover:text-primary transition-colors p-1"
-                                                            title="Modifier le rapport"
+                                                        <button
+                                                            onClick={() => {
+                                                                setSelectedEntryId(entry.id);
+                                                                setIsEditJournalModalOpen(true);
+                                                            }}
+                                                            className="p-2 hover:bg-black/5 rounded-full transition-all text-muted-foreground hover:text-black"
                                                         >
                                                             <Edit className="h-4 w-4" />
-                                                        </Link>
+                                                        </button>
                                                     )}
-                                                    <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-background border text-xs font-medium">
-                                                        <WeatherIcon className="h-3.5 w-3.5 text-primary" />
-                                                        <span className="capitalize">{entry.weather?.toLowerCase() || 'Météo'}</span>
+                                                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-black/5 dark:bg-white/5 text-[10px] font-black uppercase tracking-widest">
+                                                        <WeatherIcon className="h-3.5 w-3.5 text-black/40 dark:text-white/40" />
+                                                        {entry.weather?.toLowerCase()}
                                                     </div>
-                                                    <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-background border text-xs font-medium">
-                                                        <UserIcon className="h-3.5 w-3.5 text-primary" />
-                                                        <span>{entry.workers_count} ouvriers</span>
+                                                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-black/5 dark:bg-white/5 text-[10px] font-black uppercase tracking-widest">
+                                                        <Users className="h-3.5 w-3.5 text-black/40 dark:text-white/40" />
+                                                        {entry.workers_count} ouvriers
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="p-4">
-                                                <p className="text-sm text-foreground whitespace-pre-wrap leading-relaxed">
+                                            <div className="p-8">
+                                                <p className="text-[13px] font-bold text-muted-foreground whitespace-pre-wrap leading-relaxed mb-8">
                                                     {entry.content}
                                                 </p>
                                                 {entry.photos && entry.photos.length > 0 && (
-                                                    <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-2">
+                                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                                         {entry.photos.map((photo) => (
-                                                            <div key={photo.id} className="aspect-square rounded-lg overflow-hidden border">
+                                                            <div key={photo.id} className="aspect-square rounded-2xl overflow-hidden border-none bg-black/5 relative group cursor-pointer shadow-sm hover:shadow-md transition-all">
                                                                 <img
                                                                     src={photo.image}
                                                                     alt={photo.caption || "Photo de chantier"}
-                                                                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300 cursor-pointer"
+                                                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                                                     onClick={() => window.open(photo.image, '_blank')}
                                                                 />
+                                                                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                                    <Plus className="text-white h-6 w-6 scale-75 group-hover:scale-100 transition-transform" />
+                                                                </div>
                                                             </div>
                                                         ))}
                                                     </div>
@@ -504,13 +523,13 @@ export default function ConstructionDetail() {
                                 })}
                             </div>
                         ) : (
-                            <div className="bg-card border border-dashed rounded-xl p-12 text-center">
-                                <div className="mx-auto h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
-                                    <FileText className="h-8 w-8 text-muted-foreground" />
+                            <div className="solaris-glass rounded-[2.5rem] p-24 text-center border-none shadow-xl">
+                                <div className="mx-auto h-20 w-20 rounded-full bg-black/[0.03] flex items-center justify-center mb-8">
+                                    <FileText className="h-10 w-10 text-black/10" />
                                 </div>
-                                <h3 className="text-lg font-semibold mb-2">Journal vide</h3>
-                                <p className="text-muted-foreground max-w-md mx-auto text-sm">
-                                    Aucune entrée n'a encore été ajoutée au journal de ce chantier.
+                                <h3 className="text-[12px] font-black uppercase tracking-[0.2em] mb-3">Journal de Supervision Vide</h3>
+                                <p className="text-[10px] font-black uppercase tracking-widest opacity-30 max-w-xs mx-auto">
+                                    Aucune entrée journalière n'a été enregistrée pour ce chantier industriel.
                                 </p>
                             </div>
                         )}
@@ -518,31 +537,29 @@ export default function ConstructionDetail() {
                 )}
 
                 {activeTab === 'photos' && (
-                    <div className="space-y-6">
-                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                    <div className="space-y-10">
+                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
                             {journalEntries.flatMap(e => e.photos || []).length > 0 ? (
                                 journalEntries.flatMap(e => e.photos || []).map((photo) => (
-                                    <div key={photo.id} className="group relative aspect-square rounded-xl overflow-hidden border bg-muted shadow-sm hover:shadow-md transition-all">
+                                    <div key={photo.id} className="group relative aspect-square rounded-[2rem] overflow-hidden border-none bg-black/5 shadow-md hover:shadow-2xl transition-all duration-500 scale-95 hover:scale-100">
                                         <img
                                             src={photo.image}
                                             alt={photo.caption}
-                                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                         />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-3">
-                                            <p className="text-white text-[10px] font-medium line-clamp-1">{photo.caption || "Sans légende"}</p>
-                                            <p className="text-white/70 text-[8px]">{format(new Date(photo.created_at), 'd MMM yyyy', { locale: fr })}</p>
+                                        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out">
+                                            <p className="text-white text-[10px] font-black uppercase tracking-widest line-clamp-1 mb-1">{photo.caption || "Sans légende"}</p>
+                                            <p className="text-white/40 text-[9px] font-bold uppercase">{format(new Date(photo.created_at), 'd MMM yyyy', { locale: fr })}</p>
                                         </div>
                                     </div>
                                 ))
                             ) : (
-                                <div className="col-span-full bg-card border border-dashed rounded-xl p-12 text-center">
-                                    <div className="mx-auto h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
-                                        <Image className="h-8 w-8 text-muted-foreground" />
+                                <div className="col-span-full solaris-glass rounded-[2.5rem] p-24 text-center border-none shadow-xl">
+                                    <div className="mx-auto h-20 w-20 rounded-full bg-black/[0.03] flex items-center justify-center mb-8">
+                                        <Image className="h-10 w-10 text-black/10" />
                                     </div>
-                                    <h3 className="text-lg font-semibold mb-2">Galerie Photos vide</h3>
-                                    <p className="text-muted-foreground max-w-md mx-auto text-sm">
-                                        Les photos ajoutées via le journal de chantier apparaîtront ici.
-                                    </p>
+                                    <h3 className="text-[12px] font-black uppercase tracking-[0.2em] mb-3">Galerie Photos Vide</h3>
+                                    <p className="text-[10px] font-black uppercase tracking-widest opacity-30">Les visuels du chantier apparaîtront après documentation dans le journal.</p>
                                 </div>
                             )}
                         </div>
@@ -550,58 +567,59 @@ export default function ConstructionDetail() {
                 )}
 
                 {activeTab === 'documents' && (
-                    <div className="space-y-6">
+                    <div className="space-y-10">
                         {(user?.role === 'ADMIN_MADIS' || user?.role === 'CHEF_CHANTIER') && (
-                            <div className="flex justify-end">
-                                <Link
-                                    to={`/dashboard/documents/new?siteId=${id}&propertyId=${site?.property_id || site?.project_property_id}`}
-                                    className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors bg-primary text-primary-foreground shadow hover:bg-primary/90 h-10 px-6"
+                            <div className="flex justify-end mb-8">
+                                <button
+                                    onClick={() => setIsDocumentModalOpen(true)}
+                                    className="inline-flex items-center justify-center rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all bg-primary text-white hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] h-12 px-8 shadow-lg shadow-primary/20 dark:shadow-[0_0_20px_rgba(236,72,153,0.3)]"
                                 >
-                                    <Upload className="mr-2 h-4 w-4" />
-                                    Ajouter un document
-                                </Link>
+                                    <Plus className="mr-3 h-5 w-5" />
+                                    Ajouter un Document
+                                </button>
                             </div>
                         )}
 
                         {documents.length > 0 ? (
-                            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                                 {documents.map((doc) => (
-                                    <div key={doc.id} className="bg-card border rounded-xl p-4 shadow-sm hover:border-primary/50 transition-colors group">
-                                        <div className="flex items-start gap-4">
-                                            <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
-                                                <File className="h-5 w-5 text-primary" />
+                                    <div key={doc.id} className="solaris-glass rounded-3xl p-6 border-none shadow-lg hover:shadow-2xl transition-all duration-500 group relative overflow-hidden">
+                                        <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                                            <File className="h-16 w-16 -mr-4 -mt-4" />
+                                        </div>
+                                        <div className="flex items-start gap-5 relative z-10">
+                                            <div className="h-14 w-14 rounded-2xl bg-black text-white flex items-center justify-center shrink-0 shadow-xl group-hover:scale-110 transition-transform">
+                                                <FileText className="h-6 w-6" />
                                             </div>
-                                            <div className="flex-1 min-w-0">
-                                                <h4 className="text-sm font-bold truncate mb-1">{doc.title}</h4>
-                                                <p className="text-xs text-muted-foreground mb-2 line-clamp-2">{doc.description || "Aucune description"}</p>
-                                                <div className="flex items-center justify-between text-[10px] text-muted-foreground">
-                                                    <span className="capitalize px-1.5 py-0.5 rounded bg-muted font-medium">
-                                                        {doc.category?.toLowerCase() || 'Document'}
+                                            <div className="flex-1 min-w-0 pt-1">
+                                                <h4 className="text-[12px] font-black uppercase tracking-tight truncate mb-1">{doc.title}</h4>
+                                                <p className="text-[10px] font-bold text-muted-foreground opacity-60 mb-4 line-clamp-1">{doc.description || "Aucun détail technique"}</p>
+                                                <div className="flex items-center justify-between text-[9px] font-black uppercase tracking-widest">
+                                                    <span className="px-2.5 py-1 rounded-lg bg-black/5 dark:bg-white/5 text-black/60 dark:text-white/60">
+                                                        {doc.category || 'Document'}
                                                     </span>
-                                                    <span>{format(new Date(doc.uploaded_at), 'd MMM yyyy', { locale: fr })}</span>
+                                                    <span className="opacity-40">{format(new Date(doc.uploaded_at), 'd MMM yyyy', { locale: fr })}</span>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="mt-4 pt-3 border-t flex justify-end">
+                                        <div className="mt-6 pt-4 border-t border-black/5 dark:border-white/5 flex justify-end relative z-10">
                                             <button
                                                 onClick={() => window.open(doc.file, '_blank')}
-                                                className="text-xs text-primary font-semibold flex items-center gap-1 hover:underline"
+                                                className="text-[10px] font-black uppercase tracking-widest text-black dark:text-white hover:opacity-70 flex items-center gap-2 transition-opacity"
                                             >
-                                                <Download className="h-3 w-3" /> Télécharger
+                                                <Download className="h-3.5 w-3.5" /> Télécharger
                                             </button>
                                         </div>
                                     </div>
                                 ))}
                             </div>
                         ) : (
-                            <div className="bg-card border border-dashed rounded-xl p-12 text-center">
-                                <div className="mx-auto h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
-                                    <File className="h-8 w-8 text-muted-foreground" />
+                            <div className="solaris-glass rounded-[2.5rem] p-24 text-center border-none shadow-xl">
+                                <div className="mx-auto h-20 w-20 rounded-full bg-black/[0.03] flex items-center justify-center mb-8">
+                                    <File className="h-10 w-10 text-black/10" />
                                 </div>
-                                <h3 className="text-lg font-semibold mb-2">Aucun document technique</h3>
-                                <p className="text-muted-foreground max-w-md mx-auto text-sm">
-                                    Les plans, factures et autres documents techniques apparaîtront ici.
-                                </p>
+                                <h3 className="text-[12px] font-black uppercase tracking-[0.2em] mb-3">Coffre-fort Documentaire Vide</h3>
+                                <p className="text-[10px] font-black uppercase tracking-widest opacity-30 max-w-xs mx-auto">Aucun plan technique ou contrat n'a été téléversé pour ce chantier.</p>
                             </div>
                         )}
                     </div>
@@ -609,11 +627,11 @@ export default function ConstructionDetail() {
                 {activeTab === 'finance' && (
                     <div className="space-y-6">
                         <div className="grid gap-6 md:grid-cols-2">
-                            {/* Budget Breakdown Chart */}
-                            <div className="bg-card border rounded-xl p-6 shadow-sm">
-                                <h3 className="font-semibold text-lg mb-6 flex items-center gap-2">
-                                    <DollarSign className="h-5 w-5 text-primary" />
-                                    Répartition des Dépenses
+                            {/* Budget Breakdown Chart Solaris Style */}
+                            <div className="solaris-glass rounded-[2.5rem] p-10 border-none shadow-xl">
+                                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] opacity-30 mb-10 flex items-center gap-3">
+                                    <DollarSign className="h-4 w-4" />
+                                    Répartition Analytique
                                 </h3>
                                 <div className="h-[300px] w-full">
                                     {Object.keys(site.budget_by_category || {}).length > 0 ? (
@@ -626,66 +644,76 @@ export default function ConstructionDetail() {
                                                     }))}
                                                     cx="50%"
                                                     cy="50%"
-                                                    innerRadius={60}
-                                                    outerRadius={80}
-                                                    paddingAngle={5}
+                                                    innerRadius={70}
+                                                    outerRadius={90}
+                                                    paddingAngle={8}
                                                     dataKey="value"
                                                 >
                                                     {[
-                                                        '#0ea5e9', // Blue (Matériaux)
-                                                        '#f59e0b', // Amber (Main d'œuvre)
-                                                        '#10b981', // Emerald (Services)
-                                                        '#6366f1', // Indigo (Other)
-                                                        '#a855f7'  // Purple (Other)
+                                                        '#ff0048', // Primary pink
+                                                        '#00f2ff', // Neon cyan
+                                                        '#a855f7', // Purple
+                                                        '#f59e0b', // Amber
+                                                        '#10b981'  // Emerald
                                                     ].map((color, index) => (
-                                                        <Cell key={`cell-${index}`} fill={color} />
+                                                        <Cell key={`cell-${index}`} fill={color} stroke="none" />
                                                     ))}
                                                 </Pie>
                                                 <RechartsTooltip
+                                                    contentStyle={{
+                                                        backgroundColor: 'rgba(10, 10, 20, 0.9)',
+                                                        borderRadius: '16px',
+                                                        border: '1px solid rgba(255,255,255,0.1)',
+                                                        boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
+                                                        fontSize: '10px',
+                                                        fontWeight: '900',
+                                                        textTransform: 'uppercase',
+                                                        letterSpacing: '0.05em',
+                                                        color: '#ffffff'
+                                                    }}
                                                     formatter={(value) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(value)}
                                                 />
-                                                <Legend />
                                             </PieChart>
                                         </ResponsiveContainer>
                                     ) : (
-                                        <div className="h-full flex flex-col items-center justify-center text-muted-foreground border border-dashed rounded-lg">
-                                            <DollarSign className="h-8 w-8 mb-2 opacity-20" />
-                                            <p className="text-sm">Aucune donnée de dépense</p>
+                                        <div className="h-full flex flex-col items-center justify-center text-muted-foreground border-2 border-dashed border-black/5 dark:border-white/5 rounded-3xl">
+                                            <DollarSign className="h-10 w-10 mb-4 opacity-10" />
+                                            <p className="text-[10px] font-black uppercase tracking-widest opacity-20">Données Insuffisantes</p>
                                         </div>
                                     )}
                                 </div>
                             </div>
 
-                            {/* Budget Summary Card */}
-                            <div className="bg-card border rounded-xl p-6 shadow-sm flex flex-col justify-center">
-                                <div className="space-y-8">
+                            {/* Budget Summary Card Solaris Style */}
+                            <div className="solaris-glass rounded-[2.5rem] p-10 border-none shadow-xl flex flex-col justify-center">
+                                <div className="space-y-10">
                                     <div>
-                                        <p className="text-sm text-muted-foreground mb-1 uppercase tracking-wider font-bold">Budget Consommé</p>
-                                        <div className="flex items-baseline gap-2">
-                                            <span className="text-4xl font-black text-primary">
+                                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3 opacity-40">Compteur Consommation</p>
+                                        <div className="flex items-baseline gap-3">
+                                            <span className="text-5xl font-black tracking-tighter text-black dark:text-white">
                                                 {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(site.budget_spent || 0)}
                                             </span>
-                                            <span className="text-lg text-muted-foreground font-medium">
+                                            <span className="text-[12px] text-muted-foreground font-black uppercase tracking-widest opacity-40">
                                                 / {site.budget ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(site.budget) : 'N/A'}
                                             </span>
                                         </div>
                                     </div>
 
-                                    <div className="space-y-4">
+                                    <div className="space-y-6">
                                         {Object.entries(site.budget_by_category || {}).map(([key, value], index) => {
                                             const label = key === 'MATERIAUX' ? 'Matériaux' : key === 'MAIN_D_OEUVRE' ? 'Main d\'œuvre' : key === 'SERVICES' ? 'Services' : key;
-                                            const colors = ['bg-sky-500', 'bg-amber-500', 'bg-emerald-500', 'bg-indigo-500', 'bg-purple-500'];
+                                            const tints = ['bg-primary', 'bg-cyan-400', 'bg-purple-500', 'bg-amber-500', 'bg-emerald-500'];
                                             const percentage = site.budget_spent > 0 ? (parseFloat(value) / site.budget_spent) * 100 : 0;
 
                                             return (
-                                                <div key={key} className="space-y-1.5">
-                                                    <div className="flex justify-between text-xs font-bold uppercase">
+                                                <div key={key} className="space-y-2.5">
+                                                    <div className="flex justify-between text-[10px] font-black uppercase tracking-widest">
                                                         <span>{label}</span>
-                                                        <span>{new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(value)}</span>
+                                                        <span className="text-black/40 dark:text-white/40">{new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(value)}</span>
                                                     </div>
-                                                    <div className="h-2 bg-muted rounded-full overflow-hidden">
+                                                    <div className="h-2 bg-black/[0.03] dark:bg-white/10 rounded-full overflow-hidden p-[1px]">
                                                         <div
-                                                            className={cn("h-full rounded-full transition-all duration-1000", colors[index % colors.length])}
+                                                            className={cn("h-full rounded-full transition-all duration-1000", tints[index % tints.length])}
                                                             style={{ width: `${percentage}%` }}
                                                         />
                                                     </div>
@@ -697,64 +725,94 @@ export default function ConstructionDetail() {
                             </div>
                         </div>
 
-                        {/* Transactions List */}
-                        <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
-                            <div className="p-6 border-b flex items-center justify-between">
-                                <h3 className="font-semibold text-lg">Historique des Transactions</h3>
-                                {(user?.role === 'ADMIN_MADIS' || user?.role === 'CHEF_CHANTIER') && (
-                                    <Link
-                                        to={`/dashboard/finance/transactions/new?site=${id}`}
-                                        className="inline-flex items-center justify-center rounded-md text-xs font-bold uppercase transition-colors bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4"
-                                    >
-                                        <Plus className="mr-2 h-3.5 w-3.5" /> Ajouter une dépense
-                                    </Link>
-                                )}
+                        {/* Transactions List Solaris Style */}
+                        <div className="solaris-glass rounded-[2.5rem] shadow-xl overflow-hidden border-none">
+                            <div className="p-8 border-b border-black/[0.03] bg-black/[0.01] flex items-center justify-between">
+                                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] opacity-30 flex items-center gap-3">
+                                    <Clock className="h-4 w-4" />
+                                    Registre des Flux
+                                </h3>
+
+
                             </div>
                             <div className="overflow-x-auto">
-                                <table className="w-full text-sm text-left">
-                                    <thead className="bg-muted/50 text-muted-foreground uppercase text-[10px] font-bold tracking-widest">
+                                <table className="w-full text-left">
+                                    <thead className="bg-black/[0.02] dark:bg-white/5 text-muted-foreground uppercase text-[9px] font-black tracking-[0.15em]">
                                         <tr>
-                                            <th className="px-6 py-4">Date</th>
-                                            <th className="px-6 py-4">Catégorie</th>
-                                            <th className="px-6 py-4">Description</th>
-                                            <th className="px-6 py-4 text-right">Montant</th>
-                                            <th className="px-6 py-4 text-right">Actions</th>
+                                            <th className="px-8 py-5">Horodatage</th>
+                                            <th className="px-8 py-5">Classification</th>
+                                            <th className="px-8 py-5">Détails Techniques</th>
+                                            <th className="px-8 py-5 text-right">Montant HT</th>
+                                            <th className="px-8 py-5 text-right">Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y border-t">
+                                    <tbody className="divide-y divide-black/[0.03] dark:divide-white/5">
                                         {transactions.length > 0 ? (
                                             transactions.map((tx) => (
-                                                <tr key={tx.id} className="hover:bg-muted/30 transition-colors">
-                                                    <td className="px-6 py-4 whitespace-nowrap font-medium">
+                                                <tr key={tx.id} className="hover:bg-black/[0.01] dark:hover:bg-white/[0.03] transition-colors group">
+                                                    <td className="px-8 py-6 whitespace-nowrap text-[11px] font-bold font-mono">
                                                         {format(new Date(tx.date), 'dd/MM/yyyy')}
                                                     </td>
-                                                    <td className="px-6 py-4">
-                                                        <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-muted border">
+                                                    <td className="px-8 py-6">
+                                                        <span className="inline-flex items-center px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest bg-black text-white shadow-sm">
                                                             {tx.category_display || tx.category}
                                                         </span>
                                                     </td>
-                                                    <td className="px-6 py-4 text-muted-foreground line-clamp-1">
+                                                    <td className="px-8 py-6 text-[11px] font-bold text-muted-foreground opacity-60 max-w-xs truncate">
                                                         {tx.description || '-'}
                                                     </td>
-                                                    <td className="px-6 py-4 text-right font-bold text-red-600 dark:text-red-400">
+                                                    <td className="px-8 py-6 text-right font-black text-[12px] tracking-tighter">
                                                         {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(tx.amount)}
                                                     </td>
-                                                    <td className="px-6 py-4 text-right">
-                                                        {(user?.role === 'ADMIN_MADIS' || user?.role === 'CHEF_CHANTIER') && (
-                                                            <Link
-                                                                to={`/dashboard/finance/transactions/${tx.id}/edit?site=${id}`}
-                                                                className="text-primary hover:text-primary/80 transition-colors p-1"
-                                                            >
-                                                                <Edit className="h-4 w-4" />
-                                                            </Link>
-                                                        )}
+                                                    <td className="px-8 py-6 text-right">
+                                                        <div className="flex items-center justify-end gap-1">
+                                                            {tx.invoice && (
+                                                                <a
+                                                                    href={tx.invoice}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    title="Voir le justificatif"
+                                                                    className="p-2 hover:bg-primary/10 dark:hover:bg-primary/20 rounded-xl transition-all inline-block opacity-60 hover:opacity-100"
+                                                                >
+                                                                    <Eye className="h-4 w-4 text-primary" />
+                                                                </a>
+                                                            )}
+                                                            {(user?.role === 'ADMIN_MADIS' || user?.role === 'CHEF_CHANTIER') && (
+                                                                <>
+                                                                    <Link
+                                                                        to={`/dashboard/finance/transactions/${tx.id}/edit?site=${id}`}
+                                                                        className="p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-xl transition-all inline-block opacity-0 group-hover:opacity-100"
+                                                                        title="Modifier"
+                                                                    >
+                                                                        <Edit className="h-4 w-4" />
+                                                                    </Link>
+                                                                    <button
+                                                                        onClick={async () => {
+                                                                            if (!window.confirm('Supprimer cette transaction ? Cette action est irréversible.')) return;
+                                                                            try {
+                                                                                await api.delete(`/finance/transactions/${tx.id}/`);
+                                                                                showToast({ message: 'Transaction supprimée.', type: 'success' });
+                                                                                fetchSiteDetails();
+                                                                            } catch (err) {
+                                                                                console.error(err);
+                                                                                showToast({ message: 'Erreur lors de la suppression.', type: 'error' });
+                                                                            }
+                                                                        }}
+                                                                        className="p-2 hover:bg-red-500/10 dark:hover:bg-red-500/20 rounded-xl transition-all inline-block opacity-0 group-hover:opacity-100"
+                                                                        title="Supprimer"
+                                                                    >
+                                                                        <Trash2 className="h-4 w-4 text-red-500" />
+                                                                    </button>
+                                                                </>
+                                                            )}
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             ))
                                         ) : (
                                             <tr>
-                                                <td colSpan="4" className="px-6 py-12 text-center text-muted-foreground italic">
-                                                    Aucune transaction enregistrée pour ce chantier.
+                                                <td colSpan="5" className="px-8 py-20 text-center">
+                                                    <p className="text-[10px] font-black uppercase tracking-widest opacity-20">Aucun enregistrement financier</p>
                                                 </td>
                                             </tr>
                                         )}
@@ -766,6 +824,48 @@ export default function ConstructionDetail() {
                 )}
             </div>
 
+            {/* Modal d'upload de document */}
+            <UploadDocumentModal
+                isOpen={isDocumentModalOpen}
+                onClose={() => setIsDocumentModalOpen(false)}
+                siteId={id}
+                propertyId={site?.property_id || site?.project_property_id}
+                onSuccess={() => {
+                    fetchSiteDetails();
+                    setIsDocumentModalOpen(false);
+                }}
+            />
+
+            {/* Modal de journal */}
+            <JournalEntryModal
+                isOpen={isJournalModalOpen}
+                onClose={() => setIsJournalModalOpen(false)}
+                site={site}
+                onOpenEdit={(entryId) => {
+                    setIsJournalModalOpen(false);
+                    setSelectedEntryId(entryId);
+                    setIsEditJournalModalOpen(true);
+                }}
+                onSuccess={() => {
+                    fetchSiteDetails();
+                    setIsJournalModalOpen(false);
+                }}
+            />
+
+            <EditJournalEntryModal
+                isOpen={isEditJournalModalOpen}
+                onClose={() => {
+                    setIsEditJournalModalOpen(false);
+                    setSelectedEntryId(null);
+                }}
+                entryId={selectedEntryId}
+                site={site}
+                onSuccess={() => {
+                    fetchSiteDetails();
+                    setIsEditJournalModalOpen(false);
+                    setSelectedEntryId(null);
+                }}
+            />
         </div>
     );
 }
