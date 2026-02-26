@@ -61,12 +61,12 @@ export default function ProjectsList() {
 
     return (
         <div className="space-y-12 animate-fade-in max-w-[1600px] mx-auto px-4 lg:px-8 py-8">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-16">
-                <div className="space-y-2">
-                    <h1 className="text-4xl font-black tracking-tighter uppercase leading-none">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12 md:mb-16">
+                <div className="space-y-1.5 md:space-y-2">
+                    <h1 className="text-2xl md:text-3xl lg:text-4xl font-black tracking-tighter uppercase leading-none">
                         {activeTab === 'CONSTRUCTION' ? 'Mes Projets de Développement' : 'Entretien & Maintenance'}
                     </h1>
-                    <p className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground dark:text-white/60 opacity-60">
+                    <p className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground dark:text-white/60 opacity-60 leading-relaxed">
                         {activeTab === 'CONSTRUCTION'
                             ? "Suivez vos projets de développement immobilier de haut standing."
                             : "Suivez les interventions d'entretien et de maintenance technique."}
@@ -75,43 +75,45 @@ export default function ProjectsList() {
             </div>
 
             {/* Tabs Solaris Style */}
-            <div className="flex items-center gap-10 mb-12 overflow-x-auto pb-4 border-none">
-                <button
-                    onClick={() => setActiveTab('CONSTRUCTION')}
-                    className={cn(
-                        "pb-4 text-[11px] font-black uppercase tracking-[0.2em] transition-all px-2 flex items-center gap-4 relative whitespace-nowrap",
-                        activeTab === 'CONSTRUCTION'
-                            ? 'text-black dark:text-white after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1 after:bg-black dark:after:bg-white after:rounded-full after:shadow-lg scale-105'
-                            : 'text-muted-foreground dark:text-white/40 opacity-40 hover:opacity-100 dark:hover:text-white hover:scale-105'
-                    )}
-                >
-                    <HardHat className="h-5 w-5" />
-                    Développement
-                    <span className={cn(
-                        "ml-2 px-2.5 py-0.5 rounded-lg text-[10px] font-black shadow-sm",
-                        activeTab === 'CONSTRUCTION' ? "bg-black dark:bg-white text-white dark:text-black" : "bg-black/5 dark:bg-white/10 text-black dark:text-white"
-                    )}>
-                        {projects.filter(p => p.category === 'CONSTRUCTION').length}
-                    </span>
-                </button>
-                <button
-                    onClick={() => setActiveTab('MAINTENANCE')}
-                    className={cn(
-                        "pb-4 text-[11px] font-black uppercase tracking-[0.2em] transition-all px-2 flex items-center gap-4 relative whitespace-nowrap",
-                        activeTab === 'MAINTENANCE'
-                            ? 'text-black dark:text-white after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1 after:bg-black dark:after:bg-white after:rounded-full after:shadow-lg scale-105'
-                            : 'text-muted-foreground dark:text-white/40 opacity-40 hover:opacity-100 dark:hover:text-white hover:scale-105'
-                    )}
-                >
-                    <ClipboardList className="h-5 w-5" />
-                    Maintenance
-                    <span className={cn(
-                        "ml-2 px-2.5 py-0.5 rounded-lg text-[10px] font-black shadow-sm",
-                        activeTab === 'MAINTENANCE' ? "bg-black dark:bg-white text-white dark:text-black" : "bg-black/5 dark:bg-white/10 text-black dark:text-white"
-                    )}>
-                        {projects.filter(p => p.category === 'MAINTENANCE').length}
-                    </span>
-                </button>
+            <div className="overflow-x-auto no-scrollbar -mx-4 px-4 md:mx-0 md:px-0">
+                <div className="flex items-center gap-6 md:gap-10 mb-8 md:mb-12 border-none">
+                    <button
+                        onClick={() => setActiveTab('CONSTRUCTION')}
+                        className={cn(
+                            "pb-3 md:pb-4 text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] transition-all px-1 md:px-2 flex items-center gap-3 md:gap-4 relative whitespace-nowrap",
+                            activeTab === 'CONSTRUCTION'
+                                ? 'text-black dark:text-white after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1 after:bg-black dark:after:bg-white after:rounded-full after:shadow-lg scale-105'
+                                : 'text-muted-foreground dark:text-white/40 opacity-40 hover:opacity-100 dark:hover:text-white hover:scale-105'
+                        )}
+                    >
+                        <HardHat className="h-4 w-4 md:h-5 md:w-5" />
+                        Développement
+                        <span className={cn(
+                            "ml-1.5 md:ml-2 px-2 py-0.5 rounded-lg text-[8px] md:text-[10px] font-black shadow-sm",
+                            activeTab === 'CONSTRUCTION' ? "bg-black dark:bg-white text-white dark:text-black" : "bg-black/5 dark:bg-white/10 text-black dark:text-white"
+                        )}>
+                            {projects.filter(p => p.category === 'CONSTRUCTION').length}
+                        </span>
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('MAINTENANCE')}
+                        className={cn(
+                            "pb-3 md:pb-4 text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] transition-all px-1 md:px-2 flex items-center gap-3 md:gap-4 relative whitespace-nowrap",
+                            activeTab === 'MAINTENANCE'
+                                ? 'text-black dark:text-white after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1 after:bg-black dark:after:bg-white after:rounded-full after:shadow-lg scale-105'
+                                : 'text-muted-foreground dark:text-white/40 opacity-40 hover:opacity-100 dark:hover:text-white hover:scale-105'
+                        )}
+                    >
+                        <ClipboardList className="h-4 w-4 md:h-5 md:w-5" />
+                        Maintenance
+                        <span className={cn(
+                            "ml-1.5 md:ml-2 px-2 py-0.5 rounded-lg text-[8px] md:text-[10px] font-black shadow-sm",
+                            activeTab === 'MAINTENANCE' ? "bg-black dark:bg-white text-white dark:text-black" : "bg-black/5 dark:bg-white/10 text-black dark:text-white"
+                        )}>
+                            {projects.filter(p => p.category === 'MAINTENANCE').length}
+                        </span>
+                    </button>
+                </div>
             </div>
 
             {filteredProjects.length === 0 ? (

@@ -55,10 +55,10 @@ export default function ConstructionList() {
             {/* Header Solaris Style */}
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
                 <div>
-                    <h1 className="text-4xl font-black tracking-tighter uppercase leading-none mb-3">
+                    <h1 className="text-2xl md:text-3xl lg:text-4xl font-black tracking-tighter uppercase leading-none mb-2 md:mb-3">
                         {activeTab === 'CONSTRUCTION' ? 'Suivi de Chantier' : 'Suivi des Interventions'}
                     </h1>
-                    <p className="text-[11px] font-bold uppercase tracking-wider opacity-60">
+                    <p className="text-[10px] md:text-[11px] font-bold uppercase tracking-wider opacity-60 leading-relaxed md:leading-normal">
                         {activeTab === 'CONSTRUCTION'
                             ? "Visualisation en temps réel de l'avancement des développements opérationnels."
                             : "Gestion centralisée des interventions de maintenance et d'entretien technique."}
@@ -67,40 +67,42 @@ export default function ConstructionList() {
                 {(user?.role === 'ADMIN_MADIS' || user?.role === 'CHEF_CHANTIER') && (
                     <Link
                         to="/dashboard/construction/new"
-                        className="inline-flex items-center justify-center rounded-full text-[10px] font-black uppercase tracking-widest transition-all bg-black text-white dark:bg-primary dark:solaris-neon-pink hover:bg-black/90 h-14 px-10 shadow-xl shadow-black/10 group whitespace-nowrap"
+                        className="inline-flex items-center justify-center rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all bg-black text-white dark:bg-primary dark:solaris-neon-pink hover:bg-black/90 h-11 md:h-14 px-6 md:px-10 shadow-xl shadow-black/10 group whitespace-nowrap"
                     >
-                        <Plus className="mr-3 h-5 w-5 group-hover:rotate-90 transition-transform duration-500" />
+                        <Plus className="mr-2 md:mr-3 h-4 w-4 md:h-5 md:w-5 group-hover:rotate-90 transition-transform duration-500" />
                         {activeTab === 'CONSTRUCTION' ? 'Nouveau Chantier' : 'Nouvelle Intervention'}
                     </Link>
                 )}
             </div>
 
             {/* Navigation Tabs Solaris Style */}
-            <div className="solaris-glass rounded-full p-2 flex gap-4 w-fit shadow-lg px-3">
-                {[
-                    { id: 'CONSTRUCTION', label: "Chantiers", icon: HardHat, count: sites.filter(s => s.project_category === 'CONSTRUCTION').length },
-                    { id: 'MAINTENANCE', label: "Maintenance & Entretien", icon: ClipboardList, count: sites.filter(s => s.project_category === 'MAINTENANCE').length }
-                ].map((tab) => (
-                    <button
-                        key={tab.id}
-                        onClick={() => setActiveTab(tab.id)}
-                        className={cn(
-                            "flex items-center gap-3 px-8 py-3.5 rounded-full text-[10px] font-black uppercase tracking-[0.1em] transition-all duration-500 group relative",
-                            activeTab === tab.id
-                                ? "bg-primary text-white shadow-xl shadow-primary/20 scale-105"
-                                : "text-muted-foreground hover:text-foreground dark:hover:bg-white/5"
-                        )}
-                    >
-                        <tab.icon className={cn("h-4 w-4 transition-transform group-hover:scale-110", activeTab === tab.id ? "text-white" : "text-muted-foreground")} />
-                        {tab.label}
-                        <span className={cn(
-                            "ml-2 px-2 py-0.5 rounded-full text-[9px] font-black tracking-normal transition-colors",
-                            activeTab === tab.id ? "bg-white/20 text-white" : "bg-black/5 dark:bg-white/10 text-black/40 dark:text-white/40"
-                        )}>
-                            {tab.count}
-                        </span>
-                    </button>
-                ))}
+            <div className="overflow-x-auto no-scrollbar -mx-4 px-4 md:mx-0 md:px-0">
+                <div className="solaris-glass rounded-full p-1.5 md:p-2 flex gap-2 md:gap-4 w-fit shadow-lg px-2 md:px-3 whitespace-nowrap">
+                    {[
+                        { id: 'CONSTRUCTION', label: "Chantiers", icon: HardHat, count: sites.filter(s => s.project_category === 'CONSTRUCTION').length },
+                        { id: 'MAINTENANCE', label: "Maintenance & Entretien", icon: ClipboardList, count: sites.filter(s => s.project_category === 'MAINTENANCE').length }
+                    ].map((tab) => (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id)}
+                            className={cn(
+                                "flex items-center gap-2 md:gap-3 px-4 md:px-8 py-2.5 md:py-3.5 rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-[0.1em] transition-all duration-500 group relative",
+                                activeTab === tab.id
+                                    ? "bg-primary text-white shadow-xl shadow-primary/20 scale-105"
+                                    : "text-muted-foreground hover:text-foreground dark:hover:bg-white/5"
+                            )}
+                        >
+                            <tab.icon className={cn("h-3.5 w-3.5 md:h-4 md:w-4 transition-transform group-hover:scale-110", activeTab === tab.id ? "text-white" : "text-muted-foreground")} />
+                            {tab.label}
+                            <span className={cn(
+                                "ml-1.5 md:ml-2 px-1.5 md:px-2 py-0.5 rounded-full text-[8px] md:text-[9px] font-black tracking-normal transition-colors",
+                                activeTab === tab.id ? "bg-white/20 text-white" : "bg-black/5 dark:bg-white/10 text-black/40 dark:text-white/40"
+                            )}>
+                                {tab.count}
+                            </span>
+                        </button>
+                    ))}
+                </div>
             </div>
 
             {sites.filter(s => s.project_category === activeTab).length === 0 ? (
