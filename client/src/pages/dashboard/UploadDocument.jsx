@@ -86,9 +86,9 @@ export default function UploadDocument() {
     const ic = "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
 
     return (
-        <div className="container mx-auto py-12 px-4 max-w-4xl animate-fade-in pb-32">
+        <div className="container mx-auto py-8 md:py-12 px-4 max-w-4xl animate-fade-in pb-12 md:pb-20">
             {/* Header Area */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-16 pb-8 border-b border-black/5 dark:border-white/5">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 md:gap-8 mb-10 md:mb-16 pb-6 md:pb-8 border-b border-black/5 dark:border-white/5">
                 <div className="space-y-4">
                     <Link
                         to={propertyId ? `/dashboard/properties/${propertyId}` : "/dashboard/documents"}
@@ -266,7 +266,7 @@ export default function UploadDocument() {
             </div>
 
             {/* Security Footer */}
-            <div className="mt-12 flex flex-col items-center gap-4 opacity-30">
+            <div className="mt-8 md:mt-12 flex flex-col items-center gap-4 opacity-30">
                 <div className="h-px w-32 bg-black dark:bg-white" />
                 <p className="text-[9px] font-black uppercase tracking-[0.3em] text-center italic">
                     Cryptage de protocole Solaris 2.0 • Espace documentaire sécurisé MaDis
