@@ -68,8 +68,8 @@ export default function NotificationCenter() {
             {isOpen && (
                 <>
                     <div className="fixed inset-0 z-[100]" onClick={() => setIsOpen(false)} />
-                    <div className="absolute right-[-1.5rem] sm:right-0 mt-4 w-[calc(100vw-2rem)] sm:w-80 md:w-96 bg-white dark:bg-[#020817] solaris-glass rounded-[1.5rem] sm:rounded-[2rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)] z-[101] overflow-hidden animate-in fade-in zoom-in duration-300 border border-white/10">
-                        <div className="p-3.5 sm:p-6 border-b border-white/10 flex items-center justify-between bg-white/5">
+                    <div className="absolute right-[-1rem] sm:right-0 mt-4 w-[calc(100vw-3rem)] sm:w-80 md:w-96 bg-white dark:bg-[#0a1628] rounded-[1.5rem] sm:rounded-[2rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.3)] dark:shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)] z-[101] overflow-hidden animate-in fade-in zoom-in duration-300 border border-black/10 dark:border-white/10">
+                        <div className="p-3.5 sm:p-6 border-b border-black/10 dark:border-white/10 flex items-center justify-between bg-gray-50 dark:bg-white/5">
                             <h3 className="text-sm sm:text-xl font-black uppercase tracking-widest sm:tracking-tighter">Notifications</h3>
                             {unreadCount > 0 && (
                                 <button
@@ -89,8 +89,8 @@ export default function NotificationCenter() {
                                     <div
                                         key={notification.id}
                                         className={cn(
-                                            "p-4 sm:p-6 border-b border-white/5 last:border-0 hover:bg-white/5 transition-all relative group",
-                                            !notification.is_read && "bg-primary/[0.03] border-l-4 border-l-primary"
+                                            "p-4 sm:p-6 border-b border-black/5 dark:border-white/5 last:border-0 hover:bg-black/[0.02] dark:hover:bg-white/5 transition-all relative group",
+                                            !notification.is_read && "bg-primary/[0.05] dark:bg-primary/[0.03] border-l-4 border-l-primary"
                                         )}
                                     >
                                         <div className="flex justify-between items-start gap-4">
