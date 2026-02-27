@@ -116,29 +116,29 @@ export default function TicketsList() {
     return (
         <div className="max-w-[1600px] mx-auto space-y-10 animate-fade-in pb-20 px-4 md:px-10">
             {/* Header Solaris Style */}
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 md:gap-8">
                 <div>
-                    <h1 className="text-3xl md:text-4xl font-black tracking-tighter uppercase leading-tight md:leading-none mb-3">Messagerie</h1>
-                    <p className="text-[10px] md:text-[11px] font-bold uppercase tracking-wider opacity-60">Gestion et suivi des protocoles de communication avec l'assistance MaDis.</p>
+                    <h1 className="text-2xl md:text-4xl font-black tracking-tighter uppercase leading-tight md:leading-none mb-2 md:mb-3">Messagerie</h1>
+                    <p className="text-[9px] md:text-[11px] font-bold uppercase tracking-wider opacity-60">Gestion et suivi des protocoles de communication avec l'assistance MaDis.</p>
                 </div>
                 <Link
                     to="/dashboard/tickets/new"
-                    className="inline-flex items-center justify-center rounded-full text-[10px] font-black uppercase tracking-widest transition-all bg-black dark:bg-primary text-white hover:bg-black/90 dark:hover:bg-primary/90 h-12 md:h-14 px-8 md:px-10 shadow-xl shadow-black/10 dark:shadow-[0_0_30px_rgba(255,0,72,0.4),0_0_60px_rgba(255,0,72,0.15)] dark:hover:shadow-[0_0_40px_rgba(255,0,72,0.6),0_0_80px_rgba(255,0,72,0.2)] group whitespace-nowrap"
+                    className="inline-flex items-center justify-center rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all bg-black dark:bg-primary text-white hover:bg-black/90 dark:hover:bg-primary/90 h-11 md:h-14 px-6 md:px-10 shadow-xl shadow-black/10 dark:shadow-[0_0_30px_rgba(255,0,72,0.4),0_0_60px_rgba(255,0,72,0.15)] dark:hover:shadow-[0_0_40px_rgba(255,0,72,0.6),0_0_80px_rgba(255,0,72,0.2)] group whitespace-nowrap w-fit"
                 >
-                    <Plus className="mr-3 h-4 w-4 md:h-5 md:w-5 group-hover:rotate-90 transition-transform duration-500" />
+                    <Plus className="mr-2 md:mr-3 h-4 w-4 md:h-5 md:w-5 group-hover:rotate-90 transition-transform duration-500" />
                     Nouveau ticket
                 </Link>
             </div>
 
             {/* Filters Bar Solaris Style */}
-            <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-xl space-y-8">
-                <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] opacity-30">
-                    <MessageSquare className="h-4 w-4" />
+            <div className="solaris-glass rounded-[1.5rem] md:rounded-[2.5rem] p-5 md:p-10 border-none shadow-xl space-y-6 md:space-y-8">
+                <div className="flex items-center gap-3 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] opacity-30">
+                    <MessageSquare className="h-3.5 w-3.5 md:h-4 md:w-4" />
                     Console de Recherche et Filtrage
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-6">
-                    <div className="space-y-3 lg:col-span-4">
-                        <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Sujet / Recherche</label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-5 md:gap-6">
+                    <div className="space-y-2 md:space-y-3 lg:col-span-4">
+                        <label className="text-[9px] md:text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Sujet / Recherche</label>
                         <input
                             type="text"
                             placeholder="Rechercher une conversation..."
@@ -205,9 +205,9 @@ export default function TicketsList() {
                 </div>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-4 md:space-y-6">
                 {tickets.length === 0 ? (
-                    <div className="solaris-glass rounded-[2.5rem] p-32 text-center border-none shadow-xl mt-10">
+                    <div className="solaris-glass rounded-[1.5rem] md:rounded-[2.5rem] p-12 md:p-32 text-center border-none shadow-xl mt-6 md:mt-10">
                         <div className="mx-auto h-24 w-24 rounded-full bg-black/[0.03] flex items-center justify-center mb-10">
                             <MessageSquare className="h-10 w-10 text-black/10" />
                         </div>
@@ -224,7 +224,7 @@ export default function TicketsList() {
                                 key={ticket.id}
                                 to={`/dashboard/tickets/${ticket.id}`}
                                 className={cn(
-                                    "solaris-glass rounded-[1.5rem] md:rounded-[2rem] border-none shadow-xl p-6 md:p-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8 group hover:shadow-2xl transition-all duration-500 relative overflow-hidden",
+                                    "solaris-glass rounded-[1.25rem] md:rounded-[2rem] border-none shadow-xl p-5 md:p-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6 md:gap-8 group hover:shadow-2xl transition-all duration-500 relative overflow-hidden",
                                     ticket.unread_messages_count > 0 && "before:absolute before:inset-y-0 before:left-0 before:w-1.5 before:bg-red-600 before:shadow-[0_0_15px_rgba(220,38,38,0.5)]"
                                 )}
                             >
