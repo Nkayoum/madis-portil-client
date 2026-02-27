@@ -538,7 +538,7 @@ export default function FinancialDashboard({ isAdmin = false }) {
                             </button>
                         </div>
                     </div>
-                    <div className="overflow-x-auto">
+                    <div className="overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                         <table className="w-full text-sm">
                             <thead>
                                 <tr className="border-b bg-muted/10">
