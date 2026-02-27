@@ -253,12 +253,12 @@ export default function UploadDocument() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="h-16 px-16 bg-primary text-white text-[12px] font-black uppercase tracking-[0.25em] rounded-2xl shadow-2xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center min-w-[240px]"
+                            className="h-14 px-10 bg-primary text-white text-[11px] font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center whitespace-nowrap"
                         >
                             {loading ? (
-                                <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> Audit en cours...</>
+                                <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Audit en cours...</>
                             ) : (
-                                <><Upload className="mr-3 h-5 w-5" /> Engager la mise en ligne</>
+                                <><Upload className="mr-2 h-4 w-4" /> Engager la mise en ligne</>
                             )}
                         </button>
                     </div>
