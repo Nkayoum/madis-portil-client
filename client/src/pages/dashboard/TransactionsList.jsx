@@ -105,7 +105,7 @@ export default function TransactionsList() {
     }
 
     return (
-        <div className="space-y-12 animate-fade-in py-8 px-4 max-w-[1600px] mx-auto pb-24">
+        <div className="space-y-8 md:space-y-12 animate-fade-in py-4 md:py-8 px-0 md:px-4 max-w-[1600px] mx-auto pb-24">
             {/* Solaris Header Area */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 pb-4 border-b border-black/5">
                 <div className="flex items-start gap-6">
@@ -139,7 +139,7 @@ export default function TransactionsList() {
             </div>
 
             {/* Industrial Filters Bar */}
-            <div className="flex flex-col lg:flex-row lg:items-center gap-6">
+            <div className="flex flex-col lg:flex-row lg:items-center gap-4 md:gap-6">
                 <div className="relative group flex-1 max-w-md">
                     <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none">
                         <Search className="h-4 w-4 text-black/20 group-focus-within:text-primary transition-colors" />
@@ -153,7 +153,7 @@ export default function TransactionsList() {
                     />
                 </div>
 
-                <div className="flex items-center gap-4 p-1.5 bg-black/[0.02] border border-black/5 rounded-2xl w-fit">
+                <div className="flex items-center gap-4 p-1.5 bg-black/[0.02] border border-black/5 rounded-2xl w-full sm:w-fit max-w-full">
                     <Filter className="h-4 w-4 text-black/20 ml-4" />
                     <select
                         className="bg-transparent h-11 pr-8 text-[11px] font-black uppercase tracking-widest outline-none cursor-pointer hover:text-primary transition-colors"
@@ -172,7 +172,7 @@ export default function TransactionsList() {
 
             {/* Premium Solaris Table Container */}
             <div className="solaris-glass rounded-[2rem] border-none shadow-[0_20px_50px_rgba(0,0,0,0.05)] overflow-hidden">
-                <div className="overflow-x-auto pb-4">
+                <div className="overflow-x-auto pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="bg-black/5 text-[10px] font-black uppercase tracking-[0.2em] border-b border-black/5">
