@@ -211,7 +211,7 @@ export default function FinancialDashboard({ isAdmin = false }) {
         <div className="space-y-6">
             {/* Mode Switcher & Filters */}
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                <div className="flex bg-muted p-1 rounded-xl w-fit">
+                <div className="flex bg-muted p-1 rounded-xl w-full lg:w-fit overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                     <button
                         onClick={() => setDashboardMode('rental')}
                         className={cn(
