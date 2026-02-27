@@ -114,9 +114,9 @@ export default function DocumentsList() {
 
                 <Link
                     to="/dashboard/documents/new"
-                    className="h-14 md:h-16 px-8 md:px-10 bg-primary dark:solaris-neon-pink text-white rounded-2xl flex items-center justify-center gap-4 text-[10px] md:text-[12px] font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all group w-full md:w-auto"
+                    className="h-11 md:h-13 px-6 md:px-8 bg-primary dark:solaris-neon-pink text-white rounded-xl md:rounded-2xl flex items-center justify-center gap-3 text-[9px] md:text-[11px] font-black uppercase tracking-[0.2em] shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all group w-full md:w-auto shrink-0"
                 >
-                    <FileText className="h-4 w-4 md:h-5 md:w-5" />
+                    <FileText className="h-4 w-4 md:h-4.5 md:w-4.5" />
                     Nouveau document
                 </Link>
             </div>
@@ -149,7 +149,7 @@ export default function DocumentsList() {
 
                 <div className="h-10 w-px bg-black/5 dark:bg-white/5 hidden lg:block" />
 
-                <div className="flex items-center gap-2 overflow-x-auto pb-2 lg:pb-0 w-full lg:w-auto px-2">
+                <div className="flex items-center gap-2 overflow-x-auto w-full lg:w-auto px-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                     {categories.map((cat) => (
                         <button
                             key={cat.value}
