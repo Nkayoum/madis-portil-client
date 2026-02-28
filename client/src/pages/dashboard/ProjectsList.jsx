@@ -62,11 +62,11 @@ export default function ProjectsList() {
     return (
         <div className="space-y-12 animate-fade-in max-w-[1600px] mx-auto px-4 lg:px-8 py-8">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12 md:mb-16">
-                <div className="space-y-1.5 md:space-y-2">
-                    <h1 className="text-2xl md:text-3xl lg:text-4xl font-black tracking-tighter uppercase leading-none">
+                <div className="space-y-1">
+                    <h1 className="text-xl md:text-2xl lg:text-3xl font-bold tracking-tight uppercase leading-none">
                         {activeTab === 'CONSTRUCTION' ? 'Mes Projets de Développement' : 'Entretien & Maintenance'}
                     </h1>
-                    <p className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground dark:text-white/60 opacity-60 leading-relaxed">
+                    <p className="text-[9px] md:text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground dark:text-white/60 opacity-60 leading-relaxed">
                         {activeTab === 'CONSTRUCTION'
                             ? "Suivez vos projets de développement immobilier de haut standing."
                             : "Suivez les interventions d'entretien et de maintenance technique."}

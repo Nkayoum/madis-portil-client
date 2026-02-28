@@ -353,17 +353,17 @@ export default function FinancialDashboard({ isAdmin = false }) {
                                     {dashboardMode === 'construction' ? <Users className="h-6 w-6" /> : <TrendingUp className="h-6 w-6" />}
                                 </div>
                             </div>
-                            <p className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-1">
+                            <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-1">
                                 {stats.label_performance}
                             </p>
-                            <h3 className="text-3xl font-black">
+                            <h3 className="text-3xl font-bold">
                                 {dashboardMode === 'rental' || dashboardMode === 'transactional'
                                     ? stats.performance.toFixed(2) + '%'
                                     : formatCurrency(stats.performance)}
                             </h3>
                             <div className="flex items-center gap-1.5 mt-4">
                                 <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                                <p className="text-[10px] font-black uppercase text-emerald-600 dark:text-emerald-400 tracking-tighter">Performance Optimale</p>
+                                <p className="text-[10px] font-bold uppercase text-emerald-600 dark:text-emerald-400 tracking-tighter">Performance Optimale</p>
                             </div>
                         </div>
 
@@ -376,8 +376,8 @@ export default function FinancialDashboard({ isAdmin = false }) {
                                         <circle cx="48" cy="48" r="40" stroke="currentColor" strokeWidth="8" fill="transparent" strokeDasharray="251.2" strokeDashoffset={251.2 * (1 - (assetsRatio / 100))} className="text-primary dark:text-[#00f2ff] dark:filter dark:drop-shadow-[0_0_8px_rgba(0,242,255,0.5)]" strokeLinecap="round" />
                                     </svg>
                                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                        <span className="text-2xl font-black dark:text-white">{assetsRatio.toFixed(0)}%</span>
-                                        <span className="text-[8px] font-black uppercase text-muted-foreground tracking-widest opacity-60">Actif</span>
+                                        <span className="text-2xl font-bold dark:text-white">{assetsRatio.toFixed(0)}%</span>
+                                        <span className="text-[8px] font-bold uppercase text-muted-foreground tracking-widest opacity-60">Actif</span>
                                     </div>
                                 </div>
                                 <div className="w-full space-y-4">
@@ -386,14 +386,14 @@ export default function FinancialDashboard({ isAdmin = false }) {
                                             <div className="w-3 h-3 rounded-full bg-primary" />
                                             <span className="text-xs font-bold">Immobilier</span>
                                         </div>
-                                        <span className="text-xs font-black">{formatCurrency(totalAssetValue)}</span>
+                                        <span className="text-xs font-bold">{formatCurrency(totalAssetValue)}</span>
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2">
                                             <div className="w-3 h-3 rounded-full bg-slate-300 dark:bg-white/10" />
                                             <span className="text-xs font-bold">Liquidités</span>
                                         </div>
-                                        <span className="text-xs font-black">{formatCurrency(totalLiquidity)}</span>
+                                        <span className="text-xs font-bold">{formatCurrency(totalLiquidity)}</span>
                                     </div>
                                 </div>
                             </div>
@@ -405,16 +405,16 @@ export default function FinancialDashboard({ isAdmin = false }) {
                         <div className="lg:col-span-2 solaris-glass rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-8 md:p-10 dark:bg-black/40">
                             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
                                 <div>
-                                    <h3 className="text-xl font-black flex items-center gap-2">
+                                    <h3 className="text-xl font-bold flex items-center gap-2">
                                         <TrendingUp className="h-5 w-5 text-primary" />
                                         Évolution Financière
                                     </h3>
-                                    <p className="text-[10px] text-muted-foreground font-bold tracking-widest uppercase mt-1">Données consolidées MaDis Solaris</p>
+                                    <p className="text-[10px] text-muted-foreground font-semibold tracking-widest uppercase mt-1">Données consolidées MaDis Solaris</p>
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/5 border border-primary/10">
                                         <div className="w-2 h-2 rounded-full bg-primary" />
-                                        <span className="text-[10px] font-black text-primary uppercase">Volume Global</span>
+                                        <span className="text-[10px] font-bold text-primary uppercase">Volume Global</span>
                                     </div>
                                 </div>
                             </div>
@@ -486,8 +486,8 @@ export default function FinancialDashboard({ isAdmin = false }) {
                                         <circle cx="96" cy="96" r="80" stroke="currentColor" strokeWidth="16" fill="transparent" strokeDasharray="502.4" strokeDashoffset={502.4 * (1 - (assetsRatio / 100))} className="text-primary dark:text-[#00f2ff] dark:filter dark:drop-shadow-[0_0_12px_rgba(0,242,255,0.4)]" strokeLinecap="round" />
                                     </svg>
                                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                        <span className="text-4xl font-black dark:text-white">{assetsRatio.toFixed(0)}%</span>
-                                        <span className="text-[10px] font-black uppercase text-muted-foreground tracking-widest opacity-60">Actif</span>
+                                        <span className="text-4xl font-bold dark:text-white">{assetsRatio.toFixed(0)}%</span>
+                                        <span className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest opacity-60">Actif</span>
                                     </div>
                                 </div>
                                 <div className="w-full space-y-4">
@@ -496,14 +496,14 @@ export default function FinancialDashboard({ isAdmin = false }) {
                                             <div className="w-3 h-3 rounded-full bg-primary dark:bg-[#00f2ff]" />
                                             <span className="text-xs font-bold dark:text-white">Immobilier</span>
                                         </div>
-                                        <span className="text-xs font-black dark:text-white">{formatCurrency(totalAssetValue)}</span>
+                                        <span className="text-xs font-bold dark:text-white">{formatCurrency(totalAssetValue)}</span>
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2">
                                             <div className="w-3 h-3 rounded-full bg-slate-300 dark:bg-white/10" />
                                             <span className="text-xs font-bold dark:text-white">Liquidités</span>
                                         </div>
-                                        <span className="text-xs font-black dark:text-white">{formatCurrency(totalLiquidity)}</span>
+                                        <span className="text-xs font-bold dark:text-white">{formatCurrency(totalLiquidity)}</span>
                                     </div>
                                 </div>
                             </div>
@@ -524,8 +524,8 @@ export default function FinancialDashboard({ isAdmin = false }) {
                         </div>
                         <div className="flex items-center gap-3 sm:gap-4 shrink-0">
                             <div className="text-left sm:text-right">
-                                <p className="text-[10px] uppercase font-black text-muted-foreground leading-tight">Liquidité Totale</p>
-                                <p className="text-sm font-black text-primary whitespace-nowrap">
+                                <p className="text-[10px] uppercase font-bold text-muted-foreground leading-tight">Liquidité Totale</p>
+                                <p className="text-sm font-bold text-primary whitespace-nowrap">
                                     {wallets.reduce((sum, w) => sum + Number(w.balance), 0).toLocaleString()} €
                                 </p>
                             </div>
@@ -562,23 +562,23 @@ export default function FinancialDashboard({ isAdmin = false }) {
                                                 </td>
                                                 <td className="px-6 py-4 text-right">
                                                     <span className={cn(
-                                                        "font-black text-base",
+                                                        "font-bold text-base",
                                                         bal < 0 ? "text-[#ff0048]" : bal === 0 ? "text-muted-foreground" : "text-foreground"
                                                     )}>
-                                                        {bal.toLocaleString()}€
+                                                        {bal.toLocaleString()} €
                                                     </span>
                                                 </td>
                                                 <td className="px-6 py-4 text-center">
                                                     {bal < 0 ? (
-                                                        <span className="px-2.5 py-1 rounded-full bg-rose-100 text-[#ff0048] text-[10px] font-black uppercase flex items-center gap-1 justify-center w-fit mx-auto animate-pulse">
+                                                        <span className="px-2.5 py-1 rounded-full bg-rose-100 text-[#ff0048] text-[10px] font-bold uppercase flex items-center gap-1 justify-center w-fit mx-auto animate-pulse">
                                                             Déficit critique
                                                         </span>
                                                     ) : bal === 0 ? (
-                                                        <span className="px-2.5 py-1 rounded-full bg-muted text-muted-foreground text-[10px] font-bold uppercase w-fit mx-auto">
+                                                        <span className="px-2.5 py-1 rounded-full bg-muted text-muted-foreground text-[10px] font-semibold uppercase w-fit mx-auto">
                                                             Compte vide
                                                         </span>
                                                     ) : (
-                                                        <span className="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-black uppercase w-fit mx-auto">
+                                                        <span className="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-bold uppercase w-fit mx-auto">
                                                             Solde Créditeur
                                                         </span>
                                                     )}

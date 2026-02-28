@@ -106,8 +106,8 @@ export default function DashboardMarketplace() {
             {/* Header Area */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 pb-4 border-b border-black/5 dark:border-white/5">
                 <div>
-                    <h1 className="text-3xl md:text-5xl font-black tracking-tighter uppercase leading-tight md:leading-none mb-3">Marketplace</h1>
-                    <p className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] opacity-40">Registre des actifs disponibles • Acquisition & Location</p>
+                    <h1 className="text-xl md:text-3xl font-bold tracking-tight uppercase leading-tight md:leading-none mb-2">Marketplace</h1>
+                    <p className="text-[9px] md:text-[10px] font-semibold uppercase tracking-[0.2em] opacity-40">Registre des actifs disponibles • Acquisition & Location</p>
                 </div>
 
                 <div className="flex flex-col sm:flex-row items-center gap-4">

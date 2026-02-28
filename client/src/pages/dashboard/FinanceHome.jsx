@@ -13,7 +13,7 @@ export default function FinanceHome() {
             {/* Solaris Header Area */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 pb-4 border-b border-black/5">
                 <div>
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter uppercase leading-none mb-3">
+                    <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight uppercase leading-none mb-2">
                         Finance & <span className="text-primary italic">Rendement</span>
                     </h1>
                     <p className="text-[11px] font-black uppercase tracking-[0.2em] opacity-40">

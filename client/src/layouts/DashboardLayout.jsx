@@ -62,14 +62,14 @@ export default function DashboardLayout() {
                     sidebarOpen ? "translate-x-0" : "-translate-x-full"
                 )}
             >
-                <div className="h-20 flex items-center px-6 mb-4">
-                    <img src={logo} alt="MaDis Logo" className="h-10 w-auto" />
+                <div className="h-16 flex items-center px-5 mb-2">
+                    <img src={logo} alt="MaDis Logo" className="h-8 w-auto" />
                     <button className="ml-auto lg:hidden" onClick={toggleSidebar}>
                         <X className="h-6 w-6" />
                     </button>
                 </div>
 
-                <nav className="p-4 space-y-2 flex-1 overflow-y-auto no-scrollbar">
+                <nav className="p-3 space-y-1 flex-1 overflow-y-auto no-scrollbar">
                     {filteredNavigation.map((item) => {
                         const isActive = item.href === '/dashboard'
                             ? location.pathname === '/dashboard'
@@ -79,35 +79,35 @@ export default function DashboardLayout() {
                                 key={item.name}
                                 to={item.href}
                                 className={cn(
-                                    "flex items-center px-4 py-3.5 text-sm font-bold rounded-2xl transition-all duration-300",
+                                    "flex items-center px-3.5 py-2.5 text-xs font-semibold rounded-xl transition-all duration-300",
                                     isActive
                                         ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-[1.02] dark:solaris-neon-blue dark:bg-white/5 dark:text-white"
                                         : "text-muted-foreground hover:bg-white/40 hover:text-foreground dark:hover:bg-white/5"
                                 )}
                                 onClick={() => setSidebarOpen(false)}
                             >
-                                <item.icon className={cn("h-5 w-5 mr-3", isActive ? "animate-pulse" : "")} />
+                                <item.icon className={cn("h-4 w-4 mr-2.5", isActive ? "animate-pulse" : "")} />
                                 {item.name}
                             </Link>
                         );
                     })}
                 </nav>
 
-                <div className="p-6 border-t border-primary/5">
-                    <div className="flex items-center gap-3 mb-6 px-2">
-                        <div className="h-10 w-10 rounded-2xl bg-primary/10 border border-primary/10 flex items-center justify-center text-primary font-black text-lg">
+                <div className="p-4 border-t border-primary/5">
+                    <div className="flex items-center gap-2.5 mb-4 px-2">
+                        <div className="h-8 w-8 rounded-xl bg-primary/10 border border-primary/10 flex items-center justify-center text-primary font-bold text-sm">
                             {user?.first_name?.[0] || 'U'}
                         </div>
                         <div className="overflow-hidden">
-                            <p className="text-sm font-black truncate text-foreground">{user?.first_name} {user?.last_name}</p>
-                            <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest truncate">{user?.email}</p>
+                            <p className="text-xs font-bold truncate text-foreground">{user?.first_name} {user?.last_name}</p>
+                            <p className="text-[9px] text-muted-foreground uppercase font-medium tracking-widest truncate">{user?.email}</p>
                         </div>
                     </div>
                     <button
                         onClick={logout}
-                        className="w-full flex items-center px-4 py-3 text-xs font-black uppercase tracking-widest text-destructive hover:bg-destructive/10 rounded-2xl transition-all"
+                        className="w-full flex items-center px-3.5 py-2.5 text-[10px] font-bold uppercase tracking-widest text-destructive hover:bg-destructive/10 rounded-xl transition-all"
                     >
-                        <LogOut className="h-4 w-4 mr-3" />
+                        <LogOut className="h-3.5 w-3.5 mr-2.5" />
                         Déconnexion
                     </button>
                 </div>

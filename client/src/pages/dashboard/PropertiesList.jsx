@@ -93,8 +93,8 @@ export default function PropertiesList() {
         <div className="space-y-8 animate-fade-in p-4 md:p-8">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
-                    <h1 className="text-2xl md:text-3xl font-black tracking-tighter mb-1 uppercase">Portfolio Immobilier</h1>
-                    <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest opacity-60">Gestion des actifs MaDis</p>
+                    <h1 className="text-xl md:text-2xl font-bold tracking-tight mb-1 uppercase">Portfolio Immobilier</h1>
+                    <p className="text-[9px] text-muted-foreground font-semibold uppercase tracking-widest opacity-60">Gestion des actifs MaDis</p>
                 </div>
                 <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
                     <div className="overflow-x-auto no-scrollbar -mx-4 px-4 md:mx-0 md:px-0 w-full md:w-auto">
@@ -156,15 +156,15 @@ export default function PropertiesList() {
                             <>
                                 <button
                                     onClick={selectAll}
-                                    className="solaris-glass px-6 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-white dark:hover:bg-primary transition-all border border-slate-200/50 dark:border-white/10"
+                                    className="solaris-glass px-5 py-2.5 rounded-2xl text-[9px] font-bold uppercase tracking-widest hover:bg-primary hover:text-white dark:hover:bg-primary transition-all border border-slate-200/50 dark:border-white/10"
                                 >
                                     {selectedIds.length === filteredProperties.length ? 'Tout déselectionner' : 'Tout sélectionner'}
                                 </button>
                                 <Link
                                     to="/dashboard/properties/new"
-                                    className="inline-flex items-center justify-center rounded-2xl text-[10px] font-black uppercase tracking-widest bg-primary text-white shadow-[0_0_30px_rgba(255,0,72,0.4),0_0_60px_rgba(255,0,72,0.15)] hover:shadow-[0_0_40px_rgba(255,0,72,0.6),0_0_80px_rgba(255,0,72,0.2)] hover:scale-105 transition-all px-8 py-3"
+                                    className="inline-flex items-center justify-center rounded-2xl text-[9px] font-bold uppercase tracking-widest bg-primary text-white shadow-[0_0_30px_rgba(255,0,72,0.4),0_0_60px_rgba(255,0,72,0.15)] hover:shadow-[0_0_40px_rgba(255,0,72,0.6),0_0_80px_rgba(255,0,72,0.2)] hover:scale-105 transition-all px-6 py-2.5"
                                 >
-                                    <Plus className="mr-2 h-4 w-4" />
+                                    <Plus className="mr-2 h-3.5 w-3.5" />
                                     Ajouter un bien
                                 </Link>
                             </>
