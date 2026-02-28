@@ -319,11 +319,11 @@ export default function FinancialDashboard({ isAdmin = false }) {
                                 </div>
                                 {loadingStats && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
                             </div>
-                            <p className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-1">
+                            <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-1">
                                 {stats.label_main}
                             </p>
-                            <h3 className="text-3xl font-black">
-                                {formatCurrency(stats.main_value)}
+                            <h3 className="text-2xl sm:text-3xl font-bold tracking-tight">
+                                {formatCurrency(stats.main_value, true)}
                             </h3>
                             <p className="text-[10px] font-bold text-muted-foreground mt-4 flex items-center gap-1 opacity-60">
                                 <ShieldCheck className="h-3 w-3" /> Données sécurisées MaDis
@@ -337,10 +337,10 @@ export default function FinancialDashboard({ isAdmin = false }) {
                                     {dashboardMode === 'construction' ? <Box className="h-6 w-6" /> : <Building className="h-6 w-6" />}
                                 </div>
                             </div>
-                            <p className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-1">
+                            <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-1">
                                 {stats.label_volume}
                             </p>
-                            <h3 className="text-3xl font-black">{formatCurrency(stats.volume)}</h3>
+                            <h3 className="text-2xl sm:text-3xl font-bold tracking-tight">{formatCurrency(stats.volume, true)}</h3>
                             <div className="h-1.5 w-full bg-slate-100 dark:bg-black/40 rounded-full mt-6 overflow-hidden">
                                 <div className="h-full bg-amber-500/50 rounded-full w-2/3" />
                             </div>
@@ -356,10 +356,10 @@ export default function FinancialDashboard({ isAdmin = false }) {
                             <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-1">
                                 {stats.label_performance}
                             </p>
-                            <h3 className="text-3xl font-bold">
+                            <h3 className="text-2xl sm:text-3xl font-bold tracking-tight">
                                 {dashboardMode === 'rental' || dashboardMode === 'transactional'
                                     ? stats.performance.toFixed(2) + '%'
-                                    : formatCurrency(stats.performance)}
+                                    : formatCurrency(stats.performance, true)}
                             </h3>
                             <div className="flex items-center gap-1.5 mt-4">
                                 <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
@@ -386,14 +386,14 @@ export default function FinancialDashboard({ isAdmin = false }) {
                                             <div className="w-3 h-3 rounded-full bg-primary" />
                                             <span className="text-xs font-bold">Immobilier</span>
                                         </div>
-                                        <span className="text-xs font-bold">{formatCurrency(totalAssetValue)}</span>
+                                        <span className="text-xs font-bold whitespace-nowrap">{formatCurrency(totalAssetValue, true)}</span>
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2">
                                             <div className="w-3 h-3 rounded-full bg-slate-300 dark:bg-white/10" />
                                             <span className="text-xs font-bold">Liquidités</span>
                                         </div>
-                                        <span className="text-xs font-bold">{formatCurrency(totalLiquidity)}</span>
+                                        <span className="text-xs font-bold whitespace-nowrap">{formatCurrency(totalLiquidity, true)}</span>
                                     </div>
                                 </div>
                             </div>

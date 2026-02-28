@@ -513,7 +513,7 @@ export default function PropertyDetail() {
                             <div className="flex flex-col gap-0.5 md:gap-1">
                                 <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Loyer mensuel</span>
                                 <div className="flex items-baseline gap-2">
-                                    <span className="text-2xl md:text-3xl font-black">{formatCurrency(property.loyer_mensuel)}</span>
+                                    <span className="text-2xl md:text-3xl font-bold tracking-tight">{formatCurrency(property.loyer_mensuel, true)}</span>
                                 </div>
                             </div>
                         )}
@@ -521,7 +521,7 @@ export default function PropertyDetail() {
                             <div className="flex flex-col gap-0.5 md:gap-1">
                                 <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Nuitée</span>
                                 <div className="flex items-baseline gap-2">
-                                    <span className="text-2xl md:text-3xl font-black">{formatCurrency(property.prix_nuitee)}</span>
+                                    <span className="text-2xl md:text-3xl font-bold tracking-tight">{formatCurrency(property.prix_nuitee, true)}</span>
                                 </div>
                             </div>
                         )}
@@ -530,31 +530,33 @@ export default function PropertyDetail() {
             </div>
 
             {/* Sub-Navigation Tabs Solaris Style */}
-            <div className="flex items-center gap-8 border-b border-slate-100 pb-0 overflow-x-auto no-scrollbar">
-                {[
-                    { id: 'details', label: 'Détails Principaux', icon: Building, show: true },
-                    { id: 'projects', label: property.management_type === 'GESTION' ? 'Entretien & Maintenance' : 'Projets', icon: HardHat, show: property.management_type === 'CONSTRUCTION' || property.management_type === 'GESTION' },
-                    { id: 'transactions', label: 'Pipeline Commercial', icon: TrendingUp, show: property.management_type === 'MANDAT' },
-                    { id: 'performance', label: 'Performance & Finance', icon: Activity, show: true },
-                    { id: 'documents', label: 'Documents & Archive', icon: FileText, show: true }
-                ].filter(t => t.show).map((tab) => (
-                    <button
-                        key={tab.id}
-                        onClick={() => setActiveTab(tab.id)}
-                        className={cn(
-                            "flex items-center gap-3 pb-6 border-b-2 transition-all group relative",
-                            activeTab === tab.id
-                                ? "border-black text-black"
-                                : "border-transparent text-muted-foreground hover:text-black"
-                        )}
-                    >
-                        <tab.icon className={cn("h-4 w-4", activeTab === tab.id ? "text-primary" : "text-muted-foreground opacity-40 group-hover:opacity-100")} />
-                        <span className="text-[11px] font-black uppercase tracking-widest whitespace-nowrap">{tab.label}</span>
-                        {activeTab === tab.id && (
-                            <div className="absolute bottom-[-2px] left-0 right-0 h-0.5 bg-black animate-in fade-in slide-in-from-bottom-1" />
-                        )}
-                    </button>
-                ))}
+            <div className="flex items-center gap-6 md:gap-8 border-b border-slate-100 pb-0 overflow-x-auto no-scrollbar w-full">
+                <div className="flex items-center gap-6 md:gap-8 min-w-max px-1">
+                    {[
+                        { id: 'details', label: 'Détails Principaux', icon: Building, show: true },
+                        { id: 'projects', label: property.management_type === 'GESTION' ? 'Entretien & Maintenance' : 'Projets', icon: HardHat, show: property.management_type === 'CONSTRUCTION' || property.management_type === 'GESTION' },
+                        { id: 'transactions', label: 'Pipeline Commercial', icon: TrendingUp, show: property.management_type === 'MANDAT' },
+                        { id: 'performance', label: 'Performance & Finance', icon: Activity, show: true },
+                        { id: 'documents', label: 'Documents & Archive', icon: FileText, show: true }
+                    ].filter(t => t.show).map((tab) => (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id)}
+                            className={cn(
+                                "flex items-center gap-3 pb-6 border-b-2 transition-all group relative",
+                                activeTab === tab.id
+                                    ? "border-black text-black"
+                                    : "border-transparent text-muted-foreground hover:text-black"
+                            )}
+                        >
+                            <tab.icon className={cn("h-4 w-4 shrink-0", activeTab === tab.id ? "text-primary" : "text-muted-foreground opacity-40 group-hover:opacity-100")} />
+                            <span className="text-[11px] font-bold uppercase tracking-widest whitespace-nowrap">{tab.label}</span>
+                            {activeTab === tab.id && (
+                                <div className="absolute bottom-[-2px] left-0 right-0 h-0.5 bg-black animate-in fade-in slide-in-from-bottom-1" />
+                            )}
+                        </button>
+                    ))}
+                </div>
             </div>
 
             {/* Currency Context for International Investors */}
@@ -690,17 +692,17 @@ export default function PropertyDetail() {
                                     </h3>
                                     <div className="space-y-6">
                                         <div className="flex justify-between items-end pb-4 border-b border-slate-100">
-                                            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Loyer Principal</span>
-                                            <span className="text-2xl md:text-3xl font-black text-primary tracking-tighter">{formatCurrency(property.loyer_mensuel)}</span>
+                                            <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Loyer Principal</span>
+                                            <span className="text-2xl md:text-3xl font-bold text-primary tracking-tight">{formatCurrency(property.loyer_mensuel, true)}</span>
                                         </div>
                                         <div className="grid grid-cols-2 gap-6 md:gap-10">
                                             <div className="space-y-1">
-                                                <dt className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Charges Mensuelles</dt>
-                                                <dd className="font-black text-base md:text-lg tracking-tight">{formatCurrency(property.charges_mensuelles)}</dd>
+                                                <dt className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Charges Mensuelles</dt>
+                                                <dd className="font-bold text-base md:text-lg tracking-tight">{formatCurrency(property.charges_mensuelles, true)}</dd>
                                             </div>
                                             <div className="space-y-1">
-                                                <dt className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Dépôt de Garantie</dt>
-                                                <dd className="font-black text-base md:text-lg tracking-tight">{formatCurrency(property.depot_garantie)}</dd>
+                                                <dt className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Dépôt de Garantie</dt>
+                                                <dd className="font-bold text-base md:text-lg tracking-tight">{formatCurrency(property.depot_garantie, true)}</dd>
                                             </div>
                                         </div>
                                     </div>
