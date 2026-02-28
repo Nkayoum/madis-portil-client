@@ -51,7 +51,7 @@ export default function ConstructionList() {
     }
 
     return (
-        <div className="max-w-[1600px] mx-auto space-y-10 animate-fade-in pb-20 px-4 md:px-10">
+        <div className="max-w-[1600px] mx-auto space-y-10 animate-fade-in pb-8 md:pb-16 px-4 md:px-10">
             {/* Header Solaris Style */}
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
                 <div>
@@ -75,7 +75,7 @@ export default function ConstructionList() {
                 )}
             </div>
 
-            <div className="overflow-x-auto no-scrollbar -mx-4 px-4 md:mx-0 md:px-0 mb-2">
+            <div className="overflow-x-auto no-scrollbar -mx-4 px-4 md:mx-0 md:px-0 mb-4">
                 <div className="solaris-glass rounded-full p-1.5 md:p-2 flex gap-2 md:gap-4 w-fit shadow-lg px-2 md:px-3 whitespace-nowrap">
                     {[
                         { id: 'CONSTRUCTION', label: "Chantiers", icon: HardHat, count: sites.filter(s => s.project_category === 'CONSTRUCTION').length },

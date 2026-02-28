@@ -334,7 +334,7 @@ export default function CreateConstructionSite() {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="inline-flex items-center justify-center rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all bg-black dark:bg-primary text-white hover:bg-black/90 dark:hover:bg-primary/90 h-14 px-12 disabled:opacity-50 shadow-xl shadow-black/10 dark:shadow-primary/20 group"
+                        className="inline-flex items-center justify-center rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all bg-black dark:bg-primary text-white hover:bg-black/90 dark:hover:bg-primary/90 h-14 px-12 disabled:opacity-50 shadow-xl shadow-black/10 dark:shadow-primary/20 group whitespace-nowrap"
                     >
                         {loading ? <Loader2 className="h-5 w-5 animate-spin mr-3" /> : <Save className="h-5 w-5 mr-3 group-hover:scale-110 transition-transform" />}
                         Déployer le Chantier
