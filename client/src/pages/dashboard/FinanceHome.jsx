@@ -9,7 +9,7 @@ export default function FinanceHome() {
     const isAdmin = user?.role === 'ADMIN_MADIS';
 
     return (
-        <div className="space-y-12 animate-fade-in pb-20 max-w-[1600px] mx-auto px-4">
+        <div className="space-y-12 animate-fade-in pb-8 md:pb-12 max-w-[1600px] mx-auto px-4">
             {/* Solaris Header Area */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 pb-4 border-b border-black/5">
                 <div>
