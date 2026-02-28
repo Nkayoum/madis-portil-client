@@ -22,7 +22,8 @@ export default function FinancialDashboard({ isAdmin = false }) {
     const [properties, setProperties] = useState([]);
     const [selectedPropertyId, setSelectedPropertyId] = useState('');
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-    const availableYears = Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i);
+    const currentYear = new Date().getFullYear();
+    const availableYears = Array.from({ length: Math.max(1, currentYear - 2022 + 1) }, (_, i) => currentYear - i);
 
     const formatCurrency = (value) => {
         return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(value || 0);
@@ -280,23 +281,16 @@ export default function FinancialDashboard({ isAdmin = false }) {
                     </div>
 
                     <div className="flex items-center gap-2 px-2">
-                        <Filter className="h-4 w-4 text-muted-foreground" />
-                        <div className="flex gap-1">
+                        <Calendar className="h-4 w-4 text-muted-foreground" />
+                        <select
+                            className="bg-transparent text-sm font-bold focus:outline-none cursor-pointer py-1 pe-2"
+                            value={selectedYear}
+                            onChange={handleYearChange}
+                        >
                             {availableYears.map(year => (
-                                <button
-                                    key={year}
-                                    onClick={() => handleYearChange({ target: { value: year } })}
-                                    className={cn(
-                                        "px-2.5 py-1 text-[10px] font-black rounded-md transition-all",
-                                        selectedYear === year
-                                            ? 'bg-primary text-primary-foreground'
-                                            : 'hover:bg-muted'
-                                    )}
-                                >
-                                    {year}
-                                </button>
+                                <option key={year} value={year}>{year}</option>
                             ))}
-                        </div>
+                        </select>
                     </div>
                 </div>
             </div>
