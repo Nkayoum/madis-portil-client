@@ -264,8 +264,8 @@ export default function FinancialDashboard({ isAdmin = false }) {
                     </button>
                 </div>
 
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-muted/30 dark:bg-black/40 p-2 rounded-xl border border-black/5 dark:border-white/5">
-                    <div className="flex items-center gap-3 px-2 border-r border-muted last:border-0">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 bg-muted/30 dark:bg-black/40 p-2 rounded-xl border border-black/5 dark:border-white/5 w-full lg:w-auto">
+                    <div className="flex items-center gap-3 px-2 sm:border-r sm:border-muted last:border-0 py-1 sm:py-0">
                         <Building className="h-4 w-4 text-muted-foreground" />
                         <select
                             className="bg-transparent text-sm font-bold focus:outline-none min-w-[150px]"
@@ -310,8 +310,8 @@ export default function FinancialDashboard({ isAdmin = false }) {
             ) : (
                 <>
                     {/* Solaris Summary Cards */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <div className="solaris-glass rounded-[2.5rem] p-8 transition-all group overflow-hidden relative dark:border-white/5 dark:bg-black/40">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                        <div className="solaris-glass rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-8 transition-all group overflow-hidden relative dark:border-white/5 dark:bg-black/40">
                             <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-primary/10 transition-colors" />
                             <div className="flex justify-between items-start mb-6">
                                 <div className="p-3 rounded-2xl bg-primary/10 text-primary dark:text-primary dark:bg-primary/20">
@@ -330,7 +330,7 @@ export default function FinancialDashboard({ isAdmin = false }) {
                             </p>
                         </div>
 
-                        <div className="solaris-glass rounded-[2.5rem] p-8 transition-all group overflow-hidden relative dark:border-white/5 dark:bg-black/40">
+                        <div className="solaris-glass rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-8 transition-all group overflow-hidden relative dark:border-white/5 dark:bg-black/40">
                             <div className="absolute top-0 right-0 w-32 h-32 bg-amber-400/5 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-amber-400/10 transition-colors" />
                             <div className="flex justify-between items-start mb-6">
                                 <div className="p-3 rounded-2xl bg-amber-100/50 text-amber-600 dark:bg-amber-400/10 dark:text-amber-400">
@@ -346,7 +346,7 @@ export default function FinancialDashboard({ isAdmin = false }) {
                             </div>
                         </div>
 
-                        <div className="solaris-glass rounded-[2.5rem] p-8 transition-all group overflow-hidden relative shadow-sm dark:border-white/5 dark:bg-black/40">
+                        <div className="solaris-glass rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-8 transition-all group overflow-hidden relative shadow-sm dark:border-white/5 dark:bg-black/40">
                             <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-400/5 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-emerald-400/10 transition-colors" />
                             <div className="flex justify-between items-start mb-6">
                                 <div className="p-3 rounded-2xl bg-emerald-100/50 text-emerald-600 dark:bg-emerald-400/10 dark:text-emerald-400">
@@ -367,7 +367,7 @@ export default function FinancialDashboard({ isAdmin = false }) {
                             </div>
                         </div>
 
-                        <div className="solaris-glass rounded-[2.5rem] p-8 transition-all flex flex-col items-center justify-center relative overflow-hidden group dark:border-white/5 dark:bg-black/60">
+                        <div className="solaris-glass rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-8 transition-all flex flex-col items-center justify-center relative overflow-hidden group dark:border-white/5 dark:bg-black/60">
                             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                             <div className="relative z-10 flex flex-col items-center">
                                 <div className="relative w-24 h-24 mb-6">
@@ -402,7 +402,7 @@ export default function FinancialDashboard({ isAdmin = false }) {
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
                         {/* High-End Solaris Chart */}
-                        <div className="lg:col-span-2 solaris-glass rounded-[2.5rem] p-8 md:p-10 dark:bg-black/40">
+                        <div className="lg:col-span-2 solaris-glass rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-8 md:p-10 dark:bg-black/40">
                             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
                                 <div>
                                     <h3 className="text-xl font-black flex items-center gap-2">
@@ -474,7 +474,7 @@ export default function FinancialDashboard({ isAdmin = false }) {
                         </div>
 
                         {/* Distribution Card */}
-                        <div className="solaris-glass rounded-[2.5rem] p-8 flex flex-col dark:border-white/5 dark:bg-white/[0.02]">
+                        <div className="solaris-glass rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-8 flex flex-col dark:border-white/5 dark:bg-white/[0.02]">
                             <h3 className="text-xl font-black mb-8 flex items-center gap-2">
                                 <PieIcon className="h-5 w-5 text-primary" />
                                 Distribution

@@ -13,7 +13,7 @@ export default function FinanceHome() {
             {/* Solaris Header Area */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 pb-4 border-b border-black/5">
                 <div>
-                    <h1 className="text-5xl font-black tracking-tighter uppercase leading-none mb-3">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter uppercase leading-none mb-3">
                         Finance & <span className="text-primary italic">Rendement</span>
                     </h1>
                     <p className="text-[11px] font-black uppercase tracking-[0.2em] opacity-40">
@@ -24,17 +24,17 @@ export default function FinanceHome() {
                 </div>
 
                 {isAdmin && (
-                    <div className="flex items-center gap-4">
+                    <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 w-full sm:w-auto">
                         <Link
                             to="/dashboard/finance/transactions"
-                            className="h-14 px-8 flex items-center justify-center rounded-2xl bg-black/[0.02] border border-black/5 text-[11px] font-black uppercase tracking-widest hover:bg-black/5 transition-all text-black/60"
+                            className="h-12 sm:h-14 px-6 sm:px-8 flex items-center justify-center rounded-2xl bg-black/[0.02] border border-black/5 text-[10px] sm:text-[11px] font-black uppercase tracking-widest hover:bg-black/5 transition-all text-black/60 w-full sm:w-auto"
                         >
                             <History className="mr-3 h-4 w-4" />
                             Historique
                         </Link>
                         <Link
                             to="/dashboard/finance/transactions/new"
-                            className="h-14 px-8 flex items-center justify-center rounded-2xl bg-primary text-white text-[11px] font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] transition-all"
+                            className="h-12 sm:h-14 px-6 sm:px-8 flex items-center justify-center rounded-2xl bg-primary text-white text-[10px] sm:text-[11px] font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] transition-all w-full sm:w-auto"
                         >
                             <Plus className="mr-3 h-4 w-4" />
                             Enregistrer
