@@ -144,12 +144,15 @@ export default function AdminDashboard() {
             </div>
 
             {/* Solaris Tab Switcher */}
-            <div className="flex justify-center md:justify-start overflow-x-auto no-scrollbar -mx-4 px-4 md:mx-0 md:px-0">
-                <div className="flex p-1.5 solaris-glass dark:bg-black/40 dark:border-white/5 rounded-[1.5rem] border border-white/40 shadow-xl whitespace-nowrap">
+            <div
+                style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                className="flex justify-start [&::-webkit-scrollbar]:hidden"
+            >
+                <div style={{ display: 'flex', width: 'max-content' }} className="p-1.5 solaris-glass dark:bg-black/40 dark:border-white/5 rounded-[1.5rem] border border-white/40 shadow-xl">
                     <button
                         onClick={() => setActiveTab('overview')}
                         className={cn(
-                            "px-4 sm:px-8 py-3 text-[10px] font-black uppercase tracking-[0.2em] rounded-xl transition-all duration-300 flex items-center gap-2",
+                            "px-4 sm:px-8 py-3 text-[10px] font-black uppercase tracking-[0.2em] rounded-xl transition-all duration-300 flex items-center gap-2 whitespace-nowrap",
                             activeTab === 'overview'
                                 ? "bg-black text-white shadow-2xl dark:solaris-neon-blue dark:bg-white/10 dark:text-white"
                                 : "text-muted-foreground hover:text-foreground hover:bg-white/40 dark:hover:bg-white/5"
@@ -161,7 +164,7 @@ export default function AdminDashboard() {
                     <button
                         onClick={() => setActiveTab('finance')}
                         className={cn(
-                            "px-4 sm:px-8 py-3 text-[10px] font-black uppercase tracking-[0.2em] rounded-xl transition-all duration-300 flex items-center gap-2",
+                            "px-4 sm:px-8 py-3 text-[10px] font-black uppercase tracking-[0.2em] rounded-xl transition-all duration-300 flex items-center gap-2 whitespace-nowrap",
                             activeTab === 'finance'
                                 ? "bg-black text-white shadow-2xl dark:solaris-neon-blue dark:bg-white/5 dark:text-white"
                                 : "text-muted-foreground hover:text-foreground hover:bg-white/40 dark:hover:bg-white/5"

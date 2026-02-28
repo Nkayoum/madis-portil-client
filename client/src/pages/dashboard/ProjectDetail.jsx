@@ -124,7 +124,7 @@ export default function ProjectDetail() {
     };
 
     return (
-        <div className="space-y-6 md:space-y-12 animate-fade-in max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8 overflow-x-hidden w-full">
+        <div className="space-y-6 md:space-y-12 animate-fade-in max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8 w-full">
             <Link to="/dashboard/projects" className="inline-flex items-center text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-black transition-all group">
                 <ArrowLeft className="mr-3 h-4 w-4 group-hover:-translate-x-1 transition-transform" />
                 Retour aux projets

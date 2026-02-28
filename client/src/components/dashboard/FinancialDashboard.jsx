@@ -212,57 +212,63 @@ export default function FinancialDashboard({ isAdmin = false }) {
         <div className="space-y-6">
             {/* Mode Switcher & Filters */}
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                <div className="flex bg-muted p-1 rounded-xl w-full lg:w-fit overflow-x-auto no-scrollbar">
-                    <button
-                        onClick={() => setDashboardMode('rental')}
-                        className={cn(
-                            "px-4 py-2 text-sm font-bold rounded-lg transition-all flex items-center gap-2",
-                            dashboardMode === 'rental'
-                                ? "bg-background dark:bg-white/5 shadow-sm text-primary"
-                                : "text-muted-foreground hover:text-foreground dark:hover:bg-white/5"
-                        )}
-                    >
-                        <Calendar className="h-4 w-4" />
-                        Gestion Locative
-                    </button>
-                    <button
-                        onClick={() => setDashboardMode('transactional')}
-                        className={cn(
-                            "px-4 py-2 text-sm font-bold rounded-lg transition-all flex items-center gap-2",
-                            dashboardMode === 'transactional'
-                                ? "bg-background dark:bg-white/5 shadow-sm text-primary"
-                                : "text-muted-foreground hover:text-foreground dark:hover:bg-white/5"
-                        )}
-                    >
-                        <TrendingUp className="h-4 w-4" />
-                        Investissement Achat-Revente
-                    </button>
-                    {isEffectiveAdmin && (
+                {/* Mode Switcher — scrollable on mobile */}
+                <div
+                    style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                    className="w-full lg:w-fit rounded-xl bg-muted p-1 [&::-webkit-scrollbar]:hidden"
+                >
+                    <div style={{ display: 'flex', width: 'max-content', gap: '4px' }}>
                         <button
-                            onClick={() => setDashboardMode('construction')}
+                            onClick={() => setDashboardMode('rental')}
                             className={cn(
-                                "px-4 py-2 text-sm font-bold rounded-lg transition-all flex items-center gap-2",
-                                dashboardMode === 'construction'
+                                "px-4 py-2 text-sm font-bold rounded-lg transition-all flex items-center gap-2 whitespace-nowrap",
+                                dashboardMode === 'rental'
                                     ? "bg-background dark:bg-white/5 shadow-sm text-primary"
                                     : "text-muted-foreground hover:text-foreground dark:hover:bg-white/5"
                             )}
                         >
-                            <Hammer className="h-4 w-4" />
-                            Suivi Chantier
+                            <Calendar className="h-4 w-4" />
+                            Gestion Locative
                         </button>
-                    )}
-                    <button
-                        onClick={() => setDashboardMode('reports')}
-                        className={cn(
-                            "px-4 py-2 text-sm font-bold rounded-lg transition-all flex items-center gap-2",
-                            dashboardMode === 'reports'
-                                ? "bg-background dark:bg-white/5 shadow-sm text-primary"
-                                : "text-muted-foreground hover:text-foreground dark:hover:bg-white/5"
+                        <button
+                            onClick={() => setDashboardMode('transactional')}
+                            className={cn(
+                                "px-4 py-2 text-sm font-bold rounded-lg transition-all flex items-center gap-2 whitespace-nowrap",
+                                dashboardMode === 'transactional'
+                                    ? "bg-background dark:bg-white/5 shadow-sm text-primary"
+                                    : "text-muted-foreground hover:text-foreground dark:hover:bg-white/5"
+                            )}
+                        >
+                            <TrendingUp className="h-4 w-4" />
+                            Investissement Achat-Revente
+                        </button>
+                        {isEffectiveAdmin && (
+                            <button
+                                onClick={() => setDashboardMode('construction')}
+                                className={cn(
+                                    "px-4 py-2 text-sm font-bold rounded-lg transition-all flex items-center gap-2 whitespace-nowrap",
+                                    dashboardMode === 'construction'
+                                        ? "bg-background dark:bg-white/5 shadow-sm text-primary"
+                                        : "text-muted-foreground hover:text-foreground dark:hover:bg-white/5"
+                                )}
+                            >
+                                <Hammer className="h-4 w-4" />
+                                Suivi Chantier
+                            </button>
                         )}
-                    >
-                        <PieIcon className="h-4 w-4" />
-                        Rapports
-                    </button>
+                        <button
+                            onClick={() => setDashboardMode('reports')}
+                            className={cn(
+                                "px-4 py-2 text-sm font-bold rounded-lg transition-all flex items-center gap-2 whitespace-nowrap",
+                                dashboardMode === 'reports'
+                                    ? "bg-background dark:bg-white/5 shadow-sm text-primary"
+                                    : "text-muted-foreground hover:text-foreground dark:hover:bg-white/5"
+                            )}
+                        >
+                            <PieIcon className="h-4 w-4" />
+                            Rapports
+                        </button>
+                    </div>
                 </div>
 
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 bg-muted/30 dark:bg-black/40 p-2 rounded-xl border border-black/5 dark:border-white/5 w-full lg:w-auto">

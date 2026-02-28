@@ -133,7 +133,7 @@ export default function DashboardMarketplace() {
 
             {/* Solaris Filter Navigation */}
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-                <div className="overflow-x-auto no-scrollbar -mx-4 px-4 lg:mx-0 lg:px-0 w-full lg:w-auto">
+                <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }} className="lg:mx-0 lg:px-0 w-full lg:w-auto [&::-webkit-scrollbar]:hidden">
                     <div className="flex items-center gap-2 md:gap-4 p-1.5 bg-black/[0.02] dark:bg-white/5 border border-black/5 dark:border-white/5 rounded-2xl md:rounded-[1.5rem] w-fit whitespace-nowrap">
                         {CATEGORIES.map(c => {
                             const Icon = c.icon;
@@ -157,7 +157,7 @@ export default function DashboardMarketplace() {
                     </div>
                 </div>
 
-                <div className="overflow-x-auto no-scrollbar -mx-4 px-4 lg:mx-0 lg:px-0 w-full lg:w-auto">
+                <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }} className="lg:mx-0 lg:px-0 w-full lg:w-auto [&::-webkit-scrollbar]:hidden">
                     <div className="flex items-center gap-2 p-1.5 bg-black/[0.02] dark:bg-white/5 border border-black/5 dark:border-white/5 rounded-2xl w-fit whitespace-nowrap">
                         {NATURES.map(n => {
                             const isActive = nature === n.value;

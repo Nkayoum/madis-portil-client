@@ -97,7 +97,7 @@ export default function PropertiesList() {
                     <p className="text-[9px] text-muted-foreground font-semibold uppercase tracking-widest opacity-60">Gestion des actifs MaDis</p>
                 </div>
                 <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
-                    <div className="overflow-x-auto no-scrollbar -mx-4 px-4 md:mx-0 md:px-0 w-full md:w-auto">
+                    <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }} className="-mx-4 px-4 md:mx-0 md:px-0 w-full md:w-auto [&::-webkit-scrollbar]:hidden">
                         <div className="flex items-center gap-2 p-1.5 solaris-glass rounded-2xl w-fit whitespace-nowrap">
                             <button
                                 onClick={() => setFilter('ALL')}

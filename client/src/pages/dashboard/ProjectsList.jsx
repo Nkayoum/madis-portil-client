@@ -75,8 +75,8 @@ export default function ProjectsList() {
             </div>
 
             {/* Tabs Solaris Style */}
-            <div className="overflow-x-auto no-scrollbar -mx-4 px-4 md:mx-0 md:px-0">
-                <div className="flex items-center gap-6 md:gap-10 mb-8 md:mb-12 border-none">
+            <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }} className="-mx-4 px-4 md:mx-0 md:px-0 [&::-webkit-scrollbar]:hidden">
+                <div style={{ display: 'flex', width: 'max-content', gap: '24px' }} className="items-center mb-8 md:mb-12 border-none">
                     <button
                         onClick={() => setActiveTab('CONSTRUCTION')}
                         className={cn(

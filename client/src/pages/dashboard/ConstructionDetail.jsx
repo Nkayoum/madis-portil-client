@@ -128,7 +128,7 @@ export default function ConstructionDetail() {
             </Link>
 
             {/* Header Solaris Style */}
-            <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] relative overflow-hidden">
+            <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] relative overflow-x-clip overflow-y-visible">
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 md:gap-10">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 md:gap-8">
                         <div className="p-4 md:p-5 bg-black text-white rounded-[1.5rem] md:rounded-[2rem] shadow-2xl relative group shrink-0">
@@ -182,7 +182,7 @@ export default function ConstructionDetail() {
                         </div>
 
                         {(user?.role === 'ADMIN_MADIS' || user?.role === 'CHEF_CHANTIER') && site.status !== 'ANNULE' && (
-                            <div className="flex items-center gap-2 md:gap-3 w-full lg:w-auto overflow-x-auto no-scrollbar pb-1 lg:pb-0">
+                            <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }} className="flex items-center gap-2 md:gap-3 w-full lg:w-auto pb-1 lg:pb-0 [&::-webkit-scrollbar]:hidden">
                                 {site.status === 'EN_COURS' && (
                                     <button
                                         onClick={() => setIsSuspensionModalOpen(true)}
@@ -232,8 +232,8 @@ export default function ConstructionDetail() {
             </div>
 
             {/* Navigation Tabs Solaris Style */}
-            <div className="overflow-x-auto no-scrollbar -mx-4 px-4 md:mx-0 md:px-0 mb-8">
-                <div className="solaris-glass rounded-full p-2 flex gap-2 md:gap-4 w-fit shadow-lg px-3 whitespace-nowrap">
+            <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }} className="mb-8 [&::-webkit-scrollbar]:hidden">
+                <div style={{ width: 'max-content' }} className="solaris-glass rounded-full p-2 flex gap-2 md:gap-4 shadow-lg px-3 whitespace-nowrap">
                     {[
                         { id: 'overview', label: "Vue d'ensemble", icon: Layout },
                         { id: 'journal', label: "Journal", icon: FileText },

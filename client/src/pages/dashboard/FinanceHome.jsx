@@ -44,7 +44,7 @@ export default function FinanceHome() {
             </div>
 
             {/* Main Analytical Dashboard Container */}
-            <div className="solaris-glass rounded-[2.5rem] p-4 md:p-10 border-none shadow-2xl relative overflow-hidden">
+            <div className="solaris-glass rounded-[2.5rem] p-4 md:p-10 border-none shadow-2xl relative overflow-x-clip overflow-y-visible">
                 <div className="absolute top-0 right-0 h-64 w-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
                 <FinancialDashboard isAdmin={isAdmin} />
             </div>

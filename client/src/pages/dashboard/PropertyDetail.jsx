@@ -529,9 +529,12 @@ export default function PropertyDetail() {
                 )}
             </div>
 
-            {/* Sub-Navigation Tabs Solaris Style */}
-            <div className="flex items-center gap-6 md:gap-8 border-b border-slate-100 pb-0 overflow-x-auto no-scrollbar w-full">
-                <div className="flex items-center gap-6 md:gap-8 min-w-max px-1">
+            {/* Sub-Navigation Tabs — scrollable */}
+            <div
+                style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                className="w-full border-b border-slate-100 pb-0 [&::-webkit-scrollbar]:hidden"
+            >
+                <div style={{ display: 'flex', gap: '24px', width: 'max-content', paddingLeft: '4px', paddingRight: '4px' }}>
                     {[
                         { id: 'details', label: 'Détails Principaux', icon: Building, show: true },
                         { id: 'projects', label: property.management_type === 'GESTION' ? 'Entretien & Maintenance' : 'Projets', icon: HardHat, show: property.management_type === 'CONSTRUCTION' || property.management_type === 'GESTION' },
@@ -1942,6 +1945,6 @@ export default function PropertyDetail() {
                     </div>
                 )
             }
-        </div>
+        </div >
     );
 }

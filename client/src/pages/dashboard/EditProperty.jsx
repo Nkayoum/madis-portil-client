@@ -362,7 +362,7 @@ export default function EditProperty() {
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-50"></div>
 
                 {/* Tab Navigation */}
-                <div className="flex border-b border-border/50 bg-muted/20 overflow-x-auto no-scrollbar">
+                <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }} className="flex border-b border-border/50 bg-muted/20 [&::-webkit-scrollbar]:hidden">
                     {TABS.map((tab) => {
                         const isActive = activeTab === tab.id;
                         const Icon = tab.icon;
