@@ -327,7 +327,7 @@ export default function CreateConstructionSite() {
                     </div>
                 </div>
 
-                <div className="flex justify-end gap-4">
+                <div className="flex justify-center gap-4">
                     <Link to="/dashboard/construction" className="inline-flex items-center justify-center rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all bg-white dark:bg-white/5 border border-black/5 dark:border-white/5 shadow-sm hover:bg-black/5 dark:hover:bg-white/10 h-14 px-10">
                         Annuler
                     </Link>

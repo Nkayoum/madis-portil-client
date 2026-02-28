@@ -292,14 +292,14 @@ export default function DashboardMarketplace() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4 md:p-8 pt-16 md:pt-20"
+                        className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-md p-4 md:p-8 pt-16 md:pt-20"
                         onClick={closeDetail}
                     >
                         <motion.div
                             initial={{ opacity: 0, scale: 0.9, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                            className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] shadow-[0_30px_100px_rgba(0,0,0,0.3)] w-full max-w-4xl max-h-full flex flex-col overflow-hidden border-none"
+                            className="bg-white dark:bg-[rgba(2,4,10,0.98)] rounded-[2rem] md:rounded-[2.5rem] shadow-[0_30px_100px_rgba(0,0,0,0.3)] w-full max-w-4xl max-h-full flex flex-col overflow-hidden border border-black/5 dark:border-white/5"
                             onClick={e => e.stopPropagation()}
                         >
                             <div className="flex flex-col md:flex-row min-h-0 flex-1 overflow-hidden">

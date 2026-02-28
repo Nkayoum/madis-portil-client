@@ -232,7 +232,7 @@ export default function ConstructionDetail() {
             </div>
 
             {/* Navigation Tabs Solaris Style */}
-            <div className="overflow-x-auto no-scrollbar -mx-4 px-4 md:mx-0 md:px-0 mb-4">
+            <div className="overflow-x-auto no-scrollbar -mx-4 px-4 md:mx-0 md:px-0 mb-8">
                 <div className="solaris-glass rounded-full p-2 flex gap-2 md:gap-4 w-fit shadow-lg px-3 whitespace-nowrap">
                     {[
                         { id: 'overview', label: "Vue d'ensemble", icon: Layout },
