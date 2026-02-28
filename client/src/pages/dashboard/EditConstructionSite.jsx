@@ -86,7 +86,7 @@ export default function EditConstructionSite() {
     }
 
     return (
-        <div className="max-w-[1000px] mx-auto py-12 px-6 animate-fade-in pb-20">
+        <div className="max-w-[1000px] mx-auto py-12 px-6 animate-fade-in pb-8">
             <div className="flex items-center gap-6 mb-12">
                 <Link to={`/dashboard/construction/${id}`} className="p-3 hover:bg-black hover:text-white rounded-2xl transition-all shadow-sm border border-black/5 dark:border-white/10 bg-white dark:bg-white/10 group dark:text-white">
                     <ArrowLeft className="h-5 w-5 group-hover:-translate-x-1 transition-transform" />
@@ -204,7 +204,7 @@ export default function EditConstructionSite() {
                     </div>
                 </div>
 
-                <div className="flex justify-end gap-3">
+                <div className="flex justify-center gap-3">
                     <button
                         type="submit"
                         disabled={saving}
