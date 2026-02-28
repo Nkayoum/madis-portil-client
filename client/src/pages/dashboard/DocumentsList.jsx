@@ -106,37 +106,37 @@ export default function DocumentsList() {
     return (
         <div className="container mx-auto py-8 md:py-12 px-4 max-w-[1600px] animate-fade-in pb-32">
             {/* Solaris Header Area */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 md:gap-10 mb-12 md:mb-16 pb-8 border-b border-black/5 dark:border-white/5">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-8 mb-8 md:mb-12 pb-6 border-b border-black/5 dark:border-white/5">
                 <div>
-                    <h1 className="text-3xl md:text-5xl font-black tracking-tighter uppercase leading-tight md:leading-none mb-3">Documents</h1>
-                    <p className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] opacity-40">Registre des actifs documentaires • Protocoles & Certifications</p>
+                    <h1 className="text-2xl md:text-4xl font-bold tracking-tight uppercase leading-tight md:leading-none mb-1.5">Documents</h1>
+                    <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] opacity-30">Registre des actifs documentaires</p>
                 </div>
 
                 <Link
                     to="/dashboard/documents/new"
-                    className="h-11 md:h-13 px-6 md:px-8 bg-primary dark:solaris-neon-pink text-white rounded-xl md:rounded-2xl flex items-center justify-center gap-3 text-[9px] md:text-[11px] font-black uppercase tracking-[0.2em] shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all group w-full md:w-auto shrink-0"
+                    className="h-10 md:h-11 px-6 md:px-7 bg-primary dark:solaris-neon-pink text-white rounded-xl flex items-center justify-center gap-2 text-[9px] md:text-[10px] font-bold uppercase tracking-widest shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all group w-full md:w-auto shrink-0"
                 >
-                    <FileText className="h-4 w-4 md:h-4.5 md:w-4.5" />
+                    <FileText className="h-4 w-4" />
                     Nouveau document
                 </Link>
             </div>
 
             {/* Industrial Command Bar */}
-            <div className="solaris-glass rounded-[2rem] p-4 flex flex-col lg:flex-row items-center gap-4 mb-12 shadow-2xl border-none">
+            <div className="solaris-glass rounded-[1.5rem] p-3 flex flex-col lg:flex-row items-center gap-3 mb-8 shadow-sm border-none">
                 <div className="relative flex-1 group w-full">
-                    <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-4 w-4 text-black/20 dark:text-white/20 group-focus-within:text-primary transition-colors" />
+                    <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-4 w-4 text-black/20 dark:text-white/20 group-focus-within:text-primary transition-colors" />
                     <input
                         type="text"
-                        placeholder="RECHERCHER UN FICHIER..."
-                        className="w-full h-14 pl-16 pr-8 bg-black/[0.02] dark:bg-black/40 border dark:border-white/5 rounded-2xl text-[11px] font-black uppercase tracking-widest focus:bg-white dark:focus:bg-black/60 focus:ring-4 focus:ring-primary/10 transition-all outline-none"
+                        placeholder="RECHERCHER..."
+                        className="w-full h-11 pl-14 pr-6 bg-black/[0.02] dark:bg-black/40 border dark:border-white/5 rounded-xl text-[10px] font-bold uppercase tracking-widest focus:bg-white dark:focus:bg-black/60 focus:ring-4 focus:ring-primary/10 transition-all outline-none"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                     />
                 </div>
 
-                <div className="w-full lg:w-[250px]">
+                <div className="w-full lg:w-[220px]">
                     <select
-                        className="w-full h-14 px-6 bg-black/[0.02] dark:bg-white/5 border-none rounded-2xl text-[11px] font-black uppercase tracking-widest focus:bg-primary/10 transition-all outline-none appearance-none"
+                        className="w-full h-11 px-5 bg-black/[0.02] dark:bg-white/5 border-none rounded-xl text-[10px] font-bold uppercase tracking-widest focus:bg-primary/10 transition-all outline-none appearance-none"
                         value={selectedPropertyId}
                         onChange={(e) => setSelectedPropertyId(e.target.value)}
                     >
@@ -149,15 +149,15 @@ export default function DocumentsList() {
 
                 <div className="h-10 w-px bg-black/5 dark:bg-white/5 hidden lg:block" />
 
-                <div className="flex items-center gap-2 overflow-x-auto w-full lg:w-auto px-2 no-scrollbar">
+                <div className="flex items-center gap-1.5 overflow-x-auto w-full lg:w-auto px-1 no-scrollbar">
                     {categories.map((cat) => (
                         <button
                             key={cat.value}
                             onClick={() => setFilter(cat.value)}
                             className={cn(
-                                "px-6 h-12 rounded-xl text-[9px] font-black uppercase tracking-widest whitespace-nowrap transition-all duration-300",
+                                "px-4 h-10 rounded-lg text-[8px] md:text-[9px] font-bold uppercase tracking-widest whitespace-nowrap transition-all duration-300",
                                 filter === cat.value
-                                    ? "bg-primary text-white shadow-xl shadow-primary/20 scale-[1.05]"
+                                    ? "bg-primary text-white shadow-md"
                                     : "text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5"
                             )}
                         >
@@ -170,42 +170,42 @@ export default function DocumentsList() {
             {/* Documents Industrial Grid */}
             <div className="min-h-[400px]">
                 {filteredDocuments.length === 0 ? (
-                    <div className="text-center py-32 bg-black/[0.01] dark:bg-white/[0.01] rounded-[3rem] border-2 border-dashed border-black/5 dark:border-white/5">
-                        <div className="mx-auto h-20 w-20 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center mb-6">
-                            <File className="h-10 w-10 text-black/10 dark:text-white/10" />
+                    <div className="text-center py-24 bg-black/[0.01] dark:bg-white/[0.01] rounded-[2rem] border-2 border-dashed border-black/5 dark:border-white/5">
+                        <div className="mx-auto h-16 w-16 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center mb-4">
+                            <File className="h-8 w-8 text-black/10 dark:text-white/10" />
                         </div>
-                        <h3 className="text-2xl font-black uppercase tracking-tighter opacity-20">Archive Vierge</h3>
-                        <p className="text-[10px] font-black uppercase tracking-widest opacity-20 mt-2">
-                            Aucun protocole documentaire ne correspond aux critères.
+                        <h3 className="text-xl font-bold uppercase tracking-tight opacity-20">Archive Vierge</h3>
+                        <p className="text-[9px] font-bold uppercase tracking-widest opacity-20 mt-1">
+                            Aucun protocole documentaire ne correspond.
                         </p>
                     </div>
                 ) : (
-                    <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                         {filteredDocuments.map((doc) => (
-                            <div key={doc.id} className="group flex flex-col solaris-glass rounded-[1.5rem] md:rounded-[2rem] border-none shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:-translate-y-2 transition-all duration-500 overflow-hidden dark:bg-black/40">
-                                <div className="p-6 md:p-8">
-                                    <div className="flex items-start justify-between mb-8">
+                            <div key={doc.id} className="group flex flex-col solaris-glass rounded-[1.25rem] md:rounded-[1.5rem] border-none shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-500 overflow-hidden dark:bg-black/40">
+                                <div className="p-5 md:p-6">
+                                    <div className="flex items-start justify-between mb-6">
                                         <div className={cn(
-                                            "h-14 w-14 md:h-16 md:w-16 rounded-2xl flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform duration-500 shrink-0",
+                                            "h-12 w-12 md:h-14 md:w-14 rounded-xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-500 shrink-0",
                                             getCategoryStyles(doc.category)
                                         )}>
-                                            <FileText className="h-6 w-6 md:h-8 md:w-8" />
+                                            <FileText className="h-6 w-6 md:h-7 md:w-7" />
                                         </div>
                                         <div className="flex items-center gap-2">
                                             <a
                                                 href={doc.file}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="h-10 w-10 md:h-12 md:w-12 rounded-xl bg-black dark:bg-white/10 text-white flex items-center justify-center transition-all shadow-lg active:scale-90"
+                                                className="h-9 w-9 md:h-10 md:w-10 rounded-lg bg-black dark:bg-white/10 text-white flex items-center justify-center transition-all shadow-md active:scale-95"
                                                 title="TÉLÉCHARGER"
                                             >
-                                                <Download className="h-4 w-4 md:h-5 md:w-5" />
+                                                <Download className="h-4 w-4" />
                                             </a>
                                             {user?.role === 'ADMIN_MADIS' && (
                                                 <button
                                                     onClick={() => handleDelete(doc.id, doc.title)}
                                                     disabled={deletingId === doc.id}
-                                                    className="h-10 w-10 md:h-12 md:w-12 rounded-xl bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 hover:bg-rose-600 hover:text-white flex items-center justify-center transition-all shadow-sm active:scale-90 disabled:opacity-50"
+                                                    className="h-9 w-9 md:h-10 md:w-10 rounded-lg bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 hover:bg-rose-600 hover:text-white flex items-center justify-center transition-all shadow-sm active:scale-95 disabled:opacity-50"
                                                     title="SUPPRIMER"
                                                 >
                                                     {deletingId === doc.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Trash2 className="h-4 w-4" />}
@@ -214,34 +214,34 @@ export default function DocumentsList() {
                                         </div>
                                     </div>
 
-                                    <h3 className="text-lg md:text-xl font-black uppercase tracking-tighter leading-tight mb-3 group-hover:text-primary transition-colors line-clamp-2">
+                                    <h3 className="text-base md:text-lg font-bold uppercase tracking-tight leading-tight mb-2 group-hover:text-primary transition-colors line-clamp-2">
                                         {doc.title}
                                     </h3>
 
                                     {doc.property_name && (
-                                        <div className="flex flex-col gap-1 mb-6">
-                                            <div className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-2">
+                                        <div className="flex flex-col gap-1 mb-5">
+                                            <div className="text-[9px] font-bold uppercase tracking-widest text-primary flex items-center gap-2">
                                                 <div className="h-1 w-1 rounded-full bg-primary" />
                                                 {doc.property_name}
                                             </div>
                                             {doc.project_name && (
-                                                <div className="text-[9px] font-bold uppercase tracking-widest text-black/30 ml-3">
+                                                <div className="text-[8px] font-semibold uppercase tracking-widest text-black/30 ml-3">
                                                     Projet: {doc.project_name}
                                                 </div>
                                             )}
                                         </div>
                                     )}
 
-                                    <div className="pt-6 border-t border-black/5 dark:border-white/5 flex items-center justify-between">
-                                        <div className="flex items-center gap-3">
+                                    <div className="pt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
                                             <span className={cn(
-                                                "px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest",
+                                                "px-2.5 py-0.5 rounded-lg text-[8px] font-bold uppercase tracking-widest",
                                                 getCategoryStyles(doc.category)
                                             )}>
                                                 {doc.category_display || doc.category}
                                             </span>
                                         </div>
-                                        <div className="text-[10px] font-mono tracking-tighter font-black opacity-30 uppercase">
+                                        <div className="text-[9px] font-mono tracking-tighter font-bold opacity-30 uppercase">
                                             {format(new Date(doc.uploaded_at), 'dd/MM/yyyy', { locale: fr })}
                                         </div>
                                     </div>

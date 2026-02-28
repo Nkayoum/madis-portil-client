@@ -158,21 +158,21 @@ export default function TicketDetail() {
 
     return (
         <div className="max-w-[1600px] mx-auto flex flex-col h-[calc(100vh-8rem)] animate-fade-in px-4 md:px-10">
-            <div className="mb-4 md:mb-8">
-                <Link to="/dashboard/tickets" className="inline-flex items-center text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-black dark:hover:text-white transition-all group">
-                    <ArrowLeft className="mr-3 h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-                    <span className="truncate">Retour au registre des échanges</span>
+            <div className="mb-3 md:mb-5">
+                <Link to="/dashboard/tickets" className="inline-flex items-center text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-black dark:hover:text-white transition-all group">
+                    <ArrowLeft className="mr-2 h-3.5 w-3.5 group-hover:-translate-x-1 transition-transform" />
+                    <span className="truncate">Retour au registre</span>
                 </Link>
             </div>
 
             {/* Ticket Header Solaris Style */}
-            <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] border-none shadow-xl overflow-hidden z-20 relative mb-4 md:mb-6">
-                <div className="p-6 md:p-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6 md:gap-10">
+            <div className="solaris-glass rounded-[1.5rem] md:rounded-[2rem] border-none shadow-sm overflow-hidden z-20 relative mb-4 md:mb-6">
+                <div className="p-5 md:p-8 flex flex-col lg:flex-row lg:items-center justify-between gap-5 md:gap-8">
                     <div>
-                        <div className="flex flex-wrap items-center gap-3 md:gap-6 mb-4">
-                            <h1 className="text-xl md:text-3xl lg:text-4xl font-black tracking-tighter uppercase leading-none">{ticket.subject}</h1>
+                        <div className="flex flex-wrap items-center gap-2 md:gap-4 mb-3 md:mb-4">
+                            <h1 className="text-xl md:text-2xl font-bold tracking-tight uppercase leading-tight">{ticket.subject}</h1>
                             <span className={cn(
-                                "px-3 md:px-5 py-1.5 md:py-2 rounded-full text-[8px] md:text-[10px] font-black uppercase tracking-widest shadow-sm",
+                                "px-3 md:px-4 py-1 rounded-full text-[8px] md:text-[9px] font-bold uppercase tracking-widest shadow-sm",
                                 statusConfig.bg, statusConfig.color
                             )}>
                                 {ticket.status_display || statusConfig.label}
@@ -180,28 +180,28 @@ export default function TicketDetail() {
                             {ticket.property && (
                                 <Link
                                     to={`/dashboard/properties/${ticket.property}`}
-                                    className="inline-flex items-center gap-2 px-3 md:px-5 py-1.5 md:py-2 rounded-full text-[8px] md:text-[10px] font-black uppercase tracking-widest bg-black text-white hover:bg-black/90 transition-all shadow-lg"
+                                    className="inline-flex items-center gap-1.5 px-3 md:px-4 py-1 rounded-full text-[8px] md:text-[9px] font-bold uppercase tracking-widest bg-black text-white hover:bg-black/90 transition-all shadow-md"
                                 >
-                                    <Building className="h-3 md:h-4 w-3 md:w-4" />
+                                    <Building className="h-3 md:h-3.5 w-3 md:w-3.5" />
                                     <span className="truncate max-w-[100px] md:max-w-none">{ticket.property_name}</span>
-                                    <ExternalLink className="h-2.5 md:h-3 w-2.5 md:w-3 ml-1 opacity-50" />
+                                    <ExternalLink className="h-2.5 w-2.5 ml-0.5 opacity-50" />
                                 </Link>
                             )}
                         </div>
-                        <div className="flex flex-wrap items-center gap-4 md:gap-8 dark:text-white/60">
-                            <div className="flex items-center gap-2 bg-black/[0.03] dark:bg-white/5 px-2.5 py-1 rounded-lg border border-black/5 dark:border-white/5">
-                                <span className="text-[8px] md:text-[9px] font-black uppercase tracking-widest opacity-20">ID</span>
-                                <span className="text-[10px] md:text-[11px] font-black font-mono">#{ticket.id}</span>
+                        <div className="flex flex-wrap items-center gap-4 md:gap-6 dark:text-white/60">
+                            <div className="flex items-center gap-1.5 bg-black/[0.03] dark:bg-white/5 px-2 py-0.5 rounded-lg border border-black/5 dark:border-white/5">
+                                <span className="text-[8px] font-bold uppercase tracking-widest opacity-20">ID</span>
+                                <span className="text-[10px] font-bold font-mono">#{ticket.id}</span>
                             </div>
                             <div className="flex items-center gap-2 text-black/40 dark:text-white/40">
-                                <Clock className="h-3.5 md:h-4 w-3.5 md:w-4" />
-                                <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest">
-                                    Ouvert le {format(new Date(ticket.created_at), 'd MMM yyyy à HH:mm', { locale: fr })}
+                                <Clock className="h-3.5 w-3.5" />
+                                <span className="text-[9px] font-bold uppercase tracking-widest">
+                                    Ouvert le {format(new Date(ticket.created_at), 'd MMM yyyy', { locale: fr })}
                                 </span>
                             </div>
-                            <div className="flex items-center gap-2 px-2.5 py-1 rounded-lg bg-black/5 dark:bg-white/5 text-red-600 dark:text-red-400">
-                                <span className="text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] opacity-40">Priorité</span>
-                                <span className="text-[8px] md:text-[9px] font-black uppercase tracking-widest font-bold">
+                            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-black/5 dark:bg-white/5 text-red-600 dark:text-red-400">
+                                <span className="text-[8px] font-bold uppercase tracking-[0.2em] opacity-40">Priorité</span>
+                                <span className="text-[8px] font-bold uppercase tracking-widest">
                                     {ticket.priority}
                                 </span>
                             </div>
@@ -209,24 +209,24 @@ export default function TicketDetail() {
                     </div>
 
                     {user?.role === 'ADMIN_MADIS' && (
-                        <div className="flex gap-4">
+                        <div className="flex gap-2">
                             {ticket.status !== 'CLOSED' ? (
                                 <button
                                     onClick={() => handleStatusChange('CLOSED')}
                                     disabled={updatingStatus}
-                                    className="flex-1 lg:flex-none inline-flex items-center justify-center rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all bg-red-600 text-white hover:bg-red-700 h-11 md:h-12 px-6 md:px-8 shadow-[0_0_30px_rgba(220,38,38,0.4)]"
+                                    className="flex-1 lg:flex-none inline-flex items-center justify-center rounded-xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all bg-red-600 text-white hover:bg-red-700 h-9 md:h-10 px-4 md:px-6 shadow-md"
                                 >
-                                    {updatingStatus ? <Loader2 className="h-4 w-4 animate-spin mr-3" /> : <X className="mr-2 md:mr-3 h-4 w-4" />}
-                                    Clôturer le protocole
+                                    {updatingStatus ? <Loader2 className="h-3.5 w-3.5 animate-spin mr-2" /> : <X className="mr-2 h-3.5 w-3.5" />}
+                                    Clôturer
                                 </button>
                             ) : (
                                 <button
                                     onClick={() => handleStatusChange('OPEN')}
                                     disabled={updatingStatus}
-                                    className="flex-1 lg:flex-none inline-flex items-center justify-center rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all bg-black text-white hover:bg-black/90 h-11 md:h-12 px-6 md:px-8 shadow-lg"
+                                    className="flex-1 lg:flex-none inline-flex items-center justify-center rounded-xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all bg-black text-white hover:bg-black/90 h-9 md:h-10 px-4 md:px-6 shadow-md"
                                 >
-                                    {updatingStatus ? <Loader2 className="h-4 w-4 animate-spin mr-3" /> : <CheckCircle2 className="mr-2 md:mr-3 h-4 w-4" />}
-                                    Réactiver l'échange
+                                    {updatingStatus ? <Loader2 className="h-3.5 w-3.5 animate-spin mr-2" /> : <CheckCircle2 className="mr-2 h-3.5 w-3.5" />}
+                                    Réactiver
                                 </button>
                             )}
                         </div>
@@ -264,23 +264,23 @@ export default function TicketDetail() {
             <div className="flex-1 overflow-y-auto py-6 md:py-10 space-y-6 md:space-y-10 pr-2 md:pr-4 no-scrollbar [&::-webkit-scrollbar]:hidden" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                 {/* Initial Ticket Description */}
                 <div className="flex justify-start">
-                    <div className="max-w-[95%] md:max-w-[85%] rounded-[1.5rem] md:rounded-[2rem] rounded-tl-none px-5 py-4 md:px-8 md:py-6 bg-white dark:bg-white/5 border border-black/5 dark:border-white/5 shadow-xl relative group">
-                        <div className="flex items-center gap-3 md:gap-4 mb-3 md:mb-4">
-                            <div className="h-7 w-7 md:h-8 md:w-8 rounded-lg md:rounded-xl bg-black flex items-center justify-center text-[9px] md:text-[10px] font-black text-white transition-transform group-hover:scale-110">
+                    <div className="max-w-[95%] md:max-w-[85%] rounded-[1rem] md:rounded-[1.5rem] rounded-tl-none px-4 py-3 md:px-6 md:py-4 bg-white dark:bg-white/5 border border-black/5 dark:border-white/5 shadow-md relative group">
+                        <div className="flex items-center gap-2 md:gap-3 mb-2 md:mb-3">
+                            <div className="h-6 w-6 md:h-7 md:w-7 rounded-lg bg-black flex items-center justify-center text-[8px] md:text-[9px] font-bold text-white transition-transform group-hover:scale-110">
                                 {ticket.creator_name?.[0] || 'V'}
                             </div>
-                            <span className="text-[11px] md:text-[12px] font-black uppercase tracking-tight">
+                            <span className="text-[10px] md:text-[11px] font-bold uppercase tracking-tight">
                                 {ticket.creator_name || 'Émetteur'}
                             </span>
-                            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest opacity-20 ml-auto">
+                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-20 ml-auto">
                                 {format(new Date(ticket.created_at), 'HH:mm', { locale: fr })}
                             </span>
                         </div>
-                        <p className="text-[13px] md:text-[14px] font-medium leading-relaxed text-black/70 dark:text-white/70 whitespace-pre-wrap">{ticket.description}</p>
+                        <p className="text-[12px] md:text-[13px] font-medium leading-relaxed text-black/70 dark:text-white/70 whitespace-pre-wrap">{ticket.description}</p>
                         {ticket.attachment && (
-                            <a href={ticket.attachment} target="_blank" rel="noreferrer" className="flex items-center gap-2 md:gap-3 mt-4 md:mt-6 text-[9px] md:text-[10px] font-black uppercase tracking-widest p-3 md:p-4 rounded-xl md:rounded-2xl bg-black/[0.03] dark:bg-white/5 hover:bg-black hover:text-white transition-all w-fit shadow-sm border border-black/5 dark:border-white/5">
-                                <Paperclip className="h-3.5 md:h-4 w-3.5 md:w-4" />
-                                Pièce jointe d'ouverture
+                            <a href={ticket.attachment} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 md:gap-2 mt-3 md:mt-4 text-[8px] md:text-[9px] font-bold uppercase tracking-widest p-2 md:p-3 rounded-xl bg-black/[0.03] dark:bg-white/5 hover:bg-black hover:text-white transition-all w-fit shadow-sm border border-black/5 dark:border-white/5">
+                                <Paperclip className="h-3 w-3 md:h-3.5 md:w-3.5" />
+                                Pièce jointe initiale
                             </a>
                         )}
                     </div>
@@ -293,39 +293,39 @@ export default function TicketDetail() {
                     return (
                         <div key={msg.id} className={cn("flex group", isMe ? 'justify-end' : 'justify-start')}>
                             <div className={cn(
-                                "max-w-[95%] md:max-w-[85%] rounded-[1.5rem] md:rounded-[2rem] px-5 py-4 md:px-8 md:py-6 shadow-xl border transition-all duration-500",
+                                "max-w-[95%] md:max-w-[85%] rounded-[1rem] md:rounded-[1.5rem] px-4 py-3 md:px-6 md:py-4 shadow-md border transition-all duration-500",
                                 isInternalNote
                                     ? 'bg-red-50/80 dark:bg-red-900/20 border-red-200 dark:border-red-800/30 rounded-tl-none'
                                     : isMe
                                         ? 'bg-black text-white rounded-tr-none'
                                         : 'bg-white dark:bg-white/5 border-black/5 dark:border-white/5 rounded-tl-none'
                             )}>
-                                <div className={cn("flex items-center gap-3 md:gap-4 mb-3 md:mb-4", isMe && !isInternalNote && "flex-row-reverse text-right")}>
+                                <div className={cn("flex items-center gap-2 md:gap-3 mb-2 md:mb-3", isMe && !isInternalNote && "flex-row-reverse text-right")}>
                                     <div className={cn(
-                                        "h-7 w-7 md:h-8 md:w-8 rounded-lg md:rounded-xl flex items-center justify-center text-[9px] md:text-[10px] font-black transition-transform group-hover:scale-110",
+                                        "h-6 w-6 md:h-7 md:w-7 rounded-lg flex items-center justify-center text-[8px] md:text-[9px] font-bold transition-transform group-hover:scale-110",
                                         isMe ? "bg-white text-black" : "bg-black text-white"
                                     )}>
                                         {msg.author_name?.[0] || (isMe ? 'V' : 'S')}
                                     </div>
-                                    <div className="flex items-center gap-2 md:gap-3">
-                                        <span className="text-[11px] md:text-[12px] font-black uppercase tracking-tight">
-                                            {msg.author_name || (isMe ? 'Vous' : 'Support MaDis')}
+                                    <div className="flex items-center gap-1.5 md:gap-2">
+                                        <span className="text-[10px] md:text-[11px] font-bold uppercase tracking-tight">
+                                            {msg.author_name || (isMe ? 'Vous' : 'Support')}
                                         </span>
                                         {isInternalNote && (
-                                            <span className="bg-red-600 text-white text-[7px] md:text-[8px] font-black px-1.5 md:px-2 py-0.5 rounded-full shadow-lg animate-pulse tracking-widest uppercase">
-                                                NOTE INTERNE
+                                            <span className="bg-red-600 text-white text-[7px] font-bold px-1.5 py-0.5 rounded-full shadow-sm animate-pulse tracking-widest uppercase">
+                                                INTERNE
                                             </span>
                                         )}
                                     </div>
                                     <span className={cn(
-                                        "text-[9px] md:text-[10px] font-black uppercase tracking-widest opacity-20",
+                                        "text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-20",
                                         isMe && !isInternalNote && "ml-0 mr-auto"
                                     )}>
                                         {format(new Date(msg.created_at), 'HH:mm', { locale: fr })}
                                     </span>
                                 </div>
                                 <p className={cn(
-                                    "text-[13px] md:text-[14px] font-medium leading-relaxed whitespace-pre-wrap",
+                                    "text-[12px] md:text-[13px] font-medium leading-relaxed whitespace-pre-wrap",
                                     isMe && !isInternalNote ? "text-white/90" : "text-black/70 dark:text-white/70"
                                 )}>
                                     {msg.content}
@@ -354,40 +354,40 @@ export default function TicketDetail() {
             </div>
 
             {/* Input Area Solaris Style - Refined Footer Hook */}
-            <div className="mt-auto pt-4 md:pt-6">
-                <div className="solaris-glass rounded-[1.5rem] md:rounded-[2.5rem] p-3 md:p-5 shadow-[0_20px_50px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.3)] border border-black/5 dark:border-white/5 relative z-20">
+            <div className="mt-auto pt-2 md:pt-4">
+                <div className="solaris-glass rounded-[1.25rem] md:rounded-[2rem] p-2.5 md:p-3 shadow-md border border-black/5 dark:border-white/5 relative z-20">
                     {selectedFile && (
-                        <div className="mb-3 p-2.5 md:p-3 bg-black/[0.03] dark:bg-white/5 border border-black/5 dark:border-white/5 rounded-xl md:rounded-2xl flex items-center justify-between animate-in slide-in-from-bottom-2">
-                            <div className="flex items-center gap-2 md:gap-3 overflow-hidden">
-                                <div className="p-1.5 md:p-2 bg-black text-white rounded-lg">
-                                    <Paperclip className="h-3 md:h-3.5 w-3 md:w-3.5" />
+                        <div className="mb-2 p-2 bg-black/[0.03] dark:bg-white/5 border border-black/5 dark:border-white/5 rounded-xl flex items-center justify-between animate-in slide-in-from-bottom-2">
+                            <div className="flex items-center gap-2 overflow-hidden">
+                                <div className="p-1.5 bg-black text-white rounded-lg">
+                                    <Paperclip className="h-3 w-3" />
                                 </div>
                                 <div className="min-w-0">
-                                    <span className="text-[9px] md:text-[10px] font-black uppercase truncate block">{selectedFile.name}</span>
-                                    <span className="text-[7px] md:text-[8px] font-black uppercase opacity-20 block">
-                                        {(selectedFile.size / 1024 / 1024).toFixed(2)} MB • Pièce jointe
+                                    <span className="text-[8px] md:text-[9px] font-bold uppercase truncate block">{selectedFile.name}</span>
+                                    <span className="text-[7px] font-bold uppercase opacity-20 block">
+                                        {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
                                     </span>
                                 </div>
                             </div>
                             <button
                                 type="button"
                                 onClick={removeFile}
-                                className="h-8 w-8 flex items-center justify-center hover:bg-red-600 hover:text-white text-muted-foreground rounded-lg transition-all"
+                                className="h-7 w-7 flex items-center justify-center hover:bg-red-600 hover:text-white text-muted-foreground rounded-lg transition-all"
                             >
-                                <X className="h-4 w-4" />
+                                <X className="h-3.5 w-3.5" />
                             </button>
                         </div>
                     )}
 
-                    <form onSubmit={handleSendMessage} className="space-y-3 md:space-y-4">
+                    <form onSubmit={handleSendMessage} className="space-y-2">
                         {user?.role === 'ADMIN_MADIS' && (
-                            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 px-1">
-                                <label className="flex items-center gap-2.5 cursor-pointer group">
+                            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-2 px-1">
+                                <label className="flex items-center gap-2 cursor-pointer group">
                                     <div className={cn(
-                                        "h-3.5 w-3.5 md:h-4 md:w-4 rounded border flex items-center justify-center transition-all",
+                                        "h-3 w-3 rounded border flex items-center justify-center transition-all",
                                         isInternal ? "bg-red-600 border-red-600" : "border-black/10 dark:border-white/10 group-hover:border-black dark:group-hover:border-white"
                                     )}>
-                                        {isInternal && <AlertCircle className="h-2 w-2 md:h-2.5 md:w-2.5 text-white" />}
+                                        {isInternal && <AlertCircle className="h-2 w-2 text-white" />}
                                         <input
                                             type="checkbox"
                                             checked={isInternal}
@@ -396,23 +396,23 @@ export default function TicketDetail() {
                                         />
                                     </div>
                                     <span className={cn(
-                                        "text-[8px] md:text-[9px] font-black uppercase tracking-[0.15em] transition-colors",
+                                        "text-[7px] md:text-[8px] font-bold uppercase tracking-[0.15em] transition-colors",
                                         isInternal ? "text-red-600 dark:text-red-400" : "text-black/30 dark:text-white/30 group-hover:text-black dark:group-hover:text-white"
                                     )}>
-                                        Note interne (Confidentiel)
+                                        Note interne
                                     </span>
                                 </label>
 
                                 {ticket.status === 'CLOSED' && (
-                                    <div className="flex items-center gap-2 text-red-600 text-[8px] md:text-[9px] font-black uppercase tracking-widest animate-pulse">
-                                        <AlertCircle className="h-3 w-3" />
-                                        Échange clôturé
+                                    <div className="flex items-center gap-1.5 text-red-600 text-[7px] md:text-[8px] font-bold uppercase tracking-widest animate-pulse">
+                                        <AlertCircle className="h-2.5 w-2.5" />
+                                        Clos
                                     </div>
                                 )}
                             </div>
                         )}
 
-                        <div className="flex gap-2.5 md:gap-3 items-end">
+                        <div className="flex gap-2 items-end">
                             <input
                                 type="file"
                                 ref={fileInputRef}
@@ -422,16 +422,16 @@ export default function TicketDetail() {
                             <button
                                 type="button"
                                 onClick={() => fileInputRef.current?.click()}
-                                className="h-10 w-10 md:h-12 md:w-12 flex items-center justify-center text-muted-foreground hover:text-black dark:hover:text-white bg-black/[0.03] dark:bg-white/[0.03] hover:bg-black/[0.05] border border-black/5 dark:border-white/5 rounded-xl md:rounded-2xl transition-all shadow-sm flex-shrink-0"
+                                className="h-9 w-9 md:h-10 md:w-10 flex items-center justify-center text-muted-foreground hover:text-black dark:hover:text-white bg-black/[0.03] dark:bg-white/[0.03] hover:bg-black/[0.05] border border-black/5 dark:border-white/5 rounded-xl transition-all shadow-sm flex-shrink-0"
                                 disabled={sending || ticket.status === 'CLOSED'}
                             >
-                                <Paperclip className="h-4.5 md:h-5 w-4.5 md:w-5" />
+                                <Paperclip className="h-4 w-4" />
                             </button>
 
                             <div className="flex-1 relative">
                                 <textarea
-                                    className="w-full min-h-[40px] md:min-h-[48px] max-h-32 py-2.5 md:py-3 px-4 md:px-6 rounded-xl md:rounded-2xl bg-black/[0.01] dark:bg-white/[0.02] border border-black/5 dark:border-white/5 focus:bg-white dark:focus:bg-white/[0.05] focus:ring-1 focus:ring-black/10 dark:focus:ring-white/10 transition-all text-[12px] md:text-[13px] font-bold resize-none scrollbar-none"
-                                    placeholder={ticket.status === 'CLOSED' ? "Échange clôturé..." : "Transmettre un message..."}
+                                    className="w-full min-h-[36px] md:min-h-[40px] max-h-24 py-2 px-4 rounded-xl bg-black/[0.01] dark:bg-white/[0.02] border border-black/5 dark:border-white/5 focus:bg-white transition-all text-[11px] md:text-[12px] font-semibold resize-none scrollbar-none"
+                                    placeholder={ticket.status === 'CLOSED' ? "Clos" : "Message..."}
                                     value={newMessage}
                                     onChange={(e) => {
                                         setNewMessage(e.target.value);
@@ -452,12 +452,12 @@ export default function TicketDetail() {
                             <button
                                 type="submit"
                                 disabled={sending || (!newMessage.trim() && !selectedFile) || ticket.status === 'CLOSED'}
-                                className="h-10 w-10 md:h-12 md:w-12 flex items-center justify-center bg-black text-white dark:bg-white dark:text-black rounded-xl md:rounded-2xl hover:scale-105 disabled:opacity-30 disabled:hover:scale-100 transition-all shadow-xl flex-shrink-0"
+                                className="h-9 w-9 md:h-10 md:w-10 flex items-center justify-center bg-black text-white dark:bg-white dark:text-black rounded-xl hover:scale-105 disabled:opacity-30 transition-all shadow-sm flex-shrink-0"
                             >
                                 {sending ? (
-                                    <Loader2 className="h-4 md:h-5 w-4 md:w-5 animate-spin" />
+                                    <Loader2 className="h-4 w-4 animate-spin" />
                                 ) : (
-                                    <Send className="h-4 md:h-5 w-4 md:w-5" />
+                                    <Send className="h-4 w-4" />
                                 )}
                             </button>
                         </div>

@@ -128,27 +128,27 @@ export default function ConstructionDetail() {
             </Link>
 
             {/* Header Solaris Style */}
-            <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] relative overflow-x-clip overflow-y-visible">
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 md:gap-10">
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 md:gap-8">
-                        <div className="p-4 md:p-5 bg-black text-white rounded-[1.5rem] md:rounded-[2rem] shadow-2xl relative group shrink-0">
+            <div className="solaris-glass rounded-[1.5rem] md:rounded-[2rem] p-4 md:p-6 border-none shadow-[0_16px_32px_-8px_rgba(0,0,0,0.05)] relative overflow-x-clip overflow-y-visible">
+                <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6 md:gap-8">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 md:gap-6 flex-1 min-w-0">
+                        <div className="p-3 md:p-4 bg-black text-white rounded-[1.2rem] md:rounded-[1.5rem] shadow-xl relative group shrink-0">
                             <HardHat className="h-6 w-6 md:h-8 md:w-8 group-hover:scale-110 transition-transform duration-500" />
                             <div className="absolute -inset-2 bg-black/5 rounded-[2.2rem] -z-10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
                         </div>
                         <div>
-                            <div className="flex flex-col sm:flex-row sm:items-center gap-3 md:gap-4 mb-2">
-                                <h1 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tighter uppercase leading-tight">Chantier: {site.name}</h1>
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-2 md:gap-3 mb-1.5 md:mb-2">
+                                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight uppercase leading-tight">Chantier: {site.name}</h1>
                                 <span className={cn(
-                                    "flex items-center gap-1.5 px-3 md:px-4 py-1.5 rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-widest shadow-sm whitespace-nowrap w-fit",
+                                    "flex items-center gap-1.5 px-2 md:px-3 py-1 rounded-full text-[8px] md:text-[9px] font-bold uppercase tracking-widest shadow-sm whitespace-nowrap w-fit",
                                     status.bg, status.color
                                 )}>
-                                    <status.icon className="h-3 w-3 shrink-0" />
+                                    <status.icon className="h-2.5 w-2.5 shrink-0" />
                                     <span>{status.label}</span>
                                 </span>
                             </div>
-                            <div className="flex items-center gap-4 text-muted-foreground">
-                                <div className="flex items-center gap-1.5 font-bold text-[10px] md:text-[11px] uppercase tracking-wider opacity-60">
-                                    <MapPin className="h-3.5 w-3.5" />
+                            <div className="flex items-center gap-3 text-muted-foreground">
+                                <div className="flex items-center gap-1.5 font-semibold text-[9px] md:text-[10px] uppercase tracking-wider opacity-60">
+                                    <MapPin className="h-3 w-3" />
                                     <span>{site.address}, {site.city}</span>
                                 </div>
                             </div>
@@ -165,30 +165,30 @@ export default function ConstructionDetail() {
                         </div>
                     </div>
 
-                    <div className="flex flex-col lg:items-end gap-6 lg:border-l lg:pl-10 border-black/5 dark:border-white/5">
-                        <div className="flex flex-col items-start lg:items-end">
-                            <span className="text-[10px] font-black uppercase tracking-[0.2em] opacity-30 mb-2 md:mb-3">
+                    <div className="flex flex-col xl:items-end gap-3 xl:border-l xl:pl-8 border-black/5 dark:border-white/5">
+                        <div className="flex flex-col items-start lg:items-end w-full">
+                            <span className="text-[9px] font-bold uppercase tracking-[0.2em] opacity-30 mb-1.5 md:mb-2 text-left lg:text-right">
                                 Progression globale
                             </span>
-                            <div className="flex items-center gap-4 md:gap-6 w-full lg:w-auto">
-                                <div className="flex-1 lg:w-64 h-3 bg-black/[0.03] dark:bg-white/10 rounded-full overflow-hidden p-[2px] border border-black/5 dark:border-white/5 shadow-inner">
+                            <div className="flex items-center gap-3 md:gap-4 w-full lg:w-auto">
+                                <div className="flex-1 lg:w-48 h-2 bg-black/[0.03] dark:bg-white/10 rounded-full overflow-hidden p-[1px] border border-black/5 dark:border-white/5 shadow-inner">
                                     <div
-                                        className="h-full bg-black dark:bg-white rounded-full shadow-[0_0_15px_rgba(0,0,0,0.2)] transition-all duration-1000 ease-out"
+                                        className="h-full bg-black dark:bg-white rounded-full shadow-[0_0_10px_rgba(0,0,0,0.1)] transition-all duration-1000 ease-out"
                                         style={{ width: `${site.progress_percentage}%` }}
                                     />
                                 </div>
-                                <span className="font-black text-2xl md:text-3xl tracking-tighter leading-none">{site.progress_percentage}%</span>
+                                <span className="font-bold text-xl md:text-2xl tracking-tighter leading-none">{site.progress_percentage}%</span>
                             </div>
                         </div>
 
                         {(user?.role === 'ADMIN_MADIS' || user?.role === 'CHEF_CHANTIER') && site.status !== 'ANNULE' && (
-                            <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }} className="flex items-center gap-2 md:gap-3 w-full lg:w-auto pb-1 lg:pb-0 [&::-webkit-scrollbar]:hidden">
+                            <div className="flex items-center justify-start lg:justify-end gap-2 w-full lg:w-auto overflow-x-auto no-scrollbar pb-1">
                                 {site.status === 'EN_COURS' && (
                                     <button
                                         onClick={() => setIsSuspensionModalOpen(true)}
-                                        className="inline-flex items-center justify-center rounded-xl md:rounded-2xl text-[8px] md:text-[10px] font-black uppercase tracking-widest transition-all bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 hover:bg-amber-200 dark:hover:bg-amber-900/50 h-8 md:h-11 px-2.5 md:px-6 shadow-sm whitespace-nowrap"
+                                        className="inline-flex items-center justify-center rounded-lg md:rounded-xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 hover:bg-amber-200 dark:hover:bg-amber-900/50 h-8 md:h-9 px-3 md:px-4 shadow-sm whitespace-nowrap"
                                     >
-                                        <Pause className="mr-1 md:mr-2 h-3 w-3 md:h-4 md:w-4" /> Suspendre
+                                        <Pause className="mr-1.5 h-3 w-3" /> Suspendre
                                     </button>
                                 )}
                                 {(site.status === 'SUSPENDU' || site.status === 'PREPARATION') && (
@@ -197,9 +197,9 @@ export default function ConstructionDetail() {
                                             await api.patch(`/construction/sites/${id}/`, { status: 'EN_COURS' });
                                             fetchSiteDetails();
                                         }}
-                                        className="inline-flex items-center justify-center rounded-xl md:rounded-2xl text-[8px] md:text-[10px] font-black uppercase tracking-widest transition-all bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 h-8 md:h-11 px-2.5 md:px-6 shadow-sm whitespace-nowrap"
+                                        className="inline-flex items-center justify-center rounded-lg md:rounded-xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 h-8 md:h-9 px-3 md:px-4 shadow-sm whitespace-nowrap"
                                     >
-                                        <Clock className="mr-1 md:mr-2 h-3 w-3 md:h-4 md:w-4" /> Relancer
+                                        <Clock className="mr-1.5 h-3 w-3" /> Relancer
                                     </button>
                                 )}
 
@@ -207,9 +207,9 @@ export default function ConstructionDetail() {
                                     <>
                                         <Link
                                             to={`/dashboard/construction/${id}/edit`}
-                                            className="inline-flex items-center justify-center rounded-xl md:rounded-2xl text-[8px] md:text-[10px] font-black uppercase tracking-widest transition-all bg-white dark:bg-white/10 border border-black/5 dark:border-white/10 shadow-sm hover:bg-black/5 dark:hover:bg-white/20 h-8 md:h-11 px-2.5 md:px-6 dark:text-white whitespace-nowrap"
+                                            className="inline-flex items-center justify-center rounded-lg md:rounded-xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all bg-white dark:bg-white/10 border border-black/5 dark:border-white/10 shadow-sm hover:bg-black/5 dark:hover:bg-white/20 h-8 md:h-9 px-3 md:px-4 dark:text-white whitespace-nowrap"
                                         >
-                                            <Edit className="mr-1 md:mr-2 h-3 w-3 md:h-4 md:w-4" /> Modifier
+                                            <Edit className="mr-1.5 h-3 w-3" /> Modifier
                                         </Link>
                                         <button
                                             onClick={async () => {
@@ -219,9 +219,9 @@ export default function ConstructionDetail() {
                                                     navigate('/dashboard/construction');
                                                 }
                                             }}
-                                            className="inline-flex items-center justify-center rounded-xl md:rounded-2xl text-[8px] md:text-[10px] font-black uppercase tracking-widest transition-all bg-red-500 text-white hover:bg-red-600 h-8 md:h-11 px-2.5 md:px-6 shadow-[0_4px_15_rgba(239,68,68,0.4)] dark:shadow-[0_0_20px_rgba(239,68,68,0.6)] whitespace-nowrap"
+                                            className="inline-flex items-center justify-center rounded-lg md:rounded-xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all bg-red-500 text-white hover:bg-red-600 h-8 md:h-9 px-3 md:px-4 shadow-md whitespace-nowrap"
                                         >
-                                            <Trash2 className="mr-1 md:mr-2 h-3 w-3 md:h-4 md:w-4" /> Supprimer
+                                            <Trash2 className="mr-1.5 h-3 w-3" /> Supprimer
                                         </button>
                                     </>
                                 )}
@@ -232,8 +232,8 @@ export default function ConstructionDetail() {
             </div>
 
             {/* Navigation Tabs Solaris Style */}
-            <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }} className="mb-8 [&::-webkit-scrollbar]:hidden">
-                <div style={{ width: 'max-content' }} className="solaris-glass rounded-full p-2 flex gap-2 md:gap-4 shadow-lg px-3 whitespace-nowrap">
+            <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }} className="mb-6 md:mb-8 [&::-webkit-scrollbar]:hidden">
+                <div style={{ width: 'max-content' }} className="solaris-glass rounded-2xl p-1.5 flex gap-2 md:gap-3 shadow-sm px-2 md:px-3 whitespace-nowrap">
                     {[
                         { id: 'overview', label: "Vue d'ensemble", icon: Layout },
                         { id: 'journal', label: "Journal", icon: FileText },
@@ -245,13 +245,13 @@ export default function ConstructionDetail() {
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
                             className={cn(
-                                "flex items-center gap-2 md:gap-3 px-4 md:px-8 py-2.5 md:py-3.5 rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-[0.1em] transition-all duration-500 group",
+                                "flex items-center gap-2 md:gap-3 px-4 md:px-6 py-2 md:py-2.5 rounded-xl text-[9px] md:text-[10px] font-bold uppercase tracking-widest transition-all duration-300 group",
                                 activeTab === tab.id
-                                    ? "bg-black text-white shadow-xl scale-105"
+                                    ? "bg-black text-white shadow-lg scale-[1.02]"
                                     : "text-muted-foreground hover:text-black dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/5"
                             )}
                         >
-                            <tab.icon className={cn("h-3.5 w-3.5 md:h-4 md:w-4 transition-transform group-hover:scale-110", activeTab === tab.id ? "text-white" : "text-muted-foreground")} />
+                            <tab.icon className={cn("h-3.5 w-3.5 transition-transform group-hover:scale-110", activeTab === tab.id ? "text-white" : "text-muted-foreground")} />
                             {tab.label}
                         </button>
                     ))}
@@ -261,24 +261,24 @@ export default function ConstructionDetail() {
             {/* Tab Content */}
             <div className="mt-2">
                 {activeTab === 'overview' && (
-                    <div className="grid gap-6 lg:grid-cols-3">
-                        <div className="lg:col-span-2 space-y-6">
+                    <div className="grid gap-6 grid-cols-1">
+                        <div className="space-y-6">
                             {/* Description Solaris Style */}
-                            <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-xl">
-                                <h3 className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] opacity-30 mb-4 md:mb-6 flex items-center gap-2 md:gap-3">
-                                    <FileText className="h-4 w-4" />
+                            <div className="solaris-glass rounded-[1.5rem] md:rounded-[2rem] p-5 md:p-8 border-none shadow-sm">
+                                <h3 className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] opacity-30 mb-3 md:mb-5 flex items-center gap-2 md:gap-3">
+                                    <FileText className="h-3.5 w-3.5" />
                                     Description Technique
                                 </h3>
-                                <p className="text-[12px] md:text-[13px] font-bold text-muted-foreground whitespace-pre-wrap leading-relaxed">
+                                <p className="text-[11px] md:text-[12px] font-semibold text-muted-foreground whitespace-pre-wrap leading-relaxed opacity-80">
                                     {site.description || "Aucune description fournie pour ce chantier."}
                                 </p>
                             </div>
 
                             {/* Milestones (Jalons) Solaris Style */}
-                            <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-xl">
-                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 md:mb-10">
-                                    <h3 className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] opacity-30 flex items-center gap-2 md:gap-3">
-                                        <CheckCircle2 className="h-4 w-4" />
+                            <div className="solaris-glass rounded-[1.5rem] md:rounded-[2rem] p-5 md:p-8 border-none shadow-sm">
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 md:mb-8">
+                                    <h3 className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] opacity-30 flex items-center gap-2 md:gap-3">
+                                        <CheckCircle2 className="h-3.5 w-3.5" />
                                         Jalons Industriels
                                     </h3>
 
@@ -330,21 +330,21 @@ export default function ConstructionDetail() {
                                                     </button>
                                                     <div className="flex-1 min-w-0">
                                                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 md:gap-4">
-                                                            <p className={cn("text-[11px] md:text-[12px] font-black uppercase tracking-tight", milestone.completed ? 'text-muted-foreground line-through' : 'text-black dark:text-white')}>
+                                                            <p className={cn("text-[10px] md:text-[11px] font-bold uppercase tracking-tight", milestone.completed ? 'text-muted-foreground line-through' : 'text-black dark:text-white')}>
                                                                 {milestone.description}
                                                             </p>
                                                             <div className="flex items-center gap-2">
                                                                 {isOverdue && !milestone.completed && (
-                                                                    <span className="text-[8px] md:text-[9px] font-black text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 px-1.5 md:px-2 py-0.5 md:py-1 rounded-[4px] border border-red-100 dark:border-red-800 uppercase tracking-widest transition-all">RETARD</span>
+                                                                    <span className="text-[7px] md:text-[8px] font-bold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 px-1.5 py-0.5 rounded-[4px] border border-red-100 dark:border-red-800 uppercase tracking-widest transition-all">RETARD</span>
                                                                 )}
                                                                 {milestone.completed && (
-                                                                    <span className="text-[8px] md:text-[9px] font-black text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 px-1.5 md:px-2 py-0.5 md:py-1 rounded-[4px] border border-emerald-100 dark:border-emerald-800 uppercase tracking-widest">TERMINE</span>
+                                                                    <span className="text-[7px] md:text-[8px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 px-1.5 py-0.5 rounded-[4px] border border-emerald-100 dark:border-emerald-800 uppercase tracking-widest">TERMINE</span>
                                                                 )}
                                                             </div>
                                                         </div>
-                                                        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1.5 md:mt-2">
-                                                            <div className="flex items-center gap-1.5 text-[9px] md:text-[10px] font-bold text-muted-foreground opacity-60">
-                                                                <Calendar className="h-3 w-3 md:h-3.5 md:w-3.5" />
+                                                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 md:mt-1.5">
+                                                            <div className="flex items-center gap-1.5 text-[8px] md:text-[9px] font-semibold text-muted-foreground opacity-60">
+                                                                <Calendar className="h-3 w-3" />
                                                                 {milestone.end_date ? format(new Date(milestone.end_date), 'd MMM yyyy', { locale: fr }) : 'Non déterm.'}
                                                             </div>
                                                             <div className="flex items-center gap-1.5 text-[9px] md:text-[10px] font-bold text-muted-foreground opacity-60">
@@ -371,17 +371,17 @@ export default function ConstructionDetail() {
                                         <DollarSign className="h-4 w-4" />
                                         Suivi Financier
                                     </h3>
-                                    <div className="space-y-6 md:space-y-8">
-                                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3 sm:gap-0">
+                                    <div className="space-y-4 md:space-y-6">
+                                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-2 sm:gap-0">
                                             <div>
-                                                <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Budget consommé</p>
-                                                <p className="text-xl md:text-3xl font-black tracking-tighter">
+                                                <p className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Budget consommé</p>
+                                                <p className="text-lg md:text-2xl font-bold tracking-tighter">
                                                     {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(site.budget_spent || 0)}
                                                 </p>
                                             </div>
                                             <div className="sm:text-right">
-                                                <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Total</p>
-                                                <p className="font-bold text-[10px] md:text-[12px]">
+                                                <p className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Total</p>
+                                                <p className="font-semibold text-[9px] md:text-[11px]">
                                                     {site.budget ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(site.budget) : 'Non défini'}
                                                 </p>
                                             </div>

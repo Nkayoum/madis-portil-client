@@ -90,20 +90,20 @@ export default function PropertiesList() {
     }
 
     return (
-        <div className="space-y-8 animate-fade-in p-4 md:p-8">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="space-y-6 animate-fade-in p-4 md:p-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6">
                 <div>
-                    <h1 className="text-xl md:text-2xl font-bold tracking-tight mb-1 uppercase">Portfolio Immobilier</h1>
-                    <p className="text-[9px] text-muted-foreground font-semibold uppercase tracking-widest opacity-60">Gestion des actifs MaDis</p>
+                    <h1 className="text-xl md:text-2xl font-bold tracking-tight mb-0.5 uppercase">Portfolio Immobilier</h1>
+                    <p className="text-[9px] text-muted-foreground font-semibold uppercase tracking-widest opacity-40">Gestion des actifs MaDis</p>
                 </div>
-                <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+                <div className="flex flex-col md:flex-row items-start md:items-center gap-3">
                     <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }} className="-mx-4 px-4 md:mx-0 md:px-0 w-full md:w-auto [&::-webkit-scrollbar]:hidden">
-                        <div className="flex items-center gap-2 p-1.5 solaris-glass rounded-2xl w-fit whitespace-nowrap">
+                        <div className="flex items-center gap-1.5 p-1 solaris-glass rounded-[1rem] w-fit whitespace-nowrap">
                             <button
                                 onClick={() => setFilter('ALL')}
                                 className={cn(
-                                    "px-4 sm:px-6 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all",
-                                    filter === 'ALL' ? "bg-primary text-white shadow-xl shadow-primary/20" : "text-muted-foreground hover:text-foreground dark:hover:bg-white/5"
+                                    "px-4 md:px-5 py-1.5 text-[9px] font-bold uppercase tracking-widest rounded-lg transition-all",
+                                    filter === 'ALL' ? "bg-primary text-white shadow-md" : "text-muted-foreground hover:text-foreground dark:hover:bg-white/5"
                                 )}
                             >
                                 Tous ({properties.length})
@@ -111,8 +111,8 @@ export default function PropertiesList() {
                             <button
                                 onClick={() => setFilter('MANDATES')}
                                 className={cn(
-                                    "px-4 sm:px-6 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all",
-                                    filter === 'MANDATES' ? "bg-primary text-white shadow-xl shadow-primary/20" : "text-muted-foreground hover:text-foreground dark:hover:bg-white/5"
+                                    "px-4 md:px-5 py-1.5 text-[9px] font-bold uppercase tracking-widest rounded-lg transition-all",
+                                    filter === 'MANDATES' ? "bg-primary text-white shadow-md" : "text-muted-foreground hover:text-foreground dark:hover:bg-white/5"
                                 )}
                             >
                                 Mandats ({properties.filter(p => !p.owner).length})
@@ -120,8 +120,8 @@ export default function PropertiesList() {
                             <button
                                 onClick={() => setFilter('CLIENTS')}
                                 className={cn(
-                                    "px-4 sm:px-6 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all",
-                                    filter === 'CLIENTS' ? "bg-primary text-white shadow-xl shadow-primary/20" : "text-muted-foreground hover:text-foreground dark:hover:bg-white/5"
+                                    "px-4 md:px-5 py-1.5 text-[9px] font-bold uppercase tracking-widest rounded-lg transition-all",
+                                    filter === 'CLIENTS' ? "bg-primary text-white shadow-md" : "text-muted-foreground hover:text-foreground dark:hover:bg-white/5"
                                 )}
                             >
                                 Clients ({properties.filter(p => !!p.owner).length})
@@ -129,25 +129,25 @@ export default function PropertiesList() {
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2.5">
                         {user?.role === 'ADMIN_MADIS' && selectedIds.length > 0 && (
-                            <div className="flex items-center gap-2 pr-4 border-r border-slate-200 mr-2 animate-in fade-in slide-in-from-right-2">
-                                <span className="text-[10px] font-black uppercase tracking-tighter text-muted-foreground">
-                                    {selectedIds.length} sélectionné(s)
+                            <div className="flex items-center gap-2 pr-3 border-r border-slate-200 mr-1 animate-in fade-in slide-in-from-right-2">
+                                <span className="text-[9px] font-bold uppercase tracking-tight text-muted-foreground">
+                                    {selectedIds.length}
                                 </span>
                                 <button
                                     onClick={handleBulkDelete}
                                     disabled={isDeleting}
-                                    className="flex items-center gap-2 px-4 py-2 bg-rose-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all hover:bg-rose-600 shadow-[0_0_30px_rgba(220,38,38,0.4),0_0_60px_rgba(220,38,38,0.15)] hover:shadow-[0_0_40px_rgba(220,38,38,0.6),0_0_80px_rgba(220,38,38,0.2)]"
+                                    className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-500 text-white rounded-xl text-[9px] font-bold uppercase tracking-widest transition-all hover:bg-rose-600 shadow-md"
                                 >
                                     {isDeleting ? <Loader2 className="h-3 w-3 animate-spin" /> : <Trash2 className="h-3 w-3" />}
                                     Supprimer
                                 </button>
                                 <button
                                     onClick={() => setSelectedIds([])}
-                                    className="p-2 text-muted-foreground hover:text-foreground hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-colors"
+                                    className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg transition-colors"
                                 >
-                                    <X className="h-4 w-4" />
+                                    <X className="h-3.5 w-3.5" />
                                 </button>
                             </div>
                         )}
@@ -156,16 +156,16 @@ export default function PropertiesList() {
                             <>
                                 <button
                                     onClick={selectAll}
-                                    className="solaris-glass px-5 py-2.5 rounded-2xl text-[9px] font-bold uppercase tracking-widest hover:bg-primary hover:text-white dark:hover:bg-primary transition-all border border-slate-200/50 dark:border-white/10"
+                                    className="solaris-glass px-4 py-2 rounded-xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest hover:bg-primary hover:text-white transition-all border border-slate-200/50"
                                 >
-                                    {selectedIds.length === filteredProperties.length ? 'Tout déselectionner' : 'Tout sélectionner'}
+                                    {selectedIds.length === filteredProperties.length ? 'Déselectionner' : 'Sélectionner tout'}
                                 </button>
                                 <Link
                                     to="/dashboard/properties/new"
-                                    className="inline-flex items-center justify-center rounded-2xl text-[9px] font-bold uppercase tracking-widest bg-primary text-white shadow-[0_0_30px_rgba(255,0,72,0.4),0_0_60px_rgba(255,0,72,0.15)] hover:shadow-[0_0_40px_rgba(255,0,72,0.6),0_0_80px_rgba(255,0,72,0.2)] hover:scale-105 transition-all px-6 py-2.5"
+                                    className="inline-flex items-center justify-center rounded-xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest bg-primary text-white shadow-md hover:scale-105 transition-all px-4 py-2"
                                 >
-                                    <Plus className="mr-2 h-3.5 w-3.5" />
-                                    Ajouter un bien
+                                    <Plus className="mr-1.5 h-3.5 w-3.5" />
+                                    Ajouter
                                 </Link>
                             </>
                         )}
@@ -202,14 +202,14 @@ export default function PropertiesList() {
                     <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest opacity-60">Ajustez vos filtres</p>
                 </div>
             ) : (
-                <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                     {filteredProperties.map((property) => {
                         return (
                             <div
                                 key={property.id}
                                 className={cn(
-                                    "group relative flex flex-col overflow-hidden rounded-[2.5rem] solaris-glass transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl active:scale-[0.98] dark:bg-black/80",
-                                    selectedIds.includes(property.id) && "ring-4 ring-black/5 dark:ring-primary/20 border-black dark:border-primary/40 bg-black/60 dark:bg-black/80"
+                                    "group relative flex flex-col overflow-hidden rounded-[1.5rem] md:rounded-[2rem] solaris-glass transition-all duration-500 hover:scale-[1.01] hover:shadow-lg active:scale-[0.99] dark:bg-black/80",
+                                    selectedIds.includes(property.id) && "ring-2 ring-primary/20 border-primary/40 bg-black/60 dark:bg-black/80"
                                 )}
                             >
                                 <Link to={`/dashboard/properties/${property.id}`} className="absolute inset-0 z-0" />
@@ -219,7 +219,7 @@ export default function PropertiesList() {
                                     <button
                                         onClick={(e) => toggleSelect(property.id, e)}
                                         className={cn(
-                                            "absolute top-6 left-6 z-10 p-2 rounded-xl border backdrop-blur-xl transition-all duration-300",
+                                            "absolute top-4 left-4 z-10 p-1.5 rounded-lg border backdrop-blur-xl transition-all duration-300",
                                             selectedIds.includes(property.id)
                                                 ? "bg-black text-white border-black"
                                                 : "bg-white/40 text-transparent hover:text-black/40 border-black/10 opacity-0 group-hover:opacity-100"
@@ -243,21 +243,21 @@ export default function PropertiesList() {
                                     )}
 
                                     {/* Overlay Tags */}
-                                    <div className="absolute top-6 right-6 flex flex-col gap-2 items-end z-10">
+                                    <div className="absolute top-4 right-4 flex flex-col gap-1.5 items-end z-10">
                                         {property.status === 'VENDU' ? (
-                                            <span className="px-4 py-1.5 rounded-full bg-black text-white text-[9px] font-black uppercase tracking-widest shadow-xl border border-white/20 backdrop-blur-md">
+                                            <span className="px-3 py-1 rounded-full bg-black text-white text-[8px] font-bold uppercase tracking-widest shadow-md border border-white/20 backdrop-blur-md">
                                                 Sold Out
                                             </span>
                                         ) : (
-                                            <div className="flex gap-2">
+                                            <div className="flex gap-1.5">
                                                 <span className={cn(
-                                                    "px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest shadow-lg border backdrop-blur-md",
+                                                    "px-3 py-1 rounded-full text-[8px] font-bold uppercase tracking-widest shadow-sm border backdrop-blur-md",
                                                     property.category === 'RESIDENTIEL' ? "bg-black/40 dark:bg-black/60 border-white/10 dark:text-white" :
                                                         property.category === 'COMMERCIAL' ? "bg-amber-900/40 border-amber-400/20 text-amber-400" : "bg-blue-900/40 border-blue-400/20 text-blue-400"
                                                 )}>
                                                     {property.category_display}
                                                 </span>
-                                                <span className="px-4 py-1.5 rounded-full bg-black text-white text-[9px] font-black uppercase tracking-widest shadow-lg border border-white/20 backdrop-blur-sm">
+                                                <span className="px-3 py-1 rounded-full bg-black text-white text-[8px] font-bold uppercase tracking-widest shadow-sm border border-white/20 backdrop-blur-sm">
                                                     {property.management_type === 'CONSTRUCTION' ? "Chantier" : property.transaction_nature_display}
                                                 </span>
                                             </div>
@@ -265,25 +265,25 @@ export default function PropertiesList() {
                                     </div>
 
                                     {/* Glass Info Bar */}
-                                    <div className="absolute inset-x-0 bottom-0 p-8 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
-                                        <div className="flex items-center gap-2 text-white/60 mb-1">
-                                            <MapPin className="h-3 w-3" />
-                                            <span className="text-[10px] font-black uppercase tracking-widest truncate">{property.city || 'Location unavailable'}</span>
+                                    <div className="absolute inset-x-0 bottom-0 p-5 md:p-6 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+                                        <div className="flex items-center gap-1.5 text-white/60 mb-1">
+                                            <MapPin className="h-2.5 w-2.5" />
+                                            <span className="text-[9px] font-bold uppercase tracking-widest truncate">{property.city || 'Location unavailable'}</span>
                                         </div>
-                                        <h3 className="font-black text-2xl text-white tracking-tighter leading-tight group-hover:text-primary transition-colors">
+                                        <h3 className="font-bold text-lg md:text-xl text-white tracking-tight leading-tight group-hover:text-primary transition-colors">
                                             {property.name}
                                         </h3>
                                     </div>
                                 </div>
 
-                                <div className="flex flex-col flex-1 p-6 md:p-8 dark:bg-black/60">
-                                    <div className="flex flex-col mb-6 md:mb-8">
+                                <div className="flex flex-col flex-1 p-5 md:p-6 dark:bg-black/60">
+                                    <div className="flex flex-col mb-4 md:mb-6">
                                         {property.management_type !== 'CONSTRUCTION' && (
                                             <div className="flex flex-col">
-                                                <span className="text-[9px] md:text-[10px] uppercase text-muted-foreground font-black tracking-widest mb-1 opacity-60">
-                                                    {property.transaction_nature === 'VENTE' ? "Prix de vente" : "Loyer Mensuel"}
+                                                <span className="text-[8px] md:text-[9px] uppercase text-muted-foreground font-bold tracking-widest mb-0.5 opacity-50">
+                                                    {property.transaction_nature === 'VENTE' ? "Prix" : "Loyer"}
                                                 </span>
-                                                <h4 className="text-2xl md:text-3xl font-black tracking-tighter">
+                                                <h4 className="text-xl md:text-2xl font-bold tracking-tight">
                                                     {property.transaction_nature === 'VENTE'
                                                         ? (property.prix_vente ? formatCurrency(property.prix_vente, true) : '-- €')
                                                         : (property.loyer_mensuel ? formatCurrency(property.loyer_mensuel) + '/m' : '-- €/m')}
@@ -292,26 +292,26 @@ export default function PropertiesList() {
                                         )}
                                         {property.management_type === 'CONSTRUCTION' && (
                                             <div className="flex flex-col">
-                                                <span className="text-[9px] md:text-[10px] uppercase text-muted-foreground font-black tracking-widest mb-1 opacity-60">Budget Travaux</span>
-                                                <h4 className="text-2xl md:text-3xl font-black tracking-tighter text-primary dark:text-[#ff00e5]">PROJET ACTIF</h4>
+                                                <span className="text-[8px] md:text-[9px] uppercase text-muted-foreground font-bold tracking-widest mb-0.5 opacity-50">Status</span>
+                                                <h4 className="text-xl md:text-2xl font-bold tracking-tight text-primary">PROJET ACTIF</h4>
                                             </div>
                                         )}
                                     </div>
 
-                                    <div className="grid grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8 border-t border-black/5 dark:border-white/5 pt-6 md:pt-8 mt-auto">
+                                    <div className="grid grid-cols-2 gap-3 md:gap-4 mb-4 md:mb-6 border-t border-black/5 dark:border-white/5 pt-4 md:pt-6 mt-auto">
                                         <div className="flex flex-col overflow-hidden">
-                                            <span className="text-[8px] md:text-[9px] uppercase text-muted-foreground font-black tracking-widest opacity-60">Propriétaire</span>
-                                            <div className="flex items-center gap-2 text-[10px] md:text-xs font-black mt-2 truncate">
-                                                <div className="h-5 w-5 md:h-6 md:w-6 rounded-lg bg-black/20 dark:bg-white/5 border border-black/5 dark:border-white/5 flex items-center justify-center shrink-0">
+                                            <span className="text-[8px] md:text-[9px] uppercase text-muted-foreground font-bold tracking-widest opacity-50">Propriétaire</span>
+                                            <div className="flex items-center gap-1.5 text-[10px] md:text-xs font-bold mt-1.5 truncate">
+                                                <div className="h-5 w-5 md:h-6 md:w-6 rounded-lg bg-black/20 dark:bg-white/5 border border-black/5 flex items-center justify-center shrink-0">
                                                     <User className="h-2.5 w-2.5 md:h-3 md:w-3 text-slate-400 dark:text-white/40" />
                                                 </div>
-                                                <span className="truncate">{property.owner_name || (property.management_type === 'CONSTRUCTION' ? "Client Privé" : "MaDis Mandat")}</span>
+                                                <span className="truncate">{property.owner_name || (property.management_type === 'CONSTRUCTION' ? "Client Privé" : "MaDis")}</span>
                                             </div>
                                         </div>
                                         <div className="flex flex-col overflow-hidden">
-                                            <span className="text-[8px] md:text-[9px] uppercase text-muted-foreground font-black tracking-widest opacity-60">Type</span>
-                                            <div className="flex items-center gap-2 text-[10px] md:text-xs font-black mt-2 truncate">
-                                                <div className="h-5 w-5 md:h-6 md:w-6 rounded-lg bg-black/20 dark:bg-white/5 border border-black/5 dark:border-white/5 flex items-center justify-center shrink-0">
+                                            <span className="text-[8px] md:text-[9px] uppercase text-muted-foreground font-bold tracking-widest opacity-50">Type</span>
+                                            <div className="flex items-center gap-1.5 text-[10px] md:text-xs font-bold mt-1.5 truncate">
+                                                <div className="h-5 w-5 md:h-6 md:w-6 rounded-lg bg-black/20 dark:bg-white/5 border border-black/5 flex items-center justify-center shrink-0">
                                                     {property.category === 'RESIDENTIEL' ? <Building className="h-2.5 w-2.5 md:h-3 md:w-3 text-slate-400 dark:text-white/40" /> :
                                                         property.category === 'COMMERCIAL' ? <ShoppingBag className="h-2.5 w-2.5 md:h-3 md:w-3 text-slate-400 dark:text-white/40" /> :
                                                             <Briefcase className="h-2.5 w-2.5 md:h-3 md:w-3 text-slate-400 dark:text-white/40" />}
@@ -322,12 +322,12 @@ export default function PropertiesList() {
                                     </div>
 
                                     <div className="flex items-center justify-between group/link">
-                                        <div className="h-9 md:h-10 px-4 md:px-6 rounded-2xl bg-primary text-white flex items-center justify-center gap-2 md:gap-3 text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all hover:gap-5 shadow-lg shadow-primary/20">
+                                        <div className="h-8 md:h-9 px-4 md:px-5 rounded-xl bg-primary text-white flex items-center justify-center gap-2 text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all hover:gap-4 shadow-md">
                                             Détails
                                             <ArrowRight className="h-3 w-3 transition-transform" />
                                         </div>
-                                        {property.property_stats && <div className="text-[8px] md:text-[10px] font-black uppercase tracking-widest opacity-30 text-right">
-                                            ID: #{property.id.toString().padStart(4, '0')}
+                                        {property.property_stats && <div className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-30 text-right">
+                                            #{property.id.toString().padStart(4, '0')}
                                         </div>}
                                     </div>
                                 </div>

@@ -145,7 +145,7 @@ export default function AnnualReport({ data, selectedYear, isAdmin }) {
     return (
         <>
             {/* Professional Administrative Document (Print Only) */}
-            <FormalAnnualReport data={data} selectedYear={selectedYear} />
+            {/* <FormalAnnualReport data={data} selectedYear={selectedYear} /> */}
 
             {/* Web UI Dashboard (Screen Only) */}
             <div className="space-y-8 animate-in fade-in duration-500 screen-only">

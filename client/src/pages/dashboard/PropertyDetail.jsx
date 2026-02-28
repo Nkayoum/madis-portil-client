@@ -396,14 +396,14 @@ export default function PropertyDetail() {
     }
 
     return (
-        <div className="space-y-8 md:space-y-12 animate-fade-in pb-40 px-4 md:px-8 py-8">
-            <Link to="/dashboard/properties" className="flex items-center text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-black transition-all group w-fit">
-                <ArrowLeft className="mr-2 h-3.5 w-3.5 group-hover:-translate-x-1 transition-transform" />
+        <div className="space-y-6 md:space-y-8 animate-fade-in pb-24 px-4 md:px-8 py-6">
+            <Link to="/dashboard/properties" className="flex items-center text-[9px] font-bold uppercase tracking-widest text-muted-foreground hover:text-black transition-all group w-fit">
+                <ArrowLeft className="mr-1.5 h-3 w-3 group-hover:-translate-x-1 transition-transform" />
                 Retour au Portfolio
             </Link>
 
             {/* Header / Hero Section */}
-            <div className="relative rounded-[2rem] md:rounded-[3rem] overflow-hidden solaris-glass border-none shadow-2xl">
+            <div className="relative rounded-[1.5rem] md:rounded-[2rem] overflow-hidden solaris-glass border-none shadow-xl">
                 {/* Image Gallery High-End */}
                 {property.images && property.images.length > 0 && (
                     <div className="relative aspect-square md:aspect-[21/9] bg-slate-900 overflow-hidden">
@@ -420,25 +420,25 @@ export default function PropertyDetail() {
                             <>
                                 <button
                                     onClick={() => setActiveImageIndex((prev) => (prev - 1 + property.images.length) % property.images.length)}
-                                    className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 p-3 md:p-4 rounded-xl md:rounded-2xl bg-white/10 text-white backdrop-blur-xl hover:bg-white/20 transition-all border border-white/10"
+                                    className="absolute left-4 top-1/2 -translate-y-1/2 p-2.5 rounded-xl bg-white/10 text-white backdrop-blur-xl hover:bg-white/20 transition-all border border-white/10"
                                 >
-                                    <ChevronLeft className="h-5 w-5 md:h-6 w-6" />
+                                    <ChevronLeft className="h-4 w-4 md:h-5 w-5" />
                                 </button>
                                 <button
                                     onClick={() => setActiveImageIndex((prev) => (prev + 1) % property.images.length)}
-                                    className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 p-3 md:p-4 rounded-xl md:rounded-2xl bg-white/10 text-white backdrop-blur-xl hover:bg-white/20 transition-all border border-white/10"
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 p-2.5 rounded-xl bg-white/10 text-white backdrop-blur-xl hover:bg-white/20 transition-all border border-white/10"
                                 >
-                                    <ChevronRight className="h-5 w-5 md:h-6 w-6" />
+                                    <ChevronRight className="h-4 w-4 md:h-5 w-5" />
                                 </button>
 
-                                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3">
+                                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
                                     {property.images.map((_, idx) => (
                                         <button
                                             key={idx}
                                             onClick={() => setActiveImageIndex(idx)}
                                             className={cn(
-                                                "h-1.5 rounded-full transition-all duration-500",
-                                                idx === activeImageIndex ? "bg-white w-12 shadow-lg" : "bg-white/30 w-3 hover:bg-white/50"
+                                                "h-1 rounded-full transition-all duration-500",
+                                                idx === activeImageIndex ? "bg-white w-8 shadow-md" : "bg-white/30 w-2 hover:bg-white/50"
                                             )}
                                         />
                                     ))}
@@ -447,57 +447,57 @@ export default function PropertyDetail() {
                         )}
 
                         {/* Property Brand Info Overlay */}
-                        <div className="absolute bottom-6 left-6 right-6 md:bottom-12 md:left-12 md:right-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
-                            <div className="space-y-4 pointer-events-none">
-                                <div className="flex flex-wrap items-center gap-2 md:gap-3">
+                        <div className="absolute bottom-6 left-6 right-6 md:left-8 md:right-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+                            <div className="space-y-3 pointer-events-none">
+                                <div className="flex flex-wrap items-center gap-2">
                                     <span className={cn(
-                                        "px-3 md:px-5 py-1.5 md:py-2 rounded-full text-[8px] md:text-[10px] font-black uppercase tracking-widest backdrop-blur-md border",
+                                        "px-2.5 py-1 rounded-full text-[8px] font-bold uppercase tracking-widest backdrop-blur-md border",
                                         property.category === 'RESIDENTIEL' ? "bg-white/90 text-black border-white" :
                                             property.category === 'COMMERCIAL' ? "bg-amber-400/90 text-black border-amber-300" : "bg-blue-400/90 text-black border-blue-300"
                                     )}>
                                         {property.category_display}
                                     </span>
-                                    <span className="px-3 md:px-5 py-1.5 md:py-2 rounded-full bg-black/60 text-white text-[8px] md:text-[10px] font-black uppercase tracking-widest backdrop-blur-md border border-white/20">
-                                        {property.management_type === 'CONSTRUCTION' ? "Projet Chantier" : property.transaction_nature_display}
+                                    <span className="px-2.5 py-1 rounded-full bg-black/60 text-white text-[8px] font-bold uppercase tracking-widest backdrop-blur-md border border-white/20">
+                                        {property.management_type === 'CONSTRUCTION' ? "Chantier" : property.transaction_nature_display}
                                     </span>
                                     <span className={cn(
-                                        "px-3 md:px-5 py-1.5 md:py-2 rounded-full text-[8px] md:text-[10px] font-black uppercase tracking-widest backdrop-blur-md border",
+                                        "px-2.5 py-1 rounded-full text-[8px] font-bold uppercase tracking-widest backdrop-blur-md border",
                                         property.status === 'DISPONIBLE' ? "bg-emerald-400/90 text-black border-emerald-300" :
                                             property.status === 'VENDU' ? "bg-black text-white border-white/20" : "bg-amber-400/90 text-black border-amber-300"
                                     )}>
                                         {property.status_display}
                                     </span>
                                     {property.is_foncier_verified && (
-                                        <span className="px-3 md:px-5 py-1.5 md:py-2 rounded-full bg-white/90 text-emerald-600 text-[8px] md:text-[10px] font-black uppercase tracking-widest backdrop-blur-md border border-white flex items-center gap-2">
-                                            <ShieldCheck className="h-3 w-3" />
+                                        <span className="px-2.5 py-1 rounded-full bg-white/90 text-emerald-600 text-[8px] font-bold uppercase tracking-widest backdrop-blur-md border border-white flex items-center gap-1.5">
+                                            <ShieldCheck className="h-2.5 w-2.5" />
                                             Vérifié
                                         </span>
                                     )}
                                 </div>
-                                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tighter drop-shadow-2xl leading-none">
+                                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white tracking-tight drop-shadow-xl leading-none">
                                     {property.name}
                                 </h1>
-                                <div className="flex items-center gap-2 md:gap-3 text-white/80 font-bold uppercase tracking-widest text-[9px] md:text-[11px]">
-                                    <MapPin className="h-3.5 w-3.5 md:h-4 w-4 text-primary" />
+                                <div className="flex items-center gap-2 text-white/80 font-bold uppercase tracking-widest text-[8px] md:text-[9px]">
+                                    <MapPin className="h-3 w-3 text-primary" />
                                     {property.address}, {property.city}
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-3 md:gap-4 pointer-events-auto">
+                            <div className="flex items-center gap-3 pointer-events-auto">
                                 {isAdmin && (
                                     <>
                                         <button
                                             onClick={handleDelete}
-                                            className="h-10 md:h-12 px-5 md:px-8 bg-white/10 text-white rounded-xl md:rounded-2xl text-[9px] md:text-[11px] font-black uppercase tracking-widest backdrop-blur-xl border border-white/10 hover:bg-rose-500 hover:border-rose-400 transition-all flex items-center gap-2 md:gap-3"
+                                            className="h-9 md:h-10 px-4 md:px-6 bg-white/10 text-white rounded-lg md:rounded-xl text-[8px] md:text-[10px] font-bold uppercase tracking-widest backdrop-blur-xl border border-white/10 hover:bg-rose-500 hover:border-rose-400 transition-all flex items-center gap-2"
                                         >
-                                            <Trash2 className="h-3.5 w-3.5 md:h-4 w-4" />
+                                            <Trash2 className="h-3 w-3 md:h-3.5 md:w-3.5" />
                                             <span className="hidden sm:inline">Supprimer</span>
                                         </button>
                                         <Link
                                             to={`/dashboard/properties/${id}/edit`}
-                                            className="h-10 md:h-12 px-6 md:px-10 bg-white text-black rounded-xl md:rounded-2xl text-[9px] md:text-[11px] font-black uppercase tracking-widest shadow-2xl hover:bg-slate-100 transition-all flex items-center gap-2 md:gap-3"
+                                            className="h-9 md:h-10 px-5 md:px-8 bg-white text-black rounded-lg md:rounded-xl text-[8px] md:text-[10px] font-bold uppercase tracking-widest shadow-lg hover:bg-slate-100 transition-all flex items-center gap-2"
                                         >
-                                            <Edit className="h-3.5 w-3.5 md:h-4 w-4" />
+                                            <Edit className="h-3 w-3 md:h-3.5 md:w-3.5" />
                                             Modifier
                                         </Link>
                                     </>
@@ -508,20 +508,20 @@ export default function PropertyDetail() {
                 )}
 
                 {property.transaction_nature === 'LOCATION' && property.status !== 'VENDU' && (property.loyer_mensuel || property.prix_nuitee) && (
-                    <div className="px-6 md:px-10 pb-8 md:pb-10 flex flex-wrap items-center gap-6 md:gap-10">
+                    <div className="px-6 md:px-8 pb-6 md:pb-8 flex flex-wrap items-center gap-6 md:gap-8">
                         {property.loyer_mensuel && (
-                            <div className="flex flex-col gap-0.5 md:gap-1">
-                                <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Loyer mensuel</span>
-                                <div className="flex items-baseline gap-2">
-                                    <span className="text-2xl md:text-3xl font-bold tracking-tight">{formatCurrency(property.loyer_mensuel, true)}</span>
+                            <div className="flex flex-col gap-0.5">
+                                <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Loyer mensuel</span>
+                                <div className="flex items-baseline gap-1.5">
+                                    <span className="text-xl md:text-2xl font-bold tracking-tight">{formatCurrency(property.loyer_mensuel, true)}</span>
                                 </div>
                             </div>
                         )}
                         {property.prix_nuitee && (
-                            <div className="flex flex-col gap-0.5 md:gap-1">
-                                <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Nuitée</span>
-                                <div className="flex items-baseline gap-2">
-                                    <span className="text-2xl md:text-3xl font-bold tracking-tight">{formatCurrency(property.prix_nuitee, true)}</span>
+                            <div className="flex flex-col gap-0.5">
+                                <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Nuitée</span>
+                                <div className="flex items-baseline gap-1.5">
+                                    <span className="text-xl md:text-2xl font-bold tracking-tight">{formatCurrency(property.prix_nuitee, true)}</span>
                                 </div>
                             </div>
                         )}
@@ -534,28 +534,28 @@ export default function PropertyDetail() {
                 style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 className="w-full border-b border-slate-100 pb-0 [&::-webkit-scrollbar]:hidden"
             >
-                <div style={{ display: 'flex', gap: '24px', width: 'max-content', paddingLeft: '4px', paddingRight: '4px' }}>
+                <div style={{ display: 'flex', gap: '20px', width: 'max-content', paddingLeft: '2px', paddingRight: '2px' }}>
                     {[
-                        { id: 'details', label: 'Détails Principaux', icon: Building, show: true },
-                        { id: 'projects', label: property.management_type === 'GESTION' ? 'Entretien & Maintenance' : 'Projets', icon: HardHat, show: property.management_type === 'CONSTRUCTION' || property.management_type === 'GESTION' },
-                        { id: 'transactions', label: 'Pipeline Commercial', icon: TrendingUp, show: property.management_type === 'MANDAT' },
-                        { id: 'performance', label: 'Performance & Finance', icon: Activity, show: true },
-                        { id: 'documents', label: 'Documents & Archive', icon: FileText, show: true }
+                        { id: 'details', label: 'Détails', icon: Building, show: true },
+                        { id: 'projects', label: property.management_type === 'GESTION' ? 'Maintenance' : 'Projets', icon: HardHat, show: property.management_type === 'CONSTRUCTION' || property.management_type === 'GESTION' },
+                        { id: 'transactions', label: 'Pipeline', icon: TrendingUp, show: property.management_type === 'MANDAT' },
+                        { id: 'performance', label: 'Finance', icon: Activity, show: true },
+                        { id: 'documents', label: 'Documents', icon: FileText, show: true }
                     ].filter(t => t.show).map((tab) => (
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
                             className={cn(
-                                "flex items-center gap-3 pb-6 border-b-2 transition-all group relative",
+                                "flex items-center gap-2.5 pb-4 border-b-2 transition-all group relative",
                                 activeTab === tab.id
                                     ? "border-black text-black"
                                     : "border-transparent text-muted-foreground hover:text-black"
                             )}
                         >
-                            <tab.icon className={cn("h-4 w-4 shrink-0", activeTab === tab.id ? "text-primary" : "text-muted-foreground opacity-40 group-hover:opacity-100")} />
-                            <span className="text-[11px] font-bold uppercase tracking-widest whitespace-nowrap">{tab.label}</span>
+                            <tab.icon className={cn("h-3.5 w-3.5 shrink-0", activeTab === tab.id ? "text-primary" : "text-muted-foreground opacity-40 group-hover:opacity-100")} />
+                            <span className="text-[10px] font-bold uppercase tracking-widest whitespace-nowrap">{tab.label}</span>
                             {activeTab === tab.id && (
-                                <div className="absolute bottom-[-2px] left-0 right-0 h-0.5 bg-black animate-in fade-in slide-in-from-bottom-1" />
+                                <div className="absolute bottom-[-2px] left-0 right-0 h-0.5 bg-black" />
                             )}
                         </button>
                     ))}
@@ -575,137 +575,137 @@ export default function PropertyDetail() {
             {/* Tab Content */}
             <div className="mt-2">
                 {activeTab === 'details' && (
-                    <div className="space-y-8 animate-fade-in">
-                        <div className="grid gap-8 lg:grid-cols-2">
-                            <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-xl">
-                                <h3 className="font-black text-lg md:text-xl mb-6 md:mb-8 flex items-center gap-4 tracking-tighter uppercase">
-                                    <div className="p-2.5 md:p-3 rounded-xl md:rounded-2xl bg-black text-white shadow-lg">
-                                        <Building className="h-4 w-4 md:h-5 md:w-5" />
+                    <div className="space-y-6 animate-fade-in">
+                        <div className="grid gap-6 lg:grid-cols-2">
+                            <div className="solaris-glass rounded-[1.5rem] p-6 md:p-8 border-none shadow-lg">
+                                <h3 className="font-bold text-base md:text-lg mb-6 flex items-center gap-3 uppercase tracking-tight">
+                                    <div className="p-2 rounded-lg bg-black text-white shadow-md">
+                                        <Building className="h-4 w-4" />
                                     </div>
                                     Informations Générales
                                 </h3>
-                                <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6 md:gap-y-8 text-sm">
-                                    <div className="space-y-1">
-                                        <dt className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Type de bien</dt>
-                                        <dd className="font-black text-base md:text-lg tracking-tight">{property.property_type_display || property.property_type}</dd>
+                                <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-6 text-sm">
+                                    <div className="space-y-0.5">
+                                        <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Type</dt>
+                                        <dd className="font-bold text-sm md:text-base tracking-tight">{property.property_type_display || property.property_type}</dd>
                                     </div>
-                                    <div className="space-y-1">
-                                        <dt className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Surface Totale</dt>
-                                        <dd className="font-black text-base md:text-lg tracking-tight flex items-center gap-2">
-                                            <Ruler className="h-3.5 w-3.5 md:h-4 w-4 text-primary" />
-                                            {property.surface ? `${property.surface} m²` : 'N/A'}
+                                    <div className="space-y-0.5">
+                                        <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Surface</dt>
+                                        <dd className="font-bold text-sm md:text-base tracking-tight flex items-center gap-1.5">
+                                            <Ruler className="h-3.5 w-3.5 text-primary" />
+                                            {property.surface ? `${property.surface} m²` : '---'}
                                         </dd>
                                     </div>
                                     {property.category === 'RESIDENTIEL' && (
                                         <>
-                                            <div className="space-y-1">
-                                                <dt className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Nombre de pièces</dt>
-                                                <dd className="font-black text-base md:text-lg tracking-tight">{property.room_count || 'N/A'}</dd>
+                                            <div className="space-y-0.5">
+                                                <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Pièces</dt>
+                                                <dd className="font-bold text-sm md:text-base tracking-tight">{property.room_count || '---'}</dd>
                                             </div>
-                                            <div className="space-y-1">
-                                                <dt className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Nombre de chambres</dt>
-                                                <dd className="font-black text-base md:text-lg tracking-tight">{property.bedroom_count || 'N/A'}</dd>
+                                            <div className="space-y-0.5">
+                                                <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Chambres</dt>
+                                                <dd className="font-bold text-sm md:text-base tracking-tight">{property.bedroom_count || '---'}</dd>
                                             </div>
                                         </>
                                     )}
-                                    <div className="space-y-1">
-                                        <dt className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Statut Actuel</dt>
-                                        <dd className="mt-1.5 md:mt-2">
-                                            <span className="inline-flex items-center gap-2 px-3 md:px-4 py-1.5 rounded-full bg-black text-white text-[8px] md:text-[10px] font-black uppercase tracking-widest">
-                                                <div className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-primary animate-pulse" />
+                                    <div className="space-y-0.5">
+                                        <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Statut</dt>
+                                        <dd className="mt-1">
+                                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black text-white text-[8px] md:text-[9px] font-bold uppercase tracking-widest">
+                                                <div className="w-1 h-1 rounded-full bg-primary animate-pulse" />
                                                 {property.status_display || property.status}
                                             </span>
                                         </dd>
                                     </div>
                                     {property.prix_acquisition && (
-                                        <div className="space-y-1">
-                                            <dt className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-primary">Investissement Initial</dt>
-                                            <dd className="font-black text-xl md:text-2xl tracking-tighter text-primary">
+                                        <div className="space-y-0.5">
+                                            <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-primary">Investissement</dt>
+                                            <dd className="font-bold text-lg md:text-xl tracking-tight text-primary">
                                                 {formatCurrency(Number(property.prix_acquisition) + Number(property.frais_acquisition_annexes || 0), true)}
                                             </dd>
                                         </div>
                                     )}
-                                    <div className="sm:col-span-2 space-y-2 md:space-y-3">
-                                        <dt className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Détenteur de l'Actif</dt>
-                                        <dd className="font-black">
+                                    <div className="sm:col-span-2 space-y-2">
+                                        <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Propriétaire</dt>
+                                        <dd className="font-bold">
                                             {property.owner ? (
-                                                <div className="flex items-center gap-2.5 md:gap-3 p-2.5 md:p-3 rounded-xl md:rounded-2xl bg-white/50 border border-slate-100 w-fit">
-                                                    <div className="h-7 w-7 md:h-8 md:w-8 rounded-lg md:rounded-xl bg-black flex items-center justify-center text-[9px] md:text-[11px] text-white font-black uppercase">
+                                                <div className="flex items-center gap-2.5 p-2 rounded-xl bg-white/50 border border-slate-100 w-fit">
+                                                    <div className="h-7 w-7 rounded-lg bg-black flex items-center justify-center text-[9px] text-white font-bold uppercase">
                                                         {property.owner_name?.split(' ').map(n => n[0]).join('')}
                                                     </div>
-                                                    <span className="text-xs md:text-sm tracking-tight">{property.owner_name}</span>
+                                                    <span className="text-xs tracking-tight">{property.owner_name}</span>
                                                 </div>
                                             ) : (
-                                                <span className="text-emerald-500 font-black uppercase tracking-widest text-[9px] md:text-[11px] italic">Actif Disponible (Mandat)</span>
+                                                <span className="text-emerald-500 font-bold uppercase tracking-widest text-[9px] italic">Disponible (Mandat)</span>
                                             )}
                                         </dd>
                                     </div>
                                 </dl>
                             </div>
 
-                            <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-xl">
-                                <h3 className="font-black text-lg md:text-xl mb-6 md:mb-8 flex items-center gap-4 tracking-tighter uppercase">
-                                    <div className="p-2.5 md:p-3 rounded-xl md:rounded-2xl bg-black text-white shadow-lg">
-                                        <FileText className="h-4 w-4 md:h-5 md:w-5" />
+                            <div className="solaris-glass rounded-[1.5rem] p-6 md:p-8 border-none shadow-lg">
+                                <h3 className="font-bold text-base md:text-lg mb-6 flex items-center gap-3 uppercase tracking-tight">
+                                    <div className="p-2 rounded-lg bg-black text-white shadow-md">
+                                        <FileText className="h-4 w-4" />
                                     </div>
-                                    Notes & Description
+                                    Description
                                 </h3>
-                                <p className="text-[12px] md:text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap font-medium">
-                                    {property.description || "Aucune description détaillée n'a été fournie pour ce bien d'exception."}
+                                <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed whitespace-pre-wrap font-medium opacity-80">
+                                    {property.description || "Aucune description détaillée."}
                                 </p>
                             </div>
                         </div>
 
                         {/* Specific Details Based on Property Type Solaris Style */}
-                        <div className="grid gap-8 lg:grid-cols-2">
+                        <div className="grid gap-6 lg:grid-cols-2">
                             {property.management_type === 'MANDAT' && (
-                                <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-xl">
-                                    <h3 className="font-black text-lg md:text-xl mb-6 md:mb-8 flex items-center gap-4 tracking-tighter uppercase">
-                                        <div className="p-2.5 md:p-3 rounded-xl md:rounded-2xl bg-black text-white shadow-lg">
-                                            <Euro className="h-4 w-4 md:h-5 md:w-5" />
+                                <div className="solaris-glass rounded-[1.5rem] p-6 md:p-8 border-none shadow-lg">
+                                    <h3 className="font-bold text-base md:text-lg mb-6 flex items-center gap-3 uppercase tracking-tight">
+                                        <div className="p-2 rounded-lg bg-black text-white shadow-md">
+                                            <Euro className="h-4 w-4" />
                                         </div>
-                                        Structure de la Vente
+                                        Vente
                                     </h3>
-                                    <div className="space-y-6">
-                                        <div className="flex justify-between items-end pb-4 border-b border-slate-100">
-                                            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Prix de mise en vente</span>
-                                            <span className="text-xl md:text-2xl font-black tracking-tighter">{formatCurrency(property.prix_acquisition, true)}</span>
+                                    <div className="space-y-4">
+                                        <div className="flex justify-between items-end pb-3 border-b border-slate-100">
+                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Mise en vente</span>
+                                            <span className="text-lg md:text-xl font-bold tracking-tight">{formatCurrency(property.prix_acquisition, true)}</span>
                                         </div>
-                                        <div className="flex justify-between items-end pb-4 border-b border-slate-100">
-                                            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Honoraires & Frais annexes</span>
-                                            <span className="text-base md:text-lg font-black text-muted-foreground tracking-tight">+{formatCurrency(property.frais_acquisition_annexes, true)}</span>
+                                        <div className="flex justify-between items-end pb-3 border-b border-slate-100">
+                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Honoraires/Frais</span>
+                                            <span className="text-sm md:text-base font-bold text-muted-foreground tracking-tight">+{formatCurrency(property.frais_acquisition_annexes, true)}</span>
                                         </div>
-                                        <div className="flex items-center gap-3 pt-2">
-                                            <div className={cn("p-1.5 md:p-2 rounded-lg md:rounded-xl", property.negociable ? "bg-emerald-500 text-white shadow-lg shadow-emerald-200" : "bg-slate-100 text-slate-400")}>
-                                                <Check className="h-3.5 w-3.5 md:h-4 w-4" />
+                                        <div className="flex items-center gap-2.5 pt-1">
+                                            <div className={cn("p-1.5 rounded-lg", property.negociable ? "bg-emerald-500 text-white shadow-md" : "bg-slate-100 text-slate-400")}>
+                                                <Check className="h-3 w-3" />
                                             </div>
-                                            <span className={cn("text-[9px] md:text-[10px] font-black uppercase tracking-widest", property.negociable ? "text-emerald-600" : "text-slate-400 opacity-60")}>Opportunité Négociable</span>
+                                            <span className={cn("text-[8px] md:text-[9px] font-bold uppercase tracking-widest", property.negociable ? "text-emerald-600" : "text-slate-400 opacity-60")}>Négociable</span>
                                         </div>
                                     </div>
                                 </div>
                             )}
 
                             {property.management_type === 'GESTION' && (
-                                <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-xl">
-                                    <h3 className="font-black text-lg md:text-xl mb-6 md:mb-8 flex items-center gap-4 tracking-tighter uppercase">
-                                        <div className="p-2.5 md:p-3 rounded-xl md:rounded-2xl bg-black text-white shadow-lg">
-                                            <Home className="h-4 w-4 md:h-5 md:w-5" />
+                                <div className="solaris-glass rounded-[1.5rem] p-6 md:p-8 border-none shadow-lg">
+                                    <h3 className="font-bold text-base md:text-lg mb-6 flex items-center gap-3 uppercase tracking-tight">
+                                        <div className="p-2 rounded-lg bg-black text-white shadow-md">
+                                            <Home className="h-4 w-4" />
                                         </div>
-                                        Conditions Locatives
+                                        Location
                                     </h3>
-                                    <div className="space-y-6">
-                                        <div className="flex justify-between items-end pb-4 border-b border-slate-100">
-                                            <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Loyer Principal</span>
-                                            <span className="text-2xl md:text-3xl font-bold text-primary tracking-tight">{formatCurrency(property.loyer_mensuel, true)}</span>
+                                    <div className="space-y-4">
+                                        <div className="flex justify-between items-end pb-3 border-b border-slate-100">
+                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Loyer</span>
+                                            <span className="text-lg md:text-xl font-bold text-primary tracking-tight">{formatCurrency(property.loyer_mensuel, true)}</span>
                                         </div>
-                                        <div className="grid grid-cols-2 gap-6 md:gap-10">
-                                            <div className="space-y-1">
-                                                <dt className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Charges Mensuelles</dt>
-                                                <dd className="font-bold text-base md:text-lg tracking-tight">{formatCurrency(property.charges_mensuelles, true)}</dd>
+                                        <div className="grid grid-cols-2 gap-4 md:gap-6">
+                                            <div className="space-y-0.5">
+                                                <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Charges</dt>
+                                                <dd className="font-bold text-sm md:text-base tracking-tight">{formatCurrency(property.charges_mensuelles, true)}</dd>
                                             </div>
-                                            <div className="space-y-1">
-                                                <dt className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Dépôt de Garantie</dt>
-                                                <dd className="font-bold text-base md:text-lg tracking-tight">{formatCurrency(property.depot_garantie, true)}</dd>
+                                            <div className="space-y-0.5">
+                                                <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Garantie</dt>
+                                                <dd className="font-bold text-sm md:text-base tracking-tight">{formatCurrency(property.depot_garantie, true)}</dd>
                                             </div>
                                         </div>
                                     </div>
@@ -713,17 +713,17 @@ export default function PropertyDetail() {
                             )}
 
                             {property.management_type === 'CONSTRUCTION' && (
-                                <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-xl">
-                                    <h3 className="font-black text-lg md:text-xl mb-6 md:mb-8 flex items-center gap-4 tracking-tighter uppercase">
-                                        <div className="p-2.5 md:p-3 rounded-xl md:rounded-2xl bg-black text-white shadow-lg">
-                                            <Wrench className="h-4 w-4 md:h-5 md:w-5" />
+                                <div className="solaris-glass rounded-[1.5rem] p-6 md:p-8 border-none shadow-lg">
+                                    <h3 className="font-bold text-base md:text-lg mb-6 flex items-center gap-3 uppercase tracking-tight">
+                                        <div className="p-2 rounded-lg bg-black text-white shadow-md">
+                                            <Wrench className="h-4 w-4" />
                                         </div>
-                                        Paramètres du Chantier
+                                        Chantier
                                     </h3>
-                                    <div className="space-y-6">
-                                        <div className="flex flex-col gap-1 pb-4 border-b border-slate-100">
-                                            <dt className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Enveloppe Budgétaire Globale</dt>
-                                            <dd className="font-black text-2xl md:text-4xl tracking-tighter text-black">{formatCurrency(property.budget_total, true)}</dd>
+                                    <div className="space-y-4">
+                                        <div className="flex flex-col gap-0.5 pb-3 border-b border-slate-100">
+                                            <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Budget Global</dt>
+                                            <dd className="font-bold text-xl md:text-2xl tracking-tight text-black">{formatCurrency(property.budget_total, true)}</dd>
                                         </div>
                                     </div>
                                 </div>
@@ -809,37 +809,37 @@ export default function PropertyDetail() {
 
                                             return (
                                                 <>
-                                                    <div className="solaris-glass rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-8 border-none shadow-xl">
-                                                        <div className="flex items-center justify-between mb-4">
-                                                            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Budget Travaux</span>
-                                                            <div className="p-2 rounded-xl bg-black text-white"><Wrench className="h-4 w-4" /></div>
+                                                    <div className="solaris-glass rounded-[1.2rem] p-5 md:p-6 border-none shadow-lg">
+                                                        <div className="flex items-center justify-between mb-3">
+                                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Budget Travaux</span>
+                                                            <div className="p-1.5 rounded-lg bg-black text-white"><Wrench className="h-3.5 w-3.5" /></div>
                                                         </div>
-                                                        <div className="text-2xl md:text-3xl font-black tracking-tighter">{budget.toLocaleString()}€</div>
-                                                        <p className="text-[9px] md:text-[10px] text-muted-foreground mt-2 font-bold uppercase tracking-widest">Enveloppe Prévisionnelle</p>
+                                                        <div className="text-xl md:text-2xl font-bold tracking-tight">{budget.toLocaleString()}€</div>
+                                                        <p className="text-[8px] md:text-[9px] text-muted-foreground mt-1.5 font-bold uppercase tracking-widest">Prévisionnel</p>
                                                     </div>
-                                                    <div className="solaris-glass rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-8 border-none shadow-xl">
-                                                        <div className="flex items-center justify-between mb-4">
-                                                            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Déjà Consommé</span>
-                                                            <div className="p-2 rounded-xl bg-rose-500 text-white"><TrendingDown className="h-4 w-4" /></div>
+                                                    <div className="solaris-glass rounded-[1.2rem] p-5 md:p-6 border-none shadow-lg">
+                                                        <div className="flex items-center justify-between mb-3">
+                                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Consommé</span>
+                                                            <div className="p-1.5 rounded-lg bg-rose-500 text-white"><TrendingDown className="h-3.5 w-3.5" /></div>
                                                         </div>
-                                                        <div className="text-2xl md:text-3xl font-black tracking-tighter text-rose-500">{spent.toLocaleString()}€</div>
-                                                        <p className="text-[9px] md:text-[10px] text-muted-foreground mt-2 font-bold uppercase tracking-widest">{progress.toFixed(1)}% Consommé</p>
+                                                        <div className="text-xl md:text-2xl font-bold tracking-tight text-rose-500">{spent.toLocaleString()}€</div>
+                                                        <p className="text-[8px] md:text-[9px] text-muted-foreground mt-1.5 font-bold uppercase tracking-widest">{progress.toFixed(1)}%</p>
                                                     </div>
-                                                    <div className="solaris-glass rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-8 border-none shadow-xl">
-                                                        <div className="flex items-center justify-between mb-4">
-                                                            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Reste à Engager</span>
-                                                            <div className="p-2 rounded-xl bg-emerald-500 text-white"><Euro className="h-4 w-4" /></div>
+                                                    <div className="solaris-glass rounded-[1.2rem] p-5 md:p-6 border-none shadow-lg">
+                                                        <div className="flex items-center justify-between mb-3">
+                                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Reste</span>
+                                                            <div className="p-1.5 rounded-lg bg-emerald-500 text-white"><Euro className="h-3.5 w-3.5" /></div>
                                                         </div>
-                                                        <div className="text-2xl md:text-3xl font-black tracking-tighter text-emerald-500">{remaining.toLocaleString()}€</div>
-                                                        <p className="text-[9px] md:text-[10px] text-muted-foreground mt-2 font-bold uppercase tracking-widest">Solde Disponible</p>
+                                                        <div className="text-xl md:text-2xl font-bold tracking-tight text-emerald-500">{remaining.toLocaleString()}€</div>
+                                                        <p className="text-[8px] md:text-[9px] text-muted-foreground mt-1.5 font-bold uppercase tracking-widest">Disponible</p>
                                                     </div>
-                                                    <div className="solaris-glass rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-8 border-none shadow-xl">
-                                                        <div className="flex items-center justify-between mb-4">
-                                                            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Progression</span>
-                                                            <div className="p-2 rounded-xl bg-blue-500 text-white"><Activity className="h-4 w-4" /></div>
+                                                    <div className="solaris-glass rounded-[1.2rem] p-5 md:p-6 border-none shadow-lg">
+                                                        <div className="flex items-center justify-between mb-3">
+                                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Progression</span>
+                                                            <div className="p-1.5 rounded-lg bg-blue-500 text-white"><Activity className="h-3.5 w-3.5" /></div>
                                                         </div>
-                                                        <div className="text-2xl md:text-3xl font-black tracking-tighter text-blue-600">{progress.toFixed(0)}%</div>
-                                                        <div className="h-1.5 w-full bg-black/5 rounded-full overflow-hidden mt-3">
+                                                        <div className="text-xl md:text-2xl font-bold tracking-tight text-blue-600">{progress.toFixed(0)}%</div>
+                                                        <div className="h-1.5 w-full bg-black/5 rounded-full overflow-hidden mt-2.5">
                                                             <div className="h-full bg-blue-500 transition-all duration-1000" style={{ width: `${Math.min(100, progress)}%` }} />
                                                         </div>
                                                     </div>
@@ -876,36 +876,36 @@ export default function PropertyDetail() {
 
                                             return (
                                                 <>
-                                                    <div className="solaris-glass rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-8 border-none shadow-xl lg:col-span-2">
-                                                        <div className="flex items-center justify-between mb-4">
-                                                            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">
+                                                    <div className="solaris-glass rounded-[1.2rem] p-5 md:p-6 border-none shadow-lg lg:col-span-2">
+                                                        <div className="flex items-center justify-between mb-3">
+                                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">
                                                                 Plus-value nette {signedTx ? '(Réelle)' : '(Estimée)'}
                                                             </span>
-                                                            <div className={cn("p-2 rounded-xl text-white shadow-lg", isPlusValueNegative ? "bg-rose-500" : "bg-emerald-500")}>
-                                                                <TrendingUp className="h-4 w-4" />
+                                                            <div className={cn("p-1.5 rounded-lg text-white shadow-md", isPlusValueNegative ? "bg-rose-500" : "bg-emerald-500")}>
+                                                                <TrendingUp className="h-3.5 w-3.5" />
                                                             </div>
                                                         </div>
-                                                        <div className={cn("text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter leading-none", isPlusValueNegative ? "text-rose-600" : "text-emerald-500")}>
+                                                        <div className={cn("text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight leading-none", isPlusValueNegative ? "text-rose-600" : "text-emerald-500")}>
                                                             {netPlusValue !== null ? `${netPlusValue.toLocaleString()}€` : 'N/A'}
                                                         </div>
-                                                        <p className="text-[9px] md:text-[10px] text-muted-foreground mt-3 font-bold uppercase tracking-widest max-w-[200px]">
-                                                            Position nette après achat, frais et commissions
+                                                        <p className="text-[8px] md:text-[9px] text-muted-foreground mt-1.5 font-bold uppercase tracking-widest max-w-[200px]">
+                                                            Fonds nets après frais
                                                         </p>
                                                     </div>
-                                                    <div className="solaris-glass rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-8 border-none shadow-xl lg:col-span-2">
-                                                        <div className="flex items-center justify-between mb-4">
-                                                            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">
-                                                                ROI de l'Actif {signedTx ? '(Net)' : '(Estimé)'}
+                                                    <div className="solaris-glass rounded-[1.2rem] p-5 md:p-6 border-none shadow-lg lg:col-span-2">
+                                                        <div className="flex items-center justify-between mb-3">
+                                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">
+                                                                ROI {signedTx ? '(Net)' : '(Estimé)'}
                                                             </span>
-                                                            <div className={cn("p-2 rounded-xl text-white shadow-lg", isRoiNegative ? "bg-rose-500" : "bg-emerald-500")}>
-                                                                <Percent className="h-4 w-4" />
+                                                            <div className={cn("p-1.5 rounded-lg text-white shadow-md", isRoiNegative ? "bg-rose-500" : "bg-emerald-500")}>
+                                                                <Percent className="h-3.5 w-3.5" />
                                                             </div>
                                                         </div>
-                                                        <div className={cn("text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter leading-none", isRoiNegative ? "text-rose-600" : "text-emerald-500")}>
+                                                        <div className={cn("text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight leading-none", isRoiNegative ? "text-rose-600" : "text-emerald-500")}>
                                                             {roi !== null ? `${roi.toFixed(1)}%` : 'N/A'}
                                                         </div>
-                                                        <p className="text-[9px] md:text-[10px] text-muted-foreground mt-3 font-bold uppercase tracking-widest max-w-[200px]">
-                                                            Rendement sur l'ensemble des fonds investis
+                                                        <p className="text-[8px] md:text-[9px] text-muted-foreground mt-1.5 font-bold uppercase tracking-widest max-w-[200px]">
+                                                            Rendement sur investissement
                                                         </p>
                                                     </div>
                                                 </>
@@ -913,45 +913,45 @@ export default function PropertyDetail() {
                                         } else {
                                             return (
                                                 <>
-                                                    <div className="solaris-glass rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-8 border-none shadow-xl">
-                                                        <div className="flex items-center justify-between mb-4">
-                                                            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Rendement Annuel</span>
-                                                            <div className="p-2 rounded-xl bg-emerald-500 text-white shadow-lg shadow-emerald-200"><TrendingUp className="h-4 w-4" /></div>
+                                                    <div className="solaris-glass rounded-[1.2rem] p-5 md:p-6 border-none shadow-lg">
+                                                        <div className="flex items-center justify-between mb-3">
+                                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Rendement Annuel</span>
+                                                            <div className="p-1.5 rounded-lg bg-emerald-500 text-white shadow-md"><TrendingUp className="h-3.5 w-3.5" /></div>
                                                         </div>
-                                                        <div className="text-2xl md:text-3xl font-black tracking-tighter text-emerald-600">{perfData?.property_summary?.theoretical_yield || 0}%</div>
-                                                        <p className="text-[9px] md:text-[10px] text-muted-foreground mt-2 font-bold uppercase tracking-widest">Objectif Cible</p>
+                                                        <div className="text-xl md:text-2xl font-bold tracking-tight text-emerald-600">{perfData?.property_summary?.theoretical_yield || 0}%</div>
+                                                        <p className="text-[8px] md:text-[9px] text-muted-foreground mt-1.5 font-bold uppercase tracking-widest">Objectif</p>
                                                     </div>
-                                                    <div className="solaris-glass rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-8 border-none shadow-xl">
-                                                        <div className="flex items-center justify-between mb-4">
-                                                            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Rendement Réel</span>
-                                                            <div className="p-2 rounded-xl bg-black text-white shadow-lg"><Activity className="h-4 w-4" /></div>
+                                                    <div className="solaris-glass rounded-[1.2rem] p-5 md:p-6 border-none shadow-lg">
+                                                        <div className="flex items-center justify-between mb-3">
+                                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Rendement Réel</span>
+                                                            <div className="p-1.5 rounded-lg bg-black text-white shadow-md"><Activity className="h-3.5 w-3.5" /></div>
                                                         </div>
-                                                        <div className="text-2xl md:text-3xl font-black tracking-tighter">{perfData?.property_summary?.yield || 0}%</div>
-                                                        <p className="text-[9px] md:text-[10px] text-muted-foreground mt-2 font-bold uppercase tracking-widest">Performance 12m</p>
+                                                        <div className="text-xl md:text-2xl font-bold tracking-tight">{perfData?.property_summary?.yield || 0}%</div>
+                                                        <p className="text-[8px] md:text-[9px] text-muted-foreground mt-1.5 font-bold uppercase tracking-widest">Performance</p>
                                                     </div>
-                                                    <div className="solaris-glass rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-8 border-none shadow-xl">
-                                                        <div className="flex items-center justify-between mb-4">
-                                                            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Cashflow Net</span>
-                                                            <div className={cn("p-2 rounded-xl text-white shadow-lg", (perfData?.property_summary?.net || 0) >= 0 ? "bg-emerald-500" : "bg-rose-500")}><Euro className="h-4 w-4" /></div>
+                                                    <div className="solaris-glass rounded-[1.2rem] p-5 md:p-6 border-none shadow-lg">
+                                                        <div className="flex items-center justify-between mb-3">
+                                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Cashflow Net</span>
+                                                            <div className={cn("p-1.5 rounded-lg text-white shadow-md", (perfData?.property_summary?.net || 0) >= 0 ? "bg-emerald-500" : "bg-rose-500")}><Euro className="h-3.5 w-3.5" /></div>
                                                         </div>
-                                                        <div className={cn("text-2xl md:text-3xl font-black tracking-tighter", (perfData?.property_summary?.net || 0) >= 0 ? "text-emerald-500" : "text-rose-600")}>
+                                                        <div className={cn("text-xl md:text-2xl font-bold tracking-tight", (perfData?.property_summary?.net || 0) >= 0 ? "text-emerald-500" : "text-rose-600")}>
                                                             {(perfData?.property_summary?.net || 0).toLocaleString()}€
                                                         </div>
-                                                        <p className="text-[9px] md:text-[10px] text-muted-foreground mt-2 font-bold uppercase tracking-widest">Solde Encaissé</p>
+                                                        <p className="text-[8px] md:text-[9px] text-muted-foreground mt-1.5 font-bold uppercase tracking-widest">Solde</p>
                                                     </div>
-                                                    <div className="solaris-glass rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-8 border-none shadow-xl">
-                                                        <div className="flex items-center justify-between mb-4">
-                                                            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Encaïssement</span>
-                                                            <div className="p-2 rounded-xl bg-blue-500 text-white shadow-lg"><Activity className="h-4 w-4" /></div>
+                                                    <div className="solaris-glass rounded-[1.2rem] p-5 md:p-6 border-none shadow-lg">
+                                                        <div className="flex items-center justify-between mb-3">
+                                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Encaïssement</span>
+                                                            <div className="p-1.5 rounded-lg bg-blue-500 text-white shadow-md"><Activity className="h-3.5 w-3.5" /></div>
                                                         </div>
                                                         <div className={cn(
-                                                            "text-2xl md:text-3xl font-black tracking-tighter",
+                                                            "text-xl md:text-2xl font-bold tracking-tight",
                                                             (perfData.property_summary?.collection_rate || 0) >= 90 ? "text-emerald-500" :
                                                                 (perfData.property_summary?.collection_rate || 0) >= 50 ? "text-orange-500" : "text-rose-600"
                                                         )}>
                                                             {perfData.property_summary?.collection_rate !== null && perfData.property_summary?.collection_rate !== undefined ? `${perfData.property_summary.collection_rate}%` : 'N/A'}
                                                         </div>
-                                                        <p className="text-[9px] md:text-[10px] text-muted-foreground mt-2 font-bold uppercase tracking-widest">Loyer Collecté</p>
+                                                        <p className="text-[8px] md:text-[9px] text-muted-foreground mt-1.5 font-bold uppercase tracking-widest">Loyers</p>
                                                     </div>
                                                 </>
                                             );
@@ -961,16 +961,16 @@ export default function PropertyDetail() {
 
                                 {
                                     (property.management_type === 'CONSTRUCTION' || (property.transaction_nature !== 'VENTE' && property.status !== 'VENDU')) && (
-                                        <div className="grid gap-8 lg:grid-cols-3">
+                                        <div className="grid gap-6 lg:grid-cols-3">
                                             {/* Evolution Chart Solaris Style */}
-                                            <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-xl lg:col-span-2">
-                                                <h3 className="font-black text-lg md:text-xl mb-6 md:mb-10 flex items-center gap-4 tracking-tighter uppercase">
-                                                    <div className="p-2.5 md:p-3 rounded-xl md:rounded-2xl bg-black text-white shadow-lg">
-                                                        <Calendar className="h-4 w-4 md:h-5 md:w-5" />
+                                            <div className="solaris-glass rounded-[1.5rem] p-6 md:p-8 border-none shadow-lg lg:col-span-2">
+                                                <h3 className="font-bold text-base md:text-lg mb-6 md:mb-8 flex items-center gap-3 uppercase tracking-tight">
+                                                    <div className="p-2 rounded-lg bg-black text-white shadow-md">
+                                                        <Calendar className="h-4 w-4" />
                                                     </div>
-                                                    Évolution des Flux
+                                                    Évolution
                                                 </h3>
-                                                <div className="h-[250px] md:h-[300px] w-full">
+                                                <div className="h-[220px] md:h-[260px] w-full">
                                                     <ResponsiveContainer width="100%" height="100%">
                                                         {perfData?.monthly_data ? (
                                                             <AreaChart data={perfData.monthly_data}>
@@ -985,7 +985,7 @@ export default function PropertyDetail() {
                                                                     dataKey="month"
                                                                     axisLine={false}
                                                                     tickLine={false}
-                                                                    tick={{ fontSize: 10, fontWeight: 900, fill: '#64748b' }}
+                                                                    tick={{ fontSize: 9, fontWeight: 700, fill: '#64748b' }}
                                                                     tickFormatter={str => {
                                                                         const [y, m] = str.split('-');
                                                                         return new Date(y, m - 1).toLocaleString('fr-FR', { month: 'short' }).toUpperCase();
@@ -994,7 +994,7 @@ export default function PropertyDetail() {
                                                                 <YAxis
                                                                     axisLine={false}
                                                                     tickLine={false}
-                                                                    tick={{ fontSize: 10, fontWeight: 900, fill: '#64748b' }}
+                                                                    tick={{ fontSize: 9, fontWeight: 700, fill: '#64748b' }}
                                                                     tickFormatter={v => `${v}€`}
                                                                     domain={[0, dataMax => Math.max(dataMax, (perfData?.expected_monthly_rent || 0) * 1.2)]}
                                                                 />
@@ -1004,29 +1004,29 @@ export default function PropertyDetail() {
                                                                             const d = payload[0].payload;
                                                                             const dateObj = new Date(d.month.split('-')[0], d.month.split('-')[1] - 1);
                                                                             return (
-                                                                                <div className="solaris-glass rounded-3xl shadow-2xl p-6 text-[11px] space-y-3 min-w-[200px] border-none backdrop-blur-xl">
-                                                                                    <p className="font-black border-b border-black/5 pb-2 mb-2 uppercase tracking-widest text-muted-foreground opacity-60">
+                                                                                <div className="solaris-glass rounded-2xl shadow-xl p-4 text-[10px] space-y-2.5 min-w-[180px] border-none backdrop-blur-xl">
+                                                                                    <p className="font-bold border-b border-black/5 pb-1.5 mb-1.5 uppercase tracking-widest text-muted-foreground opacity-60">
                                                                                         {dateObj.toLocaleString('fr-FR', { month: 'long', year: 'numeric' })}
                                                                                     </p>
                                                                                     {property.management_type === 'CONSTRUCTION' ? (
-                                                                                        <div className="flex justify-between items-center gap-4">
-                                                                                            <span className="font-black uppercase tracking-widest opacity-60">Dépenses</span>
-                                                                                            <span className="font-black text-rose-500 text-lg tracking-tighter">{d.expenses.toLocaleString()}€</span>
+                                                                                        <div className="flex justify-between items-center gap-3">
+                                                                                            <span className="font-bold uppercase tracking-widest opacity-60">Dépenses</span>
+                                                                                            <span className="font-bold text-rose-500 text-base tracking-tight">{d.expenses.toLocaleString()}€</span>
                                                                                         </div>
                                                                                     ) : (
                                                                                         <>
-                                                                                            <div className="flex justify-between items-center gap-4">
-                                                                                                <span className="font-black uppercase tracking-widest opacity-60 text-emerald-600">Revenus</span>
-                                                                                                <span className="font-black text-emerald-600 text-lg tracking-tighter">{d.revenues.toLocaleString()}€</span>
+                                                                                            <div className="flex justify-between items-center gap-3">
+                                                                                                <span className="font-bold uppercase tracking-widest opacity-60 text-emerald-600">Revenus</span>
+                                                                                                <span className="font-bold text-emerald-600 text-base tracking-tight">{d.revenues.toLocaleString()}€</span>
                                                                                             </div>
-                                                                                            <div className="flex justify-between items-center gap-4">
-                                                                                                <span className="font-black uppercase tracking-widest opacity-40">Loyers</span>
-                                                                                                <span className="font-black text-black/40 text-sm tracking-tight">{d.actual_rent.toLocaleString()}€</span>
+                                                                                            <div className="flex justify-between items-center gap-3">
+                                                                                                <span className="font-bold uppercase tracking-widest opacity-40">Loyers</span>
+                                                                                                <span className="font-bold text-black/40 text-xs tracking-tight">{d.actual_rent.toLocaleString()}€</span>
                                                                                             </div>
-                                                                                            <div className="flex justify-between items-center gap-4 border-t border-black/5 pt-3 mt-1 underline-offset-4 decoration-2">
-                                                                                                <span className="font-black uppercase tracking-widest opacity-60">Taux</span>
+                                                                                            <div className="flex justify-between items-center gap-3 border-t border-black/5 pt-2 mt-1 underline-offset-4 decoration-2">
+                                                                                                <span className="font-bold uppercase tracking-widest opacity-60">Taux</span>
                                                                                                 <span className={cn(
-                                                                                                    "font-black text-lg tracking-tighter",
+                                                                                                    "font-bold text-base tracking-tight",
                                                                                                     d.collection_rate >= 90 ? "text-emerald-500" : d.collection_rate >= 50 ? "text-orange-500" : "text-rose-600"
                                                                                                 )}>
                                                                                                     {d.collection_rate}%
@@ -1043,7 +1043,7 @@ export default function PropertyDetail() {
                                                                 {perfData?.expected_monthly_rent > 0 && (
                                                                     <ReferenceLine
                                                                         y={perfData.expected_monthly_rent}
-                                                                        label={{ position: 'top', value: `OBJC : ${perfData.expected_monthly_rent}€`, fontSize: 9, fill: '#000000', fontWeight: 900, tracking: '0.1em' }}
+                                                                        label={{ position: 'top', value: `OBJ : ${perfData.expected_monthly_rent}€`, fontSize: 8, fill: '#000000', fontWeight: 700, tracking: '0.1em' }}
                                                                         stroke="#000000"
                                                                         strokeDasharray="5 5"
                                                                         strokeOpacity={0.2}
@@ -1060,9 +1060,9 @@ export default function PropertyDetail() {
                                                                 )}
                                                             </AreaChart>
                                                         ) : (
-                                                            <div className="flex flex-col items-center justify-center h-full text-muted-foreground py-10 opacity-40">
-                                                                <TrendingUp className="h-12 w-12 mb-4" />
-                                                                <p className="text-[10px] font-black uppercase tracking-widest">Initialisation des données...</p>
+                                                            <div className="flex flex-col items-center justify-center h-full text-muted-foreground py-8 opacity-40">
+                                                                <TrendingUp className="h-10 w-10 mb-3" />
+                                                                <p className="text-[9px] font-bold uppercase tracking-widest">Initialisation...</p>
                                                             </div>
                                                         )}
                                                     </ResponsiveContainer>
@@ -1070,21 +1070,21 @@ export default function PropertyDetail() {
                                             </div>
 
                                             {/* Distribution Solaris Style */}
-                                            <div className="solaris-glass rounded-[2.5rem] p-10 border-none shadow-xl">
-                                                <h3 className="font-black text-xl mb-10 flex items-center gap-4 tracking-tighter uppercase">
-                                                    <div className="p-3 rounded-2xl bg-black text-white shadow-lg">
-                                                        <Activity className="h-5 w-5" />
+                                            <div className="solaris-glass rounded-[1.5rem] p-6 md:p-8 border-none shadow-lg">
+                                                <h3 className="font-bold text-base md:text-lg mb-6 flex items-center gap-3 uppercase tracking-tight">
+                                                    <div className="p-2 rounded-lg bg-black text-white shadow-md">
+                                                        <Activity className="h-4 w-4" />
                                                     </div>
                                                     Répartition
                                                 </h3>
-                                                <div className="space-y-8">
+                                                <div className="space-y-6">
                                                     {perfData?.category_stats?.map((cat) => (
-                                                        <div key={cat.category} className="space-y-3">
+                                                        <div key={cat.category} className="space-y-2">
                                                             <div className="flex justify-between items-end">
-                                                                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">{cat.label || cat.category}</span>
-                                                                <span className="font-black tracking-tighter">{Number(cat.total).toLocaleString()}€</span>
+                                                                <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">{cat.label || cat.category}</span>
+                                                                <span className="font-bold tracking-tight text-xs">{Number(cat.total).toLocaleString()}€</span>
                                                             </div>
-                                                            <div className="h-2 w-full bg-black/5 rounded-full overflow-hidden">
+                                                            <div className="h-1.5 w-full bg-black/5 rounded-full overflow-hidden">
                                                                 <div
                                                                     className={cn("h-full transition-all duration-1000", property.management_type === 'CONSTRUCTION' ? "bg-rose-500" : "bg-black")}
                                                                     style={{ width: `${Math.min(100, (cat.total / (Math.abs(property.management_type === 'CONSTRUCTION' ? perfData?.total_outflow : perfData?.total_inflow) || 1)) * 100)}%` }}
@@ -1093,7 +1093,7 @@ export default function PropertyDetail() {
                                                         </div>
                                                     ))}
                                                     {(!perfData || !perfData.category_stats || perfData.category_stats.length === 0) && (
-                                                        <p className="text-center text-muted-foreground text-[10px] font-black uppercase tracking-widest py-20 opacity-40">Aucune donnée disponible</p>
+                                                        <p className="text-center text-muted-foreground text-[9px] font-bold uppercase tracking-widest py-12 opacity-40">Aucune donnée</p>
                                                     )}
                                                 </div>
                                             </div>
@@ -1104,47 +1104,47 @@ export default function PropertyDetail() {
                                 {/* Operations Table Solaris Style */}
                                 {
                                     (user?.role === 'ADMIN_MADIS' || cashCalls.length > 0 || settlements.length > 0) && (
-                                        <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] overflow-hidden border-none shadow-xl">
-                                            <div className="p-6 md:p-10 border-b border-black/5 flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white/30 backdrop-blur-md">
-                                                <div className="space-y-1">
-                                                    <h3 className="font-black text-lg md:text-xl flex items-center gap-4 tracking-tighter uppercase">
-                                                        <div className="p-2.5 md:p-3 rounded-xl md:rounded-2xl bg-black text-white shadow-lg">
-                                                            <History className="h-4 w-4 md:h-5 md:w-5" />
+                                        <div className="solaris-glass rounded-[1.5rem] overflow-hidden border-none shadow-lg">
+                                            <div className="p-5 md:p-6 border-b border-black/5 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white/30 backdrop-blur-md">
+                                                <div className="space-y-0.5">
+                                                    <h3 className="font-bold text-base md:text-lg flex items-center gap-3 uppercase tracking-tight">
+                                                        <div className="p-2 rounded-lg bg-black text-white shadow-md">
+                                                            <History className="h-4 w-4" />
                                                         </div>
-                                                        {property.transaction_nature === 'VENTE' ? "Opérations Financières" : "Opérations de Régie"}
+                                                        {property.transaction_nature === 'VENTE' ? "Opérations" : "Opérations de Régie"}
                                                     </h3>
-                                                    <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60 ml-0 md:ml-14">Appels de fonds & Reversements en cours</p>
+                                                    <p className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60 ml-0 md:ml-11">Appels & Reversements</p>
                                                 </div>
-                                                <div className="flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-full bg-black text-white text-[9px] md:text-[10px] font-black uppercase tracking-widest w-fit">
-                                                    <div className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-primary animate-pulse" />
-                                                    Traitement en cours
+                                                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black text-white text-[8px] md:text-[9px] font-bold uppercase tracking-widest w-fit">
+                                                    <div className="w-1 h-1 rounded-full bg-primary animate-pulse" />
+                                                    En cours
                                                 </div>
                                             </div>
                                             <div className="overflow-x-auto">
                                                 <table className="w-full">
                                                     <thead>
-                                                        <tr className="bg-black text-[10px] font-black uppercase tracking-widest text-white/60">
-                                                            <th className="px-10 py-5 text-left font-black">Type de Flux</th>
-                                                            <th className="px-10 py-5 text-left font-black">Libellé / Période</th>
-                                                            <th className="px-10 py-5 text-left font-black text-white">Montant (EUR)</th>
-                                                            <th className="px-10 py-5 text-left font-black">Status</th>
-                                                            <th className="px-10 py-5 text-right font-black">Intervention</th>
+                                                        <tr className="bg-black text-[9px] font-bold uppercase tracking-widest text-white/60">
+                                                            <th className="px-6 py-4 text-left font-bold">Flux</th>
+                                                            <th className="px-6 py-4 text-left font-bold">Libellé</th>
+                                                            <th className="px-6 py-4 text-left font-bold text-white">Montant</th>
+                                                            <th className="px-6 py-4 text-left font-bold">Status</th>
+                                                            <th className="px-6 py-4 text-right font-bold">Actions</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody className="divide-y divide-black/5">
                                                         {cashCalls.filter(cc => cc.status !== 'PAID' && cc.status !== 'CANCELLED').map((cc) => (
                                                             <tr key={`cc-${cc.id}`} className="hover:bg-white/50 transition-colors group">
-                                                                <td className="px-10 py-8">
-                                                                    <span className="font-black text-[11px] uppercase tracking-widest text-emerald-600 block px-4 py-1.5 rounded-full bg-emerald-50 w-fit">Appel de Fonds</span>
+                                                                <td className="px-6 py-5">
+                                                                    <span className="font-bold text-[9px] uppercase tracking-widest text-emerald-600 block px-3 py-1 rounded-full bg-emerald-50 w-fit">Appel</span>
                                                                 </td>
-                                                                <td className="px-10 py-8">
-                                                                    <div className="font-black text-sm tracking-tight">{cc.reason}</div>
-                                                                    <div className="text-[10px] text-muted-foreground uppercase font-black tracking-widest mt-1 opacity-40">Référence #{cc.id.toString().padStart(6, '0')}</div>
+                                                                <td className="px-6 py-5">
+                                                                    <div className="font-bold text-xs tracking-tight">{cc.reason}</div>
+                                                                    <div className="text-[8px] text-muted-foreground uppercase font-bold tracking-widest mt-0.5 opacity-40">#{cc.id.toString().padStart(6, '0')}</div>
                                                                 </td>
-                                                                <td className="px-10 py-8 font-black text-xl tracking-tighter">{Number(cc.amount).toLocaleString('fr-FR')} €</td>
-                                                                <td className="px-10 py-8">
+                                                                <td className="px-6 py-5 font-bold text-base tracking-tight">{Number(cc.amount).toLocaleString('fr-FR')} €</td>
+                                                                <td className="px-6 py-5">
                                                                     <span className={cn(
-                                                                        "inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest",
+                                                                        "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[8px] font-bold uppercase tracking-widest",
                                                                         cc.status === 'SENT' ? "bg-blue-500 text-white" :
                                                                             cc.status === 'PENDING' ? "bg-amber-500 text-white" :
                                                                                 cc.status === 'REJECTED' ? "bg-rose-500 text-white" :
@@ -1154,35 +1154,35 @@ export default function PropertyDetail() {
                                                                         {cc.status_display || cc.status}
                                                                     </span>
                                                                 </td>
-                                                                <td className="px-10 py-8 text-right">
-                                                                    <div className="flex justify-end gap-3 translate-x-2 opacity-80 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                                                                <td className="px-6 py-5 text-right">
+                                                                    <div className="flex justify-end gap-2 translate-x-1 opacity-80 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
                                                                         {(cc.status === 'SENT' || cc.status === 'REJECTED') && !isAdmin && (
                                                                             <button
                                                                                 onClick={() => updateOpStatus('CASH_CALL', cc.id, 'PENDING')}
-                                                                                className="px-6 py-2.5 bg-black text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-lg"
+                                                                                className="px-4 py-1.5 bg-black text-white rounded-lg text-[8px] font-bold uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-md"
                                                                             >
-                                                                                {cc.status === 'REJECTED' ? 'Renvoyer Justificatif' : 'Initier Paiement'}
+                                                                                Payer
                                                                             </button>
                                                                         )}
                                                                         {cc.status === 'PENDING' && isAdmin && (
-                                                                            <div className="flex items-center gap-3">
+                                                                            <div className="flex items-center gap-2">
                                                                                 {cc.proof && (
                                                                                     <a
                                                                                         href={cc.proof}
                                                                                         target="_blank"
                                                                                         rel="noopener noreferrer"
-                                                                                        className="p-3 bg-black/5 text-black rounded-2xl hover:bg-black hover:text-white transition-all shadow-sm"
+                                                                                        className="p-1.5 bg-black/5 text-black rounded-lg hover:bg-black hover:text-white transition-all shadow-sm"
                                                                                         title="Voir Justificatif"
                                                                                     >
-                                                                                        <FileText className="h-4 w-4" />
+                                                                                        <FileText className="h-3.5 w-3.5" />
                                                                                     </a>
                                                                                 )}
                                                                                 <button
                                                                                     onClick={() => updateOpStatus('CASH_CALL', cc.id, 'PAID')}
-                                                                                    className="p-3 bg-emerald-500 text-white rounded-2xl hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-200"
+                                                                                    className="p-1.5 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-all shadow-md"
                                                                                     title="Valider"
                                                                                 >
-                                                                                    <CheckCircle2 className="h-4 w-4" />
+                                                                                    <CheckCircle2 className="h-3.5 w-3.5" />
                                                                                 </button>
                                                                                 <button
                                                                                     onClick={() => {
@@ -1190,10 +1190,10 @@ export default function PropertyDetail() {
                                                                                             updateOpStatus('CASH_CALL', cc.id, 'REJECTED');
                                                                                         }
                                                                                     }}
-                                                                                    className="p-3 bg-rose-500 text-white rounded-2xl hover:bg-rose-600 transition-all shadow-lg shadow-rose-200"
+                                                                                    className="p-1.5 bg-rose-500 text-white rounded-lg hover:bg-rose-600 transition-all shadow-md"
                                                                                     title="Rejeter"
                                                                                 >
-                                                                                    <XCircle className="h-4 w-4" />
+                                                                                    <XCircle className="h-3.5 w-3.5" />
                                                                                 </button>
                                                                             </div>
                                                                         )}
@@ -1203,26 +1203,26 @@ export default function PropertyDetail() {
                                                         ))}
                                                         {settlements.filter(s => s.status !== 'PAID' && s.status !== 'CANCELLED').map((s) => (
                                                             <tr key={`s-${s.id}`} className="hover:bg-white/50 transition-colors group">
-                                                                <td className="px-10 py-8">
-                                                                    <span className="font-black text-[11px] uppercase tracking-widest text-rose-500 block px-4 py-1.5 rounded-full bg-rose-50 w-fit">Reversement Client</span>
+                                                                <td className="px-6 py-5">
+                                                                    <span className="font-bold text-[9px] uppercase tracking-widest text-rose-500 block px-3 py-1 rounded-full bg-rose-50 w-fit">Reversement</span>
                                                                 </td>
-                                                                <td className="px-10 py-8">
-                                                                    <div className="font-black text-sm tracking-tight">Période du {format(new Date(s.period_start), 'dd/MM/yy')} au {format(new Date(s.period_end), 'dd/MM/yy')}</div>
-                                                                    <div className="text-[10px] text-muted-foreground uppercase font-black tracking-widest mt-1 opacity-40">REGLEMENT SOLDE</div>
+                                                                <td className="px-6 py-5">
+                                                                    <div className="font-bold text-xs tracking-tight">{format(new Date(s.period_start), 'dd/MM/yy')} - {format(new Date(s.period_end), 'dd/MM/yy')}</div>
+                                                                    <div className="text-[8px] text-muted-foreground uppercase font-bold tracking-widest mt-0.5 opacity-40">REGLEMENT</div>
                                                                 </td>
-                                                                <td className="px-10 py-8 font-black text-xl tracking-tighter text-rose-600">{Number(s.amount).toLocaleString('fr-FR')} €</td>
-                                                                <td className="px-10 py-8">
-                                                                    <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500 text-white text-[10px] font-black uppercase tracking-widest">
+                                                                <td className="px-6 py-5 font-bold text-base tracking-tight text-rose-600">{Number(s.amount).toLocaleString('fr-FR')} €</td>
+                                                                <td className="px-6 py-5">
+                                                                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500 text-white text-[8px] font-bold uppercase tracking-widest">
                                                                         <div className="w-1 h-1 rounded-full bg-white animate-pulse" />
                                                                         {s.status_display || s.status}
                                                                     </span>
                                                                 </td>
-                                                                <td className="px-10 py-8 text-right">
+                                                                <td className="px-6 py-5 text-right">
                                                                     <button
                                                                         onClick={() => updateOpStatus('SETTLEMENT', s.id, 'PAID')}
-                                                                        className="px-6 py-2.5 bg-black text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-lg opacity-80 group-hover:opacity-100"
+                                                                        className="px-4 py-1.5 bg-black text-white rounded-lg text-[8px] font-bold uppercase tracking-widest hover:scale-105 transition-all shadow-md opacity-80 group-hover:opacity-100"
                                                                     >
-                                                                        Valider le Virement
+                                                                        Valider
                                                                     </button>
                                                                 </td>
                                                             </tr>
@@ -1242,65 +1242,65 @@ export default function PropertyDetail() {
                                 }
 
                                 {/* Financial Flows Solaris Style */}
-                                <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] overflow-hidden border-none shadow-xl mt-8">
-                                    <div className="p-6 md:p-10 border-b border-black/5 bg-white/30 backdrop-blur-md">
-                                        <div className="space-y-1">
-                                            <h3 className="font-black text-lg md:text-xl flex items-center gap-4 tracking-tighter uppercase">
-                                                <div className="p-2.5 md:p-3 rounded-xl md:rounded-2xl bg-black text-white shadow-lg">
-                                                    <Activity className="h-4 w-4 md:h-5 md:w-5" />
+                                <div className="solaris-glass rounded-[1.5rem] overflow-hidden border-none shadow-lg mt-6">
+                                    <div className="p-5 md:p-6 border-b border-black/5 bg-white/30 backdrop-blur-md">
+                                        <div className="space-y-0.5">
+                                            <h3 className="font-bold text-base md:text-lg flex items-center gap-3 uppercase tracking-tight">
+                                                <div className="p-2 rounded-lg bg-black text-white shadow-md">
+                                                    <Activity className="h-4 w-4" />
                                                 </div>
-                                                Historique des Flux Financiers
+                                                Historique des Flux
                                             </h3>
-                                            <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60 ml-0 md:ml-14">Dernières transactions validées sur ce bien</p>
+                                            <p className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60 ml-0 md:ml-11">Transactions validées</p>
                                         </div>
                                     </div>
                                     <div className="overflow-x-auto">
                                         <table className="w-full">
                                             <thead>
-                                                <tr className="bg-black text-[10px] font-black uppercase tracking-widest text-white/60">
-                                                    <th className="px-10 py-5 text-left font-black">Type</th>
-                                                    <th className="px-10 py-5 text-left font-black">Catégorie Analytique</th>
-                                                    <th className="px-10 py-5 text-left font-black text-white">Montant net</th>
-                                                    <th className="px-10 py-5 text-left font-black">Période / Cycle</th>
-                                                    <th className="px-10 py-5 text-right font-black">Date Valeur</th>
+                                                <tr className="bg-black text-[9px] font-bold uppercase tracking-widest text-white/60">
+                                                    <th className="px-6 py-4 text-left font-bold">Flux</th>
+                                                    <th className="px-6 py-4 text-left font-bold">Catégorie</th>
+                                                    <th className="px-6 py-4 text-left font-bold text-white">Montant</th>
+                                                    <th className="px-6 py-4 text-left font-bold">Période</th>
+                                                    <th className="px-6 py-4 text-right font-bold">Date</th>
                                                 </tr>
                                             </thead>
                                             <tbody className="divide-y divide-black/5">
                                                 {perfData?.recent_transactions?.map((tx) => (
                                                     <tr key={tx.id} className="hover:bg-white/50 transition-colors group">
-                                                        <td className="px-10 py-6">
+                                                        <td className="px-6 py-4">
                                                             <span className={cn(
-                                                                "inline-flex items-center px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest",
+                                                                "inline-flex items-center px-3 py-1 rounded-full text-[8px] font-bold uppercase tracking-widest",
                                                                 tx.type === 'INFLOW' ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
                                                             )}>
                                                                 {tx.type === 'INFLOW' ? 'Revenu' : 'Dépense'}
                                                             </span>
                                                         </td>
-                                                        <td className="px-10 py-6 font-black text-sm tracking-tight">{tx.category}</td>
+                                                        <td className="px-6 py-4 font-bold text-xs tracking-tight">{tx.category}</td>
                                                         <td className={cn(
-                                                            "px-10 py-6 font-black text-lg tracking-tighter",
+                                                            "px-6 py-4 font-bold text-base tracking-tight",
                                                             tx.type === 'INFLOW' ? "text-emerald-500" : "text-rose-500"
                                                         )}>
                                                             {tx.type === 'INFLOW' ? '+' : '-'}{Number(tx.amount).toLocaleString('fr-FR')} €
                                                         </td>
-                                                        <td className="px-10 py-6 font-black text-[11px] uppercase tracking-widest text-muted-foreground opacity-60">
+                                                        <td className="px-6 py-4 font-bold text-[9px] uppercase tracking-widest text-muted-foreground opacity-60">
                                                             {tx.period_month && tx.period_year ? (
-                                                                `${new Date(2000, tx.period_month - 1).toLocaleString('fr-FR', { month: 'long' }).toUpperCase()} ${tx.period_year}`
+                                                                `${new Date(2000, tx.period_month - 1).toLocaleString('fr-FR', { month: 'short' }).toUpperCase()} ${tx.period_year}`
                                                             ) : (
-                                                                'REGULARISATION'
+                                                                'REGL.'
                                                             )}
                                                         </td>
-                                                        <td className="px-10 py-6 text-right font-black text-xs tracking-tight">
-                                                            {format(new Date(tx.date), 'dd MMM yyyy', { locale: fr }).toUpperCase()}
+                                                        <td className="px-6 py-4 text-right font-bold text-[10px] tracking-tight">
+                                                            {format(new Date(tx.date), 'dd MMM yy', { locale: fr }).toUpperCase()}
                                                         </td>
                                                     </tr>
                                                 ))}
                                                 {(!perfData || !perfData.recent_transactions || perfData.recent_transactions.length === 0) && (
                                                     <tr>
-                                                        <td colSpan={5} className="px-10 py-20 text-center opacity-40">
-                                                            <div className="flex flex-col items-center gap-4">
-                                                                <Activity className="h-10 w-10 opacity-20" />
-                                                                <p className="text-[10px] font-black uppercase tracking-widest">Aucune transaction enregistrée</p>
+                                                        <td colSpan={5} className="px-6 py-12 text-center opacity-40">
+                                                            <div className="flex flex-col items-center gap-3">
+                                                                <Activity className="h-8 w-8 opacity-20" />
+                                                                <p className="text-[9px] font-bold uppercase tracking-widest">Aucune donnée</p>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -1308,22 +1308,22 @@ export default function PropertyDetail() {
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div className="p-10 bg-black/5 border-t border-black/5 flex flex-col sm:flex-row items-center justify-between gap-6">
-                                        <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60 max-w-[400px]">
-                                            Les flux affichés ici correspondent aux données financières exportées du grand livre. Pour une vision exhaustive, consultez le module Finance.
+                                    <div className="p-6 bg-black/5 border-t border-black/5 flex flex-col sm:flex-row items-center justify-between gap-4">
+                                        <div className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60 max-w-[400px]">
+                                            Données exportées du grand livre.
                                         </div>
-                                        <div className="flex flex-wrap items-center gap-6">
+                                        <div className="flex flex-wrap items-center gap-4">
                                             {isAdmin && (
                                                 <Link
                                                     to={`/dashboard/finance/transactions/new?propertyId=${id}&returnToProperty=true`}
-                                                    className="inline-flex items-center justify-center rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all bg-black text-white shadow-xl hover:scale-105 active:scale-95 h-12 px-10"
+                                                    className="inline-flex items-center justify-center rounded-xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all bg-black text-white shadow-md hover:scale-105 active:scale-95 h-10 px-6"
                                                 >
-                                                    <Plus className="mr-3 h-4 w-4" />
-                                                    Nouvelle Transaction
+                                                    <Plus className="mr-2 h-3.5 w-3.5" />
+                                                    Nouveau
                                                 </Link>
                                             )}
-                                            <Link to="/dashboard/finance/transactions" className="text-[10px] font-black uppercase tracking-widest text-black hover:underline underline-offset-4 decoration-2">
-                                                Accéder au module Finance
+                                            <Link to="/dashboard/finance/transactions" className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-black hover:underline underline-offset-2 decoration-2">
+                                                Module Finance
                                             </Link>
                                         </div>
                                     </div>
@@ -1335,26 +1335,26 @@ export default function PropertyDetail() {
 
 
                 {activeTab === 'projects' && (
-                    <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-xl animate-fade-in">
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 md:mb-12">
-                            <div className="space-y-1">
-                                <h3 className="font-black text-lg md:text-xl flex items-center gap-4 tracking-tighter uppercase">
-                                    <div className="p-2.5 md:p-3 rounded-xl md:rounded-2xl bg-black text-white shadow-lg">
-                                        <HardHat className="h-4 w-4 md:h-5 md:w-5" />
+                    <div className="solaris-glass rounded-[1.5rem] p-5 md:p-8 border-none shadow-lg animate-fade-in">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 md:mb-8">
+                            <div className="space-y-0.5">
+                                <h3 className="font-bold text-base md:text-lg flex items-center gap-3 uppercase tracking-tight">
+                                    <div className="p-2 rounded-lg bg-black text-white shadow-md">
+                                        <HardHat className="h-4 w-4" />
                                     </div>
                                     {property.management_type === 'GESTION' ? 'Entretien & Maintenance' : 'Suivi des Projets'}
                                 </h3>
-                                <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60 ml-0 md:ml-14">
-                                    {property.management_type === 'GESTION' ? 'Interventions techniques et maintenance préventive' : 'Projets de développement et travaux en cours'}
+                                <p className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60 ml-0 md:ml-12">
+                                    {property.management_type === 'GESTION' ? 'Interventions techniques et maintenance' : 'Projets de développement et travaux'}
                                 </p>
                             </div>
                             {user?.role === 'ADMIN_MADIS' && (
                                 <Link
                                     to={`/dashboard/projects/new?propertyId=${id}`}
-                                    className="inline-flex items-center justify-center rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all bg-black text-white shadow-xl hover:scale-105 active:scale-95 h-10 md:h-12 px-6 md:px-10"
+                                    className="inline-flex items-center justify-center rounded-xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all bg-black text-white shadow-md hover:scale-105 active:scale-95 h-9 md:h-10 px-5 md:px-8"
                                 >
-                                    <Plus className="mr-2 md:mr-3 h-3.5 w-3.5 md:h-4 w-4" />
-                                    {property.management_type === 'GESTION' ? 'Nouvelle Intervention' : 'Nouveau Projet'}
+                                    <Plus className="mr-2 h-3 w-3" />
+                                    {property.management_type === 'GESTION' ? 'Intervention' : 'Projet'}
                                 </Link>
                             )}
                         </div>
@@ -1398,38 +1398,38 @@ export default function PropertyDetail() {
                                         <Link
                                             key={project.id}
                                             to={`/dashboard/projects/${project.id}`}
-                                            className="group relative solaris-glass rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-8 border-none shadow-lg hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98] transition-all flex flex-col bg-white/40"
+                                            className="group relative solaris-glass rounded-[1.2rem] p-5 md:p-6 border-none shadow-md hover:shadow-xl hover:scale-[1.01] active:scale-[0.99] transition-all flex flex-col bg-white/40"
                                         >
-                                            <div className="flex justify-between items-start mb-4 md:mb-6">
-                                                <h4 className="font-black text-base md:text-lg tracking-tighter group-hover:text-primary transition-colors pr-2 line-clamp-1 truncate">{project.name}</h4>
-                                                <span className="shrink-0 px-3 md:px-4 py-1.5 rounded-full bg-black text-white text-[8px] md:text-[9px] font-black uppercase tracking-widest shadow-lg">
+                                            <div className="flex justify-between items-start mb-4">
+                                                <h4 className="font-bold text-sm md:text-base tracking-tight group-hover:text-primary transition-colors pr-2 line-clamp-1 truncate">{project.name}</h4>
+                                                <span className="shrink-0 px-2.5 py-1 rounded-full bg-black text-white text-[7px] md:text-[8px] font-bold uppercase tracking-widest shadow-md">
                                                     {project.status_display || project.status}
                                                 </span>
                                             </div>
 
-                                            <p className="text-[10px] md:text-[11px] font-medium text-muted-foreground line-clamp-2 mb-6 md:mb-8 leading-relaxed opacity-70">
+                                            <p className="text-[9px] md:text-[10px] font-medium text-muted-foreground line-clamp-2 mb-4 leading-relaxed opacity-70">
                                                 {project.description || "Aucune description détaillée."}
                                             </p>
 
-                                            <div className="mt-auto pt-4 md:pt-6 border-t border-black/5 flex items-center justify-between">
-                                                <div className="flex items-center gap-4 md:gap-6">
-                                                    <div className="flex flex-col gap-0.5 md:gap-1">
-                                                        <span className="text-[8px] md:text-[9px] font-black uppercase tracking-widest opacity-40">Budget</span>
-                                                        <div className="flex items-center gap-1 font-black text-[10px] md:text-xs tracking-tight">
-                                                            <Euro className="h-2.5 w-2.5 md:h-3 w-3 text-emerald-500" />
+                                            <div className="mt-auto pt-4 border-t border-black/5 flex items-center justify-between">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="flex flex-col gap-0.5">
+                                                        <span className="text-[7px] md:text-[8px] font-bold uppercase tracking-widest opacity-40">Budget</span>
+                                                        <div className="flex items-center gap-1 font-bold text-[9px] md:text-xs tracking-tight">
+                                                            <Euro className="h-2.5 w-2.5 text-emerald-500" />
                                                             <span>{project.budget ? `${Number(project.budget).toLocaleString('fr-FR')} €` : 'N/A'}</span>
                                                         </div>
                                                     </div>
-                                                    <div className="flex flex-col gap-0.5 md:gap-1">
-                                                        <span className="text-[8px] md:text-[9px] font-black uppercase tracking-widest opacity-40">Début</span>
-                                                        <div className="flex items-center gap-1 font-black text-[10px] md:text-xs tracking-tight">
-                                                            <Clock className="h-2.5 w-2.5 md:h-3 w-3 text-blue-500" />
+                                                    <div className="flex flex-col gap-0.5">
+                                                        <span className="text-[7px] md:text-[8px] font-bold uppercase tracking-widest opacity-40">Début</span>
+                                                        <div className="flex items-center gap-1 font-bold text-[9px] md:text-xs tracking-tight">
+                                                            <Clock className="h-2.5 w-2.5 text-blue-500" />
                                                             <span>{project.start_date ? format(new Date(project.start_date), 'd MMM yy', { locale: fr }).toUpperCase() : 'N/A'}</span>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div className="p-2.5 md:p-3 rounded-xl md:rounded-2xl bg-black/5 text-black opacity-0 group-hover:opacity-100 group-hover:bg-black group-hover:text-white transition-all transform translate-x-4 group-hover:translate-x-0">
-                                                    <ArrowRight className="h-3.5 w-3.5 md:h-4 w-4" />
+                                                <div className="p-2 rounded-xl bg-black/5 text-black opacity-0 group-hover:opacity-100 group-hover:bg-black group-hover:text-white transition-all transform translate-x-2 group-hover:translate-x-0">
+                                                    <ArrowRight className="h-3 w-3" />
                                                 </div>
                                             </div>
                                         </Link>
@@ -1440,37 +1440,37 @@ export default function PropertyDetail() {
                 )}
 
                 {activeTab === 'transactions' && (
-                    <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-xl animate-fade-in pb-20">
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 md:mb-12">
-                            <div className="space-y-1">
-                                <h3 className="font-black text-lg md:text-xl flex items-center gap-4 tracking-tighter uppercase">
-                                    <div className="p-2.5 md:p-3 rounded-xl md:rounded-2xl bg-black text-white shadow-lg">
-                                        <TrendingUp className="h-4 w-4 md:h-5 md:w-5" />
+                    <div className="solaris-glass rounded-[1.5rem] p-5 md:p-8 border-none shadow-lg animate-fade-in pb-12">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 md:mb-8">
+                            <div className="space-y-0.5">
+                                <h3 className="font-bold text-base md:text-lg flex items-center gap-3 uppercase tracking-tight">
+                                    <div className="p-2 rounded-lg bg-black text-white shadow-md">
+                                        <TrendingUp className="h-4 w-4" />
                                     </div>
                                     Pipeline Commercial
                                 </h3>
-                                <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60 ml-0 md:ml-14">
-                                    Suivi des offres, candidatures et cycle de vente
+                                <p className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60 ml-0 md:ml-12">
+                                    Suivi des offres, candidatures et transactions
                                 </p>
                             </div>
                             {user?.role === 'ADMIN_MADIS' && (
                                 <button
                                     onClick={() => setShowTxModal(true)}
-                                    className="inline-flex items-center justify-center rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all bg-black text-white shadow-xl hover:scale-105 active:scale-95 h-10 md:h-12 px-6 md:px-10"
+                                    className="inline-flex items-center justify-center rounded-xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all bg-black text-white shadow-md hover:scale-105 active:scale-95 h-9 md:h-10 px-5 md:px-8"
                                 >
-                                    <Plus className="mr-2 md:mr-3 h-3.5 w-3.5 md:h-4 w-4" />
+                                    <Plus className="mr-2 h-3 w-3" />
                                     Ajouter une offre
                                 </button>
                             )}
                         </div>
 
-                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-12 md:mb-16">
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8 md:mb-10">
                             {['DISPONIBLE', 'NEGOCIATION', 'SIGNE', 'ANNULE'].map((status) => {
                                 const count = property.transactions?.filter(t => t.status === status).length || 0;
-                                const icon = status === 'DISPONIBLE' ? <ClipboardList className="h-3.5 w-3.5 md:h-4 w-4" /> :
-                                    status === 'NEGOCIATION' ? <MessageSquare className="h-3.5 w-3.5 md:h-4 w-4" /> :
-                                        status === 'SIGNE' ? <CheckCircle2 className="h-3.5 w-3.5 md:h-4 w-4" /> :
-                                            <XCircle className="h-3.5 w-3.5 md:h-4 w-4" />;
+                                const icon = status === 'DISPONIBLE' ? <ClipboardList className="h-3.5 w-3.5" /> :
+                                    status === 'NEGOCIATION' ? <MessageSquare className="h-3.5 w-3.5" /> :
+                                        status === 'SIGNE' ? <CheckCircle2 className="h-3.5 w-3.5" /> :
+                                            <XCircle className="h-3.5 w-3.5" />;
 
                                 const colorClass = status === 'DISPONIBLE' ? "bg-blue-500" :
                                     status === 'NEGOCIATION' ? "bg-orange-500" :
@@ -1478,17 +1478,17 @@ export default function PropertyDetail() {
                                             "bg-rose-500";
 
                                 return (
-                                    <div key={status} className="relative solaris-glass rounded-2xl md:rounded-3xl p-4 md:p-6 border-none shadow-lg overflow-hidden group hover:scale-[1.05] transition-all duration-500">
-                                        <div className={cn("absolute top-0 right-0 w-16 md:w-24 h-16 md:h-24 -mt-4 md:-mt-8 -mr-4 md:-mr-8 opacity-[0.05] group-hover:opacity-[0.08] transition-opacity rounded-full", colorClass)} />
-                                        <div className="flex items-center gap-3 md:gap-4 mb-3 md:mb-4">
-                                            <div className={cn("p-2 md:p-2.5 rounded-lg md:rounded-xl text-white shadow-lg", colorClass)}>
+                                    <div key={status} className="relative solaris-glass rounded-xl md:rounded-2xl p-4 md:p-5 border-none shadow-md overflow-hidden group hover:scale-[1.02] transition-all duration-300">
+                                        <div className={cn("absolute top-0 right-0 w-16 md:w-20 h-16 md:h-20 -mt-4 -mr-4 opacity-[0.05] group-hover:opacity-[0.08] transition-opacity rounded-full", colorClass)} />
+                                        <div className="flex items-center gap-3 mb-2 md:mb-3">
+                                            <div className={cn("p-1.5 md:p-2 rounded-lg text-white shadow-md", colorClass)}>
                                                 {icon}
                                             </div>
-                                            <span className="text-[8px] md:text-[9px] font-black uppercase tracking-widest opacity-40">{status === 'DISPONIBLE' ? 'Offres' : status === 'NEGOCIATION' ? 'Négos' : status === 'SIGNE' ? 'Signées' : 'Annulées'}</span>
+                                            <span className="text-[7px] md:text-[8px] font-bold uppercase tracking-widest opacity-40">{status === 'DISPONIBLE' ? 'Offres' : status === 'NEGOCIATION' ? 'Négos' : status === 'SIGNE' ? 'Signées' : 'Annulées'}</span>
                                         </div>
-                                        <div className="flex items-baseline gap-1.5 md:gap-2">
-                                            <span className="text-2xl md:text-4xl font-black tracking-tighter">{count}</span>
-                                            <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest opacity-20">Dossiers</span>
+                                        <div className="flex items-baseline gap-1.5">
+                                            <span className="text-xl md:text-2xl font-bold tracking-tight">{count}</span>
+                                            <span className="text-[7px] md:text-[8px] font-bold uppercase tracking-widest opacity-20">Dossiers</span>
                                         </div>
                                     </div>
                                 );
@@ -1502,30 +1502,30 @@ export default function PropertyDetail() {
                                     {property.transactions
                                         .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
                                         .map((tx) => (
-                                            <div key={tx.id} className="group solaris-glass rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-8 border-none shadow-lg hover:shadow-2xl transition-all bg-white/40">
-                                                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 md:gap-8">
-                                                    <div className="flex items-center gap-4 md:gap-6">
-                                                        <div className="h-12 w-12 md:h-16 md:w-16 rounded-2xl md:rounded-3xl bg-black text-white flex items-center justify-center font-black text-lg md:text-xl shadow-xl">
+                                            <div key={tx.id} className="group solaris-glass rounded-[1.2rem] p-5 md:p-6 border-none shadow-md hover:shadow-xl transition-all bg-white/40">
+                                                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 md:gap-6">
+                                                    <div className="flex items-center gap-4">
+                                                        <div className="h-10 w-10 md:h-12 md:w-12 rounded-xl bg-black text-white flex items-center justify-center font-bold text-base md:text-lg shadow-md">
                                                             {tx.buyer_tenant_name?.split(' ').map(n => n[0]).join('')}
                                                         </div>
                                                         <div>
-                                                            <div className="font-black text-lg md:text-xl tracking-tighter flex items-center gap-2 md:gap-3">
+                                                            <div className="font-bold text-base md:text-lg tracking-tight flex items-center gap-2">
                                                                 {tx.buyer_tenant_name}
-                                                                {tx.status === 'SIGNE' && <div className="p-1 rounded-full bg-emerald-500 text-white"><ShieldCheck className="h-2.5 w-2.5 md:h-3 w-3" /></div>}
+                                                                {tx.status === 'SIGNE' && <div className="p-1 rounded-full bg-emerald-500 text-white"><ShieldCheck className="h-2.5 w-2.5" /></div>}
                                                             </div>
-                                                            <div className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60 flex items-center gap-1.5 md:gap-2 mt-1 md:mt-2">
-                                                                <Clock className="h-2.5 w-2.5 md:h-3 w-3" />
-                                                                Reçue le {format(new Date(tx.created_at), 'dd MMM yyyy', { locale: fr }).toUpperCase()}
+                                                            <div className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60 flex items-center gap-1.5 mt-1">
+                                                                <Clock className="h-2.5 w-2.5" />
+                                                                {format(new Date(tx.created_at), 'dd/MM/yy')}
                                                             </div>
                                                         </div>
                                                     </div>
 
-                                                    <div className="flex flex-row md:items-center justify-between lg:justify-end gap-6 md:gap-10">
+                                                    <div className="flex flex-row md:items-center justify-between lg:justify-end gap-6 md:gap-8">
                                                         <div className="text-left md:text-right">
-                                                            <div className="text-[8px] md:text-[9px] font-black uppercase tracking-widest opacity-40 mb-0.5 md:mb-1">Montant de l'offre</div>
-                                                            <div className="text-xl md:text-2xl font-black tracking-tighter text-black">{Number(tx.asking_price).toLocaleString('fr-FR')} €</div>
+                                                            <div className="text-[7px] md:text-[8px] font-bold uppercase tracking-widest opacity-40 mb-0.5">Offre</div>
+                                                            <div className="text-lg md:text-xl font-bold tracking-tight text-black">{Number(tx.asking_price).toLocaleString('fr-FR')} €</div>
                                                             {tx.final_price && tx.status === 'SIGNE' && (
-                                                                <div className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-emerald-600 mt-0.5 md:mt-1">Prix acté: {Number(tx.final_price).toLocaleString('fr-FR')} €</div>
+                                                                <div className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-emerald-600 mt-0.5">Final: {Number(tx.final_price).toLocaleString('fr-FR')} €</div>
                                                             )}
                                                         </div>
 
@@ -1534,7 +1534,7 @@ export default function PropertyDetail() {
                                                                 <button
                                                                     onClick={() => setStatusDropdown(statusDropdown === tx.id ? null : tx.id)}
                                                                     className={cn(
-                                                                        "h-10 md:h-12 px-4 md:px-6 rounded-xl md:rounded-2xl text-[8px] md:text-[10px] font-black uppercase tracking-widest flex items-center gap-2 md:gap-3 transition-all shadow-xl",
+                                                                        "h-9 md:h-10 px-4 md:px-5 rounded-xl text-[7px] md:text-[8px] font-bold uppercase tracking-widest flex items-center gap-2 transition-all shadow-md",
                                                                         tx.status === 'SIGNE' ? "bg-emerald-500 text-white" :
                                                                             tx.status === 'NEGOCIATION' ? "bg-orange-500 text-white" :
                                                                                 tx.status === 'ANNULE' ? "bg-rose-500 text-white" :
@@ -1542,7 +1542,7 @@ export default function PropertyDetail() {
                                                                     )}
                                                                 >
                                                                     {tx.status_display || tx.status}
-                                                                    <ChevronDown className="h-3.5 w-3.5 md:h-4 w-4" />
+                                                                    <ChevronDown className="h-3 w-3" />
                                                                 </button>
 
                                                                 {statusDropdown === tx.id && (
@@ -1554,7 +1554,7 @@ export default function PropertyDetail() {
                                                                                     key={s}
                                                                                     onClick={() => updateTxStatus(tx.id, s)}
                                                                                     className={cn(
-                                                                                        "w-full text-left px-6 py-3 text-[10px] font-black uppercase tracking-widest transition-all hover:bg-black hover:text-white",
+                                                                                        "w-full text-left px-5 py-2 text-[9px] font-bold uppercase tracking-widest transition-all hover:bg-black hover:text-white",
                                                                                         tx.status === s ? "bg-black/5 text-black" : "text-muted-foreground"
                                                                                     )}
                                                                                 >
@@ -1599,59 +1599,59 @@ export default function PropertyDetail() {
                 )}
 
                 {activeTab === 'documents' && (
-                    <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-xl animate-fade-in pb-20">
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 md:mb-12">
-                            <div className="space-y-1">
-                                <h3 className="font-black text-lg md:text-xl flex items-center gap-4 tracking-tighter uppercase">
-                                    <div className="p-2.5 md:p-3 rounded-xl md:rounded-2xl bg-black text-white shadow-lg">
-                                        <FileText className="h-4 w-4 md:h-5 md:w-5" />
+                    <div className="solaris-glass rounded-[1.5rem] p-5 md:p-8 border-none shadow-lg animate-fade-in pb-12">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 md:mb-8">
+                            <div className="space-y-0.5">
+                                <h3 className="font-bold text-base md:text-lg flex items-center gap-3 uppercase tracking-tight">
+                                    <div className="p-2 rounded-lg bg-black text-white shadow-md">
+                                        <FileText className="h-4 w-4" />
                                     </div>
                                     Coffre-Fort Numérique
                                 </h3>
-                                <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60 ml-0 md:ml-14">
-                                    Documents légaux, plans et justificatifs sécurisés
+                                <p className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60 ml-0 md:ml-12">
+                                    Documents légaux, plans et justificatifs
                                 </p>
                             </div>
                             <div className="flex items-center gap-3">
                                 {user?.role === 'ADMIN_MADIS' && (
                                     <>
                                         {isSelectionMode ? (
-                                            <div className="flex items-center gap-2 md:gap-4 animate-in fade-in slide-in-from-right-2">
+                                            <div className="flex items-center gap-2 md:gap-3 animate-in fade-in slide-in-from-right-2">
                                                 <button
                                                     onClick={() => { setIsSelectionMode(false); setSelectedDocuments([]); }}
-                                                    className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-black px-2 md:px-4 py-2"
+                                                    className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground hover:text-black px-2 md:px-3 py-1.5"
                                                 >
                                                     Annuler
                                                 </button>
                                                 <button
                                                     onClick={selectAllFiltered}
-                                                    className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-black hover:underline underline-offset-4 decoration-2 px-2 md:px-4 py-2"
+                                                    className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-black hover:underline underline-offset-2 decoration-2 px-2 md:px-3 py-1.5"
                                                 >
                                                     Tout
                                                 </button>
                                                 <button
                                                     onClick={handleDeleteSelectedDocuments}
                                                     disabled={selectedDocuments.length === 0}
-                                                    className="bg-black text-white text-[9px] md:text-[10px] font-black uppercase tracking-widest px-4 md:px-6 py-2.5 md:py-3 rounded-xl md:rounded-2xl shadow-xl hover:scale-105 active:scale-95 disabled:opacity-30 flex items-center gap-2 md:gap-3 transition-all"
+                                                    className="bg-black text-white text-[8px] md:text-[9px] font-bold uppercase tracking-widest px-3 md:px-4 py-2 rounded-xl shadow-md hover:scale-105 active:scale-95 disabled:opacity-30 flex items-center gap-2 transition-all"
                                                 >
-                                                    <Trash2 className="h-3 w-3 md:h-3.5 md:w-3.5" />
+                                                    <Trash2 className="h-3 w-3" />
                                                     {selectedDocuments.length}
                                                 </button>
                                             </div>
                                         ) : (
                                             <button
                                                 onClick={() => setIsSelectionMode(true)}
-                                                className="inline-flex items-center justify-center rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all bg-white text-black border-2 border-black/5 hover:border-black/20 h-10 md:h-12 px-4 md:px-8"
+                                                className="inline-flex items-center justify-center rounded-xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all bg-white text-black border-2 border-black/5 hover:border-black/20 h-9 md:h-10 px-4 md:px-6"
                                             >
-                                                <CheckCircle2 className="mr-2 md:mr-3 h-3.5 w-3.5 md:h-4 w-4" />
+                                                <CheckCircle2 className="mr-2 h-3.5 w-3.5" />
                                                 Sélectionner
                                             </button>
                                         )}
                                         <Link
                                             to={`/dashboard/documents/new?propertyId=${id}`}
-                                            className="inline-flex items-center justify-center rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all bg-black text-white shadow-xl hover:scale-105 active:scale-95 h-10 md:h-12 px-6 md:px-10"
+                                            className="inline-flex items-center justify-center rounded-xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all bg-black text-white shadow-md hover:scale-105 active:scale-95 h-9 md:h-10 px-5 md:px-8"
                                         >
-                                            <Plus className="mr-2 md:mr-3 h-3.5 w-3.5 md:h-4 w-4" />
+                                            <Plus className="mr-2 h-3.5 w-3.5" />
                                             Ajouter
                                         </Link>
                                     </>
@@ -1672,9 +1672,9 @@ export default function PropertyDetail() {
                                     key={f.id}
                                     onClick={() => setDocumentFilter(f.id)}
                                     className={cn(
-                                        "px-4 md:px-6 py-2 md:py-2.5 rounded-full text-[8px] md:text-[10px] font-black uppercase tracking-widest border-2 transition-all",
+                                        "px-4 md:px-5 py-2 rounded-full text-[8px] md:text-[9px] font-bold uppercase tracking-widest border-2 transition-all",
                                         documentFilter === f.id
-                                            ? "bg-black text-white border-black shadow-xl scale-105"
+                                            ? "bg-black text-white border-black shadow-md scale-105"
                                             : "bg-white text-black/40 border-black/5 hover:border-black/20"
                                     )}
                                 >
@@ -1699,53 +1699,53 @@ export default function PropertyDetail() {
                         ) : (
                             <div className="grid gap-4 md:gap-6 sm:grid-cols-2 lg:grid-cols-3">
                                 {filteredDocuments.map((doc) => (
-                                    <div key={doc.id} className="group relative solaris-glass rounded-[1.5rem] md:rounded-[2rem] p-4 md:p-6 border-none shadow-lg hover:shadow-2xl transition-all bg-white/40 flex flex-col">
-                                        <div className="flex items-start gap-3 md:gap-4 mb-4 md:mb-6">
+                                    <div key={doc.id} className="group relative solaris-glass rounded-[1.2rem] p-4 md:p-5 border-none shadow-md hover:shadow-xl transition-all bg-white/40 flex flex-col">
+                                        <div className="flex items-start gap-3 mb-4">
                                             {isSelectionMode && (
                                                 <div
                                                     onClick={() => toggleDocumentSelection(doc.id)}
                                                     className={cn(
-                                                        "mt-1 w-5 h-5 md:w-6 md:h-6 rounded-lg md:rounded-xl border-2 flex items-center justify-center cursor-pointer transition-all",
+                                                        "mt-1 w-5 h-5 rounded-lg border-2 flex items-center justify-center cursor-pointer transition-all",
                                                         selectedDocuments.includes(doc.id)
-                                                            ? "bg-black border-black text-white shadow-lg"
+                                                            ? "bg-black border-black text-white shadow-md"
                                                             : "bg-white border-black/10 hover:border-black/30"
                                                     )}
                                                 >
-                                                    {selectedDocuments.includes(doc.id) && <Check className="h-3 md:h-4 w-3 md:w-4 stroke-[4]" />}
+                                                    {selectedDocuments.includes(doc.id) && <Check className="h-3 w-3 stroke-[4]" />}
                                                 </div>
                                             )}
-                                            <div className="p-2 md:p-3 rounded-xl md:rounded-2xl bg-black/5 text-black shadow-sm group-hover:bg-black group-hover:text-white transition-all duration-500">
-                                                <FileText className="h-4 md:h-5 w-4 md:w-5" />
+                                            <div className="p-2 rounded-xl bg-black/5 text-black shadow-sm group-hover:bg-black group-hover:text-white transition-all duration-500">
+                                                <FileText className="h-4 w-4" />
                                             </div>
                                             <div className="min-w-0 flex-1">
                                                 <div className="flex items-start justify-between gap-2">
-                                                    <h4 className="font-black text-xs md:text-sm tracking-tight truncate pr-4">{doc.title}</h4>
+                                                    <h4 className="font-bold text-[11px] md:text-xs tracking-tight truncate pr-4">{doc.title}</h4>
                                                     {!isSelectionMode && user?.role === 'ADMIN_MADIS' && (
                                                         <button
                                                             onClick={(e) => { e.preventDefault(); handleDeleteDocument(doc.id); }}
                                                             className="text-muted-foreground hover:text-rose-600 opacity-0 group-hover:opacity-100 transition-all p-1"
                                                             title="Supprimer"
                                                         >
-                                                            <Trash2 className="h-3.5 md:h-4 w-3.5 md:w-4" />
+                                                            <Trash2 className="h-3.5 w-3.5" />
                                                         </button>
                                                     )}
                                                 </div>
-                                                <div className="flex items-center gap-2 mt-1 md:mt-2">
-                                                    <span className="text-[8px] md:text-[9px] font-black uppercase tracking-widest text-black bg-black/5 px-2 py-0.5 rounded-lg">
+                                                <div className="flex items-center gap-2 mt-1">
+                                                    <span className="text-[7px] md:text-[8px] font-bold uppercase tracking-widest text-black bg-black/5 px-2 py-0.5 rounded-lg">
                                                         {doc.category_display || doc.category}
                                                     </span>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="mt-auto pt-4 md:pt-6 border-t border-black/5 flex items-center justify-between">
-                                            <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest opacity-40">{format(new Date(doc.uploaded_at || new Date()), 'dd/MM/yy', { locale: fr })}</span>
+                                        <div className="mt-auto pt-4 border-t border-black/5 flex items-center justify-between">
+                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-40">{format(new Date(doc.uploaded_at || new Date()), 'dd/MM/yy')}</span>
                                             <a
                                                 href={doc.file}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="inline-flex items-center gap-1.5 md:gap-2 text-[8px] md:text-[10px] font-black uppercase tracking-widest text-black hover:underline underline-offset-4 decoration-2 transition-all"
+                                                className="inline-flex items-center gap-1.5 text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-black hover:underline underline-offset-2 decoration-2 transition-all"
                                             >
-                                                <Download className="h-3 w-3 md:h-3.5 md:w-3.5" />
+                                                <Download className="h-3 w-3" />
                                                 Télécharger
                                             </a>
                                         </div>
@@ -1761,61 +1761,61 @@ export default function PropertyDetail() {
             {
                 showTxModal && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setShowTxModal(false)}>
-                        <div className="bg-card border rounded-2xl shadow-2xl w-full max-w-lg mx-4 animate-fade-in" onClick={e => e.stopPropagation()}>
-                            <div className="flex items-center justify-between p-6 border-b">
-                                <h3 className="text-lg font-bold">Nouvelle Offre / Candidature</h3>
+                        <div className="bg-card border rounded-xl shadow-2xl w-full max-w-lg mx-4 animate-fade-in" onClick={e => e.stopPropagation()}>
+                            <div className="flex items-center justify-between p-5 border-b">
+                                <h3 className="text-base font-bold uppercase tracking-tight">Nouvelle Offre</h3>
                                 <button onClick={() => setShowTxModal(false)} className="p-1 rounded-full hover:bg-muted transition-colors">
-                                    <X className="h-5 w-5" />
+                                    <X className="h-4 w-4" />
                                 </button>
                             </div>
-                            <div className="p-6 space-y-4">
+                            <div className="p-5 space-y-3">
                                 <div>
-                                    <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5 block">Identité / Tiers</label>
+                                    <label className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground mb-1 block">Identité / Tiers</label>
                                     <div className="relative">
-                                        <Users className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                                        <Users className="absolute left-3 top-2 h-3.5 w-3.5 text-muted-foreground" />
                                         <input
                                             type="text"
-                                            placeholder="Nom de l'acheteur ou locataire..."
+                                            placeholder="Nom..."
                                             value={txForm.buyer_tenant}
                                             onChange={e => setTxForm({ ...txForm, buyer_tenant: e.target.value })}
-                                            className="w-full pl-10 pr-4 py-2 rounded-md border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+                                            className="w-full pl-9 pr-3 py-1.5 rounded-lg border bg-background text-xs focus:outline-none focus:ring-1 focus:ring-black/5"
                                         />
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5 block">Montant de l'offre (€)</label>
+                                    <label className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground mb-1 block">Montant (€)</label>
                                     <div className="relative">
-                                        <DollarSign className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                                        <DollarSign className="absolute left-3 top-2 h-3.5 w-3.5 text-muted-foreground" />
                                         <input
                                             type="number"
-                                            placeholder="Ex: 250000"
+                                            placeholder="0"
                                             value={txForm.asking_price}
                                             onChange={e => setTxForm({ ...txForm, asking_price: e.target.value })}
-                                            className="w-full pl-10 pr-4 py-2 rounded-md border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 font-bold"
+                                            className="w-full pl-9 pr-3 py-1.5 rounded-lg border bg-background text-xs focus:outline-none focus:ring-1 focus:ring-black/5 font-bold"
                                         />
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5 block">Notes / Conditions</label>
+                                    <label className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground mb-1 block">Notes</label>
                                     <textarea
-                                        placeholder="Commentaires particuliers, conditions suspensives..."
+                                        placeholder="Commentaires..."
                                         value={txForm.notes}
                                         onChange={e => setTxForm({ ...txForm, notes: e.target.value })}
-                                        className="w-full p-4 rounded-md border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 min-h-[100px]"
+                                        className="w-full p-3 rounded-lg border bg-background text-xs focus:outline-none focus:ring-1 focus:ring-black/5 min-h-[80px]"
                                     />
                                 </div>
                             </div>
-                            <div className="flex items-center justify-end gap-3 p-6 border-t bg-muted/20">
-                                <button onClick={() => setShowTxModal(false)} className="px-4 py-2 text-sm font-medium rounded-md border hover:bg-muted transition-colors">
+                            <div className="flex items-center justify-end gap-2 p-5 border-t bg-muted/5">
+                                <button onClick={() => setShowTxModal(false)} className="px-4 py-1.5 text-[9px] font-bold uppercase tracking-widest rounded-lg border hover:bg-muted transition-colors">
                                     Annuler
                                 </button>
                                 <button
                                     onClick={createTransaction}
                                     disabled={txLoading || !txForm.buyer_tenant || !txForm.asking_price}
-                                    className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 disabled:opacity-50"
+                                    className="inline-flex items-center gap-2 px-5 py-1.5 bg-black text-white rounded-lg text-[9px] font-bold uppercase tracking-widest hover:bg-black/90 transition-all shadow-md disabled:opacity-50"
                                 >
-                                    {txLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
-                                    Enregistrer l'offre
+                                    {txLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Plus className="h-3 w-3" />}
+                                    Enregistrer
                                 </button>
                             </div>
                         </div>
@@ -1852,47 +1852,46 @@ export default function PropertyDetail() {
             {
                 showFinalPriceModal && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setShowFinalPriceModal(false)}>
-                        <div className="bg-card border rounded-2xl shadow-2xl w-full max-w-sm mx-4 animate-fade-in" onClick={e => e.stopPropagation()}>
-                            <div className="flex items-center justify-between p-6 border-b">
-                                <h3 className="text-lg font-bold">Conclusion de la Vente</h3>
+                        <div className="bg-card border rounded-xl shadow-2xl w-full max-w-sm mx-4 animate-fade-in" onClick={e => e.stopPropagation()}>
+                            <div className="flex items-center justify-between p-5 border-b">
+                                <h3 className="text-base font-bold uppercase tracking-tight">Conclusion Vente</h3>
                                 <button onClick={() => setShowFinalPriceModal(false)} className="p-1 rounded-full hover:bg-muted transition-colors">
-                                    <X className="h-5 w-5" />
+                                    <X className="h-4 w-4" />
                                 </button>
                             </div>
-                            <div className="p-6 space-y-4">
-                                <div className="p-4 bg-emerald-50 text-emerald-800 rounded-lg text-sm mb-4 flex gap-3">
-                                    <CheckCircle className="h-5 w-5 shrink-0" />
-                                    <p>Félicitations ! Vous êtes sur le point de valider cette transaction.</p>
+                            <div className="p-5 space-y-4">
+                                <div className="p-3 bg-emerald-50 text-emerald-800 rounded-lg text-[10px] md:text-xs flex gap-3">
+                                    <CheckCircle className="h-4 w-4 shrink-0" />
+                                    <p>Validation finale de la transaction.</p>
                                 </div>
                                 <div>
-                                    <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1.5 block">
-                                        <DollarSign className="h-3 w-3 inline mr-1" />
+                                    <label className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground mb-1 block">
                                         Prix Final Acté (€)
                                     </label>
                                     <input
                                         type="number"
                                         step="0.01"
-                                        placeholder="Montant final..."
+                                        placeholder="0.00"
                                         value={finalPriceValue}
                                         onChange={e => setFinalPriceValue(e.target.value)}
-                                        className="w-full rounded-md border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 font-bold text-lg"
+                                        className="w-full rounded-lg border bg-background px-3 py-1.5 text-base focus:outline-none focus:ring-1 focus:ring-black/5 font-bold"
                                         autoFocus
                                     />
-                                    <p className="text-[10px] text-muted-foreground mt-1">
-                                        Ce montant sera enregistré comme prix de vente définitif.
+                                    <p className="text-[7px] text-muted-foreground mt-1 uppercase font-bold tracking-widest opacity-40">
+                                        Montant de vente définitif.
                                     </p>
                                 </div>
                             </div>
-                            <div className="flex items-center justify-end gap-3 p-6 border-t bg-muted/20">
-                                <button onClick={() => setShowFinalPriceModal(false)} className="px-4 py-2 text-sm font-medium rounded-md border hover:bg-muted transition-colors">
+                            <div className="flex items-center justify-end gap-2 p-5 border-t bg-muted/5">
+                                <button onClick={() => setShowFinalPriceModal(false)} className="px-4 py-1.5 text-[9px] font-bold uppercase tracking-widest rounded-lg border hover:bg-muted transition-colors">
                                     Annuler
                                 </button>
                                 <button
                                     onClick={confirmFinalPrice}
-                                    className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-md text-sm font-medium hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-600/20"
+                                    className="inline-flex items-center gap-2 px-5 py-1.5 bg-emerald-600 text-white rounded-lg text-[9px] font-bold uppercase tracking-widest hover:bg-emerald-700 transition-colors shadow-md"
                                 >
-                                    <Check className="h-4 w-4" />
-                                    Confirmer la signature
+                                    <Check className="h-3.5 w-3.5" />
+                                    Signer
                                 </button>
                             </div>
                         </div>
@@ -1903,14 +1902,14 @@ export default function PropertyDetail() {
             {
                 showProofModal && (
                     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setShowProofModal(false)}>
-                        <div className="bg-card border rounded-2xl shadow-2xl w-full max-w-sm mx-4 overflow-hidden animate-in fade-in zoom-in duration-200" onClick={e => e.stopPropagation()}>
-                            <div className="p-6 border-b flex items-center justify-between">
-                                <h3 className="font-bold flex items-center gap-2">
-                                    <Upload className="h-4 w-4 text-primary" />
-                                    Justificatif de Paiement
+                        <div className="bg-card border rounded-xl shadow-2xl w-full max-w-sm mx-4 overflow-hidden animate-in fade-in zoom-in duration-200" onClick={e => e.stopPropagation()}>
+                            <div className="p-5 border-b flex items-center justify-between">
+                                <h3 className="font-bold text-sm uppercase tracking-tight flex items-center gap-2">
+                                    <Upload className="h-3.5 w-3.5 text-black" />
+                                    Justificatif
                                 </h3>
                                 <button onClick={() => setShowProofModal(false)} className="text-muted-foreground hover:text-foreground">
-                                    <X className="h-5 w-5" />
+                                    <X className="h-4 w-4" />
                                 </button>
                             </div>
                             <div className="p-6 space-y-4">
