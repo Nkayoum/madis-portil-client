@@ -182,19 +182,19 @@ export default function AddTransaction() {
     };
 
     return (
-        <div className="max-w-[1200px] mx-auto py-12 px-6 animate-fade-in">
-            <div className="flex items-center gap-8 mb-12">
-                <Link to={returnPath} className="h-12 w-12 flex items-center justify-center rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-white/10 shadow-sm hover:shadow-md transition-all group dark:text-white">
+        <div className="max-w-[1200px] mx-auto py-6 md:py-12 px-4 md:px-6 animate-fade-in pb-8">
+            <div className="flex items-center gap-4 md:gap-8 mb-8 md:mb-12">
+                <Link to={returnPath} className="h-10 w-10 md:h-12 md:w-12 flex items-center justify-center rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-white/10 shadow-sm hover:shadow-md transition-all group dark:text-white shrink-0">
                     <ArrowLeft className="h-5 w-5 group-hover:-translate-x-1 transition-transform" />
                 </Link>
-                <div>
-                    <h1 className="text-5xl font-black tracking-tighter uppercase leading-none mb-2">Enregistrer une <span className="text-primary">Transaction</span></h1>
-                    <p className="text-[11px] font-black uppercase tracking-widest opacity-40">Protocole de saisie financière • Mouvement manuel</p>
+                <div className="min-w-0">
+                    <h1 className="text-2xl sm:text-3xl md:text-5xl font-black tracking-tighter uppercase leading-none mb-2">Enregistrer une <span className="text-primary">Transaction</span></h1>
+                    <p className="text-[10px] md:text-[11px] font-black uppercase tracking-widest opacity-40">Protocole de saisie financière • Mouvement manuel</p>
                 </div>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-10">
-                <div className="solaris-glass rounded-[2.5rem] p-10 shadow-2xl space-y-10 border-none">
+                <div className="solaris-glass rounded-[1.5rem] sm:rounded-[2.5rem] p-5 sm:p-10 shadow-2xl space-y-8 sm:space-y-10 border-none">
                     {/* Property Selection */}
                     <div className="space-y-4">
                         <label className="text-[10px] font-black uppercase tracking-widest flex items-center gap-3 opacity-60">
@@ -431,7 +431,7 @@ export default function AddTransaction() {
                     </div>
                 </div>
 
-                <div className="flex justify-end items-center gap-6 pt-4">
+                <div className="flex flex-col-reverse sm:flex-row justify-center items-center gap-4 sm:gap-6 pt-4">
                     <Link
                         to={returnPath}
                         className="text-[10px] font-black uppercase tracking-widest opacity-40 hover:opacity-100 hover:text-black dark:hover:text-white transition-all"
@@ -441,7 +441,7 @@ export default function AddTransaction() {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="h-16 px-12 rounded-[1.5rem] bg-primary text-white text-[12px] font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center gap-4"
+                        className="h-14 sm:h-16 px-8 sm:px-12 rounded-[1.5rem] bg-primary text-white text-[10px] sm:text-[12px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] shadow-2xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center gap-3 sm:gap-4 whitespace-nowrap"
                     >
                         {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" />}
                         Valider l'enregistrement
