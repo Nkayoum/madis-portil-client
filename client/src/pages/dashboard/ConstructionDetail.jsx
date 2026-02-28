@@ -121,7 +121,7 @@ export default function ConstructionDetail() {
     const status = getStatusConfig(site.status);
 
     return (
-        <div className="space-y-10 animate-fade-in pb-32">
+        <div className="space-y-10 animate-fade-in pb-8 md:pb-16">
             <Link to="/dashboard/construction" className="flex items-center text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-black transition-all group w-fit">
                 <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" />
                 Retour aux chantiers
