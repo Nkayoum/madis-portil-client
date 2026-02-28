@@ -75,7 +75,7 @@ export default function ConstructionList() {
                 )}
             </div>
 
-            <div className="overflow-x-auto no-scrollbar -mx-4 px-4 md:mx-0 md:px-0">
+            <div className="overflow-x-auto no-scrollbar -mx-4 px-4 md:mx-0 md:px-0 mb-2">
                 <div className="solaris-glass rounded-full p-1.5 md:p-2 flex gap-2 md:gap-4 w-fit shadow-lg px-2 md:px-3 whitespace-nowrap">
                     {[
                         { id: 'CONSTRUCTION', label: "Chantiers", icon: HardHat, count: sites.filter(s => s.project_category === 'CONSTRUCTION').length },
