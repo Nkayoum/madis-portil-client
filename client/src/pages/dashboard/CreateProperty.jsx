@@ -321,7 +321,7 @@ export default function CreateProperty() {
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-50"></div>
 
                 {/* Tab Navigation */}
-                <div className="flex border-b border-border/50 dark:border-white/5 bg-muted/20 dark:bg-black/20 overflow-x-auto">
+                <div className="flex border-b border-border/50 dark:border-white/5 bg-muted/20 dark:bg-black/20 overflow-x-auto no-scrollbar">
                     {TABS.map((tab) => {
                         const isActive = activeTab === tab.id;
                         const Icon = tab.icon;
@@ -348,7 +348,7 @@ export default function CreateProperty() {
                                     setActiveTab(tab.id);
                                 }}
                                 className={cn(
-                                    "flex-1 min-w-0 flex items-center justify-center gap-2 md:gap-3 py-4 md:py-6 text-[8px] md:text-xs font-black uppercase tracking-wider md:tracking-widest transition-all relative group whitespace-nowrap",
+                                    "flex-none px-4 md:px-6 flex items-center justify-center gap-2 md:gap-3 py-4 md:py-6 text-[9px] md:text-xs font-black uppercase tracking-wider md:tracking-widest transition-all relative group whitespace-nowrap",
                                     isActive ? "text-primary bg-background/50 dark:bg-white/5" : "text-muted-foreground hover:text-foreground hover:bg-muted/30 dark:hover:bg-white/5"
                                 )}
                             >
