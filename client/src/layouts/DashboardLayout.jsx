@@ -69,7 +69,7 @@ export default function DashboardLayout() {
                     </button>
                 </div>
 
-                <nav className="p-4 space-y-2 flex-1 overflow-y-auto">
+                <nav className="p-4 space-y-2 flex-1 overflow-y-auto no-scrollbar">
                     {filteredNavigation.map((item) => {
                         const isActive = item.href === '/dashboard'
                             ? location.pathname === '/dashboard'
