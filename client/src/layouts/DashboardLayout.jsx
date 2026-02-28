@@ -140,7 +140,7 @@ export default function DashboardLayout() {
                 </header>
 
                 {/* Page Content */}
-                <main className="flex-1 overflow-auto p-4 md:p-8 lg:p-12 bg-transparent dark:bg-black min-h-0">
+                <main className="flex-1 overflow-auto p-4 md:p-8 lg:p-12 bg-transparent dark:bg-black min-h-0 no-scrollbar [&::-webkit-scrollbar]:hidden" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                     <div className="max-w-[1600px] mx-auto animate-fade-in">
                         <Outlet />
                     </div>

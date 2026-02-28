@@ -261,7 +261,7 @@ export default function TicketDetail() {
             </div>
 
             {/* Messages Area Solaris Style */}
-            <div className="flex-1 overflow-y-auto py-6 md:py-10 space-y-6 md:space-y-10 pr-2 md:pr-4 scrollbar-thin scrollbar-thumb-black/10">
+            <div className="flex-1 overflow-y-auto py-6 md:py-10 space-y-6 md:space-y-10 pr-2 md:pr-4 no-scrollbar [&::-webkit-scrollbar]:hidden" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                 {/* Initial Ticket Description */}
                 <div className="flex justify-start">
                     <div className="max-w-[95%] md:max-w-[85%] rounded-[1.5rem] md:rounded-[2rem] rounded-tl-none px-5 py-4 md:px-8 md:py-6 bg-white dark:bg-white/5 border border-black/5 dark:border-white/5 shadow-xl relative group">
