@@ -207,12 +207,11 @@ export default function DashboardHome() {
                 </div>
             )}
 
-            {/* Solaris Tab Switcher */}
             <div
                 style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-                className="flex justify-start [&::-webkit-scrollbar]:hidden"
+                className="flex justify-start no-scrollbar [&::-webkit-scrollbar]:hidden shrink-0"
             >
-                <div style={{ display: 'flex', width: 'max-content' }} className="p-1.5 solaris-glass dark:bg-black/60 dark:border-white/5 rounded-[1.5rem] border border-white/40 shadow-xl">
+                <div style={{ display: 'flex', width: 'max-content' }} className="p-1.5 solaris-glass dark:bg-black/60 dark:border-white/5 rounded-[1.5rem] border border-white/40 shadow-xl flex">
                     <button
                         onClick={() => setActiveTab('overview')}
                         className={cn(

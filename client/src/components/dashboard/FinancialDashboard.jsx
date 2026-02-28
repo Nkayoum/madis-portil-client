@@ -6,7 +6,7 @@ import {
 import { TrendingUp, TrendingDown, DollarSign, PieChart as PieIcon, Calendar, Loader2, Building, Percent, Filter, Wallet, History, Globe, Hammer, Box, Users, ShieldCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import api from '../../lib/axios';
-import { cn } from '../../lib/utils';
+import { cn, formatCurrency } from '../../lib/utils';
 import { useToast } from '../../context/ToastContext';
 import { useTheme } from '../../context/ThemeContext';
 import AnnualReport from './AnnualReport';
@@ -25,9 +25,7 @@ export default function FinancialDashboard({ isAdmin = false }) {
     const currentYear = new Date().getFullYear();
     const availableYears = Array.from({ length: Math.max(1, currentYear - 2022 + 1) }, (_, i) => currentYear - i);
 
-    const formatCurrency = (value) => {
-        return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(value || 0);
-    };
+
 
     useEffect(() => {
         const initDashboard = async () => {
@@ -52,6 +50,7 @@ export default function FinancialDashboard({ isAdmin = false }) {
         initDashboard();
     }, []);
 
+    // fetch wallets for admin
     const fetchWallets = async () => {
         setLoadingWallets(true);
         try {
@@ -211,13 +210,13 @@ export default function FinancialDashboard({ isAdmin = false }) {
     return (
         <div className="space-y-6">
             {/* Mode Switcher & Filters */}
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 overflow-x-auto no-scrollbar pb-1" style={{ scrollbarWidth: 'none' }}>
                 {/* Mode Switcher — scrollable on mobile */}
                 <div
                     style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-                    className="w-full lg:w-fit rounded-xl bg-muted p-1 [&::-webkit-scrollbar]:hidden"
+                    className="w-full lg:w-fit rounded-xl bg-muted p-1 no-scrollbar [&::-webkit-scrollbar]:hidden shrink-0"
                 >
-                    <div style={{ display: 'flex', width: 'max-content', gap: '4px' }}>
+                    <div style={{ display: 'flex', width: 'max-content', gap: '4px' }} className="flex">
                         <button
                             onClick={() => setDashboardMode('rental')}
                             className={cn(
@@ -311,7 +310,7 @@ export default function FinancialDashboard({ isAdmin = false }) {
                 <>
                     {/* Solaris Summary Cards */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-                        <div className="solaris-glass rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-8 transition-all group overflow-hidden relative dark:border-white/5 dark:bg-black/40">
+                        <div className="solaris-glass rounded-[2rem] sm:rounded-[2.5rem] p-5 sm:p-7 transition-all group overflow-hidden relative dark:border-white/5 dark:bg-black/40">
                             <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-primary/10 transition-colors" />
                             <div className="flex justify-between items-start mb-6">
                                 <div className="p-3 rounded-2xl bg-primary/10 text-primary dark:text-primary dark:bg-primary/20">
@@ -322,15 +321,16 @@ export default function FinancialDashboard({ isAdmin = false }) {
                             <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-1">
                                 {stats.label_main}
                             </p>
-                            <h3 className="text-2xl sm:text-3xl font-bold tracking-tight">
-                                {formatCurrency(stats.main_value, true)}
+                            <h3 className="text-xl sm:text-2xl font-black tracking-tight pt-1">
+                                <span className="hidden xl:inline">{formatCurrency(stats.main_value)}</span>
+                                <span className="xl:hidden">{formatCurrency(stats.main_value, true)}</span>
                             </h3>
                             <p className="text-[10px] font-bold text-muted-foreground mt-4 flex items-center gap-1 opacity-60">
                                 <ShieldCheck className="h-3 w-3" /> Données sécurisées MaDis
                             </p>
                         </div>
 
-                        <div className="solaris-glass rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-8 transition-all group overflow-hidden relative dark:border-white/5 dark:bg-black/40">
+                        <div className="solaris-glass rounded-[2rem] sm:rounded-[2.5rem] p-5 sm:p-7 transition-all group overflow-hidden relative dark:border-white/5 dark:bg-black/40">
                             <div className="absolute top-0 right-0 w-32 h-32 bg-amber-400/5 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-amber-400/10 transition-colors" />
                             <div className="flex justify-between items-start mb-6">
                                 <div className="p-3 rounded-2xl bg-amber-100/50 text-amber-600 dark:bg-amber-400/10 dark:text-amber-400">
@@ -340,13 +340,16 @@ export default function FinancialDashboard({ isAdmin = false }) {
                             <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-1">
                                 {stats.label_volume}
                             </p>
-                            <h3 className="text-2xl sm:text-3xl font-bold tracking-tight">{formatCurrency(stats.volume, true)}</h3>
+                            <h3 className="text-xl sm:text-2xl font-black tracking-tight pt-1">
+                                <span className="hidden xl:inline">{formatCurrency(stats.volume)}</span>
+                                <span className="xl:hidden">{formatCurrency(stats.volume, true)}</span>
+                            </h3>
                             <div className="h-1.5 w-full bg-slate-100 dark:bg-black/40 rounded-full mt-6 overflow-hidden">
                                 <div className="h-full bg-amber-500/50 rounded-full w-2/3" />
                             </div>
                         </div>
 
-                        <div className="solaris-glass rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-8 transition-all group overflow-hidden relative shadow-sm dark:border-white/5 dark:bg-black/40">
+                        <div className="solaris-glass rounded-[2rem] sm:rounded-[2.5rem] p-5 sm:p-7 transition-all group overflow-hidden relative shadow-sm dark:border-white/5 dark:bg-black/40">
                             <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-400/5 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-emerald-400/10 transition-colors" />
                             <div className="flex justify-between items-start mb-6">
                                 <div className="p-3 rounded-2xl bg-emerald-100/50 text-emerald-600 dark:bg-emerald-400/10 dark:text-emerald-400">
@@ -356,10 +359,15 @@ export default function FinancialDashboard({ isAdmin = false }) {
                             <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-1">
                                 {stats.label_performance}
                             </p>
-                            <h3 className="text-2xl sm:text-3xl font-bold tracking-tight">
+                            <h3 className="text-xl sm:text-2xl font-black tracking-tight pt-1">
                                 {dashboardMode === 'rental' || dashboardMode === 'transactional'
                                     ? stats.performance.toFixed(2) + '%'
-                                    : formatCurrency(stats.performance, true)}
+                                    : (
+                                        <>
+                                            <span className="hidden xl:inline">{formatCurrency(stats.performance)}</span>
+                                            <span className="xl:hidden">{formatCurrency(stats.performance, true)}</span>
+                                        </>
+                                    )}
                             </h3>
                             <div className="flex items-center gap-1.5 mt-4">
                                 <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
@@ -526,7 +534,7 @@ export default function FinancialDashboard({ isAdmin = false }) {
                             <div className="text-left sm:text-right">
                                 <p className="text-[10px] uppercase font-bold text-muted-foreground leading-tight">Liquidité Totale</p>
                                 <p className="text-sm font-bold text-primary whitespace-nowrap">
-                                    {wallets.reduce((sum, w) => sum + Number(w.balance), 0).toLocaleString()} €
+                                    {formatCurrency(wallets.reduce((sum, w) => sum + Number(w.balance), 0))}
                                 </p>
                             </div>
                             <button
@@ -565,7 +573,7 @@ export default function FinancialDashboard({ isAdmin = false }) {
                                                         "font-bold text-base",
                                                         bal < 0 ? "text-[#ff0048]" : bal === 0 ? "text-muted-foreground" : "text-foreground"
                                                     )}>
-                                                        {bal.toLocaleString()} €
+                                                        {formatCurrency(bal)}
                                                     </span>
                                                 </td>
                                                 <td className="px-6 py-4 text-center">

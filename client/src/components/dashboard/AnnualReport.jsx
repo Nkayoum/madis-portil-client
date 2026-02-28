@@ -1,5 +1,5 @@
 import { Download, Table, PieChart, Calendar, TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
-import { cn } from '../../lib/utils';
+import { cn, formatCurrency } from '../../lib/utils';
 
 export default function AnnualReport({ data, selectedYear, isAdmin }) {
     if (!data) return null;
@@ -31,8 +31,9 @@ export default function AnnualReport({ data, selectedYear, isAdmin }) {
                         <TrendingUp className="h-4 w-4" />
                         <span className="text-[10px] font-black uppercase tracking-widest opacity-70">Revenus Totaux {selectedYear}</span>
                     </div>
-                    <div className="text-4xl font-black text-foreground tracking-tighter dark:text-white">
-                        {totalRevenue.toLocaleString()}€
+                    <div className="text-4xl font-black text-foreground tracking-tighter dark:text-white whitespace-nowrap">
+                        <span className="hidden xl:inline">{formatCurrency(totalRevenue)}</span>
+                        <span className="xl:hidden">{formatCurrency(totalRevenue, true)}</span>
                     </div>
                 </div>
 
@@ -42,8 +43,9 @@ export default function AnnualReport({ data, selectedYear, isAdmin }) {
                         <TrendingDown className="h-4 w-4" />
                         <span className="text-[10px] font-black uppercase tracking-widest opacity-70">Charges Totales {selectedYear}</span>
                     </div>
-                    <div className="text-4xl font-black text-foreground tracking-tighter dark:text-white">
-                        {totalExpense.toLocaleString()}€
+                    <div className="text-4xl font-black text-foreground tracking-tighter dark:text-white whitespace-nowrap">
+                        <span className="hidden xl:inline">{formatCurrency(totalExpense)}</span>
+                        <span className="xl:hidden">{formatCurrency(totalExpense, true)}</span>
                     </div>
                 </div>
 
@@ -63,10 +65,11 @@ export default function AnnualReport({ data, selectedYear, isAdmin }) {
                         )}>Résultat Net {selectedYear}</span>
                     </div>
                     <div className={cn(
-                        "text-4xl font-black tracking-tighter",
+                        "text-4xl font-black tracking-tighter whitespace-nowrap",
                         netResult >= 0 ? "text-foreground dark:text-white" : "text-orange-600 dark:text-orange-400"
                     )}>
-                        {netResult.toLocaleString()}€
+                        <span className="hidden xl:inline">{formatCurrency(netResult)}</span>
+                        <span className="xl:hidden">{formatCurrency(netResult, true)}</span>
                     </div>
                 </div>
             </div>
@@ -124,10 +127,11 @@ export default function AnnualReport({ data, selectedYear, isAdmin }) {
                             <tr>
                                 <td className="px-6 py-4 text-[11px] uppercase tracking-widest text-primary">BILAN ANNUEL NET</td>
                                 <td className={cn(
-                                    "px-6 py-4 text-right text-lg font-black",
+                                    "px-6 py-4 text-right text-lg font-black whitespace-nowrap",
                                     netResult >= 0 ? "text-primary" : "text-rose-600"
                                 )}>
-                                    {netResult.toLocaleString()}€
+                                    <span className="hidden xl:inline">{formatCurrency(netResult)}</span>
+                                    <span className="xl:hidden">{formatCurrency(netResult, true)}</span>
                                 </td>
                                 <td className="px-6 py-4"></td>
                             </tr>
