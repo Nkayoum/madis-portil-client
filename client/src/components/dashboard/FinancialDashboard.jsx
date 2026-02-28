@@ -394,14 +394,14 @@ export default function FinancialDashboard({ isAdmin = false }) {
                                             <div className="w-3 h-3 rounded-full bg-primary" />
                                             <span className="text-xs font-bold">Immobilier</span>
                                         </div>
-                                        <span className="text-xs font-bold whitespace-nowrap">{formatCurrency(totalAssetValue, true)}</span>
+                                        <span className="text-xs font-black whitespace-nowrap">{formatCurrency(totalAssetValue, true)}</span>
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2">
                                             <div className="w-3 h-3 rounded-full bg-slate-300 dark:bg-white/10" />
                                             <span className="text-xs font-bold">Liquidités</span>
                                         </div>
-                                        <span className="text-xs font-bold whitespace-nowrap">{formatCurrency(totalLiquidity, true)}</span>
+                                        <span className="text-xs font-black whitespace-nowrap">{formatCurrency(totalLiquidity, true)}</span>
                                     </div>
                                 </div>
                             </div>
@@ -504,14 +504,14 @@ export default function FinancialDashboard({ isAdmin = false }) {
                                             <div className="w-3 h-3 rounded-full bg-primary dark:bg-[#00f2ff]" />
                                             <span className="text-xs font-bold dark:text-white">Immobilier</span>
                                         </div>
-                                        <span className="text-xs font-bold dark:text-white">{formatCurrency(totalAssetValue)}</span>
+                                        <span className="text-xs font-black dark:text-white">{formatCurrency(totalAssetValue)}</span>
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2">
                                             <div className="w-3 h-3 rounded-full bg-slate-300 dark:bg-white/10" />
                                             <span className="text-xs font-bold dark:text-white">Liquidités</span>
                                         </div>
-                                        <span className="text-xs font-bold dark:text-white">{formatCurrency(totalLiquidity)}</span>
+                                        <span className="text-xs font-black dark:text-white">{formatCurrency(totalLiquidity)}</span>
                                     </div>
                                 </div>
                             </div>
@@ -570,7 +570,7 @@ export default function FinancialDashboard({ isAdmin = false }) {
                                                 </td>
                                                 <td className="px-6 py-4 text-right">
                                                     <span className={cn(
-                                                        "font-bold text-base",
+                                                        "font-black text-base",
                                                         bal < 0 ? "text-[#ff0048]" : bal === 0 ? "text-muted-foreground" : "text-foreground"
                                                     )}>
                                                         {formatCurrency(bal)}
