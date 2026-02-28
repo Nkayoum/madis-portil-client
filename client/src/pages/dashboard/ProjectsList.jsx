@@ -89,7 +89,7 @@ export default function ProjectsList() {
                         <HardHat className="h-4 w-4 md:h-5 md:w-5" />
                         Développement
                         <span className={cn(
-                            "ml-1.5 md:ml-2 px-2 py-0.5 rounded-lg text-[8px] md:text-[10px] font-black shadow-sm",
+                            "ml-1.5 md:ml-2 min-w-[20px] md:min-w-[24px] h-[20px] md:h-[24px] flex items-center justify-center rounded-full text-[8px] md:text-[10px] font-black shadow-sm",
                             activeTab === 'CONSTRUCTION' ? "bg-black dark:bg-white text-white dark:text-black" : "bg-black/5 dark:bg-white/10 text-black dark:text-white"
                         )}>
                             {projects.filter(p => p.category === 'CONSTRUCTION').length}
@@ -107,7 +107,7 @@ export default function ProjectsList() {
                         <ClipboardList className="h-4 w-4 md:h-5 md:w-5" />
                         Maintenance
                         <span className={cn(
-                            "ml-1.5 md:ml-2 px-2 py-0.5 rounded-lg text-[8px] md:text-[10px] font-black shadow-sm",
+                            "ml-1.5 md:ml-2 min-w-[20px] md:min-w-[24px] h-[20px] md:h-[24px] flex items-center justify-center rounded-full text-[8px] md:text-[10px] font-black shadow-sm",
                             activeTab === 'MAINTENANCE' ? "bg-black dark:bg-white text-white dark:text-black" : "bg-black/5 dark:bg-white/10 text-black dark:text-white"
                         )}>
                             {projects.filter(p => p.category === 'MAINTENANCE').length}
