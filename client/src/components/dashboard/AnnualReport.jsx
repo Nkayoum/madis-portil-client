@@ -82,7 +82,7 @@ export default function AnnualReport({ data, selectedYear, isAdmin }) {
                         TOTAL CONSOLIDÉ
                     </div>
                 </div>
-                <div className="overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                <div className="overflow-x-auto no-scrollbar">
                     <table className="w-full text-sm">
                         <thead>
                             <tr className="bg-muted/10 dark:bg-white/[0.02] border-b dark:border-white/5">

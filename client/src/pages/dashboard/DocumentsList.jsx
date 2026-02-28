@@ -149,7 +149,7 @@ export default function DocumentsList() {
 
                 <div className="h-10 w-px bg-black/5 dark:bg-white/5 hidden lg:block" />
 
-                <div className="flex items-center gap-2 overflow-x-auto w-full lg:w-auto px-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                <div className="flex items-center gap-2 overflow-x-auto w-full lg:w-auto px-2 no-scrollbar">
                     {categories.map((cat) => (
                         <button
                             key={cat.value}

@@ -105,7 +105,7 @@ export default function TransactionsList() {
     }
 
     return (
-        <div className="space-y-8 md:space-y-12 animate-fade-in py-4 md:py-8 px-0 md:px-4 max-w-[1600px] mx-auto pb-24">
+        <div className="space-y-8 md:space-y-12 animate-fade-in py-4 md:py-8 px-0 md:px-4 max-w-[1600px] mx-auto pb-8">
             {/* Solaris Header Area */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 pb-4 border-b border-black/5">
                 <div className="flex items-start gap-6">
@@ -172,7 +172,7 @@ export default function TransactionsList() {
 
             {/* Premium Solaris Table Container */}
             <div className="solaris-glass rounded-[2rem] border-none shadow-[0_20px_50px_rgba(0,0,0,0.05)] overflow-hidden">
-                <div className="overflow-x-auto pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                <div className="overflow-x-auto pb-4 no-scrollbar">
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="bg-black/5 text-[10px] font-black uppercase tracking-[0.2em] border-b border-black/5">

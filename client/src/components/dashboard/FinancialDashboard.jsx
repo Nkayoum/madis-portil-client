@@ -211,7 +211,7 @@ export default function FinancialDashboard({ isAdmin = false }) {
         <div className="space-y-6">
             {/* Mode Switcher & Filters */}
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                <div className="flex bg-muted p-1 rounded-xl w-full lg:w-fit overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                <div className="flex bg-muted p-1 rounded-xl w-full lg:w-fit overflow-x-auto no-scrollbar">
                     <button
                         onClick={() => setDashboardMode('rental')}
                         className={cn(
@@ -538,7 +538,7 @@ export default function FinancialDashboard({ isAdmin = false }) {
                             </button>
                         </div>
                     </div>
-                    <div className="overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                    <div className="overflow-x-auto no-scrollbar">
                         <table className="w-full text-sm">
                             <thead>
                                 <tr className="border-b bg-muted/10">
