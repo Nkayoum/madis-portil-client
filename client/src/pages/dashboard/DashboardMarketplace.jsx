@@ -143,7 +143,7 @@ export default function DashboardMarketplace() {
                                     key={c.value}
                                     onClick={() => setCategory(c.value)}
                                     className={cn(
-                                        "flex items-center gap-2 md:gap-3 px-4 md:px-6 py-2.5 md:py-3 text-[9px] md:text-[10px] font-black uppercase tracking-widest rounded-xl transition-all duration-300",
+                                        "flex items-center gap-2 md:gap-3 px-4 md:px-6 py-2.5 md:py-3 text-[9px] md:text-[10px] font-bold uppercase tracking-widest rounded-xl transition-all duration-300",
                                         isActive
                                             ? "bg-black text-white shadow-xl scale-[1.05]"
                                             : "text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5"
@@ -166,7 +166,7 @@ export default function DashboardMarketplace() {
                                     key={n.value}
                                     onClick={() => setNature(n.value)}
                                     className={cn(
-                                        "px-4 md:px-5 py-2 md:py-2.5 text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] rounded-xl transition-all",
+                                        "px-4 md:px-5 py-2 md:py-2.5 text-[8px] md:text-[9px] font-bold uppercase tracking-[0.2em] rounded-xl transition-all",
                                         isActive
                                             ? "bg-white dark:bg-white/10 text-black dark:text-white shadow-md"
                                             : "text-black/30 dark:text-white/30 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5"
@@ -185,13 +185,13 @@ export default function DashboardMarketplace() {
             {loading ? (
                 <div className="flex flex-col items-center justify-center py-32 space-y-4">
                     <Loader2 className="h-12 w-12 animate-spin text-primary opacity-20" />
-                    <span className="text-[10px] font-black uppercase tracking-widest opacity-30">Synchronisation Marketplace...</span>
+                    <span className="text-[10px] font-bold uppercase tracking-widest opacity-30">Synchronisation Marketplace...</span>
                 </div>
             ) : properties.length === 0 ? (
                 <div className="text-center py-32 solaris-glass rounded-[3rem] border-dashed border-2 border-black/5">
                     <Building className="h-20 w-20 mx-auto text-black/5 mb-6" />
-                    <h3 className="text-2xl font-black uppercase tracking-tighter mb-2">Aucun actif detecté</h3>
-                    <p className="text-[10px] font-black uppercase tracking-widest opacity-40">Modifiez les paramètres du protocole de filtrage.</p>
+                    <h3 className="text-2xl font-bold uppercase tracking-tight mb-2">Aucun actif detecté</h3>
+                    <p className="text-[10px] font-semibold uppercase tracking-widest opacity-40">Modifiez les paramètres du protocole de filtrage.</p>
                 </div>
             ) : (
                 <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -216,17 +216,17 @@ export default function DashboardMarketplace() {
 
                                 <div className="absolute top-4 left-4 flex flex-col gap-2">
                                     <span className={cn(
-                                        "px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg backdrop-blur-md",
+                                        "px-2.5 py-1 rounded-lg text-[9px] font-bold uppercase tracking-widest text-white shadow-lg backdrop-blur-md",
                                         p.category === 'RESIDENTIEL' ? "bg-black/60" : p.category === 'COMMERCIAL' ? "bg-primary/80" : "bg-black/80"
                                     )}>{p.category_display}</span>
 
                                     {p.management_type !== 'CONSTRUCTION' ? (
                                         <span className={cn(
-                                            "px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg backdrop-blur-md",
+                                            "px-2.5 py-1 rounded-lg text-[9px] font-bold uppercase tracking-widest text-white shadow-lg backdrop-blur-md",
                                             p.transaction_nature === 'VENTE' ? "bg-white/90 text-black border border-black/5" : "bg-primary/90"
                                         )}>{p.transaction_nature_display}</span>
                                     ) : (
-                                        <span className="px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest text-white bg-red-600 shadow-lg">Prototype</span>
+                                        <span className="px-2.5 py-1 rounded-lg text-[9px] font-bold uppercase tracking-widest text-white bg-red-600 shadow-lg">Prototype</span>
                                     )}
                                 </div>
 
@@ -238,7 +238,7 @@ export default function DashboardMarketplace() {
 
                                 {getPrice(p) && (
                                     <div className="absolute bottom-4 right-4 px-4 py-2 rounded-xl bg-black/90 backdrop-blur-xl text-white shadow-2xl">
-                                        <span className="text-[16px] font-black tracking-tighter">{getPrice(p)}</span>
+                                        <span className="text-[16px] font-bold tracking-tight">{getPrice(p)}</span>
                                     </div>
                                 )}
                             </div>
@@ -246,8 +246,8 @@ export default function DashboardMarketplace() {
                             {/* Card Details */}
                             <div className="flex flex-col flex-1 p-6 space-y-4">
                                 <div>
-                                    <h3 className="text-xl font-black uppercase tracking-tighter leading-none mb-2 group-hover:text-primary transition-colors">{p.name}</h3>
-                                    <div className="flex items-center text-[10px] font-black uppercase tracking-widest opacity-40">
+                                    <h3 className="text-xl font-bold uppercase tracking-tight leading-none mb-2 group-hover:text-primary transition-colors">{p.name}</h3>
+                                    <div className="flex items-center text-[10px] font-bold uppercase tracking-widest opacity-40">
                                         <MapPin className="h-3 w-3 mr-2 text-primary" />
                                         {p.city}
                                     </div>

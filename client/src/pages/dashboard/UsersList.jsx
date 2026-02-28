@@ -93,15 +93,15 @@ export default function UsersList() {
                 <div>
                     <div className="flex items-center gap-2 mb-2">
                         <Users className="h-4 w-4 text-primary" />
-                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Gestion des Comptes</span>
+                        <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-primary">Gestion des Comptes</span>
                     </div>
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter leading-tight md:leading-none">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-tight md:leading-none">
                         Registre <span className="opacity-40">Clients</span>
                     </h1>
                 </div>
                 <Link
                     to="/dashboard/users/new"
-                    className="h-11 md:h-12 px-6 md:px-8 rounded-2xl bg-primary text-white text-[10px] font-black uppercase tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-2xl shadow-primary/20"
+                    className="h-11 md:h-12 px-6 md:px-8 rounded-2xl bg-primary text-white text-[10px] font-bold uppercase tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-2xl shadow-primary/20"
                 >
                     <Plus className="h-4 w-4" />
                     Inscrire Nouveau Client
@@ -115,7 +115,7 @@ export default function UsersList() {
                     <input
                         type="text"
                         placeholder="RECHERCHER UN UTILISATEUR PAR NOM OU EMAIL..."
-                        className="h-16 w-full rounded-[1.25rem] solaris-glass border border-white/20 dark:border-white/5 bg-white/40 dark:bg-black/60 px-6 pl-16 text-[10px] font-black uppercase tracking-widest placeholder:text-muted-foreground/40 focus:bg-white dark:focus:bg-white/10 focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-sm"
+                        className="h-16 w-full rounded-[1.25rem] solaris-glass border border-white/20 dark:border-white/5 bg-white/40 dark:bg-black/60 px-6 pl-16 text-[10px] font-bold uppercase tracking-widest placeholder:text-muted-foreground/40 focus:bg-white dark:focus:bg-white/10 focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-sm"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                     />
@@ -128,11 +128,11 @@ export default function UsersList() {
                     <table className="w-full border-collapse">
                         <thead>
                             <tr className="border-b border-black/5 dark:border-white/5 bg-black/[0.02] dark:bg-white/5">
-                                <th className="px-8 py-6 text-left text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Utilisateur</th>
-                                <th className="px-8 py-6 text-left text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Rôle & Permissions</th>
-                                <th className="px-8 py-6 text-left text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">État du Compte</th>
-                                <th className="px-8 py-6 text-left text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Inscription</th>
-                                <th className="px-8 py-6 text-right text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Actions</th>
+                                <th className="px-8 py-6 text-left text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Utilisateur</th>
+                                <th className="px-8 py-6 text-left text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Rôle & Permissions</th>
+                                <th className="px-8 py-6 text-left text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">État du Compte</th>
+                                <th className="px-8 py-6 text-left text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Inscription</th>
+                                <th className="px-8 py-6 text-right text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-black/5 dark:divide-white/5">
@@ -140,14 +140,14 @@ export default function UsersList() {
                                 <tr key={user.id} className="hover:bg-white/40 dark:hover:bg-white/[0.03] transition-colors group">
                                     <td className="px-8 py-8">
                                         <div className="flex items-center gap-5">
-                                            <div className="h-14 w-14 rounded-2xl bg-zinc-900 dark:bg-white/10 flex items-center justify-center text-white text-sm font-black shadow-xl group-hover:scale-110 transition-transform">
+                                            <div className="h-14 w-14 rounded-2xl bg-zinc-900 dark:bg-white/10 flex items-center justify-center text-white text-sm font-bold shadow-xl group-hover:scale-110 transition-transform">
                                                 {user.first_name?.[0]}{user.last_name?.[0]}
                                             </div>
                                             <div>
-                                                <div className="text-base font-black tracking-tighter group-hover:text-primary transition-colors">
+                                                <div className="text-base font-bold tracking-tight group-hover:text-primary transition-colors">
                                                     {user.first_name} {user.last_name}
                                                 </div>
-                                                <div className="text-[10px] font-bold text-muted-foreground uppercase opacity-60 font-mono tracking-tight">
+                                                <div className="text-[10px] font-semibold text-muted-foreground uppercase opacity-60 font-mono tracking-tight">
                                                     {user.email}
                                                 </div>
                                             </div>
@@ -158,19 +158,19 @@ export default function UsersList() {
                                     </td>
                                     <td className="px-8 py-8">
                                         {user.is_active ? (
-                                            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-green-500/10 text-green-600 text-[9px] font-black uppercase tracking-widest border border-green-200/20">
+                                            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-green-500/10 text-green-600 text-[9px] font-bold uppercase tracking-widest border border-green-200/20">
                                                 <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
                                                 Actif
                                             </span>
                                         ) : (
-                                            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-500/10 text-rose-600 text-[9px] font-black uppercase tracking-widest border border-rose-200/20">
+                                            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-500/10 text-rose-600 text-[9px] font-bold uppercase tracking-widest border border-rose-200/20">
                                                 <span className="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
                                                 Suspendu
                                             </span>
                                         )}
                                     </td>
                                     <td className="px-8 py-8">
-                                        <span className="text-[10px] font-black text-muted-foreground/60 font-mono">
+                                        <span className="text-[10px] font-bold text-muted-foreground/60 font-mono">
                                             {format(new Date(user.date_joined || user.created_at || new Date()), 'dd/MM/yyyy', { locale: fr })}
                                         </span>
                                     </td>
@@ -203,8 +203,8 @@ export default function UsersList() {
                         <div className="h-24 w-24 rounded-[2rem] bg-slate-50 dark:bg-white/5 flex items-center justify-center mb-8 shadow-inner">
                             <Users className="h-10 w-10 text-slate-200 dark:text-white/10" />
                         </div>
-                        <h3 className="text-2xl font-black tracking-tighter mb-2">Aucun client trouvé</h3>
-                        <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60 max-w-xs">
+                        <h3 className="text-2xl font-bold tracking-tight mb-2">Aucun client trouvé</h3>
+                        <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground opacity-60 max-w-xs">
                             Affinez vos critères de recherche pour localiser le compte.
                         </p>
                     </div>

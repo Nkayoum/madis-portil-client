@@ -85,7 +85,7 @@ export default function ConstructionList() {
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
                             className={cn(
-                                "flex items-center gap-2 md:gap-3 px-4 md:px-8 py-2.5 md:py-3.5 rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-[0.1em] transition-all duration-500 group relative",
+                                "flex items-center gap-2 md:gap-3 px-4 md:px-8 py-2.5 md:py-3.5 rounded-full text-[9px] md:text-[10px] font-bold uppercase tracking-[0.1em] transition-all duration-500 group relative",
                                 activeTab === tab.id
                                     ? "bg-primary text-white shadow-xl shadow-primary/20 scale-105"
                                     : "text-muted-foreground hover:text-foreground dark:hover:bg-white/5"
@@ -95,7 +95,7 @@ export default function ConstructionList() {
                             <span className="hidden md:inline">{tab.fullLabel || tab.label}</span>
                             <span className="md:hidden">{tab.label}</span>
                             <span className={cn(
-                                "ml-1.5 md:ml-2 px-1.5 md:px-2 py-0.5 rounded-full text-[8px] md:text-[9px] font-black tracking-normal transition-colors",
+                                "ml-1.5 md:ml-2 px-1.5 md:px-2 py-0.5 rounded-full text-[8px] md:text-[9px] font-bold tracking-normal transition-colors",
                                 activeTab === tab.id ? "bg-white/20 text-white" : "bg-black/5 dark:bg-white/10 text-black/40 dark:text-white/40"
                             )}>
                                 {tab.count}
@@ -114,10 +114,10 @@ export default function ConstructionList() {
                             <ClipboardList className="h-10 w-10 text-black/10 dark:text-white/10" />
                         )}
                     </div>
-                    <h3 className="text-[14px] font-black uppercase tracking-[0.2em] mb-4">
+                    <h3 className="text-[14px] font-bold uppercase tracking-[0.2em] mb-4">
                         {activeTab === 'CONSTRUCTION' ? 'Aucun Chantier Actif' : 'Zéro Intervention'}
                     </h3>
-                    <p className="text-[10px] font-black uppercase tracking-widest opacity-30 max-w-xs mx-auto leading-relaxed">
+                    <p className="text-[10px] font-semibold uppercase tracking-widest opacity-30 max-w-xs mx-auto leading-relaxed">
                         {activeTab === 'CONSTRUCTION'
                             ? "Déploiement opérationnel en attente. Aucun développement actif n'est répertorié."
                             : "Protocole de maintenance vierge. Aucune intervention technique n'est planifiée."}
@@ -136,7 +136,7 @@ export default function ConstructionList() {
                                 <div className="p-10 flex-1 flex flex-col">
                                     <div className="flex justify-between items-start gap-4 mb-6">
                                         <div className="flex-1 min-w-0">
-                                            <h3 className="text-xl font-black tracking-tight uppercase leading-tight group-hover:text-red-600 transition-colors truncate">
+                                            <h3 className="text-xl font-bold tracking-tight uppercase leading-tight group-hover:text-red-600 transition-colors truncate">
                                                 {site.name}
                                             </h3>
                                             <div className="flex items-center gap-2 mt-2">
