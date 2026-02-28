@@ -78,7 +78,7 @@ export default function AddTransactionModal({ isOpen, onClose, site, onSuccess }
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
             <div className="bg-card border rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden animate-in zoom-in-95 duration-200">
                 {/* Header */}
                 <div className="flex items-center justify-between p-6 border-b bg-muted/30">

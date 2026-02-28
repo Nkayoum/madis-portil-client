@@ -41,7 +41,7 @@ export default function SettlementModal({ propertyId, onClose, onSuccess }) {
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={onClose}>
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={onClose}>
             <div className="bg-card border rounded-2xl shadow-2xl w-full max-w-md mx-4 animate-fade-in overflow-hidden" onClick={e => e.stopPropagation()}>
                 <div className="flex items-center justify-between p-6 border-b">
                     <div className="flex items-center gap-3">
