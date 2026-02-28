@@ -32,6 +32,13 @@ class User(AbstractUser):
     )
     created_at = models.DateTimeField('date de création', auto_now_add=True)
     updated_at = models.DateTimeField('dernière modification', auto_now=True)
+    letterhead = models.ImageField(
+        'papier à en-tête',
+        upload_to='letterheads/',
+        null=True,
+        blank=True,
+        help_text='Image du papier à en-tête pour les rapports PDF',
+    )
 
     # Use email as login field
     USERNAME_FIELD = 'email'

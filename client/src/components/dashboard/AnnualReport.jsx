@@ -1,15 +1,32 @@
-import { Download, Table, PieChart, Calendar, TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { Download, Table, PieChart, Calendar, TrendingUp, TrendingDown, DollarSign, Upload, Loader2, FileImage, Trash2 } from 'lucide-react';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import { cn, formatCurrency } from '../../lib/utils';
+import { useAuth } from '../../context/AuthContext';
 import FormalAnnualReport from './FormalAnnualReport';
 
 export default function AnnualReport({ data, selectedYear, isAdmin }) {
+    const { user, updateUser } = useAuth();
+    const [generating, setGenerating] = useState(false);
+    const [uploading, setUploading] = useState(false);
+    const [letterheadUrl, setLetterheadUrl] = useState(null);
+    const reportRef = useRef(null);
+    const fileInputRef = useRef(null);
+
+    // Load saved letterhead from user profile
+    useEffect(() => {
+        if (user?.letterhead) {
+            setLetterheadUrl(user.letterhead);
+        }
+    }, [user?.letterhead]);
+
     if (!data) return null;
 
     const categories = data.category_stats || [];
     const rental = data.rental_performance || {};
     const trans = data.transactional_performance || {};
 
-    // Group categories by type for the report
     const revenueCategories = categories.filter(c =>
         ['RENT', 'PROMOTION_SALE', 'CASH_CALL'].includes(c.category)
     );
@@ -21,6 +38,73 @@ export default function AnnualReport({ data, selectedYear, isAdmin }) {
     const totalRevenue = revenueCategories.reduce((sum, c) => sum + c.total, 0);
     const totalExpense = expenseCategories.reduce((sum, c) => sum + c.total, 0);
     const netResult = totalRevenue - totalExpense;
+
+    const handleLetterheadUpload = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // Show preview immediately
+        const reader = new FileReader();
+        reader.onload = (ev) => setLetterheadUrl(ev.target.result);
+        reader.readAsDataURL(file);
+
+        // Upload to server
+        setUploading(true);
+        try {
+            const formData = new FormData();
+            formData.append('letterhead', file);
+            await updateUser(formData);
+        } catch (err) {
+            console.error('Letterhead upload failed:', err);
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    const handleRemoveLetterhead = async () => {
+        setLetterheadUrl(null);
+        setUploading(true);
+        try {
+            await updateUser({ letterhead: null });
+        } catch (err) {
+            console.error('Letterhead removal failed:', err);
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    const generatePDF = async () => {
+        if (!reportRef.current) return;
+        setGenerating(true);
+        try {
+            const canvas = await html2canvas(reportRef.current, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: '#ffffff',
+                logging: false,
+            });
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+            const imgWidth = pdfWidth;
+            const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+
+            // If the image is taller than one page, we may need multiple pages
+            let yOffset = 0;
+            while (yOffset < imgHeight) {
+                if (yOffset > 0) pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 0, -yOffset, imgWidth, imgHeight);
+                yOffset += pdfHeight;
+            }
+
+            pdf.save(`Rapport_Annuel_MaDis_${selectedYear}.pdf`);
+        } catch (err) {
+            console.error('PDF generation failed:', err);
+        } finally {
+            setGenerating(false);
+        }
+    };
 
     return (
         <>
@@ -155,26 +239,60 @@ export default function AnnualReport({ data, selectedYear, isAdmin }) {
                     <p className="text-xs text-blue-700/80 dark:text-blue-400/80 leading-relaxed">
                         Ce rapport consolide l'ensemble des flux financiers pour l'année {selectedYear}. Pour une déclaration en régime réel (LMNP/Réel), les charges de maintenance, taxes et assurances sont généralement déductibles. Les commissions MaDis (Intermédiation) sont également à intégrer dans vos charges de gestion.
                     </p>
-                    <div className="mt-4 flex items-center gap-3">
+                    <div className="mt-4 flex flex-wrap items-center gap-3">
                         <button
-                            onClick={() => {
-                                document.body.classList.add('print-formal-active');
-                                window.print();
-                                // Restore after print dialog closes
-                                setTimeout(() => {
-                                    document.body.classList.remove('print-formal-active');
-                                }, 500);
-                            }}
-                            className="px-4 py-2 bg-white dark:bg-background border rounded-lg text-xs font-bold shadow-sm hover:shadow transition-all flex items-center gap-2"
+                            onClick={generatePDF}
+                            disabled={generating}
+                            className="px-4 py-2 bg-white dark:bg-background border rounded-lg text-xs font-bold shadow-sm hover:shadow transition-all flex items-center gap-2 disabled:opacity-50"
                         >
-                            <Download className="h-3 w-3" />
-                            Imprimer le récapitulatif
+                            {generating ? (
+                                <Loader2 className="h-3 w-3 animate-spin" />
+                            ) : (
+                                <Download className="h-3 w-3" />
+                            )}
+                            {generating ? 'Génération en cours...' : 'Télécharger le récapitulatif PDF'}
                         </button>
-                        <span className="text-[10px] text-muted-foreground italic">
-                            Note: Les amortissements ne sont pas inclus dans ce rapport de trésorerie.
-                        </span>
+
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept="image/png,image/jpeg,image/jpg"
+                            className="hidden"
+                            onChange={handleLetterheadUpload}
+                        />
+                        <button
+                            onClick={() => fileInputRef.current?.click()}
+                            className="px-4 py-2 border rounded-lg text-xs font-bold shadow-sm hover:shadow transition-all flex items-center gap-2 bg-white dark:bg-background"
+                        >
+                            {letterheadUrl ? <FileImage className="h-3 w-3 text-emerald-600" /> : <Upload className="h-3 w-3" />}
+                            {letterheadUrl ? 'Papier à en-tête chargé ✓' : 'Charger papier à en-tête'}
+                        </button>
+
+                        {letterheadUrl && (
+                            <button
+                                onClick={handleRemoveLetterhead}
+                                disabled={uploading}
+                                className="text-[10px] text-rose-500 hover:underline font-medium flex items-center gap-1 disabled:opacity-50"
+                            >
+                                <Trash2 className="h-2.5 w-2.5" />
+                                Retirer l'en-tête
+                            </button>
+                        )}
                     </div>
+                    <p className="text-[10px] text-muted-foreground italic mt-3">
+                        Note: Les amortissements ne sont pas inclus dans ce rapport de trésorerie.
+                    </p>
                 </div>
+            </div>
+
+            {/* Hidden: Formal Report for PDF Capture */}
+            <div style={{ position: 'absolute', left: '-9999px', top: 0 }}>
+                <FormalAnnualReport
+                    data={data}
+                    selectedYear={selectedYear}
+                    letterheadUrl={letterheadUrl}
+                    reportRef={reportRef}
+                />
             </div>
         </>
     );

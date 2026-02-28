@@ -38,7 +38,6 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('madis_token');
         localStorage.removeItem('madis_user');
         setUser(null);
-        // Optional: Call logout API endpoint
         try {
             api.post('/auth/logout/');
         } catch (e) {
@@ -46,8 +45,26 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const updateUser = async (data) => {
+        try {
+            const isFormData = data instanceof FormData;
+            const response = await api.patch('/auth/profile/', data, {
+                headers: isFormData ? { 'Content-Type': 'multipart/form-data' } : {},
+            });
+            const updatedUser = response.data;
+            setUser(updatedUser);
+            localStorage.setItem('madis_user', JSON.stringify(updatedUser));
+            return { success: true, user: updatedUser };
+        } catch (error) {
+            return {
+                success: false,
+                error: error.response?.data || 'Mise à jour échouée',
+            };
+        }
+    };
+
     return (
-        <AuthContext.Provider value={{ user, login, logout, loading, isAuthenticated: !!user }}>
+        <AuthContext.Provider value={{ user, login, logout, updateUser, loading, isAuthenticated: !!user }}>
             {children}
         </AuthContext.Provider>
     );
