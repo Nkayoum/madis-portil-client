@@ -68,7 +68,7 @@ export default function NotificationCenter() {
             {isOpen && (
                 <>
                     <div className="fixed inset-0 z-[100]" onClick={() => setIsOpen(false)} />
-                    <div className="absolute right-0 mt-4 w-[calc(100vw-2rem)] sm:w-80 md:w-96 bg-white dark:bg-[#0a1628] rounded-[1.5rem] sm:rounded-[2rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.3)] dark:shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)] z-[101] overflow-hidden animate-in fade-in zoom-in duration-300 border border-black/10 dark:border-white/10">
+                    <div className="fixed inset-x-4 top-16 sm:absolute sm:inset-x-auto sm:top-auto sm:right-0 sm:mt-4 sm:w-96 bg-white dark:bg-[#0a1628] rounded-[1.5rem] sm:rounded-[2rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.3)] dark:shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)] z-[101] overflow-hidden animate-in fade-in zoom-in duration-300 border border-black/10 dark:border-white/10">
                         <div className="p-3.5 sm:p-6 border-b border-black/10 dark:border-white/10 flex items-center justify-between bg-gray-50 dark:bg-white/5">
                             <h3 className="text-sm sm:text-xl font-black uppercase tracking-widest sm:tracking-tighter">Notifications</h3>
                             {unreadCount > 0 && (
