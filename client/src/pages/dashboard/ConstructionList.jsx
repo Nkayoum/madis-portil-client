@@ -75,8 +75,8 @@ export default function ConstructionList() {
                 )}
             </div>
 
-            <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }} className="-mx-4 px-4 md:mx-0 md:px-0 mb-8 [&::-webkit-scrollbar]:hidden">
-                <div className="solaris-glass rounded-full p-1.5 md:p-2 flex gap-2 md:gap-4 w-fit shadow-lg px-2 md:px-3 whitespace-nowrap">
+            <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }} className="-mx-4 px-4 md:mx-0 md:px-0 mb-4 [&::-webkit-scrollbar]:hidden">
+                <div className="solaris-glass rounded-full p-1.5 md:p-2 flex gap-2 md:gap-4 w-fit mb-4 shadow-lg px-2 md:px-3 whitespace-nowrap">
                     {[
                         { id: 'CONSTRUCTION', label: "Chantiers", icon: HardHat, count: sites.filter(s => s.project_category === 'CONSTRUCTION').length },
                         { id: 'MAINTENANCE', label: "Maintenance", fullLabel: "Maintenance & Entretien", icon: ClipboardList, count: sites.filter(s => s.project_category === 'MAINTENANCE').length }

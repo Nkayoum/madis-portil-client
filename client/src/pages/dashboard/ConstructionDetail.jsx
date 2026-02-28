@@ -186,9 +186,9 @@ export default function ConstructionDetail() {
                                 {site.status === 'EN_COURS' && (
                                     <button
                                         onClick={() => setIsSuspensionModalOpen(true)}
-                                        className="inline-flex items-center justify-center rounded-xl md:rounded-2xl text-[8px] md:text-[10px] font-black uppercase tracking-widest transition-all bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 hover:bg-amber-200 dark:hover:bg-amber-900/50 h-9 md:h-11 px-3 md:px-6 shadow-sm whitespace-nowrap"
+                                        className="inline-flex items-center justify-center rounded-xl md:rounded-2xl text-[8px] md:text-[10px] font-black uppercase tracking-widest transition-all bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 hover:bg-amber-200 dark:hover:bg-amber-900/50 h-8 md:h-11 px-2.5 md:px-6 shadow-sm whitespace-nowrap"
                                     >
-                                        <Pause className="mr-1.5 md:mr-2 h-3 w-3 md:h-4 md:w-4" /> Suspendre
+                                        <Pause className="mr-1 md:mr-2 h-3 w-3 md:h-4 md:w-4" /> Suspendre
                                     </button>
                                 )}
                                 {(site.status === 'SUSPENDU' || site.status === 'PREPARATION') && (
@@ -197,9 +197,9 @@ export default function ConstructionDetail() {
                                             await api.patch(`/construction/sites/${id}/`, { status: 'EN_COURS' });
                                             fetchSiteDetails();
                                         }}
-                                        className="inline-flex items-center justify-center rounded-xl md:rounded-2xl text-[8px] md:text-[10px] font-black uppercase tracking-widest transition-all bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 h-9 md:h-11 px-3 md:px-6 shadow-sm whitespace-nowrap"
+                                        className="inline-flex items-center justify-center rounded-xl md:rounded-2xl text-[8px] md:text-[10px] font-black uppercase tracking-widest transition-all bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 h-8 md:h-11 px-2.5 md:px-6 shadow-sm whitespace-nowrap"
                                     >
-                                        <Clock className="mr-1.5 md:mr-2 h-3 w-3 md:h-4 md:w-4" /> Relancer
+                                        <Clock className="mr-1 md:mr-2 h-3 w-3 md:h-4 md:w-4" /> Relancer
                                     </button>
                                 )}
 
@@ -207,9 +207,9 @@ export default function ConstructionDetail() {
                                     <>
                                         <Link
                                             to={`/dashboard/construction/${id}/edit`}
-                                            className="inline-flex items-center justify-center rounded-xl md:rounded-2xl text-[8px] md:text-[10px] font-black uppercase tracking-widest transition-all bg-white dark:bg-white/10 border border-black/5 dark:border-white/10 shadow-sm hover:bg-black/5 dark:hover:bg-white/20 h-9 md:h-11 px-3 md:px-6 dark:text-white whitespace-nowrap"
+                                            className="inline-flex items-center justify-center rounded-xl md:rounded-2xl text-[8px] md:text-[10px] font-black uppercase tracking-widest transition-all bg-white dark:bg-white/10 border border-black/5 dark:border-white/10 shadow-sm hover:bg-black/5 dark:hover:bg-white/20 h-8 md:h-11 px-2.5 md:px-6 dark:text-white whitespace-nowrap"
                                         >
-                                            <Edit className="mr-1.5 md:mr-2 h-3 w-3 md:h-4 md:w-4" /> Modifier
+                                            <Edit className="mr-1 md:mr-2 h-3 w-3 md:h-4 md:w-4" /> Modifier
                                         </Link>
                                         <button
                                             onClick={async () => {
@@ -219,9 +219,9 @@ export default function ConstructionDetail() {
                                                     navigate('/dashboard/construction');
                                                 }
                                             }}
-                                            className="inline-flex items-center justify-center rounded-xl md:rounded-2xl text-[8px] md:text-[10px] font-black uppercase tracking-widest transition-all bg-red-500 text-white hover:bg-red-600 h-9 md:h-11 px-3 md:px-6 shadow-[0_4px_15_rgba(239,68,68,0.4)] dark:shadow-[0_0_20px_rgba(239,68,68,0.6)] whitespace-nowrap"
+                                            className="inline-flex items-center justify-center rounded-xl md:rounded-2xl text-[8px] md:text-[10px] font-black uppercase tracking-widest transition-all bg-red-500 text-white hover:bg-red-600 h-8 md:h-11 px-2.5 md:px-6 shadow-[0_4px_15_rgba(239,68,68,0.4)] dark:shadow-[0_0_20px_rgba(239,68,68,0.6)] whitespace-nowrap"
                                         >
-                                            <Trash2 className="mr-1.5 md:mr-2 h-3 w-3 md:h-4 md:w-4" /> Supprimer
+                                            <Trash2 className="mr-1 md:mr-2 h-3 w-3 md:h-4 md:w-4" /> Supprimer
                                         </button>
                                     </>
                                 )}
