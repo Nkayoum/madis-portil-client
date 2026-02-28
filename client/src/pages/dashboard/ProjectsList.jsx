@@ -135,53 +135,53 @@ export default function ProjectsList() {
                     </p>
                 </div>
             ) : (
-                <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
                     {filteredProjects.map((project) => (
                         <Link
                             key={project.id}
                             to={`/dashboard/projects/${project.id}`}
-                            className="group relative solaris-glass rounded-[2.5rem] p-8 border-none shadow-lg hover:shadow-2xl transition-all duration-500 bg-white/40 overflow-hidden flex flex-col hover:scale-[1.02] hover:-translate-y-2"
+                            className="group relative solaris-glass rounded-[1.5rem] sm:rounded-[2rem] p-5 sm:p-6 border-none shadow-lg hover:shadow-2xl transition-all duration-500 bg-white/40 overflow-hidden flex flex-col hover:scale-[1.02] hover:-translate-y-2"
                         >
-                            <div className="mb-6">
-                                <div className="flex items-start gap-4 mb-3">
-                                    <div className="p-3 sm:p-4 rounded-[1.2rem] sm:rounded-[1.5rem] bg-black dark:bg-white text-white dark:text-black shadow-xl transition-transform group-hover:rotate-6 duration-500 flex-shrink-0">
-                                        {project.category === 'CONSTRUCTION' ? <HardHat className="h-5 w-5 sm:h-6 sm:w-6" /> : <ClipboardList className="h-5 w-5 sm:h-6 sm:w-6" />}
+                            <div className="mb-4 sm:mb-5">
+                                <div className="flex items-start gap-2.5 sm:gap-3 mb-2.5">
+                                    <div className="p-2 sm:p-2.5 rounded-xl sm:rounded-[1rem] bg-black dark:bg-white text-white dark:text-black shadow-lg transition-transform group-hover:rotate-6 duration-500 flex-shrink-0">
+                                        {project.category === 'CONSTRUCTION' ? <HardHat className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> : <ClipboardList className="h-3.5 w-3.5 sm:h-4 sm:w-4" />}
                                     </div>
                                     <div className="min-w-0 flex-1">
-                                        <h3 className="text-lg sm:text-xl font-black tracking-tighter group-hover:text-primary transition-colors leading-tight break-words">
+                                        <h3 className="text-sm sm:text-base font-bold tracking-tight group-hover:text-primary transition-colors leading-snug line-clamp-2">
                                             {project.name}
                                         </h3>
-                                        <div className="flex items-center gap-2 mt-1 opacity-40 group-hover:opacity-100 transition-opacity">
-                                            <Building2 className="h-3 w-3 flex-shrink-0" />
-                                            <span className="text-[10px] font-black uppercase tracking-widest truncate">{project.property_name || 'Bien non défini'}</span>
+                                        <div className="flex items-center gap-1.5 mt-0.5 opacity-40 group-hover:opacity-100 transition-opacity">
+                                            <Building2 className="h-2.5 w-2.5 flex-shrink-0" />
+                                            <span className="text-[8px] sm:text-[9px] font-medium uppercase tracking-widest truncate">{project.property_name || 'Bien non défini'}</span>
                                         </div>
                                     </div>
                                 </div>
                                 <span className={cn(
-                                    "inline-block px-4 py-1.5 rounded-2xl text-[9px] font-black uppercase tracking-widest shadow-lg whitespace-nowrap",
+                                    "inline-block px-3 py-1 rounded-xl text-[8px] font-bold uppercase tracking-widest shadow-md whitespace-nowrap",
                                     getStatusColor(project.status)
                                 )}>
                                     {project.status_display || project.status}
                                 </span>
                             </div>
 
-                            <p className="text-[12px] font-medium text-muted-foreground dark:text-white/70 mb-10 line-clamp-3 leading-relaxed opacity-70 group-hover:opacity-100 transition-opacity">
+                            <p className="text-[10px] sm:text-[11px] font-medium text-muted-foreground dark:text-white/70 mb-6 sm:mb-8 line-clamp-2 leading-relaxed opacity-60 group-hover:opacity-100 transition-opacity">
                                 {project.description}
                             </p>
 
-                            <div className="grid grid-cols-2 gap-8 mt-auto pt-8 border-t border-black/5 dark:border-white/5">
-                                <div className="flex flex-col gap-1.5">
-                                    <span className="text-[9px] font-black uppercase tracking-widest opacity-30">Budget</span>
-                                    <div className="flex items-center gap-2 font-black text-sm tracking-tight text-black dark:text-white">
+                            <div className="grid grid-cols-2 gap-4 sm:gap-6 mt-auto pt-5 sm:pt-6 border-t border-black/5 dark:border-white/5">
+                                <div className="flex flex-col gap-1">
+                                    <span className="text-[7px] sm:text-[8px] font-bold uppercase tracking-widest opacity-30">Budget</span>
+                                    <div className="flex items-center gap-1.5 font-bold text-[11px] sm:text-xs tracking-tight text-black dark:text-white">
                                         <div className="p-1 rounded-lg bg-emerald-500/10 text-emerald-600">
                                             <Euro className="h-3 w-3" />
                                         </div>
                                         <span className="whitespace-nowrap">{formatCurrency(project.budget, true)}</span>
                                     </div>
                                 </div>
-                                <div className="flex flex-col gap-1.5">
-                                    <span className="text-[9px] font-black uppercase tracking-widest opacity-30">Lancement</span>
-                                    <div className="flex items-center gap-2 font-black text-sm tracking-tight text-black dark:text-white">
+                                <div className="flex flex-col gap-1">
+                                    <span className="text-[7px] sm:text-[8px] font-bold uppercase tracking-widest opacity-30">Lancement</span>
+                                    <div className="flex items-center gap-1.5 font-bold text-[11px] sm:text-xs tracking-tight text-black dark:text-white">
                                         <div className="p-1 rounded-lg bg-blue-500/10 text-blue-600">
                                             <Calendar className="h-3 w-3" />
                                         </div>
@@ -190,8 +190,8 @@ export default function ProjectsList() {
                                 </div>
                             </div>
 
-                            <div className="absolute bottom-6 right-8 p-3.5 rounded-[1.2rem] bg-black/5 dark:bg-white/10 text-black dark:text-white opacity-0 group-hover:opacity-100 group-hover:bg-black dark:group-hover:bg-white group-hover:text-white dark:group-hover:text-black transition-all transform translate-x-4 group-hover:translate-x-0 duration-500 shadow-xl">
-                                <ArrowRight className="h-5 w-5" />
+                            <div className="absolute bottom-5 right-6 p-3 rounded-xl bg-black/5 dark:bg-white/10 text-black dark:text-white opacity-0 group-hover:opacity-100 group-hover:bg-black dark:group-hover:bg-white group-hover:text-white dark:group-hover:text-black transition-all transform translate-x-4 group-hover:translate-x-0 duration-500 shadow-lg">
+                                <ArrowRight className="h-4 w-4" />
                             </div>
                         </Link>
                     ))}
