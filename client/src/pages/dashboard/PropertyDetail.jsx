@@ -13,7 +13,7 @@ import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
-import { cn } from '../../lib/utils';
+import { cn, formatCurrency } from '../../lib/utils';
 import WalletCard from '../../components/dashboard/WalletCard';
 import CashCallModal from '../../components/dashboard/CashCallModal';
 import SettlementModal from '../../components/dashboard/SettlementModal';
@@ -513,7 +513,7 @@ export default function PropertyDetail() {
                             <div className="flex flex-col gap-0.5 md:gap-1">
                                 <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Loyer mensuel</span>
                                 <div className="flex items-baseline gap-2">
-                                    <span className="text-2xl md:text-3xl font-black">{Number(property.loyer_mensuel).toLocaleString('fr-FR')} €</span>
+                                    <span className="text-2xl md:text-3xl font-black">{formatCurrency(property.loyer_mensuel)}</span>
                                 </div>
                             </div>
                         )}
@@ -521,7 +521,7 @@ export default function PropertyDetail() {
                             <div className="flex flex-col gap-0.5 md:gap-1">
                                 <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Nuitée</span>
                                 <div className="flex items-baseline gap-2">
-                                    <span className="text-2xl md:text-3xl font-black">{Number(property.prix_nuitee).toLocaleString('fr-FR')} €</span>
+                                    <span className="text-2xl md:text-3xl font-black">{formatCurrency(property.prix_nuitee)}</span>
                                 </div>
                             </div>
                         )}
@@ -616,7 +616,7 @@ export default function PropertyDetail() {
                                         <div className="space-y-1">
                                             <dt className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-primary">Investissement Initial</dt>
                                             <dd className="font-black text-xl md:text-2xl tracking-tighter text-primary">
-                                                {(Number(property.prix_acquisition) + Number(property.frais_acquisition_annexes || 0)).toLocaleString('fr-FR')} €
+                                                {formatCurrency(Number(property.prix_acquisition) + Number(property.frais_acquisition_annexes || 0), true)}
                                             </dd>
                                         </div>
                                     )}
@@ -664,11 +664,11 @@ export default function PropertyDetail() {
                                     <div className="space-y-6">
                                         <div className="flex justify-between items-end pb-4 border-b border-slate-100">
                                             <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Prix de mise en vente</span>
-                                            <span className="text-xl md:text-2xl font-black tracking-tighter">{property.prix_acquisition ? `${Number(property.prix_acquisition).toLocaleString('fr-FR')} €` : 'N/A'}</span>
+                                            <span className="text-xl md:text-2xl font-black tracking-tighter">{formatCurrency(property.prix_acquisition, true)}</span>
                                         </div>
                                         <div className="flex justify-between items-end pb-4 border-b border-slate-100">
                                             <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Honoraires & Frais annexes</span>
-                                            <span className="text-base md:text-lg font-black text-muted-foreground tracking-tight">+{property.frais_acquisition_annexes ? `${Number(property.frais_acquisition_annexes).toLocaleString('fr-FR')} €` : '0 €'}</span>
+                                            <span className="text-base md:text-lg font-black text-muted-foreground tracking-tight">+{formatCurrency(property.frais_acquisition_annexes, true)}</span>
                                         </div>
                                         <div className="flex items-center gap-3 pt-2">
                                             <div className={cn("p-1.5 md:p-2 rounded-lg md:rounded-xl", property.negociable ? "bg-emerald-500 text-white shadow-lg shadow-emerald-200" : "bg-slate-100 text-slate-400")}>
@@ -691,16 +691,16 @@ export default function PropertyDetail() {
                                     <div className="space-y-6">
                                         <div className="flex justify-between items-end pb-4 border-b border-slate-100">
                                             <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Loyer Principal</span>
-                                            <span className="text-2xl md:text-3xl font-black text-primary tracking-tighter">{property.loyer_mensuel ? `${Number(property.loyer_mensuel).toLocaleString('fr-FR')} €` : 'N/A'}</span>
+                                            <span className="text-2xl md:text-3xl font-black text-primary tracking-tighter">{formatCurrency(property.loyer_mensuel)}</span>
                                         </div>
                                         <div className="grid grid-cols-2 gap-6 md:gap-10">
                                             <div className="space-y-1">
                                                 <dt className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Charges Mensuelles</dt>
-                                                <dd className="font-black text-base md:text-lg tracking-tight">{property.charges_mensuelles ? `${Number(property.charges_mensuelles).toLocaleString('fr-FR')} €` : 'N/A'}</dd>
+                                                <dd className="font-black text-base md:text-lg tracking-tight">{formatCurrency(property.charges_mensuelles)}</dd>
                                             </div>
                                             <div className="space-y-1">
                                                 <dt className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Dépôt de Garantie</dt>
-                                                <dd className="font-black text-base md:text-lg tracking-tight">{property.depot_garantie ? `${Number(property.depot_garantie).toLocaleString('fr-FR')} €` : 'N/A'}</dd>
+                                                <dd className="font-black text-base md:text-lg tracking-tight">{formatCurrency(property.depot_garantie)}</dd>
                                             </div>
                                         </div>
                                     </div>
@@ -718,7 +718,7 @@ export default function PropertyDetail() {
                                     <div className="space-y-6">
                                         <div className="flex flex-col gap-1 pb-4 border-b border-slate-100">
                                             <dt className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Enveloppe Budgétaire Globale</dt>
-                                            <dd className="font-black text-2xl md:text-4xl tracking-tighter text-black">{property.budget_total ? `${Number(property.budget_total).toLocaleString('fr-FR')} €` : 'Non défini'}</dd>
+                                            <dd className="font-black text-2xl md:text-4xl tracking-tighter text-black">{formatCurrency(property.budget_total, true)}</dd>
                                         </div>
                                     </div>
                                 </div>

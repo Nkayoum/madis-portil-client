@@ -5,7 +5,7 @@ import { Building2, Calendar, Euro, ArrowRight, Loader2, Plus, HardHat, Clipboar
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { useAuth } from '../../context/AuthContext';
-import { cn } from '../../lib/utils';
+import { cn, formatCurrency } from '../../lib/utils';
 
 export default function ProjectsList() {
     const { user } = useAuth();
@@ -176,7 +176,7 @@ export default function ProjectsList() {
                                         <div className="p-1 rounded-lg bg-emerald-500/10 text-emerald-600">
                                             <Euro className="h-3 w-3" />
                                         </div>
-                                        <span>{project.budget ? `${Number(project.budget).toLocaleString('fr-FR')} €` : 'N/A'}</span>
+                                        <span className="whitespace-nowrap">{formatCurrency(project.budget, true)}</span>
                                     </div>
                                 </div>
                                 <div className="flex flex-col gap-1.5">

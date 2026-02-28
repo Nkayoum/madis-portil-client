@@ -8,7 +8,7 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { cn } from '../../lib/utils';
+import { cn, formatCurrency } from '../../lib/utils';
 
 export default function ProjectDetail() {
     const { id } = useParams();
@@ -311,7 +311,7 @@ export default function ProjectDetail() {
                                                     "px-5 md:px-6 py-3 md:py-4 text-right font-black text-xs md:text-sm tracking-tight",
                                                     tx.type === 'INFLOW' ? 'text-emerald-600' : 'text-rose-600'
                                                 )}>
-                                                    <span className="whitespace-nowrap">{tx.type === 'INFLOW' ? '+' : '-'}{Number(tx.amount).toLocaleString('fr-FR')} €</span>
+                                                    <span className="whitespace-nowrap">{tx.type === 'INFLOW' ? '+' : '-'}{formatCurrency(tx.amount)}</span>
                                                 </td>
                                             </tr>
                                         ))}
@@ -379,7 +379,7 @@ export default function ProjectDetail() {
                                     <div className="p-1.5 md:p-2 rounded-xl bg-black/5 text-black">
                                         <Euro className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />
                                     </div>
-                                    <span className="break-all">{project.budget ? `${Number(project.budget).toLocaleString('fr-FR')} €` : 'N/A'}</span>
+                                    <span className="break-all">{formatCurrency(project.budget, true)}</span>
                                 </div>
                             </div>
 
@@ -388,7 +388,7 @@ export default function ProjectDetail() {
                                     <div className="flex justify-between items-end">
                                         <div className="flex flex-col gap-0.5 md:gap-1">
                                             <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest opacity-40">Consommé</span>
-                                            <span className="text-lg md:text-xl font-black tracking-tight">{Number(project.budget_spent).toLocaleString('fr-FR')} €</span>
+                                            <span className="text-lg md:text-xl font-black tracking-tight">{formatCurrency(project.budget_spent, true)}</span>
                                         </div>
                                         <div className="px-2 py-0.5 bg-black text-white text-[8px] md:text-[10px] font-black rounded-lg shadow-lg">
                                             {project.budget_consumed_percentage}%
@@ -406,7 +406,7 @@ export default function ProjectDetail() {
                                     </div>
                                     <div className="flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center text-[8px] md:text-[9px] font-black uppercase tracking-widest opacity-40">
                                         <span className="whitespace-nowrap">Réelles</span>
-                                        <span className="whitespace-nowrap">Reste: {Number(project.budget - project.budget_spent).toLocaleString('fr-FR')} €</span>
+                                        <span className="whitespace-nowrap">Reste: {formatCurrency(project.budget - project.budget_spent, true)}</span>
                                     </div>
                                 </div>
                             )}

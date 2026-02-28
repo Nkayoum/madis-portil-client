@@ -9,7 +9,7 @@ import {
     Euro, CheckCircle, ArrowRight, Phone, Mail, User, MessageSquare,
     ShieldCheck, FileText, Download
 } from 'lucide-react';
-import { cn } from '../../lib/utils';
+import { cn, formatCurrency } from '../../lib/utils';
 
 const CATEGORIES = [
     { value: '', label: 'Toutes', icon: Filter },
@@ -95,9 +95,9 @@ export default function DashboardMarketplace() {
 
     const getPrice = (p) => {
         if (p.transaction_nature === 'VENTE' && p.prix_vente)
-            return `${Number(p.prix_vente).toLocaleString('fr-FR')} €`;
+            return formatCurrency(p.prix_vente, true);
         if (p.transaction_nature === 'LOCATION' && p.loyer_mensuel)
-            return `${Number(p.loyer_mensuel).toLocaleString('fr-FR')} €/mois`;
+            return formatCurrency(p.loyer_mensuel) + '/mois';
         return null;
     };
 

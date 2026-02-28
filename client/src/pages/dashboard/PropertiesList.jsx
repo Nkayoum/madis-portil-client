@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../lib/axios';
 import { Building, MapPin, Ruler, ArrowRight, Loader2, Plus, Filter, Tag, LayoutGrid, User, ShoppingBag, Briefcase, Trash2, CheckCircle2, Square, CheckSquare, X, MessageSquare } from 'lucide-react';
-import { cn } from '../../lib/utils';
+import { cn, formatCurrency } from '../../lib/utils';
 
 export default function PropertiesList() {
     const { user } = useAuth();
@@ -285,8 +285,8 @@ export default function PropertiesList() {
                                                 </span>
                                                 <h4 className="text-2xl md:text-3xl font-black tracking-tighter">
                                                     {property.transaction_nature === 'VENTE'
-                                                        ? (property.prix_vente ? Number(property.prix_vente).toLocaleString('fr-FR') + ' €' : '-- €')
-                                                        : (property.loyer_mensuel ? Number(property.loyer_mensuel).toLocaleString('fr-FR') + ' €/m' : '-- €/m')}
+                                                        ? (property.prix_vente ? formatCurrency(property.prix_vente, true) : '-- €')
+                                                        : (property.loyer_mensuel ? formatCurrency(property.loyer_mensuel) + '/m' : '-- €/m')}
                                                 </h4>
                                             </div>
                                         )}
