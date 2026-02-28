@@ -30,29 +30,12 @@ export default function FormalAnnualReport({ data, selectedYear, letterheadUrl, 
                 minHeight: '1123px',
                 fontFamily: 'Inter, Arial, sans-serif',
                 color: '#111',
-                background: '#fff',
+                background: hasLetterhead ? 'transparent' : '#fff',
                 position: 'relative',
                 boxSizing: 'border-box',
                 padding: 0,
             }}
         >
-            {/* Full-page letterhead background */}
-            {hasLetterhead && (
-                <img
-                    src={letterheadUrl}
-                    alt=""
-                    style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        pointerEvents: 'none',
-                        zIndex: 0,
-                    }}
-                />
-            )}
 
             {/* Content container — positioned to avoid header/footer zones */}
             <div style={{

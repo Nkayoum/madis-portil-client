@@ -77,25 +77,61 @@ export default function AnnualReport({ data, selectedYear, isAdmin }) {
         if (!reportRef.current) return;
         setGenerating(true);
         try {
-            const canvas = await html2canvas(reportRef.current, {
-                scale: 2,
-                useCORS: true,
-                backgroundColor: '#ffffff',
-                logging: false,
-            });
-            const imgData = canvas.toDataURL('image/png');
             const pdf = new jsPDF('p', 'mm', 'a4');
             const pdfWidth = pdf.internal.pageSize.getWidth();
             const pdfHeight = pdf.internal.pageSize.getHeight();
+
+            // Step 1: If letterhead exists, add it directly to PDF at native resolution
+            if (letterheadUrl) {
+                // Load the original image at full quality
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                await new Promise((resolve, reject) => {
+                    img.onload = resolve;
+                    img.onerror = reject;
+                    img.src = letterheadUrl;
+                });
+
+                // Determine format from the data URL or default to PNG
+                let format = 'PNG';
+                if (letterheadUrl.includes('image/jpeg') || letterheadUrl.includes('image/jpg')) {
+                    format = 'JPEG';
+                }
+
+                // Add letterhead at full page size, native resolution
+                pdf.addImage(img, format, 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
+            }
+
+            // Step 2: Capture only the financial content (without letterhead background)
+            const canvas = await html2canvas(reportRef.current, {
+                scale: 3,
+                useCORS: true,
+                backgroundColor: letterheadUrl ? null : '#ffffff', // Transparent if letterhead
+                logging: false,
+                imageTimeout: 0,
+            });
+
+            const contentImgData = canvas.toDataURL('image/png');
             const imgWidth = pdfWidth;
             const imgHeight = (canvas.height * pdfWidth) / canvas.width;
 
-            // If the image is taller than one page, we may need multiple pages
+            // Overlay content on top of letterhead (or as standalone)
             let yOffset = 0;
+            let pageNum = 0;
             while (yOffset < imgHeight) {
-                if (yOffset > 0) pdf.addPage();
-                pdf.addImage(imgData, 'PNG', 0, -yOffset, imgWidth, imgHeight);
+                if (pageNum > 0) {
+                    pdf.addPage();
+                    // Add letterhead to subsequent pages too
+                    if (letterheadUrl) {
+                        const img = new Image();
+                        img.src = letterheadUrl;
+                        let format = letterheadUrl.includes('image/jpeg') ? 'JPEG' : 'PNG';
+                        pdf.addImage(img, format, 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
+                    }
+                }
+                pdf.addImage(contentImgData, 'PNG', 0, -yOffset, imgWidth, imgHeight);
                 yOffset += pdfHeight;
+                pageNum++;
             }
 
             pdf.save(`Rapport_Annuel_MaDis_${selectedYear}.pdf`);
