@@ -45,7 +45,7 @@ export default function CreateUser() {
     const ic = "h-14 w-full rounded-2xl solaris-glass border border-white/20 bg-white/40 px-6 text-[10px] font-black uppercase tracking-widest placeholder:text-muted-foreground/40 focus:bg-white focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-sm";
 
     return (
-        <div className="max-w-3xl mx-auto space-y-12 pb-24 animate-fade-in">
+        <div className="max-w-3xl mx-auto space-y-12 pb-8 animate-fade-in">
             <Link
                 to="/dashboard/users"
                 className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-all group"
@@ -156,7 +156,7 @@ export default function CreateUser() {
                         </select>
                     </div>
 
-                    <div className="flex items-center justify-end gap-6 pt-10 border-t border-black/5">
+                    <div className="flex flex-col-reverse sm:flex-row items-center justify-center gap-4 pt-10 border-t border-black/5">
                         <Link
                             to="/dashboard/users"
                             className="h-14 px-10 rounded-2xl solaris-glass border border-slate-200 text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all flex items-center justify-center shadow-sm"
@@ -166,7 +166,7 @@ export default function CreateUser() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="h-14 px-12 rounded-2xl bg-black text-white text-[10px] font-black uppercase tracking-widest hover:bg-zinc-800 transition-all flex items-center justify-center gap-2 shadow-2xl disabled:opacity-50"
+                            className="h-14 px-12 rounded-2xl bg-black text-white text-[10px] font-black uppercase tracking-widest hover:bg-zinc-800 transition-all flex items-center justify-center gap-2 shadow-2xl disabled:opacity-50 whitespace-nowrap"
                         >
                             {loading ? (
                                 <><Loader2 className="h-4 w-4 animate-spin" /> Inscription...</>
