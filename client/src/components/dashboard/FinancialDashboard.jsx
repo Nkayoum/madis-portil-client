@@ -515,18 +515,18 @@ export default function FinancialDashboard({ isAdmin = false }) {
             {/* Global Wallets Overview Section (Admin Only) */}
             {isAdmin && (
                 <div className="bg-card border rounded-xl overflow-hidden shadow-sm animate-fade-in mt-8">
-                    <div className="p-6 border-b bg-muted/30 flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="p-2 rounded-lg bg-primary/10 text-primary">
+                    <div className="p-4 sm:p-6 border-b bg-muted/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div className="flex items-center gap-3 min-w-0">
+                            <div className="p-2 rounded-lg bg-primary/10 text-primary shrink-0">
                                 <Wallet className="h-5 w-5" />
                             </div>
-                            <h3 className="font-semibold text-lg">Suivi des Mandats (Trésorerie Régie)</h3>
+                            <h3 className="font-semibold text-sm sm:text-lg truncate">Suivi des Mandats (Trésorerie Régie)</h3>
                         </div>
-                        <div className="flex items-center gap-4">
-                            <div className="text-right">
+                        <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+                            <div className="text-left sm:text-right">
                                 <p className="text-[10px] uppercase font-black text-muted-foreground leading-tight">Liquidité Totale</p>
-                                <p className="text-sm font-black text-primary">
-                                    {wallets.reduce((sum, w) => sum + Number(w.balance), 0).toLocaleString()}€
+                                <p className="text-sm font-black text-primary whitespace-nowrap">
+                                    {wallets.reduce((sum, w) => sum + Number(w.balance), 0).toLocaleString()} €
                                 </p>
                             </div>
                             <button
