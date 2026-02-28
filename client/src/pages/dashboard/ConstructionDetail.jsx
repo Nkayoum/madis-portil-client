@@ -792,7 +792,7 @@ export default function ConstructionDetail() {
                                                                 <>
                                                                     <Link
                                                                         to={`/dashboard/finance/transactions/${tx.id}/edit?site=${id}`}
-                                                                        className="p-1.5 md:p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-xl transition-all inline-block opacity-0 group-hover:opacity-100"
+                                                                        className="p-1.5 md:p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-xl transition-all inline-block opacity-100 md:opacity-0 md:group-hover:opacity-100"
                                                                         title="Modifier"
                                                                     >
                                                                         <Edit className="h-4 w-4" />
@@ -809,7 +809,7 @@ export default function ConstructionDetail() {
                                                                                 showToast({ message: 'Erreur lors de la suppression.', type: 'error' });
                                                                             }
                                                                         }}
-                                                                        className="p-1.5 md:p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all inline-block opacity-0 group-hover:opacity-100 text-red-500"
+                                                                        className="p-1.5 md:p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all inline-block opacity-100 md:opacity-0 md:group-hover:opacity-100 text-red-500"
                                                                         title="Supprimer"
                                                                     >
                                                                         <Trash2 className="h-4 w-4" />
