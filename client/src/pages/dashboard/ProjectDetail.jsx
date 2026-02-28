@@ -124,17 +124,17 @@ export default function ProjectDetail() {
     };
 
     return (
-        <div className="space-y-8 md:space-y-12 animate-fade-in max-w-[1600px] mx-auto px-4 lg:px-8 py-8">
+        <div className="space-y-6 md:space-y-12 animate-fade-in max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8 overflow-x-hidden w-full">
             <Link to="/dashboard/projects" className="inline-flex items-center text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-black transition-all group">
                 <ArrowLeft className="mr-3 h-4 w-4 group-hover:-translate-x-1 transition-transform" />
                 Retour aux projets
             </Link>
 
-            <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-xl relative overflow-hidden">
+            <div className="solaris-glass rounded-[1.5rem] sm:rounded-[2.5rem] p-5 sm:p-10 border-none shadow-xl relative overflow-hidden w-full">
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
                     <div className="space-y-4">
                         <div className="flex flex-col sm:flex-row sm:items-center gap-4 md:gap-6">
-                            <h1 className="text-3xl md:text-4xl font-black tracking-tighter uppercase leading-tight md:leading-none">{project.name}</h1>
+                            <h1 className="text-xl sm:text-3xl md:text-4xl font-black tracking-tighter uppercase leading-tight md:leading-none break-words max-w-full">{project.name}</h1>
                             <span className={cn(
                                 "inline-flex items-center gap-2 px-4 md:px-5 py-2 rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-widest shadow-lg whitespace-nowrap w-fit",
                                 getStatusColor(project.status)
@@ -145,10 +145,10 @@ export default function ProjectDetail() {
                         </div>
                         <Link
                             to={`/dashboard/properties/${project.property}`}
-                            className="flex items-center gap-3 text-muted-foreground hover:text-black transition-all group bg-black/5 hover:bg-black/10 px-4 py-2 rounded-xl border border-black/5 w-fit"
+                            className="flex items-center gap-3 text-muted-foreground hover:text-black transition-all group bg-black/5 hover:bg-black/10 px-4 py-2 rounded-xl border border-black/5 w-fit max-w-full overflow-hidden"
                         >
                             <Building2 className="h-4 w-4 opacity-40 group-hover:opacity-100" />
-                            <span className="text-[11px] font-black uppercase tracking-widest">Bien associé : {project.property_name}</span>
+                            <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest truncate">Bien associé : {project.property_name}</span>
                         </Link>
                     </div>
                     {user?.role === 'ADMIN_MADIS' && (
@@ -165,30 +165,30 @@ export default function ProjectDetail() {
                                 className="inline-flex items-center justify-center rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border border-black/10 bg-black text-white shadow-xl hover:bg-black/80 h-12 px-8"
                             >
                                 <Edit className="mr-2 h-4 w-4" />
-                                Modifier le projet
+                                Modifier
                             </Link>
                         </div>
                     )}
                 </div>
             </div>
 
-            <div className="grid gap-8 md:gap-12 lg:grid-cols-3">
+            <div className="grid gap-8 md:gap-12 lg:grid-cols-3 w-full min-w-0">
                 {/* Main Content */}
-                <div className="lg:col-span-2 space-y-8 md:space-y-12">
-                    <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-lg">
+                <div className="lg:col-span-2 space-y-6 md:space-y-12 w-full min-w-0">
+                    <div className="solaris-glass rounded-[1.5rem] sm:rounded-[2.5rem] p-5 sm:p-10 border-none shadow-lg w-full overflow-hidden">
                         <h3 className="text-lg md:text-xl font-black tracking-tighter uppercase mb-6 md:mb-8 flex items-center gap-4">
                             <div className="p-2.5 md:p-3 rounded-xl md:rounded-2xl bg-black text-white shadow-xl">
                                 <ClipboardList className="h-5 w-5 md:h-6 w-6" />
                             </div>
                             Description du Projet
                         </h3>
-                        <p className="text-[12px] md:text-[13px] font-medium text-muted-foreground leading-relaxed whitespace-pre-wrap opacity-80">
+                        <p className="text-[12px] md:text-[13px] font-medium text-muted-foreground leading-relaxed whitespace-pre-wrap opacity-80 break-words">
                             {project.description || "Aucune description détaillée n'a été fournie pour ce projet."}
                         </p>
                     </div>
 
-                    <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-lg">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 md:gap-8 mb-8 md:mb-10">
+                    <div className="solaris-glass rounded-[1.5rem] sm:rounded-[2.5rem] p-5 sm:p-10 border-none shadow-lg w-full overflow-hidden">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 md:gap-8 mb-6 md:mb-10 w-full min-w-0">
                             <h3 className="text-lg md:text-xl font-black tracking-tighter uppercase flex items-center gap-4">
                                 <div className="p-2.5 md:p-3 rounded-xl md:rounded-2xl bg-black text-white shadow-xl">
                                     <HardHat className="h-5 w-5 md:h-6 w-6" />
@@ -198,7 +198,7 @@ export default function ProjectDetail() {
                             {user?.role === 'ADMIN_MADIS' && (
                                 <Link
                                     to={`/dashboard/construction/new?projectId=${id}`}
-                                    className="inline-flex items-center justify-center rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all bg-black text-white hover:bg-black/80 h-11 md:h-12 px-6 md:px-8 shadow-xl"
+                                    className="inline-flex items-center justify-center rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all bg-black text-white hover:bg-black/80 h-10 px-6 shadow-xl whitespace-nowrap w-full sm:w-auto"
                                 >
                                     <Plus className="mr-2 h-4 w-4" />
                                     Démarrer un Chantier
@@ -216,10 +216,10 @@ export default function ProjectDetail() {
                                     <Link
                                         key={site.id}
                                         to={`/dashboard/construction/${site.id}`}
-                                        className="group block p-6 md:p-8 solaris-glass bg-white/40 hover:bg-white/60 border-none rounded-[1.5rem] md:rounded-[2rem] transition-all hover:scale-[1.02] shadow-sm hover:shadow-xl"
+                                        className="group block p-5 sm:p-8 solaris-glass bg-white/40 hover:bg-white/60 border-none rounded-[1.2rem] sm:rounded-[2rem] transition-all hover:scale-[1.01] shadow-sm hover:shadow-xl w-full overflow-hidden"
                                     >
-                                        <div className="flex justify-between items-start md:items-center mb-4 md:mb-6">
-                                            <span className="text-base md:text-lg font-black tracking-tight group-hover:text-primary transition-colors pr-4">{site.name}</span>
+                                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 md:mb-6">
+                                            <span className="text-base md:text-lg font-black tracking-tight group-hover:text-primary transition-colors pr-2">{site.name}</span>
                                             <div className="flex items-center gap-2 shrink-0">
                                                 <span className="text-xs md:text-sm font-black text-primary bg-primary/10 px-2.5 md:px-3 py-1 rounded-lg shadow-sm">{site.progress_percentage}%</span>
                                             </div>
@@ -237,13 +237,13 @@ export default function ProjectDetail() {
                                                     <span>{site.status_display || site.status}</span>
                                                 </div>
                                                 {site.end_date && (
-                                                    <div className="flex items-center gap-2 opacity-60 font-mono">
+                                                    <div className="flex items-center gap-2 opacity-60 font-mono whitespace-nowrap">
                                                         <Calendar className="h-3 w-3" />
                                                         <span>FIN: {format(new Date(site.end_date), 'd MMM yyyy', { locale: fr }).toUpperCase()}</span>
                                                     </div>
                                                 )}
                                             </div>
-                                            <div className="flex items-center gap-2 group-hover:translate-x-2 transition-all group-hover:text-black">
+                                            <div className="flex items-center gap-2 group-hover:translate-x-2 transition-all group-hover:text-black shrink-0">
                                                 Voir le journal <ArrowRight className="h-4 w-4" />
                                             </div>
                                         </div>
@@ -258,8 +258,8 @@ export default function ProjectDetail() {
                         )}
                     </div>
 
-                    <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-lg">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 md:gap-8 mb-8 md:mb-10">
+                    <div className="solaris-glass rounded-[1.5rem] sm:rounded-[2.5rem] p-5 sm:p-10 border-none shadow-lg w-full overflow-hidden">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 md:gap-8 mb-6 md:mb-10 w-full min-w-0">
                             <h3 className="text-lg md:text-xl font-black tracking-tighter uppercase flex items-center gap-4">
                                 <div className="p-2.5 md:p-3 rounded-xl md:rounded-2xl bg-black text-white shadow-xl">
                                     <Euro className="h-5 w-5 md:h-6 w-6" />
@@ -269,7 +269,7 @@ export default function ProjectDetail() {
                             {user?.role === 'ADMIN_MADIS' && (
                                 <Link
                                     to={`/dashboard/finance/transactions/new?projectId=${id}`}
-                                    className="inline-flex items-center justify-center rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all bg-black text-white hover:bg-black/80 h-10 px-6 shadow-lg"
+                                    className="inline-flex items-center justify-center rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all bg-black text-white hover:bg-black/80 h-10 px-6 shadow-lg whitespace-nowrap w-full sm:w-auto"
                                 >
                                     <Plus className="mr-2 h-4 w-4" />
                                     Nouvelle Transaction
@@ -286,13 +286,13 @@ export default function ProjectDetail() {
                                 <p className="text-[11px] font-black uppercase tracking-widest">Aucune transaction répertoriée.</p>
                             </div>
                         ) : (
-                            <div className="overflow-x-auto no-scrollbar -mx-6 px-6 md:mx-0 md:px-0 rounded-[1.5rem] border border-black/5 shadow-inner">
+                            <div className="w-full overflow-x-auto no-scrollbar rounded-xl sm:rounded-[1.5rem] border border-black/5 shadow-inner bg-white/10">
                                 <table className="w-full min-w-[500px]">
                                     <thead>
                                         <tr className="border-b-2 border-black/5 text-left bg-black/[0.02]">
-                                            <th className="px-4 md:px-6 py-4 md:py-5 text-[9px] md:text-[10px] font-black uppercase tracking-widest opacity-40">Date</th>
-                                            <th className="px-4 md:px-6 py-4 md:py-5 text-[9px] md:text-[10px] font-black uppercase tracking-widest opacity-40">Description</th>
-                                            <th className="px-4 md:px-6 py-4 md:py-5 text-[9px] md:text-[10px] font-black uppercase tracking-widest opacity-40 text-right">Montant</th>
+                                            <th className="px-5 md:px-6 py-4 md:py-5 text-[9px] md:text-[10px] font-black uppercase tracking-widest opacity-40">Date</th>
+                                            <th className="px-5 md:px-6 py-4 md:py-5 text-[9px] md:text-[10px] font-black uppercase tracking-widest opacity-40">Description</th>
+                                            <th className="px-5 md:px-6 py-4 md:py-5 text-[9px] md:text-[10px] font-black uppercase tracking-widest opacity-40 text-right">Montant</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-black/5 bg-white/20">
@@ -308,10 +308,10 @@ export default function ProjectDetail() {
                                                     </div>
                                                 </td>
                                                 <td className={cn(
-                                                    "px-4 md:px-6 py-3 md:py-4 text-right font-black text-xs md:text-sm tracking-tight",
+                                                    "px-5 md:px-6 py-3 md:py-4 text-right font-black text-xs md:text-sm tracking-tight",
                                                     tx.type === 'INFLOW' ? 'text-emerald-600' : 'text-rose-600'
                                                 )}>
-                                                    {tx.type === 'INFLOW' ? '+' : '-'}{Number(tx.amount).toLocaleString('fr-FR')} €
+                                                    <span className="whitespace-nowrap">{tx.type === 'INFLOW' ? '+' : '-'}{Number(tx.amount).toLocaleString('fr-FR')} €</span>
                                                 </td>
                                             </tr>
                                         ))}
@@ -330,56 +330,8 @@ export default function ProjectDetail() {
                 </div>
 
                 {/* Sidebar Info */}
-                <div className="space-y-8 md:space-y-12">
-                    <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-lg">
-                        <h3 className="text-base md:text-lg font-black tracking-tighter uppercase mb-8 md:mb-10 flex items-center gap-4">
-                            <div className="p-2 md:p-2.5 rounded-xl bg-black text-white shadow-lg">
-                                <Euro className="h-4 w-4 md:h-5 md:w-5" />
-                            </div>
-                            Détails Financiers
-                        </h3>
-                        <div className="space-y-8 md:space-y-10">
-                            <div className="group">
-                                <div className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-40 mb-2 md:mb-3 group-hover:opacity-100 transition-opacity">Budget Total</div>
-                                <div className="flex items-center gap-3 md:gap-4 text-2xl md:text-3xl font-black tracking-tighter">
-                                    <div className="p-1.5 md:p-2 rounded-xl bg-black/5 text-black">
-                                        <Euro className="h-5 w-5 md:h-6 w-6" />
-                                    </div>
-                                    {project.budget ? `${Number(project.budget).toLocaleString('fr-FR')} €` : 'N/A'}
-                                </div>
-                            </div>
-
-                            {project.budget > 0 && (
-                                <div className="pt-8 md:pt-10 border-t border-black/5 space-y-4 md:space-y-6">
-                                    <div className="flex justify-between items-end">
-                                        <div className="flex flex-col gap-0.5 md:gap-1">
-                                            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest opacity-40">Consommé</span>
-                                            <span className="text-lg md:text-xl font-black tracking-tight">{Number(project.budget_spent).toLocaleString('fr-FR')} €</span>
-                                        </div>
-                                        <div className="px-2.5 md:px-3 py-1 bg-black text-white text-[9px] md:text-[10px] font-black rounded-lg shadow-lg">
-                                            {project.budget_consumed_percentage}%
-                                        </div>
-                                    </div>
-                                    <div className="w-full bg-black/5 rounded-full h-2.5 md:h-3 overflow-hidden shadow-inner">
-                                        <div
-                                            className={cn(
-                                                "h-full rounded-full transition-all duration-1000 relative after:absolute after:inset-0 after:bg-white/20",
-                                                project.budget_consumed_percentage > 90 ? "bg-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.4)]" :
-                                                    project.budget_consumed_percentage > 75 ? "bg-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.4)]" : "bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.4)]"
-                                            )}
-                                            style={{ width: `${Math.min(project.budget_consumed_percentage, 100)}%` }}
-                                        />
-                                    </div>
-                                    <div className="flex justify-between items-center text-[8px] md:text-[9px] font-black uppercase tracking-widest opacity-40">
-                                        <span>Dépenses réelles</span>
-                                        <span>Reste: {Number(project.budget - project.budget_spent).toLocaleString('fr-FR')} €</span>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-
-                    <div className="solaris-glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-none shadow-lg">
+                <div className="space-y-6 md:space-y-12 w-full min-w-0">
+                    <div className="solaris-glass rounded-[1.5rem] sm:rounded-[2.5rem] p-5 sm:p-10 border-none shadow-lg w-full overflow-hidden">
                         <h3 className="text-base md:text-lg font-black tracking-tighter uppercase mb-8 md:mb-10 flex items-center gap-4">
                             <div className="p-2 md:p-2.5 rounded-xl bg-black text-white shadow-lg">
                                 <Calendar className="h-4 w-4 md:h-5 md:w-5" />
@@ -394,7 +346,7 @@ export default function ProjectDetail() {
                                     </div>
                                     <div className="space-y-1">
                                         <div className="text-[9px] md:text-[10px] font-black uppercase tracking-widest opacity-40 group-hover:opacity-100 transition-opacity">Date de début</div>
-                                        <div className="text-[12px] md:text-sm font-black tracking-tight uppercase">
+                                        <div className="text-[11px] sm:text-[12px] md:text-sm font-black tracking-tight uppercase">
                                             {project.start_date ? format(new Date(project.start_date), 'd MMMM yyyy', { locale: fr }) : 'Non planifiée'}
                                         </div>
                                     </div>
@@ -405,7 +357,7 @@ export default function ProjectDetail() {
                                     </div>
                                     <div className="space-y-1">
                                         <div className="text-[9px] md:text-[10px] font-black uppercase tracking-widest opacity-40 group-hover:opacity-100 transition-opacity">Fin estimée</div>
-                                        <div className="text-[12px] md:text-sm font-black tracking-tight uppercase text-amber-600 group-hover:text-inherit transition-colors">
+                                        <div className="text-[11px] sm:text-[12px] md:text-sm font-black tracking-tight uppercase text-amber-600 group-hover:text-inherit transition-colors">
                                             {project.estimated_end_date ? format(new Date(project.estimated_end_date), 'd MMMM yyyy', { locale: fr }) : 'Non définie'}
                                         </div>
                                     </div>
@@ -413,6 +365,54 @@ export default function ProjectDetail() {
                             </div>
                         </div>
                     </div>
+                    <div className="solaris-glass rounded-[1.5rem] sm:rounded-[2.5rem] p-5 sm:p-10 border-none shadow-lg w-full overflow-hidden">
+                        <h3 className="text-base md:text-lg font-black tracking-tighter uppercase mb-8 md:mb-10 flex items-center gap-4">
+                            <div className="p-2 md:p-2.5 rounded-xl bg-black text-white shadow-lg">
+                                <Euro className="h-4 w-4 md:h-5 md:w-5" />
+                            </div>
+                            Détails Financiers
+                        </h3>
+                        <div className="space-y-8 md:space-y-10">
+                            <div className="group">
+                                <div className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-40 mb-2 md:mb-3 group-hover:opacity-100 transition-opacity">Budget Total</div>
+                                <div className="flex items-center gap-3 md:gap-4 text-xl sm:text-2xl md:text-3xl font-black tracking-tighter">
+                                    <div className="p-1.5 md:p-2 rounded-xl bg-black/5 text-black">
+                                        <Euro className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />
+                                    </div>
+                                    <span className="break-all">{project.budget ? `${Number(project.budget).toLocaleString('fr-FR')} €` : 'N/A'}</span>
+                                </div>
+                            </div>
+
+                            {project.budget > 0 && (
+                                <div className="pt-8 md:pt-10 border-t border-black/5 space-y-4 md:space-y-6">
+                                    <div className="flex justify-between items-end">
+                                        <div className="flex flex-col gap-0.5 md:gap-1">
+                                            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest opacity-40">Consommé</span>
+                                            <span className="text-lg md:text-xl font-black tracking-tight">{Number(project.budget_spent).toLocaleString('fr-FR')} €</span>
+                                        </div>
+                                        <div className="px-2 py-0.5 bg-black text-white text-[8px] md:text-[10px] font-black rounded-lg shadow-lg">
+                                            {project.budget_consumed_percentage}%
+                                        </div>
+                                    </div>
+                                    <div className="w-full bg-black/5 rounded-full h-2.5 md:h-3 overflow-hidden shadow-inner">
+                                        <div
+                                            className={cn(
+                                                "h-full rounded-full transition-all duration-1000 relative after:absolute after:inset-0 after:bg-white/20",
+                                                project.budget_consumed_percentage > 90 ? "bg-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.4)]" :
+                                                    project.budget_consumed_percentage > 75 ? "bg-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.4)]" : "bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.4)]"
+                                            )}
+                                            style={{ width: `${Math.min(project.budget_consumed_percentage, 100)}%` }}
+                                        />
+                                    </div>
+                                    <div className="flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center text-[8px] md:text-[9px] font-black uppercase tracking-widest opacity-40">
+                                        <span className="whitespace-nowrap">Réelles</span>
+                                        <span className="whitespace-nowrap">Reste: {Number(project.budget - project.budget_spent).toLocaleString('fr-FR')} €</span>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
