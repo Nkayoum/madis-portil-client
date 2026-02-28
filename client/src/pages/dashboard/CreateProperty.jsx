@@ -348,12 +348,12 @@ export default function CreateProperty() {
                                     setActiveTab(tab.id);
                                 }}
                                 className={cn(
-                                    "flex-1 min-w-[150px] flex items-center justify-center gap-3 py-6 text-xs font-black uppercase tracking-widest transition-all relative group",
+                                    "flex-1 min-w-0 flex items-center justify-center gap-2 md:gap-3 py-4 md:py-6 text-[8px] md:text-xs font-black uppercase tracking-wider md:tracking-widest transition-all relative group whitespace-nowrap",
                                     isActive ? "text-primary bg-background/50 dark:bg-white/5" : "text-muted-foreground hover:text-foreground hover:bg-muted/30 dark:hover:bg-white/5"
                                 )}
                             >
                                 <div className={cn(
-                                    "p-2 rounded-lg transition-all duration-300",
+                                    "p-1.5 md:p-2 rounded-lg transition-all duration-300 hidden md:flex",
                                     isActive ? "bg-primary/10 text-primary scale-110" : "bg-muted/50 text-muted-foreground group-hover:bg-muted group-hover:scale-105"
                                 )}>
                                     <Icon className="h-4 w-4" />
