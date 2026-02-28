@@ -256,7 +256,7 @@ export default function AnnualReport({ data, selectedYear, isAdmin }) {
                         <input
                             ref={fileInputRef}
                             type="file"
-                            accept="image/png,image/jpeg,image/jpg"
+                            accept="image/png,image/jpeg,image/jpg,image/svg+xml"
                             className="hidden"
                             onChange={handleLetterheadUpload}
                         />
