@@ -142,23 +142,23 @@ export default function ProjectsList() {
                             to={`/dashboard/projects/${project.id}`}
                             className="group relative solaris-glass rounded-[2.5rem] p-8 border-none shadow-lg hover:shadow-2xl transition-all duration-500 bg-white/40 overflow-hidden flex flex-col hover:scale-[1.02] hover:-translate-y-2"
                         >
-                            <div className="flex justify-between items-start mb-6">
-                                <div className="flex items-center gap-5">
-                                    <div className="p-4 rounded-[1.5rem] bg-black dark:bg-white text-white dark:text-black shadow-xl transition-transform group-hover:rotate-6 duration-500">
-                                        {project.category === 'CONSTRUCTION' ? <HardHat className="h-6 w-6" /> : <ClipboardList className="h-6 w-6" />}
+                            <div className="mb-6">
+                                <div className="flex items-start gap-4 mb-3">
+                                    <div className="p-3 sm:p-4 rounded-[1.2rem] sm:rounded-[1.5rem] bg-black dark:bg-white text-white dark:text-black shadow-xl transition-transform group-hover:rotate-6 duration-500 flex-shrink-0">
+                                        {project.category === 'CONSTRUCTION' ? <HardHat className="h-5 w-5 sm:h-6 sm:w-6" /> : <ClipboardList className="h-5 w-5 sm:h-6 sm:w-6" />}
                                     </div>
-                                    <div>
-                                        <h3 className="text-xl font-black tracking-tighter group-hover:text-primary transition-colors pr-2 leading-tight">
+                                    <div className="min-w-0 flex-1">
+                                        <h3 className="text-lg sm:text-xl font-black tracking-tighter group-hover:text-primary transition-colors leading-tight break-words">
                                             {project.name}
                                         </h3>
                                         <div className="flex items-center gap-2 mt-1 opacity-40 group-hover:opacity-100 transition-opacity">
-                                            <Building2 className="h-3 w-3" />
-                                            <span className="text-[10px] font-black uppercase tracking-widest">{project.property_name || 'Bien non défini'}</span>
+                                            <Building2 className="h-3 w-3 flex-shrink-0" />
+                                            <span className="text-[10px] font-black uppercase tracking-widest truncate">{project.property_name || 'Bien non défini'}</span>
                                         </div>
                                     </div>
                                 </div>
                                 <span className={cn(
-                                    "px-4 py-1.5 rounded-2xl text-[9px] font-black uppercase tracking-widest shadow-lg flex-shrink-0 whitespace-nowrap",
+                                    "inline-block px-4 py-1.5 rounded-2xl text-[9px] font-black uppercase tracking-widest shadow-lg whitespace-nowrap",
                                     getStatusColor(project.status)
                                 )}>
                                     {project.status_display || project.status}
