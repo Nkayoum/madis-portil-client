@@ -459,12 +459,12 @@ export default function ConstructionDetail() {
                 {activeTab === 'journal' && (
                     <div className="space-y-6">
                         {(user?.role === 'ADMIN_MADIS' || user?.role === 'CHEF_CHANTIER') && site.status !== 'SUSPENDU' && (
-                            <div className="flex justify-end mb-8">
+                            <div className="flex justify-end mb-6">
                                 <button
                                     onClick={() => setIsJournalModalOpen(true)}
-                                    className="inline-flex items-center justify-center rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all bg-primary text-white hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] h-12 px-8 shadow-lg shadow-primary/20 dark:shadow-[0_0_20px_rgba(236,72,153,0.3)]"
+                                    className="inline-flex items-center justify-center rounded-xl text-[9px] font-black uppercase tracking-widest transition-all bg-primary text-white hover:shadow-lg hover:scale-[1.01] active:scale-[0.99] h-9 px-6 shadow-md shadow-primary/20 dark:shadow-[0_0_15px_rgba(236,72,153,0.2)]"
                                 >
-                                    <Plus className="mr-3 h-5 w-5" />
+                                    <Plus className="mr-2 h-4 w-4" />
                                     Nouveau Rapport
                                 </button>
                             </div>
@@ -582,12 +582,12 @@ export default function ConstructionDetail() {
                 {activeTab === 'documents' && (
                     <div className="space-y-10">
                         {(user?.role === 'ADMIN_MADIS' || user?.role === 'CHEF_CHANTIER') && (
-                            <div className="flex justify-end mb-8">
+                            <div className="flex justify-end mb-6">
                                 <button
                                     onClick={() => setIsDocumentModalOpen(true)}
-                                    className="inline-flex items-center justify-center rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all bg-primary text-white hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] h-12 px-8 shadow-lg shadow-primary/20 dark:shadow-[0_0_20px_rgba(236,72,153,0.3)]"
+                                    className="inline-flex items-center justify-center rounded-xl text-[9px] font-black uppercase tracking-widest transition-all bg-primary text-white hover:shadow-lg hover:scale-[1.01] active:scale-[0.99] h-9 px-6 shadow-md shadow-primary/20 dark:shadow-[0_0_15px_rgba(236,72,153,0.2)]"
                                 >
-                                    <Plus className="mr-3 h-5 w-5" />
+                                    <Plus className="mr-2 h-4 w-4" />
                                     Ajouter un Document
                                 </button>
                             </div>
