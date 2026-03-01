@@ -143,31 +143,31 @@ export default function ManageMilestones() {
                 Retour au chantier
             </Link>
 
-            <div className="solaris-glass rounded-[2.5rem] p-10 border-none shadow-xl relative overflow-hidden">
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-10">
-                    <div className="flex items-center gap-8">
-                        <div className="p-5 bg-black text-white rounded-[2rem] shadow-2xl relative group">
-                            <CheckCircle2 className="h-8 w-8 group-hover:scale-110 transition-transform duration-500" />
-                            <div className="absolute -inset-2 bg-black/5 rounded-[2.2rem] -z-10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="solaris-glass rounded-[2rem] p-6 border-none shadow-xl relative overflow-hidden">
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                    <div className="flex items-center gap-6">
+                        <div className="p-3 bg-black text-white rounded-2xl shadow-xl relative group">
+                            <CheckCircle2 className="h-6 w-6 group-hover:scale-110 transition-transform duration-500" />
+                            <div className="absolute -inset-1 bg-black/5 rounded-[1.2rem] -z-10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
                         </div>
                         <div>
-                            <h1 className="text-4xl font-black tracking-tighter uppercase leading-none mb-2">Gestion des Jalons</h1>
-                            <p className="text-[11px] font-bold uppercase tracking-wider opacity-60">Planification et suivi des étapes de {site?.name}</p>
+                            <h1 className="text-2xl font-black tracking-tighter uppercase leading-none mb-1.5">Gestion des Jalons</h1>
+                            <p className="text-[10px] font-bold uppercase tracking-wider opacity-60">Planification et suivi des étapes de {site?.name}</p>
                         </div>
                     </div>
 
-                    <div className="flex flex-col items-end lg:border-l lg:pl-10 border-black/5">
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em] opacity-30 mb-3">
+                    <div className="flex flex-col items-end lg:border-l lg:pl-8 border-black/5">
+                        <span className="text-[9px] font-black uppercase tracking-[0.2em] opacity-30 mb-2">
                             Progression Actuelle
                         </span>
-                        <div className="flex items-center gap-6">
-                            <div className="w-64 h-3 bg-black/[0.03] dark:bg-white/10 rounded-full overflow-hidden p-[2px] border border-black/5 dark:border-white/5 shadow-inner">
+                        <div className="flex items-center gap-4">
+                            <div className="w-48 h-2 bg-black/[0.03] dark:bg-white/10 rounded-full overflow-hidden p-[1px] border border-black/5 dark:border-white/5 shadow-inner">
                                 <div
-                                    className="h-full bg-black dark:bg-white rounded-full shadow-[0_0_15px_rgba(0,0,0,0.2)] dark:shadow-[0_0_15px_rgba(255,255,255,0.1)] transition-all duration-1000 ease-out"
+                                    className="h-full bg-black dark:bg-white rounded-full shadow-[0_0_10px_rgba(0,0,0,0.1)] dark:shadow-[0_0_10px_rgba(255,255,255,0.05)] transition-all duration-1000 ease-out"
                                     style={{ width: `${site?.progress_percentage}%` }}
                                 />
                             </div>
-                            <span className="font-black text-3xl tracking-tighter leading-none">{site?.progress_percentage}%</span>
+                            <span className="font-black text-xl tracking-tighter leading-none">{site?.progress_percentage}%</span>
                         </div>
                     </div>
                 </div>
@@ -176,17 +176,17 @@ export default function ManageMilestones() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Form to add new milestone Solaris Style */}
                 <div className="lg:col-span-1">
-                    <div className="solaris-glass rounded-[2rem] p-8 border-none shadow-xl sticky top-24">
-                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] opacity-30 mb-8 flex items-center gap-3">
-                            <Plus className="h-4 w-4" />
+                    <div className="solaris-glass rounded-[1.5rem] p-6 border-none shadow-xl sticky top-24">
+                        <h3 className="text-[8px] font-black uppercase tracking-[0.2em] opacity-30 mb-6 flex items-center gap-2.5">
+                            <Plus className="h-3.5 w-3.5" />
                             Nouveau Jalon
                         </h3>
-                        <form onSubmit={handleAdd} className="space-y-6">
-                            <div className="space-y-2">
-                                <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Désignation *</label>
+                        <form onSubmit={handleAdd} className="space-y-5">
+                            <div className="space-y-1.5">
+                                <label className="text-[8px] font-black uppercase tracking-widest opacity-40 ml-1">Désignation *</label>
                                 <input
                                     type="text"
-                                    className="ic w-full p-4 rounded-2xl bg-black/[0.01] dark:bg-white/5 border border-black/5 dark:border-white/10 focus:bg-white dark:focus:bg-white/10 transition-all text-[12px] font-bold dark:text-white dark:placeholder:text-white/30"
+                                    className="ic w-full p-3 rounded-xl bg-black/[0.01] dark:bg-white/5 border border-black/5 dark:border-white/10 focus:bg-white dark:focus:bg-white/10 transition-all text-[11px] font-bold dark:text-white dark:placeholder:text-white/30"
                                     placeholder="Ex: Fondation terminée"
                                     value={newM.description}
                                     onChange={e => setNewM({ ...newM, description: e.target.value })}
@@ -194,11 +194,11 @@ export default function ManageMilestones() {
                                 />
                             </div>
 
-                            <div className="space-y-2">
-                                <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Responsable *</label>
+                            <div className="space-y-1.5">
+                                <label className="text-[8px] font-black uppercase tracking-widest opacity-40 ml-1">Responsable *</label>
                                 <input
                                     type="text"
-                                    className="ic w-full p-4 rounded-2xl bg-black/[0.01] border-black/5 focus:bg-white transition-all text-[12px] font-bold"
+                                    className="ic w-full p-3 rounded-xl bg-black/[0.01] border-black/5 focus:bg-white transition-all text-[11px] font-bold"
                                     placeholder="Ex: Entreprise Martin"
                                     value={newM.responsible}
                                     onChange={e => setNewM({ ...newM, responsible: e.target.value })}
@@ -206,22 +206,22 @@ export default function ManageMilestones() {
                                 />
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Début *</label>
+                            <div className="grid grid-cols-2 gap-3">
+                                <div className="space-y-1.5">
+                                    <label className="text-[8px] font-black uppercase tracking-widest opacity-40 ml-1">Début *</label>
                                     <input
                                         type="date"
-                                        className="ic w-full p-4 rounded-2xl bg-black/[0.01] dark:bg-white/5 border border-black/5 dark:border-white/10 focus:bg-white dark:focus:bg-white/10 transition-all text-[12px] font-bold font-mono dark:text-white dark:[color-scheme:dark]"
+                                        className="ic w-full p-3 rounded-xl bg-black/[0.01] dark:bg-white/5 border border-black/5 dark:border-white/10 focus:bg-white dark:focus:bg-white/10 transition-all text-[11px] font-bold font-mono dark:text-white dark:[color-scheme:dark]"
                                         value={newM.start_date}
                                         onChange={e => setNewM({ ...newM, start_date: e.target.value })}
                                         required
                                     />
                                 </div>
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Fin Estimée *</label>
+                                <div className="space-y-1.5">
+                                    <label className="text-[8px] font-black uppercase tracking-widest opacity-40 ml-1">Fin Estimée *</label>
                                     <input
                                         type="date"
-                                        className="ic w-full p-4 rounded-2xl bg-black/[0.01] border-black/5 focus:bg-white transition-all text-[12px] font-bold font-mono"
+                                        className="ic w-full p-3 rounded-xl bg-black/[0.01] border-black/5 focus:bg-white transition-all text-[11px] font-bold font-mono"
                                         value={newM.end_date}
                                         onChange={e => setNewM({ ...newM, end_date: e.target.value })}
                                         required
@@ -232,9 +232,9 @@ export default function ManageMilestones() {
                             <button
                                 type="submit"
                                 disabled={saving}
-                                className="w-full inline-flex items-center justify-center rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all bg-primary text-white hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] h-14 px-8 mt-4 shadow-lg shadow-primary/20 dark:shadow-[0_0_20px_rgba(236,72,153,0.3)] group"
+                                className="w-full inline-flex items-center justify-center rounded-xl text-[9px] font-black uppercase tracking-widest transition-all bg-primary text-white hover:shadow-lg hover:scale-[1.01] active:scale-[0.99] h-10 px-6 mt-2 shadow shadow-primary/20 group"
                             >
-                                {saving ? <Loader2 className="h-5 w-5 animate-spin mr-3" /> : <Plus className="h-5 w-5 mr-3 group-hover:scale-110 transition-transform" />}
+                                {saving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Plus className="h-4 w-4 mr-2 group-hover:scale-110 transition-transform" />}
                                 Ajouter au Planning
                             </button>
                         </form>
@@ -320,69 +320,69 @@ export default function ManageMilestones() {
                                 <div
                                     key={m.id}
                                     className={cn(
-                                        "solaris-glass rounded-[2rem] overflow-hidden shadow-xl transition-all duration-500 hover:shadow-2xl hover:scale-[1.01] border-none group",
+                                        "solaris-glass rounded-[1.5rem] overflow-hidden shadow-lg transition-all duration-500 hover:shadow-xl hover:scale-[1.005] border-none group",
                                         m.completed ? "opacity-60 grayscale-[0.5]" : "relative"
                                     )}
                                 >
-                                    {!m.completed && <div className="absolute inset-y-0 left-0 w-2 bg-black" />}
+                                    {!m.completed && <div className="absolute inset-y-0 left-0 w-1.5 bg-black" />}
 
-                                    <div className="p-8 flex items-center gap-8">
+                                    <div className="p-4 md:p-5 flex items-center gap-6">
                                         <div className="relative">
                                             <button
                                                 onClick={() => toggleComplete(m)}
                                                 className={cn(
-                                                    "h-10 w-10 rounded-2xl border-2 flex items-center justify-center transition-all duration-500",
+                                                    "h-8 w-8 rounded-xl border-2 flex items-center justify-center transition-all duration-500",
                                                     m.completed
-                                                        ? "bg-black border-black text-white shadow-lg"
+                                                        ? "bg-black border-black text-white shadow-md font-bold"
                                                         : "border-black/10 dark:border-white/10 hover:border-black/30 dark:hover:border-white/30 bg-white dark:bg-white/10"
                                                 )}
                                             >
-                                                {m.completed && <CheckCircle2 className="h-6 w-6" />}
-                                                {!m.completed && <div className="h-2 w-2 rounded-full bg-black/10 group-hover:bg-black group-hover:scale-125 transition-all" />}
+                                                {m.completed && <CheckCircle2 className="h-4 w-4" />}
+                                                {!m.completed && <div className="h-1.5 w-1.5 rounded-full bg-black/10 group-hover:bg-black group-hover:scale-125 transition-all" />}
                                             </button>
                                         </div>
 
                                         <div className="flex-1 min-w-0">
-                                            <div className="flex items-center justify-between gap-6">
+                                            <div className="flex items-center justify-between gap-4">
                                                 <div className="flex-1 min-w-0">
-                                                    <h4 className={cn("text-xl font-black tracking-tight uppercase leading-tight mb-2", m.completed && "text-muted-foreground/60 line-through")}>
+                                                    <h4 className={cn("text-[13px] font-black tracking-tight uppercase leading-tight mb-1.5", m.completed && "text-muted-foreground/60 line-through")}>
                                                         {m.description}
                                                     </h4>
-                                                    <div className="flex flex-wrap items-center gap-x-8 gap-y-2 mt-1">
-                                                        <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest opacity-40">
-                                                            <Calendar className="h-3.5 w-3.5" />
-                                                            <span className="font-mono text-[11px] font-bold text-black dark:text-white opacity-100">
+                                                    <div className="flex flex-wrap items-center gap-x-6 gap-y-1.5 mt-0.5">
+                                                        <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-widest opacity-40">
+                                                            <Calendar className="h-3 w-3" />
+                                                            <span className="font-mono text-[9px] font-bold text-black dark:text-white opacity-100">
                                                                 {m.start_date ? format(new Date(m.start_date), 'dd MMM', { locale: fr }) : '-'} — {m.end_date ? format(new Date(m.end_date), 'dd MMM yyyy', { locale: fr }) : 'Non déterm.'}
                                                             </span>
                                                         </div>
-                                                        <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest opacity-40">
-                                                            <User className="h-3.5 w-3.5" />
-                                                            <span className="text-black dark:text-white opacity-100">{m.responsible || 'Non renseigné'}</span>
+                                                        <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-widest opacity-40">
+                                                            <User className="h-3 w-3" />
+                                                            <span className="text-black dark:text-white opacity-100 text-[9px]">{m.responsible || 'Non renseigné'}</span>
                                                         </div>
                                                     </div>
                                                 </div>
 
-                                                <div className="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity translate-x-4 group-hover:translate-x-0">
+                                                <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0">
                                                     <button
                                                         onClick={() => startEdit(m)}
-                                                        className="p-3 text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white/20 bg-white dark:bg-white/10 border border-black/5 dark:border-white/10 rounded-2xl shadow-sm transition-all"
+                                                        className="p-2 text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white/20 bg-white dark:bg-white/10 border border-black/5 dark:border-white/10 rounded-xl shadow-sm transition-all"
                                                         title="Modifier"
                                                     >
-                                                        <Edit className="h-4 w-4" />
+                                                        <Edit className="h-3.5 w-3.5" />
                                                     </button>
                                                     <button
                                                         onClick={() => handleDelete(m.id)}
-                                                        className="p-3 text-red-500 hover:bg-red-600 hover:text-white bg-white dark:bg-white/10 border border-black/5 dark:border-white/10 rounded-2xl shadow-sm transition-all"
+                                                        className="p-2 text-red-500 hover:bg-red-600 hover:text-white bg-white dark:bg-white/10 border border-black/5 dark:border-white/10 rounded-xl shadow-sm transition-all"
                                                         title="Supprimer"
                                                     >
-                                                        <Trash2 className="h-4 w-4" />
+                                                        <Trash2 className="h-3.5 w-3.5" />
                                                     </button>
                                                 </div>
                                             </div>
 
                                             {isOverdue && !m.completed && (
-                                                <div className="mt-4 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-primary">
-                                                    <AlertCircle className="h-3.5 w-3.5" />
+                                                <div className="mt-3 flex items-center gap-2 text-[8px] font-black uppercase tracking-[0.2em] text-primary">
+                                                    <AlertCircle className="h-3 w-3" />
                                                     Dépassement de délais
                                                 </div>
                                             )}
