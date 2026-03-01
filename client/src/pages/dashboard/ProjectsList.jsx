@@ -61,35 +61,34 @@ export default function ProjectsList() {
 
     return (
         <div className="space-y-8 animate-fade-in max-w-[1600px] mx-auto px-4 lg:px-8 py-6">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-                <div className="space-y-1">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                <div className="space-y-0.5">
                     <h1 className="text-xl md:text-2xl font-bold tracking-tight uppercase leading-none">
                         {activeTab === 'CONSTRUCTION' ? 'Projets' : 'Maintenance'}
                     </h1>
-                    <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-wider opacity-40 leading-relaxed">
+                    <p className="text-[9px] font-bold uppercase tracking-wider opacity-40 leading-relaxed">
                         {activeTab === 'CONSTRUCTION'
                             ? "Suivi de vos projets immobiliers."
                             : "Suivi des interventions techniques."}
                     </p>
                 </div>
             </div>
-
             {/* Tabs Solaris Style */}
             <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }} className="-mx-4 px-4 md:mx-0 md:px-0 [&::-webkit-scrollbar]:hidden">
-                <div style={{ display: 'flex', width: 'max-content', gap: '20px' }} className="items-center mb-6 md:mb-8 border-none">
+                <div style={{ display: 'flex', width: 'max-content', gap: '16px' }} className="items-center mb-6 md:mb-8 border-none">
                     <button
                         onClick={() => setActiveTab('CONSTRUCTION')}
                         className={cn(
-                            "pb-2 md:pb-3 text-[9px] md:text-[10px] font-bold uppercase tracking-widest transition-all px-1 flex items-center gap-2 relative whitespace-nowrap",
+                            "pb-2 md:pb-2.5 text-[9px] font-bold uppercase tracking-widest transition-all px-1 flex items-center gap-2 relative whitespace-nowrap",
                             activeTab === 'CONSTRUCTION'
-                                ? 'text-black dark:text-white after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-black dark:after:bg-white after:rounded-full after:shadow-sm scale-105'
+                                ? 'text-black dark:text-white after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-black dark:after:bg-white after:rounded-full after:shadow-sm'
                                 : 'text-muted-foreground dark:text-white/40 opacity-40 hover:opacity-100 dark:hover:text-white'
                         )}
                     >
-                        <HardHat className="h-3.5 w-3.5 md:h-4 md:w-4" />
+                        <HardHat className="h-3.5 w-3.5" />
                         Développement
                         <span className={cn(
-                            "ml-1.5 min-w-[18px] h-[18px] flex items-center justify-center rounded-full text-[8px] font-bold shadow-sm",
+                            "ml-1.5 min-w-[16px] h-[16px] flex items-center justify-center rounded-full text-[7px] font-bold shadow-sm",
                             activeTab === 'CONSTRUCTION' ? "bg-black dark:bg-white text-white dark:text-black" : "bg-black/5 dark:bg-white/10 text-black dark:text-white"
                         )}>
                             {projects.filter(p => p.category === 'CONSTRUCTION').length}
@@ -98,16 +97,16 @@ export default function ProjectsList() {
                     <button
                         onClick={() => setActiveTab('MAINTENANCE')}
                         className={cn(
-                            "pb-2 md:pb-3 text-[9px] md:text-[10px] font-bold uppercase tracking-widest transition-all px-1 flex items-center gap-2 relative whitespace-nowrap",
+                            "pb-2 md:pb-2.5 text-[9px] font-bold uppercase tracking-widest transition-all px-1 flex items-center gap-2 relative whitespace-nowrap",
                             activeTab === 'MAINTENANCE'
-                                ? 'text-black dark:text-white after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-black dark:after:bg-white after:rounded-full after:shadow-sm scale-105'
+                                ? 'text-black dark:text-white after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-black dark:after:bg-white after:rounded-full after:shadow-sm'
                                 : 'text-muted-foreground dark:text-white/40 opacity-40 hover:opacity-100 dark:hover:text-white'
                         )}
                     >
-                        <ClipboardList className="h-3.5 w-3.5 md:h-4 md:w-4" />
+                        <ClipboardList className="h-3.5 w-3.5" />
                         Maintenance
                         <span className={cn(
-                            "ml-1.5 min-w-[18px] h-[18px] flex items-center justify-center rounded-full text-[8px] font-bold shadow-sm",
+                            "ml-1.5 min-w-[16px] h-[16px] flex items-center justify-center rounded-full text-[7px] font-bold shadow-sm",
                             activeTab === 'MAINTENANCE' ? "bg-black dark:bg-white text-white dark:text-black" : "bg-black/5 dark:bg-white/10 text-black dark:text-white"
                         )}>
                             {projects.filter(p => p.category === 'MAINTENANCE').length}
@@ -138,39 +137,39 @@ export default function ProjectsList() {
                         <Link
                             key={project.id}
                             to={`/dashboard/projects/${project.id}`}
-                            className="group relative solaris-glass rounded-[1.5rem] p-5 border-none shadow-sm hover:shadow-lg transition-all duration-500 bg-white/40 overflow-hidden flex flex-col hover:scale-[1.02] hover:-translate-y-1"
+                            className="group relative solaris-glass rounded-[1.2rem] p-4 border-none shadow-sm hover:shadow-lg transition-all duration-500 bg-white/40 overflow-hidden flex flex-col hover:scale-[1.01] hover:-translate-y-0.5"
                         >
                             <div className="mb-4">
-                                <div className="flex items-start gap-2.5 mb-2.5">
-                                    <div className="p-2 rounded-xl bg-black dark:bg-white text-white dark:text-black shadow-md transition-transform group-hover:rotate-6 duration-500 flex-shrink-0">
+                                <div className="flex items-start gap-2 mb-2">
+                                    <div className="p-1.5 rounded-lg bg-black dark:bg-white text-white dark:text-black shadow-sm transition-transform group-hover:rotate-6 duration-500 flex-shrink-0">
                                         {project.category === 'CONSTRUCTION' ? <HardHat className="h-3 w-3" /> : <ClipboardList className="h-3 w-3" />}
                                     </div>
                                     <div className="min-w-0 flex-1">
-                                        <h3 className="text-[13px] font-bold tracking-tight group-hover:text-primary transition-colors leading-tight line-clamp-2 uppercase">
+                                        <h3 className="text-[11px] font-bold tracking-tight group-hover:text-primary transition-colors leading-tight line-clamp-2 uppercase">
                                             {project.name}
                                         </h3>
-                                        <div className="flex items-center gap-1.5 mt-1 opacity-40">
+                                        <div className="flex items-center gap-1.5 mt-0.5 opacity-40">
                                             <Building2 className="h-2.5 w-2.5 flex-shrink-0" />
-                                            <span className="text-[8px] font-bold uppercase tracking-widest truncate">{project.property_name || 'Non défini'}</span>
+                                            <span className="text-[7.5px] font-bold uppercase tracking-widest truncate">{project.property_name || 'Non défini'}</span>
                                         </div>
                                     </div>
                                 </div>
                                 <span className={cn(
-                                    "inline-block px-2.5 py-0.5 rounded-lg text-[8px] font-bold uppercase tracking-widest shadow-sm whitespace-nowrap",
+                                    "inline-block px-2 py-0.5 rounded-[4px] text-[7.5px] font-bold uppercase tracking-widest shadow-sm whitespace-nowrap",
                                     getStatusColor(project.status)
                                 )}>
                                     {project.status_display || project.status}
                                 </span>
                             </div>
 
-                            <p className="text-[10px] font-medium text-muted-foreground dark:text-white/70 mb-6 line-clamp-2 leading-relaxed opacity-60">
+                            <p className="text-[9.5px] font-medium text-muted-foreground dark:text-white/70 mb-4 line-clamp-2 leading-relaxed opacity-60">
                                 {project.description}
                             </p>
 
-                            <div className="grid grid-cols-2 gap-4 mt-auto pt-4 border-t border-black/5 dark:border-white/5">
+                            <div className="grid grid-cols-2 gap-3 mt-auto pt-3 border-t border-black/5 dark:border-white/5">
                                 <div className="flex flex-col gap-0.5">
-                                    <span className="text-[7px] font-bold uppercase tracking-widest opacity-30">Budget</span>
-                                    <div className="flex items-center gap-1 font-bold text-[10px] tracking-tight text-black dark:text-white">
+                                    <span className="text-[7px] font-bold uppercase tracking-widest opacity-30 text-[6.5px]">Budget</span>
+                                    <div className="flex items-center gap-1 font-bold text-[9.5px] tracking-tight text-black dark:text-white">
                                         <div className="p-0.5 rounded bg-emerald-500/10 text-emerald-600">
                                             <Euro className="h-2.5 w-2.5" />
                                         </div>
@@ -178,8 +177,8 @@ export default function ProjectsList() {
                                     </div>
                                 </div>
                                 <div className="flex flex-col gap-0.5">
-                                    <span className="text-[7px] font-bold uppercase tracking-widest opacity-30">Lancement</span>
-                                    <div className="flex items-center gap-1 font-bold text-[10px] tracking-tight text-black dark:text-white">
+                                    <span className="text-[7px] font-bold uppercase tracking-widest opacity-30 text-[6.5px]">Lancement</span>
+                                    <div className="flex items-center gap-1 font-bold text-[9.5px] tracking-tight text-black dark:text-white">
                                         <div className="p-0.5 rounded bg-blue-500/10 text-blue-600">
                                             <Calendar className="h-2.5 w-2.5" />
                                         </div>
