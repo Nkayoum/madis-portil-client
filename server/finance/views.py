@@ -19,6 +19,15 @@ from .serializers import (
     SettlementSerializer
 )
 from .notifications import send_finance_notification
+from backoffice.models import AuditLog
+
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
 
 logger = logging.getLogger(__name__)
 
@@ -145,18 +154,39 @@ class CashCallViewSet(viewsets.ModelViewSet):
             owner = instance.property.owner
             if owner:
                 send_finance_notification(owner, instance, 'cash_call_submitted')
+            
+            AuditLog.objects.create(
+                user=self.request.user,
+                action=f"Preuve de paiement soumise pour l'Appel de fonds #{instance.id}",
+                ip_address=get_client_ip(self.request),
+                details=f"Montant: {instance.amount}€, Statut: {new_status}"
+            )
 
         # 2. Notify Owner if status changed to REJECTED (Admin rejected proof)
         if old_status != CashCall.Status.REJECTED and new_status == CashCall.Status.REJECTED:
             owner = instance.property.owner
             if owner:
                 send_finance_notification(owner, instance, 'cash_call_rejected')
+            
+            AuditLog.objects.create(
+                user=self.request.user,
+                action=f"Preuve rejetée pour l'Appel de fonds #{instance.id}",
+                ip_address=get_client_ip(self.request),
+                details=f"Rejeté par {self.request.user.email}."
+            )
 
         # 3. Notify Owner if status changed to PAID (Admin confirmed receipt)
         if old_status != CashCall.Status.PAID and new_status == CashCall.Status.PAID:
             owner = instance.property.owner
             if owner:
                 send_finance_notification(owner, instance, 'cash_call_paid')
+                
+            AuditLog.objects.create(
+                user=self.request.user,
+                action=f"Paiement validé pour l'Appel de fonds #{instance.id}",
+                ip_address=get_client_ip(self.request),
+                details=f"Validé par {self.request.user.email}. Montant intégral: {instance.amount}€"
+            )
 
 class SettlementViewSet(viewsets.ModelViewSet):
     """
@@ -189,6 +219,13 @@ class SettlementViewSet(viewsets.ModelViewSet):
             owner = instance.property.owner
             if owner:
                 send_finance_notification(owner, instance, 'settlement_paid')
+            
+            AuditLog.objects.create(
+                user=self.request.user,
+                action=f"Versement (Settlement) payé #{instance.id}",
+                ip_address=get_client_ip(self.request),
+                details=f"Paiement au client {owner.email} de {instance.amount}€ validé par {self.request.user.email}."
+            )
 
 class FinancialTransactionViewSet(viewsets.ModelViewSet):
     """

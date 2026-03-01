@@ -7,6 +7,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from decouple import config
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularSwaggerView,
@@ -47,7 +48,8 @@ api_v1_patterns = [
 ]
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # Obfuscated admin access
+    path(config('ADMIN_URL', default='madis-vault-admin/'), admin.site.urls),
     path('api/v1/', include((api_v1_patterns, 'api-v1'))),
 ]
 
