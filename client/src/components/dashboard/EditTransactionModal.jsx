@@ -115,20 +115,20 @@ export default function EditTransactionModal({ isOpen, onClose, transactionId, o
 
     if (!isOpen) return null;
 
-    const inputClasses = "flex w-full rounded-2xl border border-black/5 dark:border-white/5 bg-black/[0.02] dark:bg-white/[0.02] px-4 py-3 text-[11px] font-medium transition-all focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-transparent placeholder:text-muted-foreground/30";
+    const inputClasses = "flex w-full rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/[0.03] px-4 py-3 text-[11px] font-medium transition-all focus:outline-none focus:ring-2 focus:ring-primary/20 placeholder:text-muted-foreground/30 shadow-sm";
     const labelClasses = "text-[8px] md:text-[9px] font-black uppercase tracking-widest opacity-30 flex items-center gap-2 px-1";
 
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[200] flex items-start justify-center p-4 py-12 md:py-20 bg-black/40 backdrop-blur-md overflow-y-auto animate-in fade-in duration-300">
-            <div className="solaris-glass bg-white/95 dark:bg-[#0c0c0c]/95 rounded-[2.5rem] shadow-2xl w-full max-w-2xl animate-in zoom-in-95 duration-300 border-none relative my-auto">
+        <div className="fixed inset-0 z-[200] flex items-start justify-center p-4 py-12 md:py-20 bg-black/60 backdrop-blur-md overflow-y-auto animate-in fade-in duration-300">
+            <div className="bg-white dark:bg-[#050a14] rounded-[2.5rem] shadow-[0_32px_128px_-12px_rgba(0,0,0,0.2)] w-full max-w-2xl animate-in zoom-in-95 duration-300 border border-black/5 dark:border-white/5 relative my-auto overflow-hidden">
                 {/* Background Decoration */}
-                <div className="absolute top-0 right-0 p-8 opacity-[0.02] -rotate-12 pointer-events-none">
+                <div className="absolute top-0 right-0 p-8 opacity-[0.03] -rotate-12 pointer-events-none text-primary">
                     <Wallet size={160} />
                 </div>
 
-                <div className="flex items-center justify-between p-8 md:p-10 pb-4 relative z-10">
+                <div className="flex items-center justify-between p-8 md:p-10 pb-6 relative z-10 border-b border-black/[0.03] dark:border-white/[0.03]">
                     <div className="space-y-1">
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-primary/10 rounded-xl">
@@ -282,11 +282,11 @@ export default function EditTransactionModal({ isOpen, onClose, transactionId, o
                     )}
                 </div>
 
-                <div className="flex flex-col md:flex-row justify-end gap-4 p-8 md:p-10 mt-2 border-t border-black/5 dark:border-white/5 relative z-10">
+                <div className="flex flex-col md:flex-row justify-end gap-4 p-8 md:p-10 border-t border-black/[0.03] dark:border-white/[0.03] relative z-10 bg-white dark:bg-[#050a14]">
                     <button
                         type="button"
                         onClick={onClose}
-                        className="inline-flex items-center justify-center rounded-full text-[10px] font-black uppercase tracking-widest transition-all border border-black/5 dark:border-white/5 hover:bg-black/5 dark:hover:bg-white/5 h-14 px-8"
+                        className="inline-flex items-center justify-center rounded-full text-[10px] font-black uppercase tracking-widest transition-all border border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 h-14 px-8"
                     >
                         Annuler
                     </button>
@@ -294,7 +294,7 @@ export default function EditTransactionModal({ isOpen, onClose, transactionId, o
                         form="edit-transaction-form"
                         type="submit"
                         disabled={saving || loading}
-                        className="inline-flex items-center justify-center rounded-full text-[10px] font-black uppercase tracking-widest transition-all bg-primary text-white shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none h-14 px-10"
+                        className="inline-flex items-center justify-center rounded-full text-[10px] font-black uppercase tracking-widest transition-all bg-primary text-white shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none h-14 px-10"
                     >
                         {saving ? (
                             <><Loader2 className="mr-3 h-4 w-4 animate-spin" /> Enregistrement...</>
