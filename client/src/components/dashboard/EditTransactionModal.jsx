@@ -115,60 +115,76 @@ export default function EditTransactionModal({ isOpen, onClose, transactionId, o
 
     if (!isOpen) return null;
 
-    const ic = "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-all outline-none";
+    const inputClasses = "flex w-full rounded-2xl border border-black/5 dark:border-white/5 bg-black/[0.02] dark:bg-white/[0.02] px-4 py-3 text-[11px] font-medium transition-all focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-transparent placeholder:text-muted-foreground/30";
+    const labelClasses = "text-[8px] md:text-[9px] font-black uppercase tracking-widest opacity-30 flex items-center gap-2 px-1";
+
+    if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-            <div className="bg-card border rounded-2xl shadow-2xl w-full max-w-2xl overflow-y-auto max-h-[90vh] animate-in zoom-in-95 duration-200">
-                <div className="flex items-center justify-between p-6 border-b bg-muted/30 sticky top-0 bg-card z-10">
-                    <div className="flex items-center gap-3">
-                        <div className="p-2 bg-primary/10 rounded-lg">
-                            <Wallet className="h-5 w-5 text-primary" />
+        <div className="fixed inset-0 z-[200] flex items-start justify-center p-4 py-12 md:py-20 bg-black/40 backdrop-blur-md overflow-y-auto animate-in fade-in duration-300">
+            <div className="solaris-glass bg-white/95 dark:bg-[#0c0c0c]/95 rounded-[2.5rem] shadow-2xl w-full max-w-2xl animate-in zoom-in-95 duration-300 border-none relative my-auto">
+                {/* Background Decoration */}
+                <div className="absolute top-0 right-0 p-8 opacity-[0.02] -rotate-12 pointer-events-none">
+                    <Wallet size={160} />
+                </div>
+
+                <div className="flex items-center justify-between p-8 md:p-10 pb-4 relative z-10">
+                    <div className="space-y-1">
+                        <div className="flex items-center gap-3">
+                            <div className="p-2 bg-primary/10 rounded-xl">
+                                <Wallet className="h-5 w-5 text-primary" />
+                            </div>
+                            <h2 className="text-2xl md:text-3xl font-black tracking-tighter uppercase">
+                                Modifier <span className="text-primary italic">Transaction</span>
+                            </h2>
                         </div>
-                        <h2 className="text-xl font-bold tracking-tight">Modifier <span className="text-primary tracking-tight">Transaction</span></h2>
+                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-40 ml-1">Mise à jour des flux financiers.</p>
                     </div>
-                    <button onClick={onClose} className="p-2 hover:bg-muted rounded-full transition-colors">
-                        <X className="h-5 w-5 text-muted-foreground" />
+                    <button
+                        onClick={onClose}
+                        className="p-3 hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-all hover:rotate-90 duration-300 group"
+                    >
+                        <X className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
                     </button>
                 </div>
 
-                {loading ? (
-                    <div className="p-20 flex justify-center">
-                        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                    </div>
-                ) : (
-                    <form id="edit-transaction-form" onSubmit={handleSubmit} className="p-6 space-y-6">
-                        <div className="grid gap-6 md:grid-cols-2">
-                            <div className="space-y-4">
-                                <div className="grid gap-2">
-                                    <label className="text-xs font-bold text-muted-foreground uppercase">Bien immobilier *</label>
-                                    <div className="relative">
-                                        <Building2 className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                                        <select name="property" required className={cn(ic, "pl-9")} value={formData.property} onChange={handleChange}>
+                <div className="max-h-[70vh] overflow-y-auto px-8 md:px-10 py-4 custom-scrollbar relative z-10">
+                    {loading ? (
+                        <div className="py-20 flex flex-col items-center justify-center gap-4">
+                            <Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" />
+                            <p className="text-[10px] font-black uppercase tracking-widest opacity-20">Chargement des données...</p>
+                        </div>
+                    ) : (
+                        <form id="edit-transaction-form" onSubmit={handleSubmit} className="space-y-8 py-4">
+                            <div className="grid gap-8 md:grid-cols-2">
+                                <div className="space-y-6">
+                                    <div className="space-y-3">
+                                        <label className={labelClasses}>
+                                            <Building2 size={10} /> Bien immobilier *
+                                        </label>
+                                        <select name="property" required className={inputClasses} value={formData.property} onChange={handleChange}>
                                             <option value="">Sélectionnez un bien...</option>
                                             {properties.map(p => (
                                                 <option key={p.id} value={p.id}>{p.name}</option>
                                             ))}
                                         </select>
                                     </div>
-                                </div>
 
-                                <div className="grid gap-2">
-                                    <label className="text-xs font-bold text-muted-foreground uppercase">Type de mouvement</label>
-                                    <div className="relative">
-                                        <TrendingUp className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                                        <select name="type" className={cn(ic, "pl-9")} value={formData.type} onChange={handleChange}>
+                                    <div className="space-y-3">
+                                        <label className={labelClasses}>
+                                            <TrendingUp size={10} /> Type de mouvement
+                                        </label>
+                                        <select name="type" className={inputClasses} value={formData.type} onChange={handleChange}>
                                             <option value="INFLOW">Entrée (Revenu)</option>
                                             <option value="OUTFLOW">Sortie (Dépense)</option>
                                         </select>
                                     </div>
-                                </div>
 
-                                <div className="grid gap-2">
-                                    <label className="text-xs font-bold text-muted-foreground uppercase">Catégorie</label>
-                                    <div className="relative">
-                                        <FileText className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                                        <select name="category" className={cn(ic, "pl-9")} value={formData.category} onChange={handleChange}>
+                                    <div className="space-y-3">
+                                        <label className={labelClasses}>
+                                            <FileText size={10} /> Catégorie
+                                        </label>
+                                        <select name="category" className={inputClasses} value={formData.category} onChange={handleChange}>
                                             <option value="RENT">Loyer perçu</option>
                                             <option value="COMMISSION">Commission MaDis</option>
                                             <option value="MAINTENANCE">Maintenance</option>
@@ -181,55 +197,52 @@ export default function EditTransactionModal({ isOpen, onClose, transactionId, o
                                         </select>
                                     </div>
                                 </div>
+
+                                <div className="space-y-6">
+                                    <div className="space-y-3">
+                                        <label className={labelClasses}>
+                                            <Euro size={10} /> Montant (€) *
+                                        </label>
+                                        <input type="number" step="0.01" name="amount" required placeholder="0.00" className={inputClasses} value={formData.amount} onChange={handleChange} />
+                                    </div>
+
+                                    <div className="space-y-3">
+                                        <label className={labelClasses}>
+                                            <Calendar size={10} /> Date de paiement *
+                                        </label>
+                                        <input type="date" name="date" required className={inputClasses} value={formData.date} onChange={handleChange} />
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-3">
+                                            <label className={labelClasses}>Mois</label>
+                                            <select name="period_month" className={inputClasses} value={formData.period_month} onChange={handleChange}>
+                                                <option value="">N/A</option>
+                                                {[...Array(12)].map((_, i) => (
+                                                    <option key={i + 1} value={i + 1}>{new Date(2000, i).toLocaleString('fr-FR', { month: 'short' })}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="space-y-3">
+                                            <label className={labelClasses}>Année</label>
+                                            <select name="period_year" className={inputClasses} value={formData.period_year} onChange={handleChange}>
+                                                <option value="">N/A</option>
+                                                {[...Array(5)].map((_, i) => {
+                                                    const y = new Date().getFullYear() - 2 + i;
+                                                    return <option key={y} value={y}>{y}</option>;
+                                                })}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div className="space-y-4">
-                                <div className="grid gap-2">
-                                    <label className="text-xs font-bold text-muted-foreground uppercase">Montant (€) *</label>
-                                    <div className="relative">
-                                        <Euro className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                                        <input type="number" step="0.01" name="amount" required placeholder="0.00" className={cn(ic, "pl-9")} value={formData.amount} onChange={handleChange} />
-                                    </div>
-                                </div>
-
-                                <div className="grid gap-2">
-                                    <label className="text-xs font-bold text-muted-foreground uppercase">Date de paiement *</label>
-                                    <div className="relative">
-                                        <Calendar className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                                        <input type="date" name="date" required className={cn(ic, "pl-9")} value={formData.date} onChange={handleChange} />
-                                    </div>
-                                </div>
-
-                                <div className="grid grid-cols-2 gap-3">
-                                    <div className="grid gap-1">
-                                        <label className="text-[10px] font-bold text-muted-foreground uppercase">Mois</label>
-                                        <select name="period_month" className={ic} value={formData.period_month} onChange={handleChange}>
-                                            <option value="">N/A</option>
-                                            {[...Array(12)].map((_, i) => (
-                                                <option key={i + 1} value={i + 1}>{new Date(2000, i).toLocaleString('fr-FR', { month: 'short' })}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                    <div className="grid gap-1">
-                                        <label className="text-[10px] font-bold text-muted-foreground uppercase">Année</label>
-                                        <select name="period_year" className={ic} value={formData.period_year} onChange={handleChange}>
-                                            <option value="">N/A</option>
-                                            {[...Array(5)].map((_, i) => {
-                                                const y = new Date().getFullYear() - 2 + i;
-                                                return <option key={y} value={y}>{y}</option>;
-                                            })}
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="grid gap-6 md:grid-cols-2">
-                            <div className="grid gap-2">
-                                <label className="text-xs font-bold text-muted-foreground uppercase">Chantier associé</label>
-                                <div className="relative">
-                                    <HardHat className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                                    <select name="site" className={cn(ic, "pl-9")} value={formData.site} onChange={handleChange}>
+                            <div className="grid gap-8 md:grid-cols-2">
+                                <div className="space-y-3">
+                                    <label className={labelClasses}>
+                                        <HardHat size={10} /> Chantier associé
+                                    </label>
+                                    <select name="site" className={inputClasses} value={formData.site} onChange={handleChange}>
                                         <option value="">Aucun...</option>
                                         {sites
                                             .filter(s => s.property === parseInt(formData.property) || s.project_property === parseInt(formData.property))
@@ -239,26 +252,55 @@ export default function EditTransactionModal({ isOpen, onClose, transactionId, o
                                         }
                                     </select>
                                 </div>
+                                <div className="space-y-3">
+                                    <label className={labelClasses}>Justificatif (Remplacer)</label>
+                                    <div className="relative group">
+                                        <input
+                                            type="file"
+                                            onChange={handleFileChange}
+                                            className={`${inputClasses} cursor-pointer file:hidden`}
+                                        />
+                                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[8px] font-black uppercase tracking-widest opacity-20 group-hover:opacity-40 transition-opacity">
+                                            Parcourir
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="grid gap-2">
-                                <label className="text-xs font-bold text-muted-foreground uppercase">Justificatif (remplacer)</label>
-                                <input type="file" onChange={handleFileChange} className="text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" />
+
+                            <div className="space-y-3">
+                                <label className={labelClasses}>Description</label>
+                                <textarea
+                                    name="description"
+                                    rows="3"
+                                    className={`${inputClasses} h-auto py-4 resize-none`}
+                                    placeholder="Ajouter des détails sur cette opération..."
+                                    value={formData.description}
+                                    onChange={handleChange}
+                                ></textarea>
                             </div>
-                        </div>
+                        </form>
+                    )}
+                </div>
 
-                        <div className="grid gap-2">
-                            <label className="text-xs font-bold text-muted-foreground uppercase">Description</label>
-                            <textarea name="description" rows="2" className={cn(ic, "h-auto py-2 resize-none")} placeholder="Détails..." value={formData.description} onChange={handleChange}></textarea>
-                        </div>
-                    </form>
-                )}
-
-                <div className="flex justify-end gap-3 p-6 border-t bg-muted/30">
-                    <button type="button" onClick={onClose} className="inline-flex items-center justify-center rounded-md text-sm font-medium border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">
+                <div className="flex flex-col md:flex-row justify-end gap-4 p-8 md:p-10 mt-2 border-t border-black/5 dark:border-white/5 relative z-10">
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        className="inline-flex items-center justify-center rounded-full text-[10px] font-black uppercase tracking-widest transition-all border border-black/5 dark:border-white/5 hover:bg-black/5 dark:hover:bg-white/5 h-14 px-8"
+                    >
                         Annuler
                     </button>
-                    <button form="edit-transaction-form" type="submit" disabled={saving || loading} className="inline-flex items-center justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground shadow hover:bg-primary/90 h-10 px-6 disabled:opacity-50 transition-all font-bold">
-                        {saving ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Enregistrement...</> : <><Save className="mr-2 h-4 w-4" /> Enregistrer</>}
+                    <button
+                        form="edit-transaction-form"
+                        type="submit"
+                        disabled={saving || loading}
+                        className="inline-flex items-center justify-center rounded-full text-[10px] font-black uppercase tracking-widest transition-all bg-primary text-white shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none h-14 px-10"
+                    >
+                        {saving ? (
+                            <><Loader2 className="mr-3 h-4 w-4 animate-spin" /> Enregistrement...</>
+                        ) : (
+                            <><Save className="mr-3 h-4 w-4" /> Enregistrer les modifications</>
+                        )}
                     </button>
                 </div>
             </div>
