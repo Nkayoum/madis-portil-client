@@ -48,8 +48,9 @@ export const AuthProvider = ({ children }) => {
     const updateUser = async (data) => {
         try {
             const isFormData = data instanceof FormData;
+            // For FormData, delete Content-Type so browser sets multipart boundary automatically
             const response = await api.patch('/auth/profile/', data, {
-                headers: isFormData ? { 'Content-Type': 'multipart/form-data' } : {},
+                headers: isFormData ? { 'Content-Type': undefined } : {},
             });
             const updatedUser = response.data;
             setUser(updatedUser);

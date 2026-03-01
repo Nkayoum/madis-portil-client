@@ -11,13 +11,20 @@ export default function AnnualReport({ data, selectedYear, isAdmin }) {
     const [generating, setGenerating] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [letterheadUrl, setLetterheadUrl] = useState(null);
+    const BACKEND_URL = 'http://localhost:8000'; // Base URL for media files
     const reportRef = useRef(null);
     const fileInputRef = useRef(null);
 
     // Load saved letterhead from user profile
     useEffect(() => {
         if (user?.letterhead) {
-            setLetterheadUrl(user.letterhead);
+            // If it's a relative path starting with /media, prepend backend URL
+            const url = user.letterhead.startsWith('http')
+                ? user.letterhead
+                : `${BACKEND_URL}${user.letterhead}`;
+            setLetterheadUrl(url);
+        } else {
+            setLetterheadUrl(null);
         }
     }, [user?.letterhead]);
 
@@ -53,9 +60,14 @@ export default function AnnualReport({ data, selectedYear, isAdmin }) {
         try {
             const formData = new FormData();
             formData.append('letterhead', file);
-            await updateUser(formData);
+            const result = await updateUser(formData);
+            if (!result.success) {
+                console.error('Letterhead upload failed:', result.error);
+                setLetterheadUrl(null); // Revert preview since upload failed
+            }
         } catch (err) {
             console.error('Letterhead upload failed:', err);
+            setLetterheadUrl(null);
         } finally {
             setUploading(false);
         }
