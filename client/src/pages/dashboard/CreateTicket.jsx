@@ -3,10 +3,12 @@ import { useNavigate, Link } from 'react-router-dom';
 import api from '../../lib/axios';
 import { useToast } from '../../context/ToastContext';
 import { MessageSquare, Loader2, ArrowLeft } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function CreateTicket() {
     const navigate = useNavigate();
     const { showToast } = useToast();
+    const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         subject: '',
@@ -42,11 +44,11 @@ export default function CreateTicket() {
                     'Content-Type': 'multipart/form-data'
                 }
             });
-            showToast({ message: 'Ticket créé avec succès !', type: 'success' });
+            showToast({ message: t('messaging.create.success'), type: 'success' });
             navigate('/dashboard/tickets');
         } catch (err) {
             console.error(err);
-            showToast({ message: 'Erreur lors de la création du ticket.', type: 'error' });
+            showToast({ message: t('messaging.create.error'), type: 'error' });
         } finally {
             setLoading(false);
         }
@@ -58,12 +60,12 @@ export default function CreateTicket() {
         <div className="max-w-2xl mx-auto space-y-8 animate-fade-in pb-12">
             <Link to="/dashboard/tickets" className="flex items-center text-[9px] font-bold uppercase tracking-widest text-muted-foreground hover:text-primary transition-all group w-fit">
                 <ArrowLeft className="mr-2 h-3.5 w-3.5 group-hover:-translate-x-1 transition-transform" />
-                Retour aux messages
+                {t('messaging.create.back_to_list')}
             </Link>
 
             <div className="space-y-1">
-                <h1 className="text-2xl md:text-3xl font-black tracking-tighter uppercase">Nouveau Ticket</h1>
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-40">Envoyez un message à l'équipe MaDis.</p>
+                <h1 className="text-2xl md:text-3xl font-black tracking-tighter uppercase">{t('messaging.create.title')}</h1>
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-40">{t('messaging.create.subtitle')}</p>
             </div>
 
             <div className="solaris-glass rounded-[2.5rem] p-8 md:p-10 shadow-xl border-none relative overflow-hidden">
@@ -74,14 +76,14 @@ export default function CreateTicket() {
                 <form onSubmit={handleSubmit} className="space-y-8 relative z-10">
                     <div className="space-y-3">
                         <label className="text-[8px] md:text-[9px] font-black uppercase tracking-widest opacity-30 flex items-center gap-2 px-1">
-                            Sujet du message *
+                            {t('messaging.create.subject')}
                         </label>
                         <input
                             type="text"
                             name="subject"
                             required
                             className={inputClasses}
-                            placeholder="Décrivez brièvement votre demande"
+                            placeholder={t('messaging.create.subject_placeholder')}
                             value={formData.subject}
                             onChange={handleChange}
                         />
@@ -89,40 +91,40 @@ export default function CreateTicket() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-3">
-                            <label className="text-[8px] md:text-[9px] font-black uppercase tracking-widest opacity-30 px-1">Priorité</label>
+                            <label className="text-[8px] md:text-[9px] font-black uppercase tracking-widest opacity-30 px-1">{t('messaging.list.priority_label')}</label>
                             <select name="priority" className={inputClasses} value={formData.priority} onChange={handleChange}>
-                                <option value="LOW">Basse</option>
-                                <option value="MEDIUM">Moyenne</option>
-                                <option value="HIGH">Haute</option>
-                                <option value="URGENT">Urgente</option>
+                                <option value="LOW">{t('messaging.list.priority_low')}</option>
+                                <option value="MEDIUM">{t('messaging.list.priority_medium')}</option>
+                                <option value="HIGH">{t('messaging.list.priority_high')}</option>
+                                <option value="URGENT">{t('messaging.list.priority_urgent')}</option>
                             </select>
                         </div>
                         <div className="space-y-3">
-                            <label className="text-[8px] md:text-[9px] font-black uppercase tracking-widest opacity-30 px-1">Catégorie</label>
+                            <label className="text-[8px] md:text-[9px] font-black uppercase tracking-widest opacity-30 px-1">{t('messaging.create.category')}</label>
                             <select name="category" className={inputClasses} value={formData.category} onChange={handleChange}>
-                                <option value="GENERAL">Général</option>
-                                <option value="TECHNIQUE">Technique</option>
-                                <option value="ADMINISTRATIF">Administratif</option>
-                                <option value="FINANCIER">Financier</option>
+                                <option value="GENERAL">{t('messaging.create.cat_general')}</option>
+                                <option value="TECHNIQUE">{t('messaging.create.cat_technical')}</option>
+                                <option value="ADMINISTRATIF">{t('messaging.create.cat_admin')}</option>
+                                <option value="FINANCIER">{t('messaging.create.cat_financial')}</option>
                             </select>
                         </div>
                     </div>
 
                     <div className="space-y-3">
-                        <label className="text-[8px] md:text-[9px] font-black uppercase tracking-widest opacity-30 px-1">Description détaillée *</label>
+                        <label className="text-[8px] md:text-[9px] font-black uppercase tracking-widest opacity-30 px-1">{t('messaging.create.description')}</label>
                         <textarea
                             name="description"
                             required
                             rows="6"
                             className={`${inputClasses} min-h-[160px] resize-none py-4`}
-                            placeholder="Expliquez votre demande en détail..."
+                            placeholder={t('messaging.create.description_placeholder')}
                             value={formData.description}
                             onChange={handleChange}
                         />
                     </div>
 
                     <div className="space-y-3">
-                        <label className="text-[8px] md:text-[9px] font-black uppercase tracking-widest opacity-30 px-1">Pièce jointe</label>
+                        <label className="text-[8px] md:text-[9px] font-black uppercase tracking-widest opacity-30 px-1">{t('messaging.create.attachment')}</label>
                         <div className="relative group">
                             <input
                                 type="file"
@@ -131,10 +133,10 @@ export default function CreateTicket() {
                                 onChange={handleChange}
                             />
                             <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[8px] font-black uppercase tracking-widest opacity-20 group-hover:opacity-40 transition-opacity">
-                                Parcourir
+                                {t('messaging.create.browse')}
                             </div>
                         </div>
-                        <p className="text-[8px] font-bold uppercase tracking-widest opacity-20 px-1">Formats acceptés : Images, PDF, Word (max 10 Mo)</p>
+                        <p className="text-[8px] font-bold uppercase tracking-widest opacity-20 px-1">{t('messaging.create.formats')}</p>
                     </div>
 
                     <div className="flex flex-col md:flex-row justify-end gap-4 pt-6 border-t border-black/5 dark:border-white/5">
@@ -142,7 +144,7 @@ export default function CreateTicket() {
                             to="/dashboard/tickets"
                             className="inline-flex items-center justify-center rounded-full text-[10px] font-black uppercase tracking-widest transition-all border border-black/5 dark:border-white/5 hover:bg-black/5 dark:hover:bg-white/5 h-14 px-8"
                         >
-                            Annuler
+                            {t('messaging.create.btn_cancel')}
                         </Link>
                         <button
                             type="submit"
@@ -150,9 +152,9 @@ export default function CreateTicket() {
                             className="inline-flex items-center justify-center rounded-full text-[10px] font-black uppercase tracking-widest transition-all bg-primary text-white shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none h-14 px-10"
                         >
                             {loading ? (
-                                <><Loader2 className="mr-3 h-4 w-4 animate-spin" /> Envoi en cours</>
+                                <><Loader2 className="mr-3 h-4 w-4 animate-spin" /> {t('messaging.create.sending')}</>
                             ) : (
-                                <><MessageSquare className="mr-3 h-4 w-4" /> Envoyer le message</>
+                                <><MessageSquare className="mr-3 h-4 w-4" /> {t('messaging.create.btn_send')}</>
                             )}
                         </button>
                     </div>

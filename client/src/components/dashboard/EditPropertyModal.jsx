@@ -1,28 +1,29 @@
 import { useState, useEffect } from 'react';
 import api from '../../lib/axios';
 import { useToast } from '../../context/ToastContext';
+import { useTranslation } from 'react-i18next';
 import { Building, Loader2, Save, Ruler, MapPin, Image as ImageIcon, X, Tag, ShoppingBag, Briefcase, Euro, Settings, HardHat, Home, Percent, User, Calendar, Wrench, Sofa, ShieldCheck, Globe } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
 const PROPERTY_CATEGORIES = [
-    { value: 'RESIDENTIEL', label: 'Résidentiel', icon: Building },
-    { value: 'COMMERCIAL', label: 'Commercial', icon: ShoppingBag },
-    { value: 'PROFESSIONNEL', label: 'Professionnel', icon: Briefcase },
+    { value: 'RESIDENTIEL', labelKey: 'property_types_data.residential', icon: Building },
+    { value: 'COMMERCIAL', labelKey: 'property_types_data.commercial', icon: ShoppingBag },
+    { value: 'PROFESSIONNEL', labelKey: 'property_types_data.professional', icon: Briefcase },
 ];
 
 const MAIN_CATEGORIES = [
     {
         value: 'MANAGED',
-        label: 'Gestion de Patrimoine',
+        labelKey: 'property_modal.managed_assets',
+        descKey: 'property_modal.managed_assets_desc',
         icon: ShieldCheck,
-        description: 'Actifs immobiliers sous gestion (Vente ou Location).',
         color: 'blue',
     },
     {
         value: 'CONSTRUCTION',
-        label: 'Suivi de chantier',
+        labelKey: 'property_modal.construction_tracking',
+        descKey: 'property_modal.construction_tracking_desc',
         icon: HardHat,
-        description: 'Bien avec un projet de construction en cours.',
         color: 'rose',
     },
 ];
@@ -30,41 +31,42 @@ const MAIN_CATEGORIES = [
 const MANAGEMENT_TYPES = [
     {
         value: 'MANDAT',
-        label: 'À Vendre (Mandat)',
+        labelKey: 'property_modal.to_sell',
+        descKey: 'property_modal.to_sell_desc',
         icon: Tag,
-        description: 'Mandat MaDis pour la vente du bien.',
     },
     {
         value: 'GESTION',
-        label: 'À Louer (Gestion)',
+        labelKey: 'property_modal.to_rent',
+        descKey: 'property_modal.to_rent_desc',
         icon: Home,
-        description: 'Confier le bien pour la gestion locative.',
     },
 ];
 
 const PROPERTY_TYPES_BY_CATEGORY = {
     RESIDENTIEL: [
-        { value: 'APPARTEMENT', label: 'Appartement' },
-        { value: 'MAISON', label: 'Maison' },
-        { value: 'VILLA', label: 'Villa' },
+        { value: 'APPARTEMENT', labelKey: 'property_types_data.apartment' },
+        { value: 'MAISON', labelKey: 'property_types_data.house' },
+        { value: 'VILLA', labelKey: 'property_types_data.villa' },
     ],
     COMMERCIAL: [
-        { value: 'BOUTIQUE', label: 'Boutique / Commerce' },
-        { value: 'ENTREPOT', label: 'Entrepôt' },
-        { value: 'LOCAL_ACTIVITE', label: "Local d'activité" },
+        { value: 'BOUTIQUE', labelKey: 'property_types_data.boutique' },
+        { value: 'ENTREPOT', labelKey: 'property_types_data.warehouse' },
+        { value: 'LOCAL_ACTIVITE', labelKey: 'property_types_data.activity' },
     ],
     PROFESSIONNEL: [
-        { value: 'BUREAU', label: 'Bureau' },
-        { value: 'LOCAL_ACTIVITE', label: "Local d'activité" },
+        { value: 'BUREAU', labelKey: 'property_types_data.office' },
+        { value: 'LOCAL_ACTIVITE', labelKey: 'property_types_data.activity' },
     ],
     GLOBAL: [
-        { value: 'TERRAIN', label: 'Terrain' },
-        { value: 'IMMEUBLE', label: 'Immeuble' },
-        { value: 'AUTRE', label: 'Autre' },
+        { value: 'TERRAIN', labelKey: 'property_types_data.land' },
+        { value: 'IMMEUBLE', labelKey: 'property_types_data.building' },
+        { value: 'AUTRE', labelKey: 'property_types_data.other' },
     ]
 };
 
 export default function EditPropertyModal({ isOpen, onClose, propertyId, onSuccess }) {
+    const { t } = useTranslation();
     const { showToast } = useToast();
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(true);
@@ -166,7 +168,7 @@ export default function EditPropertyModal({ isOpen, onClose, propertyId, onSucce
             setExistingImages(prop.images || []);
         } catch (err) {
             console.error('Failed to fetch data', err);
-            showToast({ message: 'Impossible de charger les données du bien.', type: 'error' });
+            showToast({ message: t('property_modal.toast_load_error'), type: 'error' });
             onClose();
         } finally {
             setFetching(false);
@@ -222,15 +224,15 @@ export default function EditPropertyModal({ isOpen, onClose, propertyId, onSucce
         });
     };
 
-    const removeExistingImage = async (imageId) => {
-        if (window.confirm('Supprimer cette photo ?')) {
-            try {
-                await api.delete(`/properties/images/${imageId}/`);
-                setExistingImages(prev => prev.filter(img => img.id !== imageId));
-                showToast({ message: 'Photo supprimée', type: 'success' });
-            } catch (err) {
-                showToast({ message: 'Erreur lors de la suppression', type: 'error' });
-            }
+    const handleDeleteExistingImage = async (imageId) => {
+        if (!window.confirm(t('property_modal.confirm_delete_photo'))) return;
+        try {
+            await api.delete(`/properties/${propertyId}/images/${imageId}/`);
+            setExistingImages(prev => prev.filter(img => img.id !== imageId));
+            showToast({ message: t('property_modal.toast_delete_photo_success'), type: 'success' });
+        } catch (error) {
+            console.error('Erreur lors de la suppression de l\'image:', error);
+            showToast({ message: t('property_modal.toast_delete_photo_error'), type: 'error' });
         }
     };
 
@@ -253,12 +255,12 @@ export default function EditPropertyModal({ isOpen, onClose, propertyId, onSucce
             await api.patch(`/properties/${propertyId}/`, data, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
-            showToast({ message: 'Bien mis à jour !', type: 'success' });
+            showToast({ message: t('property_modal.toast_update_success'), type: 'success' });
             if (onSuccess) onSuccess();
             onClose();
         } catch (err) {
             console.error(err);
-            showToast({ message: 'Erreur lors de la mise à jour.', type: 'error' });
+            showToast({ message: t('property_modal.toast_update_error'), type: 'error' });
         } finally {
             setLoading(false);
         }
@@ -278,7 +280,7 @@ export default function EditPropertyModal({ isOpen, onClose, propertyId, onSucce
                             <Building className="h-5 w-5 text-primary" />
                         </div>
                         <div>
-                            <h2 className="text-xl font-bold tracking-tight">Modifier <span className="text-primary tracking-tight">le Bien</span></h2>
+                            <h2 className="text-xl font-bold tracking-tight">{t('property_modal.title_edit')} <span className="text-primary tracking-tight">{t('property_modal.title_highlight')}</span></h2>
                             <p className="text-xs text-muted-foreground uppercase font-bold tracking-wider mt-0.5">{formData.name}</p>
                         </div>
                     </div>
@@ -298,7 +300,7 @@ export default function EditPropertyModal({ isOpen, onClose, propertyId, onSucce
                             <div className="space-y-4">
                                 <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
                                     <Settings className="h-4 w-4 text-primary" />
-                                    Phase du Projet
+                                    {t('property_modal.label_project_nature')}
                                 </h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     {MAIN_CATEGORIES.map(cat => {
@@ -318,8 +320,8 @@ export default function EditPropertyModal({ isOpen, onClose, propertyId, onSucce
                                                     <cat.icon className="h-6 w-6" />
                                                 </div>
                                                 <div>
-                                                    <div className="text-sm font-bold">{cat.label}</div>
-                                                    <div className="text-[10px] text-muted-foreground">{cat.description}</div>
+                                                    <div className="text-sm font-bold">{t(cat.labelKey)}</div>
+                                                    <div className="text-[10px] text-muted-foreground">{t(cat.descKey)}</div>
                                                 </div>
                                             </button>
                                         );
@@ -331,23 +333,23 @@ export default function EditPropertyModal({ isOpen, onClose, propertyId, onSucce
                                 <div className="space-y-6">
                                     <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
                                         <User className="h-4 w-4 text-primary" />
-                                        Identification
+                                        {t('property_modal.label_identification')}
                                     </h3>
                                     <div className="grid gap-2">
-                                        <label className="text-xs font-bold text-muted-foreground uppercase">Propriétaire *</label>
+                                        <label className="text-xs font-bold text-muted-foreground uppercase">{t('property_modal.label_owner')}</label>
                                         <select name="owner" required className={inputClasses} value={formData.owner} onChange={handleChange}>
-                                            <option value="">-- Sélectionner un client --</option>
+                                            <option value="">{t('property_modal.select_owner')}</option>
                                             {users.map(u => (
                                                 <option key={u.id} value={u.id}>{u.first_name} {u.last_name} ({u.email})</option>
                                             ))}
                                         </select>
                                     </div>
                                     <div className="grid gap-2">
-                                        <label className="text-xs font-bold text-muted-foreground uppercase">Nom du bien *</label>
-                                        <input type="text" name="name" required className={inputClasses} value={formData.name} onChange={handleChange} />
+                                        <label className="text-xs font-bold text-muted-foreground uppercase">{t('property_modal.label_name')}</label>
+                                        <input type="text" name="name" required className={inputClasses} placeholder={t('property_modal.ph_name')} value={formData.name} onChange={handleChange} />
                                     </div>
                                     <div className="grid gap-2">
-                                        <label className="text-xs font-bold text-muted-foreground uppercase">Adresse *</label>
+                                        <label className="text-xs font-bold text-muted-foreground uppercase">{t('property_modal.label_address')}</label>
                                         <input type="text" name="address" required className={inputClasses} value={formData.address} onChange={handleChange} />
                                     </div>
                                 </div>
@@ -355,30 +357,34 @@ export default function EditPropertyModal({ isOpen, onClose, propertyId, onSucce
                                 <div className="space-y-6">
                                     <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
                                         <Ruler className="h-4 w-4 text-primary" />
-                                        Caractéristiques
+                                        {t('property_modal.label_characteristics')}
                                     </h3>
                                     <div className="grid grid-cols-2 gap-4">
                                         <div className="grid gap-2">
-                                            <label className="text-xs font-bold text-muted-foreground uppercase">Catégorie</label>
+                                            <label className="text-xs font-bold text-muted-foreground uppercase">{t('property_modal.label_category')}</label>
                                             <select name="category" className={inputClasses} value={formData.category} onChange={handleChange}>
-                                                {PROPERTY_CATEGORIES.map(cat => <option key={cat.value} value={cat.value}>{cat.label}</option>)}
+                                                {PROPERTY_CATEGORIES.map(cat => <option key={cat.value} value={cat.value}>{t(cat.labelKey)}</option>)}
                                             </select>
                                         </div>
                                         <div className="grid gap-2">
-                                            <label className="text-xs font-bold text-muted-foreground uppercase">Type</label>
+                                            <label className="text-xs font-bold text-muted-foreground uppercase">{t('property_modal.label_type')}</label>
                                             <select name="property_type" className={inputClasses} value={formData.property_type} onChange={handleChange}>
-                                                {(PROPERTY_TYPES_BY_CATEGORY[formData.category] || []).map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
-                                                {PROPERTY_TYPES_BY_CATEGORY.GLOBAL.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+                                                {(PROPERTY_TYPES_BY_CATEGORY[formData.category] || []).map(tOpt => (
+                                                    <option key={tOpt.value} value={tOpt.value}>{t(tOpt.labelKey)}</option>
+                                                ))}
+                                                {PROPERTY_TYPES_BY_CATEGORY.GLOBAL.map(tOpt => (
+                                                    <option key={tOpt.value} value={tOpt.value}>{t(tOpt.labelKey)}</option>
+                                                ))}
                                             </select>
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-2 gap-4">
                                         <div className="grid gap-2">
-                                            <label className="text-xs font-bold text-muted-foreground uppercase">Surface (m²)</label>
+                                            <label className="text-xs font-bold text-muted-foreground uppercase">{t('property_modal.label_surface')}</label>
                                             <input type="number" name="surface" className={inputClasses} value={formData.surface} onChange={handleChange} />
                                         </div>
                                         <div className="grid gap-2">
-                                            <label className="text-xs font-bold text-muted-foreground uppercase">Chambres</label>
+                                            <label className="text-xs font-bold text-muted-foreground uppercase">{t('property_modal.label_bedrooms')}</label>
                                             <input type="number" name="bedroom_count" className={inputClasses} value={formData.bedroom_count} onChange={handleChange} />
                                         </div>
                                     </div>
@@ -388,21 +394,23 @@ export default function EditPropertyModal({ isOpen, onClose, propertyId, onSucce
                             <div className="space-y-6 pt-4 border-t">
                                 <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
                                     <ImageIcon className="h-4 w-4 text-primary" />
-                                    Galerie Photos
+                                    {t('property_modal.label_photo_gallery')}
                                 </h3>
                                 <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
                                     {existingImages.map(img => (
                                         <div key={img.id} className="relative aspect-square rounded-lg border overflow-hidden group">
                                             <img src={img.image} className="w-full h-full object-cover" />
-                                            <button type="button" onClick={() => removeExistingImage(img.id)} className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <button type="button" onClick={() => handleDeleteExistingImage(img.id)} className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                                 <X className="h-3 w-3" />
                                             </button>
                                         </div>
                                     ))}
                                     <div className="relative aspect-square rounded-lg border-2 border-dashed flex flex-col items-center justify-center bg-muted/20 hover:bg-muted/40 cursor-pointer">
                                         <input type="file" multiple accept="image/*" className="absolute inset-0 opacity-0 cursor-pointer" onChange={handleImageChange} />
-                                        <ImageIcon className="h-5 w-5 text-muted-foreground mb-1" />
-                                        <span className="text-[8px] font-bold uppercase text-muted-foreground">Ajouter</span>
+                                        <div className="text-center">
+                                            <ImageIcon className="h-6 w-6 mx-auto text-muted-foreground mb-1" />
+                                            <span className="text-[10px] font-bold text-muted-foreground uppercase">{t('property_modal.btn_add_photos')}</span>
+                                        </div>
                                     </div>
                                     {previews.map((p, i) => (
                                         <div key={i} className="relative aspect-square rounded-lg border border-primary/30 overflow-hidden">
@@ -419,10 +427,10 @@ export default function EditPropertyModal({ isOpen, onClose, propertyId, onSucce
                 {/* Footer */}
                 <div className="flex justify-end gap-3 p-6 border-t bg-muted/30 shrink-0">
                     <button type="button" onClick={onClose} className="inline-flex items-center justify-center rounded-md text-sm font-medium border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-10 px-6">
-                        Annuler
+                        {t('property_modal.btn_cancel')}
                     </button>
                     <button form="edit-property-form" type="submit" disabled={loading || fetching} className="inline-flex items-center justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground shadow hover:bg-primary/90 h-10 px-8 disabled:opacity-50">
-                        {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Enregistrement...</> : <><Save className="mr-2 h-4 w-4" /> Sauvegarder</>}
+                        {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('property_modal.btn_saving')}</> : <><Save className="mr-2 h-4 w-4" /> {t('property_modal.btn_update')}</>}
                     </button>
                 </div>
             </div>

@@ -3,8 +3,10 @@ import api from '../../lib/axios';
 import { useToast } from '../../context/ToastContext';
 import { Upload, Loader2, FileText, X } from 'lucide-react';
 import { cn } from '../../lib/utils';
+import { useTranslation } from 'react-i18next';
 
 export default function UploadDocumentModal({ isOpen, onClose, propertyId, siteId, onSuccess }) {
+    const { t } = useTranslation();
     const { showToast } = useToast();
     const [loading, setLoading] = useState(false);
     const [propertyName, setPropertyName] = useState('');
@@ -41,9 +43,9 @@ export default function UploadDocumentModal({ isOpen, onClose, propertyId, siteI
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!file) { showToast({ message: 'Veuillez sélectionner un fichier.', type: 'error' }); return; }
+        if (!file) { showToast({ message: t('upload_document_modal.toast_no_file'), type: 'error' }); return; }
         if (!formData.property && !formData.site) {
-            showToast({ message: 'Le document doit être rattaché à un bien ou un chantier.', type: 'error' });
+            showToast({ message: t('upload_document_modal.toast_no_link'), type: 'error' });
             return;
         }
 
@@ -57,12 +59,12 @@ export default function UploadDocumentModal({ isOpen, onClose, propertyId, siteI
             if (formData.site) data.append('site', formData.site);
 
             await api.post('/documents/', data, { headers: { 'Content-Type': 'multipart/form-data' } });
-            showToast({ message: 'Document envoyé avec succès !', type: 'success' });
+            showToast({ message: t('upload_document_modal.toast_success'), type: 'success' });
             if (onSuccess) onSuccess();
             onClose();
         } catch (err) {
             console.error(err);
-            showToast({ message: 'Erreur lors de l\'envoi du document.', type: 'error' });
+            showToast({ message: t('upload_document_modal.toast_error'), type: 'error' });
         } finally {
             setLoading(false);
         }
@@ -82,9 +84,9 @@ export default function UploadDocumentModal({ isOpen, onClose, propertyId, siteI
                             <Upload className="h-5 w-5 text-primary" />
                         </div>
                         <div>
-                            <h2 className="text-xl font-black tracking-tight">Ajouter un <span className="text-primary">Document</span></h2>
+                            <h2 className="text-xl font-black tracking-tight">{t('upload_document_modal.title')}<span className="text-primary">{t('upload_document_modal.title_highlight')}</span></h2>
                             <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest mt-1">
-                                {propertyName ? `Pour : ${propertyName}` : 'Importation de fichier'}
+                                {propertyName ? t('upload_document_modal.subtitle_for', { name: propertyName }) : t('upload_document_modal.subtitle_import')}
                             </p>
                         </div>
                     </div>
@@ -98,25 +100,25 @@ export default function UploadDocumentModal({ isOpen, onClose, propertyId, siteI
 
                 <form onSubmit={handleSubmit} className="p-6 space-y-5">
                     <div className="grid gap-2">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Titre du document *</label>
-                        <input type="text" name="title" required className={`${ic} dark:placeholder:text-white/30`} placeholder="Ex: Contrat de vente, Facture..." value={formData.title} onChange={handleChange} />
+                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t('upload_document_modal.label_title')}</label>
+                        <input type="text" name="title" required className={`${ic} dark:placeholder:text-white/30`} placeholder={t('upload_document_modal.ph_title')} value={formData.title} onChange={handleChange} />
                     </div>
 
                     <div className="grid gap-2">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Catégorie</label>
+                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t('upload_document_modal.label_category')}</label>
                         <select name="category" className={ic} value={formData.category} onChange={handleChange}>
-                            <option value="CONTRAT">Contrat</option>
-                            <option value="FACTURE">Facture</option>
-                            <option value="PLAN">Plan</option>
-                            <option value="PHOTO">Photo</option>
-                            <option value="VERIF_FONCIERE">Vérification Foncière</option>
-                            <option value="ADMINISTRATIF">Administratif</option>
-                            <option value="AUTRE">Autre</option>
+                            <option value="CONTRAT">{t('upload_document_modal.cat_contract')}</option>
+                            <option value="FACTURE">{t('upload_document_modal.cat_invoice')}</option>
+                            <option value="PLAN">{t('upload_document_modal.cat_plan')}</option>
+                            <option value="PHOTO">{t('upload_document_modal.cat_photo')}</option>
+                            <option value="VERIF_FONCIERE">{t('upload_document_modal.cat_verif')}</option>
+                            <option value="ADMINISTRATIF">{t('upload_document_modal.cat_admin')}</option>
+                            <option value="AUTRE">{t('upload_document_modal.cat_other')}</option>
                         </select>
                     </div>
 
                     <div className="grid gap-2">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Fichier *</label>
+                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t('upload_document_modal.label_file')}</label>
                         <div
                             className="border-2 border-dashed border-black/10 dark:border-white/10 rounded-2xl p-8 text-center hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer group"
                             onClick={() => document.getElementById('modal-file-input').click()}
@@ -132,8 +134,8 @@ export default function UploadDocumentModal({ isOpen, onClose, propertyId, siteI
                                 </div>
                             ) : (
                                 <>
-                                    <p className="text-sm font-bold mb-1">Cliquez pour sélectionner un fichier</p>
-                                    <p className="text-xs text-muted-foreground">PDF, DOC, JPG, PNG — Max 10 Mo</p>
+                                    <p className="text-sm font-bold mb-1">{t('upload_document_modal.click_to_select')}</p>
+                                    <p className="text-xs text-muted-foreground">{t('upload_document_modal.file_formats')}</p>
                                 </>
                             )}
                         </div>
@@ -141,10 +143,10 @@ export default function UploadDocumentModal({ isOpen, onClose, propertyId, siteI
 
                     <div className="flex justify-end gap-3 pt-4 border-t border-black/5 dark:border-white/[0.06]">
                         <button type="button" onClick={onClose} className="inline-flex items-center justify-center rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border border-black/5 dark:border-white/10 bg-white dark:bg-white/10 shadow-sm hover:bg-black/5 dark:hover:bg-white/20 h-11 px-6 dark:text-white">
-                            Annuler
+                            {t('upload_document_modal.btn_cancel')}
                         </button>
                         <button type="submit" disabled={loading} className="inline-flex items-center justify-center rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all bg-primary text-white shadow-lg shadow-primary/20 dark:shadow-[0_0_20px_rgba(236,72,153,0.3)] hover:shadow-xl h-11 px-8 disabled:opacity-50">
-                            {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Envoi...</> : <><Upload className="mr-2 h-4 w-4" /> Envoyer le document</>}
+                            {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('upload_document_modal.btn_sending')}</> : <><Upload className="mr-2 h-4 w-4" /> {t('upload_document_modal.btn_send')}</>}
                         </button>
                     </div>
                 </form>

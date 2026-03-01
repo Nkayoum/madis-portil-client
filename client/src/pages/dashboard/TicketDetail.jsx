@@ -8,12 +8,15 @@ import {
     Phone, Mail, ExternalLink
 } from 'lucide-react';
 import { format } from 'date-fns';
-import { fr } from 'date-fns/locale';
+import { fr, enUS } from 'date-fns/locale';
+import { useTranslation } from 'react-i18next';
 import { cn } from '../../lib/utils';
 
 export default function TicketDetail() {
     const { id } = useParams();
     const { user } = useAuth();
+    const { t, i18n } = useTranslation();
+    const dateLocale = i18n.language === 'fr' ? fr : enUS;
     const [ticket, setTicket] = useState(null);
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
@@ -50,7 +53,7 @@ export default function TicketDetail() {
             setTicket(ticketRes.data);
             setMessages(messagesRes.data.results || []);
         } catch (err) {
-            setError('Impossible de charger la conversation.');
+            setError(t('messaging.detail.not_found'));
             console.error(err);
         } finally {
             setLoading(false);
@@ -125,9 +128,9 @@ export default function TicketDetail() {
 
     const getStatusConfig = (status) => {
         switch (status) {
-            case 'OPEN': return { color: 'text-primary', bg: 'bg-primary/10', label: 'Ouvert' };
-            case 'IN_PROGRESS': return { color: 'text-orange-600 dark:text-orange-400', bg: 'bg-orange-100 dark:bg-orange-900/20', label: 'En cours' };
-            case 'CLOSED': return { color: 'text-green-600 dark:text-green-400', bg: 'bg-green-100 dark:bg-green-900/20', label: 'Fermé' };
+            case 'OPEN': return { color: 'text-primary', bg: 'bg-primary/10', label: t('messaging.list.status_open') };
+            case 'IN_PROGRESS': return { color: 'text-orange-600 dark:text-orange-400', bg: 'bg-orange-100 dark:bg-orange-900/20', label: t('messaging.list.status_in_progress') };
+            case 'CLOSED': return { color: 'text-green-600 dark:text-green-400', bg: 'bg-green-100 dark:bg-green-900/20', label: t('messaging.list.status_closed') };
             default: return { color: 'text-muted-foreground', bg: 'bg-muted', label: status };
         }
     };
@@ -145,10 +148,10 @@ export default function TicketDetail() {
             <div className="space-y-4">
                 <Link to="/dashboard/tickets" className="flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
                     <ArrowLeft className="mr-2 h-4 w-4" />
-                    Retour aux messages
+                    {t('messaging.detail.back_to_list')}
                 </Link>
                 <div className="p-4 rounded-lg bg-destructive/10 text-destructive border border-destructive/20">
-                    {error || "Ticket non trouvé."}
+                    {error || t('messaging.detail.not_found')}
                 </div>
             </div>
         );
@@ -161,7 +164,7 @@ export default function TicketDetail() {
             <div className="mb-3 md:mb-5">
                 <Link to="/dashboard/tickets" className="inline-flex items-center text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-black dark:hover:text-white transition-all group">
                     <ArrowLeft className="mr-2 h-3.5 w-3.5 group-hover:-translate-x-1 transition-transform" />
-                    <span className="truncate">Retour au registre</span>
+                    <span className="truncate">{t('messaging.detail.back_to_registry')}</span>
                 </Link>
             </div>
 
@@ -190,17 +193,17 @@ export default function TicketDetail() {
                         </div>
                         <div className="flex flex-wrap items-center gap-4 md:gap-6 dark:text-white/60">
                             <div className="flex items-center gap-1.5 bg-black/[0.03] dark:bg-white/5 px-2 py-0.5 rounded-lg border border-black/5 dark:border-white/5">
-                                <span className="text-[8px] font-bold uppercase tracking-widest opacity-20">ID</span>
+                                <span className="text-[8px] font-bold uppercase tracking-widest opacity-20">{t('messaging.list.id')}</span>
                                 <span className="text-[10px] font-bold font-mono">#{ticket.id}</span>
                             </div>
                             <div className="flex items-center gap-2 text-black/40 dark:text-white/40">
                                 <Clock className="h-3.5 w-3.5" />
                                 <span className="text-[9px] font-bold uppercase tracking-widest">
-                                    Ouvert le {format(new Date(ticket.created_at), 'd MMM yyyy', { locale: fr })}
+                                    {t('messaging.detail.opened_on')} {format(new Date(ticket.created_at), 'd MMM yyyy', { locale: dateLocale })}
                                 </span>
                             </div>
                             <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-black/5 dark:bg-white/5 text-red-600 dark:text-red-400">
-                                <span className="text-[8px] font-bold uppercase tracking-[0.2em] opacity-40">Priorité</span>
+                                <span className="text-[8px] font-bold uppercase tracking-[0.2em] opacity-40">{t('messaging.detail.priority')}</span>
                                 <span className="text-[8px] font-bold uppercase tracking-widest">
                                     {ticket.priority}
                                 </span>
@@ -217,7 +220,7 @@ export default function TicketDetail() {
                                     className="flex-1 lg:flex-none inline-flex items-center justify-center rounded-xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all bg-red-600 text-white hover:bg-red-700 h-9 md:h-10 px-4 md:px-6 shadow-md"
                                 >
                                     {updatingStatus ? <Loader2 className="h-3.5 w-3.5 animate-spin mr-2" /> : <X className="mr-2 h-3.5 w-3.5" />}
-                                    Clôturer
+                                    {t('messaging.detail.btn_close')}
                                 </button>
                             ) : (
                                 <button
@@ -226,7 +229,7 @@ export default function TicketDetail() {
                                     className="flex-1 lg:flex-none inline-flex items-center justify-center rounded-xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all bg-black text-white hover:bg-black/90 h-9 md:h-10 px-4 md:px-6 shadow-md"
                                 >
                                     {updatingStatus ? <Loader2 className="h-3.5 w-3.5 animate-spin mr-2" /> : <CheckCircle2 className="mr-2 h-3.5 w-3.5" />}
-                                    Réactiver
+                                    {t('messaging.detail.btn_reopen')}
                                 </button>
                             )}
                         </div>
@@ -270,17 +273,17 @@ export default function TicketDetail() {
                                 {ticket.creator_name?.[0] || 'V'}
                             </div>
                             <span className="text-[10px] md:text-[11px] font-bold uppercase tracking-tight">
-                                {ticket.creator_name || 'Émetteur'}
+                                {ticket.creator_name || t('messaging.detail.sender')}
                             </span>
                             <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-20 ml-auto">
-                                {format(new Date(ticket.created_at), 'HH:mm', { locale: fr })}
+                                {format(new Date(ticket.created_at), 'HH:mm', { locale: dateLocale })}
                             </span>
                         </div>
                         <p className="text-[12px] md:text-[13px] font-medium leading-relaxed text-black/70 dark:text-white/70 whitespace-pre-wrap">{ticket.description}</p>
                         {ticket.attachment && (
                             <a href={ticket.attachment} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 md:gap-2 mt-3 md:mt-4 text-[8px] md:text-[9px] font-bold uppercase tracking-widest p-2 md:p-3 rounded-xl bg-black/[0.03] dark:bg-white/5 hover:bg-black hover:text-white transition-all w-fit shadow-sm border border-black/5 dark:border-white/5">
                                 <Paperclip className="h-3 w-3 md:h-3.5 md:w-3.5" />
-                                Pièce jointe initiale
+                                {t('messaging.detail.initial_attachment')}
                             </a>
                         )}
                     </div>
@@ -309,11 +312,11 @@ export default function TicketDetail() {
                                     </div>
                                     <div className="flex items-center gap-1.5 md:gap-2">
                                         <span className="text-[10px] md:text-[11px] font-bold uppercase tracking-tight">
-                                            {msg.author_name || (isMe ? 'Vous' : 'Support')}
+                                            {msg.author_name || (isMe ? t('messaging.detail.you') : t('messaging.detail.support'))}
                                         </span>
                                         {isInternalNote && (
                                             <span className="bg-red-600 text-white text-[7px] font-bold px-1.5 py-0.5 rounded-full shadow-sm animate-pulse tracking-widest uppercase">
-                                                INTERNE
+                                                {t('messaging.detail.internal')}
                                             </span>
                                         )}
                                     </div>
@@ -321,7 +324,7 @@ export default function TicketDetail() {
                                         "text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-20",
                                         isMe && !isInternalNote && "ml-0 mr-auto"
                                     )}>
-                                        {format(new Date(msg.created_at), 'HH:mm', { locale: fr })}
+                                        {format(new Date(msg.created_at), 'HH:mm', { locale: dateLocale })}
                                     </span>
                                 </div>
                                 <p className={cn(
@@ -343,7 +346,7 @@ export default function TicketDetail() {
                                         )}
                                     >
                                         <Paperclip className="h-3.5 md:h-4 w-3.5 md:w-4" />
-                                        Documentation Jointe
+                                        {t('messaging.detail.attachment')}
                                     </a>
                                 )}
                             </div>
@@ -399,14 +402,14 @@ export default function TicketDetail() {
                                         "text-[7px] md:text-[8px] font-bold uppercase tracking-[0.15em] transition-colors",
                                         isInternal ? "text-red-600 dark:text-red-400" : "text-black/30 dark:text-white/30 group-hover:text-black dark:group-hover:text-white"
                                     )}>
-                                        Note interne
+                                        {t('messaging.detail.internal_note')}
                                     </span>
                                 </label>
 
                                 {ticket.status === 'CLOSED' && (
                                     <div className="flex items-center gap-1.5 text-red-600 text-[7px] md:text-[8px] font-bold uppercase tracking-widest animate-pulse">
                                         <AlertCircle className="h-2.5 w-2.5" />
-                                        Clos
+                                        {t('messaging.detail.closed')}
                                     </div>
                                 )}
                             </div>
@@ -431,7 +434,7 @@ export default function TicketDetail() {
                             <div className="flex-1 relative">
                                 <textarea
                                     className="w-full min-h-[36px] md:min-h-[40px] max-h-24 py-2 px-4 rounded-xl bg-black/[0.01] dark:bg-white/[0.02] border border-black/5 dark:border-white/5 focus:bg-white transition-all text-[11px] md:text-[12px] font-semibold resize-none scrollbar-none"
-                                    placeholder={ticket.status === 'CLOSED' ? "Clos" : "Message..."}
+                                    placeholder={ticket.status === 'CLOSED' ? t('messaging.detail.closed') : t('messaging.detail.placeholder')}
                                     value={newMessage}
                                     onChange={(e) => {
                                         setNewMessage(e.target.value);

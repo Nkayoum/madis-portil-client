@@ -9,10 +9,12 @@ import api from '../../lib/axios';
 import { cn, formatCurrency } from '../../lib/utils';
 import { useToast } from '../../context/ToastContext';
 import { useTheme } from '../../context/ThemeContext';
+import { useTranslation } from 'react-i18next';
 import AnnualReport from './AnnualReport';
 
 export default function FinancialDashboard({ isAdmin = false }) {
     const { theme } = useTheme();
+    const { t } = useTranslation();
     const { showToast } = useToast();
     const [loading, setLoading] = useState(true);
     const [loadingStats, setLoadingStats] = useState(false);
@@ -162,9 +164,9 @@ export default function FinancialDashboard({ isAdmin = false }) {
             main_value: construction.total_volume || 0,
             volume: construction.matieriables_volume || 0,
             performance: construction.main_d_oeuvre_volume || 0,
-            label_main: "Volume Chantier",
-            label_volume: "Matériaux",
-            label_performance: "Main d'œuvre"
+            label_main: t('dashboard.stats.construction_volume'),
+            label_volume: t('dashboard.stats.materials'),
+            label_performance: t('dashboard.stats.labor')
         };
     } else if (dashboardMode === 'transactional') {
         const roi = trans.roi || 0;
@@ -172,9 +174,9 @@ export default function FinancialDashboard({ isAdmin = false }) {
             main_value: isEffectiveAdmin ? trans.net_capital_gain : trans.net_capital_gain, // Net Gain is prioritized
             volume: trans.sales_volume || 0,
             performance: roi,
-            label_main: isEffectiveAdmin ? "CA Commissions" : "Plus-value Nette",
-            label_volume: isEffectiveAdmin ? "Volume Ventes" : "Capital Investi", // Note: Investment is the "volume" here for the owner
-            label_performance: isEffectiveAdmin ? "Marge Nette" : "ROI Projet"
+            label_main: isEffectiveAdmin ? t('dashboard.stats.commissions') : t('dashboard.stats.capital_gain'),
+            label_volume: isEffectiveAdmin ? t('dashboard.stats.sales_volume') : t('dashboard.stats.invested'), // Note: Investment is the "volume" here for the owner
+            label_performance: isEffectiveAdmin ? t('dashboard.stats.marge') : t('dashboard.stats.roi')
         };
         // Specific adjustment for volume label if owner
         if (!isEffectiveAdmin) {
@@ -186,9 +188,9 @@ export default function FinancialDashboard({ isAdmin = false }) {
             main_value: isEffectiveAdmin ? rental.commission_total : rental.net_revenue,
             volume: rental.total_inflow || 0,
             performance: yield_val,
-            label_main: isEffectiveAdmin ? "CA Commissions" : "Solde Portefeuille",
-            label_volume: isEffectiveAdmin ? "Volume Loyers" : "Loyers Bruts",
-            label_performance: isEffectiveAdmin ? "Marge Nette" : "Rendement Net"
+            label_main: isEffectiveAdmin ? t('dashboard.stats.commissions') : t('dashboard.stats.net_cashflow'),
+            label_volume: isEffectiveAdmin ? t('dashboard.stats.sales_volume') : t('dashboard.stats.total_revenue'),
+            label_performance: isEffectiveAdmin ? t('dashboard.stats.marge') : t('dashboard.stats.yield')
         };
     }
 
@@ -227,7 +229,7 @@ export default function FinancialDashboard({ isAdmin = false }) {
                             )}
                         >
                             <Calendar className="h-4 w-4" />
-                            Gestion Locative
+                            {t('dashboard.modes.rental')}
                         </button>
                         <button
                             onClick={() => setDashboardMode('transactional')}
@@ -239,7 +241,7 @@ export default function FinancialDashboard({ isAdmin = false }) {
                             )}
                         >
                             <TrendingUp className="h-4 w-4" />
-                            Investissement Achat-Revente
+                            {t('dashboard.modes.transactional')}
                         </button>
                         {isEffectiveAdmin && (
                             <button
@@ -252,7 +254,7 @@ export default function FinancialDashboard({ isAdmin = false }) {
                                 )}
                             >
                                 <Hammer className="h-4 w-4" />
-                                Suivi Chantier
+                                {t('dashboard.modes.construction')}
                             </button>
                         )}
                         <button
@@ -265,7 +267,7 @@ export default function FinancialDashboard({ isAdmin = false }) {
                             )}
                         >
                             <PieIcon className="h-4 w-4" />
-                            Rapports
+                            {t('dashboard.modes.reports')}
                         </button>
                     </div>
                 </div>
@@ -278,7 +280,7 @@ export default function FinancialDashboard({ isAdmin = false }) {
                             value={selectedPropertyId}
                             onChange={handlePropertyChange}
                         >
-                            <option value="">{isEffectiveAdmin ? "Tous les biens (Admin)" : "Tous mes biens"}</option>
+                            <option value="">{isEffectiveAdmin ? t('dashboard.filters.all_properties_admin') : t('dashboard.filters.all_my_properties')}</option>
                             {properties.map(p => (
                                 <option key={p.id} value={p.id}>{p.name}</option>
                             ))}
@@ -326,7 +328,7 @@ export default function FinancialDashboard({ isAdmin = false }) {
                                 <span className="xl:hidden">{formatCurrency(stats.main_value, true)}</span>
                             </h3>
                             <p className="text-[10px] font-bold text-muted-foreground mt-4 flex items-center gap-1 opacity-60">
-                                <ShieldCheck className="h-3 w-3" /> Données sécurisées MaDis
+                                <ShieldCheck className="h-3 w-3" /> {t('dashboard.stats.secure_data')}
                             </p>
                         </div>
 
@@ -371,7 +373,7 @@ export default function FinancialDashboard({ isAdmin = false }) {
                             </h3>
                             <div className="flex items-center gap-1.5 mt-4">
                                 <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                                <p className="text-[10px] font-bold uppercase text-emerald-600 dark:text-emerald-400 tracking-tighter">Performance Optimale</p>
+                                <p className="text-[10px] font-bold uppercase text-emerald-600 dark:text-emerald-400 tracking-tighter">{t('dashboard.stats.optimal_performance')}</p>
                             </div>
                         </div>
 
@@ -385,21 +387,21 @@ export default function FinancialDashboard({ isAdmin = false }) {
                                     </svg>
                                     <div className="absolute inset-0 flex flex-col items-center justify-center">
                                         <span className="text-2xl font-bold dark:text-white">{assetsRatio.toFixed(0)}%</span>
-                                        <span className="text-[8px] font-bold uppercase text-muted-foreground tracking-widest opacity-60">Actif</span>
+                                        <span className="text-[8px] font-bold uppercase text-muted-foreground tracking-widest opacity-60">{t('dashboard.charts.asset')}</span>
                                     </div>
                                 </div>
                                 <div className="w-full space-y-4">
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2">
                                             <div className="w-3 h-3 rounded-full bg-primary" />
-                                            <span className="text-xs font-bold">Immobilier</span>
+                                            <span className="text-xs font-bold">{t('dashboard.charts.real_estate')}</span>
                                         </div>
                                         <span className="text-xs font-black whitespace-nowrap">{formatCurrency(totalAssetValue, true)}</span>
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2">
                                             <div className="w-3 h-3 rounded-full bg-slate-300 dark:bg-white/10" />
-                                            <span className="text-xs font-bold">Liquidités</span>
+                                            <span className="text-xs font-bold">{t('dashboard.charts.liquidity')}</span>
                                         </div>
                                         <span className="text-xs font-black whitespace-nowrap">{formatCurrency(totalLiquidity, true)}</span>
                                     </div>
@@ -415,14 +417,14 @@ export default function FinancialDashboard({ isAdmin = false }) {
                                 <div>
                                     <h3 className="text-xl font-bold flex items-center gap-2">
                                         <TrendingUp className="h-5 w-5 text-primary" />
-                                        Évolution Financière
+                                        {t('dashboard.charts.financial_evolution')}
                                     </h3>
-                                    <p className="text-[10px] text-muted-foreground font-semibold tracking-widest uppercase mt-1">Données consolidées MaDis Solaris</p>
+                                    <p className="text-[10px] text-muted-foreground font-semibold tracking-widest uppercase mt-1">{t('dashboard.charts.consolidated_data')}</p>
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/5 border border-primary/10">
                                         <div className="w-2 h-2 rounded-full bg-primary" />
-                                        <span className="text-[10px] font-bold text-primary uppercase">Volume Global</span>
+                                        <span className="text-[10px] font-bold text-primary uppercase">{t('dashboard.charts.global_volume')}</span>
                                     </div>
                                 </div>
                             </div>
@@ -485,7 +487,7 @@ export default function FinancialDashboard({ isAdmin = false }) {
                         <div className="solaris-glass rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-8 flex flex-col dark:border-white/5 dark:bg-white/[0.02]">
                             <h3 className="text-xl font-black mb-8 flex items-center gap-2">
                                 <PieIcon className="h-5 w-5 text-primary" />
-                                Distribution
+                                {t('dashboard.charts.distribution')}
                             </h3>
                             <div className="flex-1 flex flex-col justify-center items-center">
                                 <div className="relative w-48 h-48 mb-8">
@@ -495,21 +497,21 @@ export default function FinancialDashboard({ isAdmin = false }) {
                                     </svg>
                                     <div className="absolute inset-0 flex flex-col items-center justify-center">
                                         <span className="text-4xl font-bold dark:text-white">{assetsRatio.toFixed(0)}%</span>
-                                        <span className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest opacity-60">Actif</span>
+                                        <span className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest opacity-60">{t('dashboard.charts.asset')}</span>
                                     </div>
                                 </div>
                                 <div className="w-full space-y-4">
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2">
                                             <div className="w-3 h-3 rounded-full bg-primary dark:bg-[#00f2ff]" />
-                                            <span className="text-xs font-bold dark:text-white">Immobilier</span>
+                                            <span className="text-xs font-bold dark:text-white">{t('dashboard.charts.real_estate')}</span>
                                         </div>
                                         <span className="text-xs font-black dark:text-white">{formatCurrency(totalAssetValue)}</span>
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2">
                                             <div className="w-3 h-3 rounded-full bg-slate-300 dark:bg-white/10" />
-                                            <span className="text-xs font-bold dark:text-white">Liquidités</span>
+                                            <span className="text-xs font-bold dark:text-white">{t('dashboard.charts.liquidity')}</span>
                                         </div>
                                         <span className="text-xs font-black dark:text-white">{formatCurrency(totalLiquidity)}</span>
                                     </div>
@@ -528,11 +530,11 @@ export default function FinancialDashboard({ isAdmin = false }) {
                             <div className="p-2 rounded-lg bg-primary/10 text-primary shrink-0">
                                 <Wallet className="h-5 w-5" />
                             </div>
-                            <h3 className="font-semibold text-sm sm:text-lg truncate">Suivi des Mandats (Trésorerie Régie)</h3>
+                            <h3 className="font-semibold text-sm sm:text-lg truncate">{t('dashboard.treasury.title')}</h3>
                         </div>
                         <div className="flex items-center gap-3 sm:gap-4 shrink-0">
                             <div className="text-left sm:text-right">
-                                <p className="text-[10px] uppercase font-bold text-muted-foreground leading-tight">Liquidité Totale</p>
+                                <p className="text-[10px] uppercase font-bold text-muted-foreground leading-tight">{t('dashboard.treasury.total_liquidity')}</p>
                                 <p className="text-sm font-bold text-primary whitespace-nowrap">
                                     {formatCurrency(wallets.reduce((sum, w) => sum + Number(w.balance), 0))}
                                 </p>
@@ -550,10 +552,10 @@ export default function FinancialDashboard({ isAdmin = false }) {
                         <table className="w-full text-sm">
                             <thead>
                                 <tr className="border-b bg-muted/10">
-                                    <th className="px-6 py-4 text-left font-medium text-muted-foreground text-[10px] uppercase tracking-wider">Bien Immobilier</th>
-                                    <th className="px-6 py-4 text-right font-medium text-muted-foreground text-[10px] uppercase tracking-wider">Solde Actuel (€)</th>
-                                    <th className="px-6 py-4 text-center font-medium text-muted-foreground text-[10px] uppercase tracking-wider">État Trésorerie</th>
-                                    <th className="px-6 py-4 text-right font-medium text-muted-foreground text-[10px] uppercase tracking-wider">Actions</th>
+                                    <th className="px-6 py-4 text-left font-medium text-muted-foreground text-[10px] uppercase tracking-wider">{t('dashboard.treasury.property_col')}</th>
+                                    <th className="px-6 py-4 text-right font-medium text-muted-foreground text-[10px] uppercase tracking-wider">{t('dashboard.treasury.balance_col')}</th>
+                                    <th className="px-6 py-4 text-center font-medium text-muted-foreground text-[10px] uppercase tracking-wider">{t('dashboard.treasury.status_col')}</th>
+                                    <th className="px-6 py-4 text-right font-medium text-muted-foreground text-[10px] uppercase tracking-wider">{t('dashboard.treasury.actions_col')}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -565,7 +567,7 @@ export default function FinancialDashboard({ isAdmin = false }) {
                                                 <td className="px-6 py-4">
                                                     <div className="flex flex-col">
                                                         <span className="font-bold text-foreground">{w.property_name}</span>
-                                                        <span className="text-[10px] text-muted-foreground uppercase font-medium">Mandat #{w.id}</span>
+                                                        <span className="text-[10px] text-muted-foreground uppercase font-medium">{t('dashboard.treasury.mandate')}{w.id}</span>
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-4 text-right">
@@ -579,15 +581,15 @@ export default function FinancialDashboard({ isAdmin = false }) {
                                                 <td className="px-6 py-4 text-center">
                                                     {bal < 0 ? (
                                                         <span className="px-2.5 py-1 rounded-full bg-rose-100 text-[#ff0048] text-[10px] font-bold uppercase flex items-center gap-1 justify-center w-fit mx-auto animate-pulse">
-                                                            Déficit critique
+                                                            {t('dashboard.treasury.critical_deficit')}
                                                         </span>
                                                     ) : bal === 0 ? (
                                                         <span className="px-2.5 py-1 rounded-full bg-muted text-muted-foreground text-[10px] font-semibold uppercase w-fit mx-auto">
-                                                            Compte vide
+                                                            {t('dashboard.treasury.empty_account')}
                                                         </span>
                                                     ) : (
                                                         <span className="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-bold uppercase w-fit mx-auto">
-                                                            Solde Créditeur
+                                                            {t('dashboard.treasury.creditor_balance')}
                                                         </span>
                                                     )}
                                                 </td>
@@ -596,7 +598,7 @@ export default function FinancialDashboard({ isAdmin = false }) {
                                                         <Link
                                                             to={`/dashboard/properties/${w.property}`}
                                                             className="p-2 rounded-lg bg-primary/5 text-primary hover:bg-primary/20 transition-colors"
-                                                            title="Accéder à la gestion du bien"
+                                                            title={t('dashboard.treasury.access_property')}
                                                         >
                                                             <Building className="h-4 w-4" />
                                                         </Link>
@@ -608,7 +610,7 @@ export default function FinancialDashboard({ isAdmin = false }) {
                                                             }}
                                                             className="px-3 py-1.5 rounded-lg border text-[10px] font-bold uppercase tracking-wider hover:bg-muted transition-colors"
                                                         >
-                                                            Filtrer Stats
+                                                            {t('dashboard.treasury.filter_stats')}
                                                         </button>
                                                     </div>
                                                 </td>
@@ -623,7 +625,7 @@ export default function FinancialDashboard({ isAdmin = false }) {
                                             ) : (
                                                 <div className="flex flex-col items-center gap-2">
                                                     <Wallet className="h-8 w-8 opacity-10" />
-                                                    <p className="text-xs italic font-medium">Aucun portefeuille de régie trouvé.</p>
+                                                    <p className="text-xs italic font-medium">{t('dashboard.treasury.no_wallets')}</p>
                                                 </div>
                                             )}
                                         </td>

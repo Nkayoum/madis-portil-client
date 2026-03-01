@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import { useTranslation } from 'react-i18next';
 import {
     Users,
     Home,
@@ -26,19 +27,20 @@ import logo from '../assets/logo.png';
 export default function DashboardLayout() {
     const { user, logout } = useAuth();
     const { theme, setTheme } = useTheme();
+    const { t, i18n } = useTranslation();
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const location = useLocation();
 
     const navigation = [
-        { name: 'Tableau de bord', href: '/dashboard', icon: LayoutDashboard },
-        { name: 'Biens', href: '/dashboard/properties', icon: Home, roles: ['ADMIN_MADIS', 'CLIENT'] },
-        { name: 'Projets', href: '/dashboard/projects', icon: Building2, roles: ['ADMIN_MADIS', 'CLIENT'] },
-        { name: 'Finance', href: '/dashboard/finance', icon: Wallet, roles: ['ADMIN_MADIS', 'CLIENT'] },
-        { name: 'Documents', href: '/dashboard/documents', icon: FileText, roles: ['ADMIN_MADIS', 'CLIENT', 'CHEF_CHANTIER'] },
-        { name: 'Messagerie', href: '/dashboard/tickets', icon: MessageSquare, roles: ['ADMIN_MADIS', 'CLIENT', 'CHEF_CHANTIER'] },
-        { name: 'Chantiers', href: '/dashboard/construction', icon: HardHat, roles: ['ADMIN_MADIS', 'CLIENT', 'CHEF_CHANTIER'] },
-        { name: 'Marketplace', href: '/dashboard/marketplace', icon: ShoppingBag, roles: ['ADMIN_MADIS', 'CLIENT'] },
-        { name: 'Clients', href: '/dashboard/users', icon: Users, roles: ['ADMIN_MADIS'] },
+        { name: 'Tableau de bord', key: 'nav.dashboard', href: '/dashboard', icon: LayoutDashboard },
+        { name: 'Biens', key: 'nav.properties', href: '/dashboard/properties', icon: Home, roles: ['ADMIN_MADIS', 'CLIENT'] },
+        { name: 'Projets', key: 'nav.projects', href: '/dashboard/projects', icon: Building2, roles: ['ADMIN_MADIS', 'CLIENT'] },
+        { name: 'Finance', key: 'nav.finance', href: '/dashboard/finance', icon: Wallet, roles: ['ADMIN_MADIS', 'CLIENT'] },
+        { name: 'Documents', key: 'nav.documents', href: '/dashboard/documents', icon: FileText, roles: ['ADMIN_MADIS', 'CLIENT', 'CHEF_CHANTIER'] },
+        { name: 'Messagerie', key: 'nav.messaging', href: '/dashboard/tickets', icon: MessageSquare, roles: ['ADMIN_MADIS', 'CLIENT', 'CHEF_CHANTIER'] },
+        { name: 'Chantiers', key: 'nav.construction', href: '/dashboard/construction', icon: HardHat, roles: ['ADMIN_MADIS', 'CLIENT', 'CHEF_CHANTIER'] },
+        { name: 'Marketplace', key: 'nav.marketplace', href: '/dashboard/marketplace', icon: ShoppingBag, roles: ['ADMIN_MADIS', 'CLIENT'] },
+        { name: 'Clients', key: 'nav.clients', href: '/dashboard/users', icon: Users, roles: ['ADMIN_MADIS'] },
     ];
 
     const filteredNavigation = navigation.filter(item => !item.roles || item.roles.includes(user?.role));
@@ -87,7 +89,7 @@ export default function DashboardLayout() {
                                 onClick={() => setSidebarOpen(false)}
                             >
                                 <item.icon className={cn("h-4 w-4 mr-2.5", isActive ? "animate-pulse" : "")} />
-                                {item.name}
+                                {t(item.key)}
                             </Link>
                         );
                     })}
@@ -108,7 +110,7 @@ export default function DashboardLayout() {
                         className="w-full flex items-center px-3.5 py-2.5 text-[10px] font-bold uppercase tracking-widest text-destructive hover:bg-destructive/10 rounded-xl transition-all"
                     >
                         <LogOut className="h-3.5 w-3.5 mr-2.5" />
-                        Déconnexion
+                        {t('nav.logout')}
                     </button>
                 </div>
             </aside>
@@ -126,6 +128,28 @@ export default function DashboardLayout() {
                     </div>
 
                     <div className="ml-auto flex items-center space-x-2 md:space-x-4">
+                        {/* Language Switcher */}
+                        <div className="flex bg-white/40 dark:bg-white/5 p-1 rounded-2xl border border-white/50 dark:border-white/10 shadow-sm">
+                            <button
+                                onClick={() => i18n.changeLanguage('fr')}
+                                className={cn(
+                                    "px-3 py-1.5 rounded-xl text-[10px] font-black transition-all",
+                                    i18n.language === 'fr' ? "bg-primary text-white shadow-md" : "text-muted-foreground hover:text-foreground"
+                                )}
+                            >
+                                FR
+                            </button>
+                            <button
+                                onClick={() => i18n.changeLanguage('en')}
+                                className={cn(
+                                    "px-3 py-1.5 rounded-xl text-[10px] font-black transition-all",
+                                    i18n.language === 'en' ? "bg-primary text-white shadow-md" : "text-muted-foreground hover:text-foreground"
+                                )}
+                            >
+                                EN
+                            </button>
+                        </div>
+
                         <NotificationCenter />
 
                         {/* Theme Toggle */}

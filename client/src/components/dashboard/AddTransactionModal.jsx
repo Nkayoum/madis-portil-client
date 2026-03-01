@@ -7,8 +7,10 @@ import {
     TrendingUp, HardHat, X, Info
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
+import { useTranslation } from 'react-i18next';
 
 export default function AddTransactionModal({ isOpen, onClose, site, onSuccess }) {
+    const { t } = useTranslation();
     const { showToast } = useToast();
     const [loading, setLoading] = useState(false);
 
@@ -59,12 +61,12 @@ export default function AddTransactionModal({ isOpen, onClose, site, onSuccess }
             await api.post('/finance/transactions/', data, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
-            showToast({ message: 'Transaction enregistrée avec succès.', type: 'success' });
+            showToast({ message: t('add_transaction_modal.success_msg'), type: 'success' });
             if (onSuccess) onSuccess();
             onClose();
         } catch (err) {
             console.error(err);
-            let errorMessage = 'Erreur lors de l\'enregistrement.';
+            let errorMessage = t('add_transaction_modal.error_msg');
             if (err.response?.data) {
                 const errorData = err.response.data;
                 errorMessage = Object.values(errorData).flat().join('\n');
@@ -87,8 +89,8 @@ export default function AddTransactionModal({ isOpen, onClose, site, onSuccess }
                             <Wallet className="h-5 w-5 text-primary" />
                         </div>
                         <div>
-                            <h2 className="text-xl font-bold tracking-tight">Nouvelle <span className="text-primary">Dépense</span></h2>
-                            <p className="text-xs text-muted-foreground uppercase font-bold tracking-wider mt-0.5">Pour : {site?.name}</p>
+                            <h2 className="text-xl font-bold tracking-tight">{t('add_transaction_modal.title_new')} <span className="text-primary">{t('add_transaction_modal.title_expense')}</span></h2>
+                            <p className="text-xs text-muted-foreground uppercase font-bold tracking-wider mt-0.5">{site?.name ? t('add_transaction_modal.subtitle_for', { name: site.name }) : ''}</p>
                         </div>
                     </div>
                     <button
@@ -105,7 +107,7 @@ export default function AddTransactionModal({ isOpen, onClose, site, onSuccess }
                         <div className="space-y-1.5 text-left">
                             <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
                                 <FileText className="h-3 w-3" />
-                                Catégorie
+                                {t('add_transaction_modal.label_category')}
                             </label>
                             <select
                                 name="category"
@@ -114,11 +116,11 @@ export default function AddTransactionModal({ isOpen, onClose, site, onSuccess }
                                 value={formData.category}
                                 onChange={handleChange}
                             >
-                                <option value="MATERIAUX">Chantier: Matériaux</option>
-                                <option value="MAIN_D_OEUVRE">Chantier: Main d'œuvre</option>
-                                <option value="SERVICES">Chantier: Services</option>
-                                <option value="MAINTENANCE">Maintenance</option>
-                                <option value="OTHER">Autre</option>
+                                <option value="MATERIAUX">{t('add_transaction_modal.cat_materials')}</option>
+                                <option value="MAIN_D_OEUVRE">{t('add_transaction_modal.cat_labor')}</option>
+                                <option value="SERVICES">{t('add_transaction_modal.cat_services')}</option>
+                                <option value="MAINTENANCE">{t('add_transaction_modal.cat_maintenance')}</option>
+                                <option value="OTHER">{t('add_transaction_modal.cat_other')}</option>
                             </select>
                         </div>
 
@@ -126,7 +128,7 @@ export default function AddTransactionModal({ isOpen, onClose, site, onSuccess }
                         <div className="space-y-1.5 text-left">
                             <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
                                 <Euro className="h-3 w-3" />
-                                Montant (€)
+                                {t('add_transaction_modal.label_amount')}
                             </label>
                             <input
                                 type="number"
@@ -146,7 +148,7 @@ export default function AddTransactionModal({ isOpen, onClose, site, onSuccess }
                         <div className="space-y-1.5 text-left">
                             <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
                                 <Calendar className="h-3 w-3" />
-                                Date de paiement
+                                {t('add_transaction_modal.label_date')}
                             </label>
                             <input
                                 type="date"
@@ -161,7 +163,7 @@ export default function AddTransactionModal({ isOpen, onClose, site, onSuccess }
                         {/* Performance Period */}
                         <div className="space-y-1.5 text-left">
                             <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
-                                Période de l'activité
+                                {t('add_transaction_modal.label_period')}
                                 <Info className="h-3 w-3 text-primary/60" />
                             </label>
                             <div className="grid grid-cols-3 gap-2">
@@ -190,18 +192,18 @@ export default function AddTransactionModal({ isOpen, onClose, site, onSuccess }
                                 </select>
                             </div>
                             <p className="text-[9px] leading-tight text-muted-foreground/80 mt-1 italic">
-                                Indiquez quand la commande ou la prestation a eu lieu (ex: commande en janvier, payée en février).
+                                {t('add_transaction_modal.period_help')}
                             </p>
                         </div>
                     </div>
 
                     {/* Description */}
                     <div className="space-y-1.5 text-left">
-                        <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Description (optionnel)</label>
+                        <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t('add_transaction_modal.label_desc')}</label>
                         <textarea
                             name="description"
                             rows="2"
-                            placeholder="Détails de la dépense..."
+                            placeholder={t('add_transaction_modal.ph_desc')}
                             className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-none"
                             value={formData.description}
                             onChange={handleChange}
@@ -210,11 +212,11 @@ export default function AddTransactionModal({ isOpen, onClose, site, onSuccess }
 
                     {/* Invoice Upload */}
                     <div className="space-y-1.5 text-left">
-                        <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Justificatif / Facture (optionnel)</label>
+                        <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t('add_transaction_modal.label_invoice')}</label>
                         <div className="flex items-center gap-4">
                             <label className="flex-1 flex items-center justify-center h-10 rounded-md border border-dashed border-primary/30 bg-primary/5 hover:bg-primary/10 transition-colors cursor-pointer text-xs font-medium text-primary">
                                 <FileText className="h-4 w-4 mr-2" />
-                                {formData.invoice ? formData.invoice.name : "Choisir un fichier"}
+                                {formData.invoice ? formData.invoice.name : t('add_transaction_modal.btn_choose_file')}
                                 <input
                                     type="file"
                                     onChange={handleFileChange}
@@ -239,7 +241,7 @@ export default function AddTransactionModal({ isOpen, onClose, site, onSuccess }
                             onClick={onClose}
                             className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-10 px-6"
                         >
-                            Annuler
+                            {t('add_transaction_modal.btn_cancel')}
                         </button>
                         <button
                             type="submit"
@@ -247,7 +249,7 @@ export default function AddTransactionModal({ isOpen, onClose, site, onSuccess }
                             className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors bg-primary text-primary-foreground shadow hover:bg-primary/90 h-10 px-8 disabled:opacity-50"
                         >
                             {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
-                            Enregistrer
+                            {t('add_transaction_modal.btn_save')}
                         </button>
                     </div>
                 </form>

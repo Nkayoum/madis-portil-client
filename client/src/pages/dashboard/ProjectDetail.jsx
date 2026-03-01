@@ -7,13 +7,15 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { format } from 'date-fns';
-import { fr } from 'date-fns/locale';
+import { fr, enUS } from 'date-fns/locale';
+import { useTranslation } from 'react-i18next';
 import { cn, formatCurrency } from '../../lib/utils';
 
 export default function ProjectDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
     const { user } = useAuth();
+    const { t, i18n } = useTranslation();
     const [project, setProject] = useState(null);
     const [associatedChantiers, setAssociatedChantiers] = useState([]);
     const [transactions, setTransactions] = useState([]);
@@ -27,7 +29,7 @@ export default function ProjectDetail() {
             const response = await api.get(`/projects/${id}/`);
             setProject(response.data);
         } catch (err) {
-            setError('Impossible de charger les détails du projet.');
+            setError(t('project_detail.load_error'));
             console.error(err);
         } finally {
             setLoading(false);
@@ -39,7 +41,7 @@ export default function ProjectDetail() {
     }, [id]);
 
     const handleDelete = async () => {
-        if (!window.confirm('Êtes-vous sûr de vouloir supprimer ce projet ? Tous les chantiers associés seront également supprimés.')) {
+        if (!window.confirm(t('project_detail.delete_confirm'))) {
             return;
         }
 
@@ -48,7 +50,7 @@ export default function ProjectDetail() {
             navigate('/dashboard/projects');
         } catch (err) {
             console.error(err);
-            alert('Erreur lors de la suppression du projet.');
+            alert(t('project_detail.delete_error'));
         }
     };
 
@@ -84,7 +86,7 @@ export default function ProjectDetail() {
         return (
             <div className="flex h-[60vh] flex-col items-center justify-center gap-4">
                 <Loader2 className="h-12 w-12 animate-spin text-black opacity-20" />
-                <p className="text-[10px] font-black uppercase tracking-widest opacity-40">Accès aux données du projet...</p>
+                <p className="text-[10px] font-black uppercase tracking-widest opacity-40">{t('project_detail.loading_data')}</p>
             </div>
         );
     }
@@ -94,10 +96,10 @@ export default function ProjectDetail() {
             <div className="space-y-8 max-w-[1400px] mx-auto px-6 py-8">
                 <Link to="/dashboard/projects" className="inline-flex items-center text-[9px] font-bold uppercase tracking-widest text-muted-foreground hover:text-black transition-all group">
                     <ArrowLeft className="mr-2 h-3.5 w-3.5 group-hover:-translate-x-1 transition-transform" />
-                    Retour à la liste
+                    {t('project_detail.back_to_list')}
                 </Link>
                 <div className="p-8 rounded-[1.5rem] solaris-glass text-rose-600 border border-rose-500/20 font-bold uppercase text-[10px] tracking-widest text-center shadow-xl">
-                    {error || "Projet introuvable dans le système."}
+                    {error || t('project_detail.not_found')}
                 </div>
             </div>
         );
@@ -127,7 +129,7 @@ export default function ProjectDetail() {
         <div className="space-y-6 md:space-y-12 animate-fade-in max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8 w-full">
             <Link to="/dashboard/projects" className="inline-flex items-center text-[9px] font-bold uppercase tracking-widest text-muted-foreground hover:text-black transition-all group">
                 <ArrowLeft className="mr-2 h-3.5 w-3.5 group-hover:-translate-x-1 transition-transform" />
-                Retour aux projets
+                {t('project_detail.back_to_projects')}
             </Link>
 
             <div className="solaris-glass rounded-[1.5rem] p-5 sm:p-8 border-none shadow-lg relative overflow-hidden w-full">
@@ -148,7 +150,7 @@ export default function ProjectDetail() {
                             className="flex items-center gap-2.5 text-muted-foreground hover:text-black transition-all group bg-black/5 hover:bg-black/10 px-3 py-1.5 rounded-lg border border-black/5 w-fit max-w-full overflow-hidden"
                         >
                             <Building2 className="h-3.5 w-3.5 opacity-40 group-hover:opacity-100" />
-                            <span className="text-[9px] font-bold uppercase tracking-widest truncate">Bien associé : {project.property_name}</span>
+                            <span className="text-[9px] font-bold uppercase tracking-widest truncate">{t('project_detail.associated_property')} {project.property_name}</span>
                         </Link>
                     </div>
                     {user?.role === 'ADMIN_MADIS' && (
@@ -158,14 +160,14 @@ export default function ProjectDetail() {
                                 className="inline-flex items-center justify-center rounded-xl text-[9px] font-bold uppercase tracking-widest transition-all border border-rose-500/20 text-rose-600 bg-rose-500/5 shadow-sm hover:bg-rose-600 hover:text-white h-10 px-5 shadow-rose-500/10"
                             >
                                 <Trash2 className="mr-2 h-3.5 w-3.5" />
-                                Supprimer
+                                {t('project_detail.delete_button')}
                             </button>
                             <Link
                                 to={`/dashboard/projects/${id}/edit`}
                                 className="inline-flex items-center justify-center rounded-xl text-[9px] font-bold uppercase tracking-widest transition-all border border-black/10 bg-black text-white shadow-lg hover:bg-zinc-800 h-10 px-6"
                             >
                                 <Edit className="mr-2 h-3.5 w-3.5" />
-                                Modifier
+                                {t('project_detail.edit_button')}
                             </Link>
                         </div>
                     )}
@@ -180,10 +182,10 @@ export default function ProjectDetail() {
                             <div className="p-2 md:p-2.5 rounded-xl bg-black text-white shadow-lg">
                                 <ClipboardList className="h-4 w-4 md:h-5 w-5" />
                             </div>
-                            Description
+                            {t('project_detail.description')}
                         </h3>
                         <p className="text-[11px] md:text-[12px] font-medium text-muted-foreground leading-relaxed whitespace-pre-wrap opacity-70 break-words">
-                            {project.description || "Aucune description détaillée."}
+                            {project.description || t('project_detail.no_description')}
                         </p>
                     </div>
 
@@ -193,7 +195,7 @@ export default function ProjectDetail() {
                                 <div className="p-2 md:p-2.5 rounded-xl bg-black text-white shadow-lg">
                                     <HardHat className="h-4 w-4 md:h-5 w-5" />
                                 </div>
-                                Suivi de Chantier
+                                {t('project_detail.construction_tracking')}
                             </h3>
                             {user?.role === 'ADMIN_MADIS' && (
                                 <Link
@@ -201,7 +203,7 @@ export default function ProjectDetail() {
                                     className="inline-flex items-center justify-center rounded-xl text-[9px] md:text-[10px] font-bold uppercase tracking-widest transition-all bg-black text-white hover:bg-zinc-800 h-9 px-5 shadow-lg whitespace-nowrap w-full sm:w-auto"
                                 >
                                     <Plus className="mr-2 h-3.5 w-3.5" />
-                                    Démarrer un Chantier
+                                    {t('project_detail.start_construction')}
                                 </Link>
                             )}
                         </div>
@@ -239,19 +241,19 @@ export default function ProjectDetail() {
                                                 {site.end_date && (
                                                     <div className="flex items-center gap-1.5 opacity-60 font-mono whitespace-nowrap">
                                                         <Calendar className="h-2.5 w-2.5" />
-                                                        <span>FIN: {format(new Date(site.end_date), 'd MMM yy', { locale: fr }).toUpperCase()}</span>
+                                                        <span>FIN: {format(new Date(site.end_date), 'd MMM yy', { locale: i18n.language === 'en' ? enUS : fr }).toUpperCase()}</span>
                                                     </div>
                                                 )}
                                             </div>
                                             <div className="flex items-center gap-1.5 group-hover:translate-x-1.5 transition-all group-hover:text-black shrink-0">
-                                                Journal <ArrowRight className="h-3 w-3" />
+                                                {t('project_detail.journal')} <ArrowRight className="h-3 w-3" />
                                             </div>
                                         </div>
                                     </Link>
                                 ))}
                                 {associatedChantiers.length === 0 && (
                                     <div className="text-center py-12 bg-black/[0.02] rounded-[2rem] border-2 border-dashed border-black/5 opacity-40">
-                                        <p className="text-[11px] font-black uppercase tracking-widest">Aucun chantier actif sur ce projet.</p>
+                                        <p className="text-[11px] font-black uppercase tracking-widest">{t('project_detail.no_active_construction')}</p>
                                     </div>
                                 )}
                             </div>
@@ -264,7 +266,7 @@ export default function ProjectDetail() {
                                 <div className="p-2 md:p-2.5 rounded-xl bg-black text-white shadow-lg">
                                     <Euro className="h-4 w-4 md:h-5 w-5" />
                                 </div>
-                                Transactions
+                                {t('project_detail.transactions')}
                             </h3>
                             {user?.role === 'ADMIN_MADIS' && (
                                 <Link
@@ -272,7 +274,7 @@ export default function ProjectDetail() {
                                     className="inline-flex items-center justify-center rounded-xl text-[9px] md:text-[10px] font-bold uppercase tracking-widest transition-all bg-black text-white hover:bg-zinc-800 h-9 px-5 shadow-lg whitespace-nowrap w-full sm:w-auto"
                                 >
                                     <Plus className="mr-2 h-3.5 w-3.5" />
-                                    Nouvelle Transaction
+                                    {t('project_detail.new_transaction')}
                                 </Link>
                             )}
                         </div>
@@ -283,16 +285,16 @@ export default function ProjectDetail() {
                             </div>
                         ) : transactions.length === 0 ? (
                             <div className="text-center py-12 bg-black/[0.02] rounded-[2rem] border-2 border-dashed border-black/5 opacity-40">
-                                <p className="text-[11px] font-black uppercase tracking-widest">Aucune transaction répertoriée.</p>
+                                <p className="text-[11px] font-black uppercase tracking-widest">{t('project_detail.no_transaction')}</p>
                             </div>
                         ) : (
                             <div className="w-full overflow-x-auto no-scrollbar rounded-xl border border-black/5 shadow-inner bg-white/10">
                                 <table className="w-full min-w-[400px]">
                                     <thead>
                                         <tr className="border-b border-black/5 text-left bg-black/[0.02]">
-                                            <th className="px-4 py-3 text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-40">Date</th>
-                                            <th className="px-4 py-3 text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-40">Label</th>
-                                            <th className="px-4 py-3 text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-40 text-right">Montant</th>
+                                            <th className="px-4 py-3 text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-40">{t('project_detail.date_col')}</th>
+                                            <th className="px-4 py-3 text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-40">{t('project_detail.label_col')}</th>
+                                            <th className="px-4 py-3 text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-40 text-right">{t('project_detail.amount_col')}</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-black/5 bg-white/20">
@@ -320,7 +322,7 @@ export default function ProjectDetail() {
                                 {transactions.length > 5 && (
                                     <div className="p-4 text-center bg-black/[0.01] border-t border-black/5">
                                         <Link to="/dashboard/finance/transactions" className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-black hover:text-primary transition-all flex items-center justify-center gap-2">
-                                            Relevé complet <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
+                                            {t('project_detail.full_statement')} <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
                                         </Link>
                                     </div>
                                 )}
@@ -336,7 +338,7 @@ export default function ProjectDetail() {
                             <div className="p-2 md:p-2.5 rounded-xl bg-black text-white shadow-lg">
                                 <Calendar className="h-3.5 w-3.5 md:h-4 md:w-4" />
                             </div>
-                            Dates Clés
+                            {t('project_detail.key_dates')}
                         </h3>
                         <div className="space-y-6 md:space-y-8">
                             <div className="grid gap-5">
@@ -345,9 +347,9 @@ export default function ProjectDetail() {
                                         <Calendar className="h-3.5 w-3.5 md:h-4 md:w-4" />
                                     </div>
                                     <div className="space-y-0.5">
-                                        <div className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-40 group-hover:opacity-100 transition-opacity">Date de début</div>
+                                        <div className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-40 group-hover:opacity-100 transition-opacity">{t('project_detail.start_date')}</div>
                                         <div className="text-[11px] md:text-xs font-bold tracking-tight uppercase">
-                                            {project.start_date ? format(new Date(project.start_date), 'd MMMM yyyy', { locale: fr }) : 'Non planifiée'}
+                                            {project.start_date ? format(new Date(project.start_date), 'd MMMM yyyy', { locale: i18n.language === 'en' ? enUS : fr }) : t('project_detail.not_planned')}
                                         </div>
                                     </div>
                                 </div>
@@ -356,9 +358,9 @@ export default function ProjectDetail() {
                                         <Clock className="h-3.5 w-3.5 md:h-4 md:w-4" />
                                     </div>
                                     <div className="space-y-0.5">
-                                        <div className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-40 group-hover:opacity-100 transition-opacity">Fin estimée</div>
+                                        <div className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-40 group-hover:opacity-100 transition-opacity">{t('project_detail.estimated_end')}</div>
                                         <div className="text-[11px] md:text-xs font-bold tracking-tight uppercase text-amber-600 group-hover:text-inherit transition-colors">
-                                            {project.estimated_end_date ? format(new Date(project.estimated_end_date), 'd MMMM yyyy', { locale: fr }) : 'Non définie'}
+                                            {project.estimated_end_date ? format(new Date(project.estimated_end_date), 'd MMMM yyyy', { locale: i18n.language === 'en' ? enUS : fr }) : t('project_detail.not_defined')}
                                         </div>
                                     </div>
                                 </div>
@@ -370,11 +372,11 @@ export default function ProjectDetail() {
                             <div className="p-2 md:p-2.5 rounded-xl bg-black text-white shadow-lg">
                                 <Euro className="h-3.5 w-3.5 md:h-4 md:w-4" />
                             </div>
-                            Finances
+                            {t('project_detail.finances')}
                         </h3>
                         <div className="space-y-6 md:space-y-8">
                             <div className="group">
-                                <div className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-40 mb-2 group-hover:opacity-100 transition-opacity">Budget Total</div>
+                                <div className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-40 mb-2 group-hover:opacity-100 transition-opacity">{t('project_detail.total_budget')}</div>
                                 <div className="flex items-center gap-3 text-lg sm:text-xl md:text-2xl font-bold tracking-tight">
                                     <div className="p-1.5 rounded-xl bg-black/5 text-black">
                                         <Euro className="h-4 w-4 sm:h-5 w-5" />
@@ -387,7 +389,7 @@ export default function ProjectDetail() {
                                 <div className="pt-6 md:pt-8 border-t border-black/5 space-y-4 md:space-y-5">
                                     <div className="flex justify-between items-end">
                                         <div className="flex flex-col gap-0.5">
-                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-40">Consommé</span>
+                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-40">{t('project_detail.consumed')}</span>
                                             <span className="text-base md:text-lg font-bold tracking-tight">{formatCurrency(project.budget_spent, true)}</span>
                                         </div>
                                         <div className="px-2 py-0.5 bg-black text-white text-[8px] md:text-[9px] font-bold rounded-lg shadow-md">
@@ -405,8 +407,8 @@ export default function ProjectDetail() {
                                         />
                                     </div>
                                     <div className="flex flex-row justify-between items-center text-[7px] md:text-[8px] font-bold uppercase tracking-widest opacity-40">
-                                        <span>Réelles</span>
-                                        <span>Reste: {formatCurrency(project.budget - project.budget_spent, true)}</span>
+                                        <span>{t('project_detail.real')}</span>
+                                        <span>{t('project_detail.remaining')} {formatCurrency(project.budget - project.budget_spent, true)}</span>
                                     </div>
                                 </div>
                             )}

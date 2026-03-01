@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { X, DollarSign, StickyNote, Calendar, Loader2, ArrowUpRight, Info, Upload } from 'lucide-react';
 import api from '../../lib/axios';
+import { useTranslation } from 'react-i18next';
 
 export default function SettlementModal({ propertyId, onClose, onSuccess }) {
+    const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
     const [form, setForm] = useState({
         amount: '',
@@ -34,7 +36,7 @@ export default function SettlementModal({ propertyId, onClose, onSuccess }) {
             onClose();
         } catch (err) {
             console.error('Error creating settlement', err);
-            alert('Erreur lors de l\'enregistrement du reversement.');
+            alert(t('settlement.alert_error'));
         } finally {
             setLoading(false);
         }
@@ -48,7 +50,7 @@ export default function SettlementModal({ propertyId, onClose, onSuccess }) {
                         <div className="p-2 rounded-lg bg-rose-100 text-rose-600">
                             <ArrowUpRight className="h-5 w-5" />
                         </div>
-                        <h3 className="text-lg font-bold">Nouveau Reversement</h3>
+                        <h3 className="text-lg font-bold">{t('settlement.title')}</h3>
                     </div>
                     <button onClick={onClose} className="p-1 rounded-full hover:bg-muted transition-colors text-muted-foreground">
                         <X className="h-5 w-5" />
@@ -59,13 +61,13 @@ export default function SettlementModal({ propertyId, onClose, onSuccess }) {
                     <div className="p-6 space-y-5">
                         <div className="p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800 rounded-xl flex gap-3 text-xs text-amber-800 dark:text-amber-300">
                             <Info className="h-4 w-4 shrink-0 mt-0.5" />
-                            <p>Le reversement est le transfert du bénéfice net vers le compte bancaire du propriétaire. Assurez-vous d'avoir assez de provision sur le Wallet.</p>
+                            <p>{t('settlement.info')}</p>
                         </div>
 
                         <div>
                             <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1.5 block">
                                 <DollarSign className="h-3 w-3 inline mr-1" />
-                                Montant à verser (€)
+                                {t('settlement.amount')}
                             </label>
                             <input
                                 required
@@ -82,7 +84,7 @@ export default function SettlementModal({ propertyId, onClose, onSuccess }) {
                             <div>
                                 <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1.5 block">
                                     <Calendar className="h-3 w-3 inline mr-1" />
-                                    Début Période
+                                    {t('settlement.period_start')}
                                 </label>
                                 <input
                                     required
@@ -95,7 +97,7 @@ export default function SettlementModal({ propertyId, onClose, onSuccess }) {
                             <div>
                                 <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1.5 block">
                                     <Calendar className="h-3 w-3 inline mr-1" />
-                                    Fin Période
+                                    {t('settlement.period_end')}
                                 </label>
                                 <input
                                     required
@@ -110,11 +112,11 @@ export default function SettlementModal({ propertyId, onClose, onSuccess }) {
                         <div>
                             <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1.5 block">
                                 <StickyNote className="h-3 w-3 inline mr-1" />
-                                Note Interne / Référence
+                                {t('settlement.note')}
                             </label>
                             <textarea
                                 rows={2}
-                                placeholder="Référence virement ou note explicative..."
+                                placeholder={t('settlement.note_ph')}
                                 value={form.note}
                                 onChange={e => setForm(p => ({ ...p, note: e.target.value }))}
                                 className="w-full rounded-xl border bg-background px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none transition-all"
@@ -124,7 +126,7 @@ export default function SettlementModal({ propertyId, onClose, onSuccess }) {
                         <div>
                             <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1.5 block">
                                 <Upload className="h-3 w-3 inline mr-1" />
-                                Justificatif de Virement (Optionnel)
+                                {t('settlement.proof')}
                             </label>
                             <input
                                 type="file"
@@ -136,7 +138,7 @@ export default function SettlementModal({ propertyId, onClose, onSuccess }) {
 
                     <div className="flex items-center justify-end gap-3 p-6 border-t bg-muted/20">
                         <button type="button" onClick={onClose} className="px-5 py-2 text-sm font-bold uppercase tracking-wider rounded-xl border hover:bg-muted transition-colors">
-                            Annuler
+                            {t('settlement.btn_cancel')}
                         </button>
                         <button
                             type="submit"
@@ -144,7 +146,7 @@ export default function SettlementModal({ propertyId, onClose, onSuccess }) {
                             className="inline-flex items-center gap-2 px-6 py-2 bg-rose-600 text-white rounded-xl text-sm font-bold uppercase tracking-wider shadow-lg shadow-rose-200 dark:shadow-rose-900/20 hover:bg-rose-700 transition-all scale-100 active:scale-95 disabled:opacity-50"
                         >
                             {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowUpRight className="h-4 w-4" />}
-                            Enregistrer le versement
+                            {t('settlement.btn_save')}
                         </button>
                     </div>
                 </form>

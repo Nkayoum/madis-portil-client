@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from '../../lib/axios';
 import { useToast } from '../../context/ToastContext';
+import { useTranslation } from 'react-i18next';
 import {
     X, Loader2, Save, Building2,
     Calendar, Euro, ClipboardList, LayoutDashboard, Clock
@@ -8,6 +9,7 @@ import {
 import { cn } from '../../lib/utils';
 
 export default function EditProjectModal({ isOpen, onClose, projectId, onSuccess }) {
+    const { t } = useTranslation();
     const { showToast } = useToast();
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(true);
@@ -53,7 +55,7 @@ export default function EditProjectModal({ isOpen, onClose, projectId, onSuccess
             });
         } catch (err) {
             console.error('Failed to fetch data', err);
-            showToast({ message: 'Impossible de charger les données du projet.', type: 'error' });
+            showToast({ message: t('project_modal.toast_load_error'), type: 'error' });
             onClose();
         } finally {
             setFetching(false);
@@ -90,12 +92,12 @@ export default function EditProjectModal({ isOpen, onClose, projectId, onSuccess
 
         try {
             await api.patch(`/projects/${projectId}/`, cleanedData);
-            showToast({ message: 'Projet mis à jour avec succès !', type: 'success' });
+            showToast({ message: t('project_modal.toast_update_success'), type: 'success' });
             if (onSuccess) onSuccess();
             onClose();
         } catch (err) {
             console.error(err);
-            const errorMsg = err.response?.data?.detail || 'Impossible de mettre à jour le projet.';
+            const errorMsg = err.response?.data?.detail || t('project_modal.toast_update_error');
             showToast({ message: errorMsg, type: 'error' });
         } finally {
             setLoading(false);
@@ -115,8 +117,8 @@ export default function EditProjectModal({ isOpen, onClose, projectId, onSuccess
                             <LayoutDashboard className="h-6 w-6" />
                         </div>
                         <div>
-                            <h2 className="text-2xl font-black tracking-tighter uppercase leading-none">Modifier le Projet</h2>
-                            <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-30 mt-1.5">Édition des paramètres industriels</p>
+                            <h2 className="text-2xl font-black tracking-tighter uppercase leading-none">{t('project_modal.title_edit')} {t('project_modal.title_highlight')}</h2>
+                            <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-30 mt-1.5">{t('project_modal.subtitle_edit')}</p>
                         </div>
                     </div>
                     <button
@@ -138,20 +140,20 @@ export default function EditProjectModal({ isOpen, onClose, projectId, onSuccess
                             <div className="grid gap-10 md:grid-cols-2">
                                 <div className="space-y-6">
                                     <div className="grid gap-3">
-                                        <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">Nom du projet *</label>
+                                        <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">{t('project_modal.label_name')}</label>
                                         <input
                                             type="text"
                                             name="name"
                                             required
                                             className={ic}
-                                            placeholder="Ex: Rénovation Façade"
+                                            placeholder={t('project_modal.ph_name')}
                                             value={formData.name}
                                             onChange={handleChange}
                                         />
                                     </div>
 
                                     <div className="grid gap-3">
-                                        <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">Bien immobilier *</label>
+                                        <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">{t('project_modal.label_property')}</label>
                                         <div className="relative group">
                                             <Building2 className="absolute left-4 top-[14px] h-5 w-5 text-muted-foreground opacity-30 group-focus-within:opacity-100 transition-opacity" />
                                             <select
@@ -161,7 +163,7 @@ export default function EditProjectModal({ isOpen, onClose, projectId, onSuccess
                                                 value={formData.property}
                                                 onChange={handleChange}
                                             >
-                                                <option value="">-- Sélectionner un bien --</option>
+                                                <option value="">{t('project_modal.select_property')}</option>
                                                 {properties.map(p => (
                                                     <option key={p.id} value={p.id}>{p.name} ({p.city})</option>
                                                 ))}
@@ -171,7 +173,7 @@ export default function EditProjectModal({ isOpen, onClose, projectId, onSuccess
 
                                     <div className="grid gap-3">
                                         <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1 flex items-center gap-2">
-                                            <Clock className="h-3.5 w-3.5" /> Statut
+                                            <Clock className="h-3.5 w-3.5" /> {t('project_modal.label_status')}
                                         </label>
                                         <select
                                             name="status"
@@ -179,17 +181,17 @@ export default function EditProjectModal({ isOpen, onClose, projectId, onSuccess
                                             value={formData.status}
                                             onChange={handleChange}
                                         >
-                                            <option value="PLANIFIE">Planifié</option>
-                                            <option value="EN_COURS">En cours</option>
-                                            <option value="TERMINE">Terminé</option>
-                                            <option value="ANNULE">Annulé</option>
+                                            <option value="PLANIFIE">{t('project_modal.status_planned')}</option>
+                                            <option value="EN_COURS">{t('project_modal.status_in_progress')}</option>
+                                            <option value="TERMINE">{t('project_modal.status_completed')}</option>
+                                            <option value="ANNULE">{t('project_modal.status_cancelled')}</option>
                                         </select>
                                     </div>
                                 </div>
 
                                 <div className="space-y-6">
                                     <div className="grid gap-3">
-                                        <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">Catégorie *</label>
+                                        <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">{t('project_modal.label_category')}</label>
                                         <div className="relative group">
                                             <ClipboardList className="absolute left-4 top-[14px] h-5 w-5 text-muted-foreground opacity-30 group-focus-within:opacity-100 transition-opacity" />
                                             <select
@@ -199,14 +201,14 @@ export default function EditProjectModal({ isOpen, onClose, projectId, onSuccess
                                                 value={formData.category}
                                                 onChange={handleChange}
                                             >
-                                                <option value="CONSTRUCTION">Construction / Développement</option>
-                                                <option value="MAINTENANCE">Entretien / Rénovation</option>
+                                                <option value="CONSTRUCTION">{t('project_modal.cat_construction')}</option>
+                                                <option value="MAINTENANCE">{t('project_modal.cat_maintenance')}</option>
                                             </select>
                                         </div>
                                     </div>
 
                                     <div className="grid gap-3">
-                                        <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">Budget estimé (€)</label>
+                                        <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">{t('project_modal.label_budget')}</label>
                                         <div className="relative group">
                                             <Euro className="absolute left-4 top-[14px] h-5 w-5 text-muted-foreground opacity-30 group-focus-within:opacity-100 transition-opacity" />
                                             <input
@@ -222,7 +224,7 @@ export default function EditProjectModal({ isOpen, onClose, projectId, onSuccess
 
                                     <div className="grid grid-cols-2 gap-4">
                                         <div className="grid gap-3">
-                                            <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">Début</label>
+                                            <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">{t('project_modal.label_start')}</label>
                                             <input
                                                 type="date"
                                                 name="start_date"
@@ -232,7 +234,7 @@ export default function EditProjectModal({ isOpen, onClose, projectId, onSuccess
                                             />
                                         </div>
                                         <div className="grid gap-3">
-                                            <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">Fin estimée</label>
+                                            <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">{t('project_modal.label_end')}</label>
                                             <input
                                                 type="date"
                                                 name="estimated_end_date"
@@ -246,12 +248,12 @@ export default function EditProjectModal({ isOpen, onClose, projectId, onSuccess
                             </div>
 
                             <div className="grid gap-3">
-                                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">Description</label>
+                                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">{t('project_modal.label_desc')}</label>
                                 <textarea
                                     name="description"
                                     rows="4"
                                     className={cn(ic, "h-auto py-4 min-h-[120px] leading-relaxed")}
-                                    placeholder="Précisez les détails techniques du projet..."
+                                    placeholder={t('project_modal.ph_desc')}
                                     value={formData.description}
                                     onChange={handleChange}
                                 ></textarea>
@@ -266,7 +268,7 @@ export default function EditProjectModal({ isOpen, onClose, projectId, onSuccess
                         onClick={onClose}
                         className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-black transition-all px-4"
                     >
-                        Annuler
+                        {t('project_modal.btn_cancel')}
                     </button>
                     <button
                         form="edit-project-form"
@@ -275,9 +277,9 @@ export default function EditProjectModal({ isOpen, onClose, projectId, onSuccess
                         className="inline-flex items-center justify-center rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all bg-black text-white hover:bg-black/90 h-14 px-10 shadow-[0_12px_24px_-8px_rgba(0,0,0,0.3)] disabled:opacity-50 group"
                     >
                         {loading ? (
-                            <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> Mise à jour...</>
+                            <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> {t('project_modal.btn_updating')}</>
                         ) : (
-                            <><Save className="mr-3 h-5 w-5 group-hover:scale-110 transition-transform" /> Mettre à jour le projet</>
+                            <><Save className="mr-3 h-5 w-5 group-hover:scale-110 transition-transform" /> {t('project_modal.btn_update')}</>
                         )}
                     </button>
                 </div>

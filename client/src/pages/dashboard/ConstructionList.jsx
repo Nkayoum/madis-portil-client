@@ -5,15 +5,18 @@ import { HardHat, Calendar, MapPin, ArrowRight, Loader2, Camera, Plus, Clipboard
 import { cn } from '../../lib/utils';
 import { useAuth } from '../../context/AuthContext';
 import { format } from 'date-fns';
-import { fr } from 'date-fns/locale';
+import { fr, enUS } from 'date-fns/locale';
+import { useTranslation } from 'react-i18next';
 
 
 export default function ConstructionList() {
     const { user } = useAuth();
+    const { t, i18n } = useTranslation();
     const [sites, setSites] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [activeTab, setActiveTab] = useState('CONSTRUCTION'); // 'CONSTRUCTION' or 'MAINTENANCE'
+    const dateLocale = i18n.language === 'fr' ? fr : enUS;
 
 
     useEffect(() => {
@@ -25,7 +28,7 @@ export default function ConstructionList() {
             const response = await api.get('/construction/sites/');
             setSites(response.data.results || response.data || []);
         } catch (err) {
-            setError('Impossible de charger les chantiers.');
+            setError(t('construction.list.load_error'));
             console.error(err);
         } finally {
             setLoading(false);
@@ -56,12 +59,12 @@ export default function ConstructionList() {
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-2 border-b border-black/5 dark:border-white/5">
                 <div>
                     <h1 className="text-xl md:text-2xl lg:text-3xl font-bold tracking-tight uppercase leading-none mb-1.5 md:mb-2">
-                        {activeTab === 'CONSTRUCTION' ? 'Suivi de Chantier' : 'Interventions'}
+                        {activeTab === 'CONSTRUCTION' ? t('construction.list.title_construction') : t('construction.list.title_maintenance')}
                     </h1>
                     <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-wider opacity-40 leading-relaxed md:leading-normal">
                         {activeTab === 'CONSTRUCTION'
-                            ? "Visualisation de l'avancement des développements opérationnels."
-                            : "Gestion centralisée des interventions de maintenance."}
+                            ? t('construction.list.subtitle_construction')
+                            : t('construction.list.subtitle_maintenance')}
                     </p>
                 </div>
                 {user?.role === 'ADMIN_MADIS' && (
@@ -70,7 +73,7 @@ export default function ConstructionList() {
                         className="inline-flex items-center justify-center rounded-xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all bg-black text-white dark:bg-primary dark:solaris-neon-pink hover:bg-black/90 h-9 px-5 shadow-md group whitespace-nowrap"
                     >
                         <Plus className="mr-2 h-4 w-4 group-hover:rotate-90 transition-transform duration-500" />
-                        {activeTab === 'CONSTRUCTION' ? 'Nouveau Chantier' : 'Nouvelle Intervention'}
+                        {activeTab === 'CONSTRUCTION' ? t('construction.list.new_construction') : t('construction.list.new_maintenance')}
                     </Link>
                 )}
             </div>
@@ -78,8 +81,8 @@ export default function ConstructionList() {
             <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }} className="-mx-4 px-4 md:mx-0 md:px-0 mb-4 [&::-webkit-scrollbar]:hidden">
                 <div className="solaris-glass rounded-xl md:rounded-2xl p-1 md:p-1.5 flex gap-2 md:gap-3 w-fit mb-4 shadow-sm px-2 whitespace-nowrap">
                     {[
-                        { id: 'CONSTRUCTION', label: "Chantiers", icon: HardHat, count: sites.filter(s => s.project_category === 'CONSTRUCTION').length },
-                        { id: 'MAINTENANCE', label: "Maintenance", fullLabel: "Maintenance", icon: ClipboardList, count: sites.filter(s => s.project_category === 'MAINTENANCE').length }
+                        { id: 'CONSTRUCTION', label: t('construction.list.tabs.construction'), icon: HardHat, count: sites.filter(s => s.project_category === 'CONSTRUCTION').length },
+                        { id: 'MAINTENANCE', label: t('construction.list.tabs.maintenance'), fullLabel: t('construction.list.tabs.maintenance'), icon: ClipboardList, count: sites.filter(s => s.project_category === 'MAINTENANCE').length }
                     ].map((tab) => (
                         <button
                             key={tab.id}
@@ -114,10 +117,10 @@ export default function ConstructionList() {
                         )}
                     </div>
                     <h3 className="text-[12px] font-bold uppercase tracking-widest mb-3">
-                        {activeTab === 'CONSTRUCTION' ? 'Aucun Chantier' : 'Zéro Intervention'}
+                        {activeTab === 'CONSTRUCTION' ? t('construction.list.empty.title_construction') : t('construction.list.empty.title_maintenance')}
                     </h3>
                     <p className="text-[9px] font-bold uppercase tracking-widest opacity-30 max-w-xs mx-auto leading-relaxed">
-                        Registre opérationnel vierge.
+                        {t('construction.list.empty.subtitle')}
                     </p>
                 </div>
             ) : (
@@ -139,7 +142,7 @@ export default function ConstructionList() {
                                             <div className="flex items-center gap-1.5 mt-1.5">
                                                 <Building2 className="h-3 w-3 text-black/20 dark:text-white/20" />
                                                 <span className="text-[8px] font-bold uppercase tracking-widest text-black/40 dark:text-white/40 truncate">
-                                                    {site.property_name || 'Non défini'}
+                                                    {site.property_name || t('construction.list.card.not_defined')}
                                                 </span>
                                             </div>
                                         </div>
@@ -147,7 +150,7 @@ export default function ConstructionList() {
                                             "px-3 py-1 rounded-lg text-[8px] font-bold uppercase tracking-widest whitespace-nowrap shadow-sm transition-all duration-500 group-hover:scale-105",
                                             site.status === 'EN_COURS' ? "bg-black dark:bg-primary text-white" : getStatusColor(site.status)
                                         )}>
-                                            {site.status_display || site.status}
+                                            {t(`construction.list.status.${site.status}`, site.status_display || site.status)}
                                         </span>
                                     </div>
 
@@ -159,7 +162,7 @@ export default function ConstructionList() {
                                             <span className="text-[10px] font-bold truncate">
                                                 {site.address ? (
                                                     <>{site.address}{site.city ? `, ${site.city}` : ''}</>
-                                                ) : 'Non localisée'}
+                                                ) : t('construction.list.card.no_location')}
                                             </span>
                                         </div>
                                         <div className="flex items-center gap-3 text-black/60 dark:text-white/60 group/cal">
@@ -167,7 +170,7 @@ export default function ConstructionList() {
                                                 <Calendar className="h-3 w-3" />
                                             </div>
                                             <span className="text-[10px] font-bold font-mono">
-                                                {site.start_date ? format(new Date(site.start_date), 'd MMM yyyy', { locale: fr }) : '---'}
+                                                {site.start_date ? format(new Date(site.start_date), 'd MMM yyyy', { locale: dateLocale }) : '---'}
                                             </span>
                                         </div>
                                         <div className="flex items-center gap-3 text-black/60 dark:text-white/60 group/cam">
@@ -175,7 +178,7 @@ export default function ConstructionList() {
                                                 <Camera className="h-3 w-3" />
                                             </div>
                                             <span className="text-[10px] font-bold uppercase tracking-widest opacity-60">
-                                                {site.photos_count || 0} Photos
+                                                {site.photos_count || 0} {t('construction.list.card.photos')}
                                             </span>
                                         </div>
                                     </div>
@@ -184,7 +187,7 @@ export default function ConstructionList() {
                                         {site.status !== 'SUSPENDU' && (
                                             <div className="space-y-2 mb-6">
                                                 <div className="flex justify-between items-baseline px-0.5">
-                                                    <span className="text-[8px] font-bold uppercase tracking-widest opacity-30">Progression</span>
+                                                    <span className="text-[8px] font-bold uppercase tracking-widest opacity-30">{t('construction.list.card.progress')}</span>
                                                     <span className="text-xl font-bold tracking-tight">{site.progress_percentage}%</span>
                                                 </div>
                                                 <div className="w-full h-1.5 bg-black/[0.03] dark:bg-white/10 rounded-full overflow-hidden p-[0.5px] border border-black/5 dark:border-white/5 shadow-inner">
@@ -201,7 +204,7 @@ export default function ConstructionList() {
 
                                         <div className="pt-4 border-t border-black/5 dark:border-white/5 flex justify-end">
                                             <span className="inline-flex items-center text-[9px] font-bold uppercase tracking-widest text-black dark:text-white group-hover:text-red-600 transition-all group-hover:translate-x-1">
-                                                Détails
+                                                {t('construction.list.card.details')}
                                                 <ArrowRight className="ml-2 h-3.5 w-3.5" />
                                             </span>
                                         </div>

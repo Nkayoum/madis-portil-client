@@ -14,6 +14,7 @@ import { fr } from 'date-fns/locale';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { cn, formatCurrency } from '../../lib/utils';
+import { useTranslation } from 'react-i18next';
 import WalletCard from '../../components/dashboard/WalletCard';
 import CashCallModal from '../../components/dashboard/CashCallModal';
 import SettlementModal from '../../components/dashboard/SettlementModal';
@@ -23,6 +24,7 @@ export default function PropertyDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
     const { user } = useAuth();
+    const { t } = useTranslation();
     const isAdmin = user?.role === 'ADMIN_MADIS';
     const { showToast } = useToast();
     const [property, setProperty] = useState(null);
@@ -147,7 +149,7 @@ export default function PropertyDetail() {
     }, [property]);
 
     const handleDelete = async () => {
-        if (!window.confirm('Êtes-vous sûr de vouloir supprimer ce bien ? Tous les projets et chantiers associés seront également supprimés.')) {
+        if (!window.confirm(t('property_detail.delete_confirm'))) {
             return;
         }
 
@@ -156,7 +158,7 @@ export default function PropertyDetail() {
             navigate('/dashboard/properties');
         } catch (err) {
             console.error(err);
-            alert('Erreur lors de la suppression du bien.');
+            alert(t('property_detail.delete_error'));
         }
     };
 
@@ -399,7 +401,7 @@ export default function PropertyDetail() {
         <div className="space-y-6 md:space-y-8 animate-fade-in pb-24 px-4 md:px-8 py-6">
             <Link to="/dashboard/properties" className="flex items-center text-[9px] font-bold uppercase tracking-widest text-muted-foreground hover:text-black transition-all group w-fit">
                 <ArrowLeft className="mr-1.5 h-3 w-3 group-hover:-translate-x-1 transition-transform" />
-                Retour au Portfolio
+                {t('property_detail.back_to_properties')}
             </Link>
 
             {/* Header / Hero Section */}
@@ -491,14 +493,14 @@ export default function PropertyDetail() {
                                             className="h-9 md:h-10 px-4 md:px-6 bg-white/10 text-white rounded-lg md:rounded-xl text-[8px] md:text-[10px] font-bold uppercase tracking-widest backdrop-blur-xl border border-white/10 hover:bg-rose-500 hover:border-rose-400 transition-all flex items-center gap-2"
                                         >
                                             <Trash2 className="h-3 w-3 md:h-3.5 md:w-3.5" />
-                                            <span className="hidden sm:inline">Supprimer</span>
+                                            <span className="hidden sm:inline">{t('property_detail.delete_button')}</span>
                                         </button>
                                         <Link
                                             to={`/dashboard/properties/${id}/edit`}
                                             className="h-9 md:h-10 px-5 md:px-8 bg-white text-black rounded-lg md:rounded-xl text-[8px] md:text-[10px] font-bold uppercase tracking-widest shadow-lg hover:bg-slate-100 transition-all flex items-center gap-2"
                                         >
                                             <Edit className="h-3 w-3 md:h-3.5 md:w-3.5" />
-                                            Modifier
+                                            {t('property_detail.edit_button')}
                                         </Link>
                                     </>
                                 )}
@@ -511,7 +513,7 @@ export default function PropertyDetail() {
                     <div className="px-6 md:px-8 pb-6 md:pb-8 flex flex-wrap items-center gap-6 md:gap-8">
                         {property.loyer_mensuel && (
                             <div className="flex flex-col gap-0.5">
-                                <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Loyer mensuel</span>
+                                <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">{t('property_detail.monthly_rent')}</span>
                                 <div className="flex items-baseline gap-1.5">
                                     <span className="text-xl md:text-2xl font-bold tracking-tight">{formatCurrency(property.loyer_mensuel, true)}</span>
                                 </div>
@@ -519,7 +521,7 @@ export default function PropertyDetail() {
                         )}
                         {property.prix_nuitee && (
                             <div className="flex flex-col gap-0.5">
-                                <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Nuitée</span>
+                                <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">{t('property_detail.nightly_rate')}</span>
                                 <div className="flex items-baseline gap-1.5">
                                     <span className="text-xl md:text-2xl font-bold tracking-tight">{formatCurrency(property.prix_nuitee, true)}</span>
                                 </div>
@@ -536,11 +538,11 @@ export default function PropertyDetail() {
             >
                 <div style={{ display: 'flex', gap: '20px', width: 'max-content', paddingLeft: '2px', paddingRight: '2px' }}>
                     {[
-                        { id: 'details', label: 'Détails', icon: Building, show: true },
-                        { id: 'projects', label: property.management_type === 'GESTION' ? 'Maintenance' : 'Projets', icon: HardHat, show: property.management_type === 'CONSTRUCTION' || property.management_type === 'GESTION' },
-                        { id: 'transactions', label: 'Pipeline', icon: TrendingUp, show: property.management_type === 'MANDAT' },
-                        { id: 'performance', label: 'Finance', icon: Activity, show: true },
-                        { id: 'documents', label: 'Documents', icon: FileText, show: true }
+                        { id: 'details', label: t('property_detail.tabs.details'), icon: Building, show: true },
+                        { id: 'projects', label: property.management_type === 'GESTION' ? t('property_detail.tabs.maintenance') : t('property_detail.tabs.projects'), icon: HardHat, show: property.management_type === 'CONSTRUCTION' || property.management_type === 'GESTION' },
+                        { id: 'transactions', label: t('property_detail.tabs.pipeline'), icon: TrendingUp, show: property.management_type === 'MANDAT' },
+                        { id: 'performance', label: t('property_detail.tabs.finance'), icon: Activity, show: true },
+                        { id: 'documents', label: t('property_detail.tabs.documents'), icon: FileText, show: true }
                     ].filter(t => t.show).map((tab) => (
                         <button
                             key={tab.id}
@@ -582,15 +584,15 @@ export default function PropertyDetail() {
                                     <div className="p-2 rounded-lg bg-black text-white shadow-md">
                                         <Building className="h-4 w-4" />
                                     </div>
-                                    Informations Générales
+                                    {t('property_detail.details.general_info')}
                                 </h3>
                                 <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-6 text-sm">
                                     <div className="space-y-0.5">
-                                        <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Type</dt>
+                                        <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">{t('property_detail.details.type')}</dt>
                                         <dd className="font-bold text-sm md:text-base tracking-tight">{property.property_type_display || property.property_type}</dd>
                                     </div>
                                     <div className="space-y-0.5">
-                                        <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Surface</dt>
+                                        <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">{t('property_detail.details.surface')}</dt>
                                         <dd className="font-bold text-sm md:text-base tracking-tight flex items-center gap-1.5">
                                             <Ruler className="h-3.5 w-3.5 text-primary" />
                                             {property.surface ? `${property.surface} m²` : '---'}
@@ -599,17 +601,17 @@ export default function PropertyDetail() {
                                     {property.category === 'RESIDENTIEL' && (
                                         <>
                                             <div className="space-y-0.5">
-                                                <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Pièces</dt>
+                                                <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">{t('property_detail.details.rooms')}</dt>
                                                 <dd className="font-bold text-sm md:text-base tracking-tight">{property.room_count || '---'}</dd>
                                             </div>
                                             <div className="space-y-0.5">
-                                                <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Chambres</dt>
+                                                <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">{t('property_detail.details.bedrooms')}</dt>
                                                 <dd className="font-bold text-sm md:text-base tracking-tight">{property.bedroom_count || '---'}</dd>
                                             </div>
                                         </>
                                     )}
                                     <div className="space-y-0.5">
-                                        <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Statut</dt>
+                                        <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">{t('property_detail.details.status')}</dt>
                                         <dd className="mt-1">
                                             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black text-white text-[8px] md:text-[9px] font-bold uppercase tracking-widest">
                                                 <div className="w-1 h-1 rounded-full bg-primary animate-pulse" />
@@ -619,14 +621,14 @@ export default function PropertyDetail() {
                                     </div>
                                     {property.prix_acquisition && (
                                         <div className="space-y-0.5">
-                                            <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-primary">Investissement</dt>
+                                            <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-primary">{t('property_detail.details.investment')}</dt>
                                             <dd className="font-bold text-lg md:text-xl tracking-tight text-primary">
                                                 {formatCurrency(Number(property.prix_acquisition) + Number(property.frais_acquisition_annexes || 0), true)}
                                             </dd>
                                         </div>
                                     )}
                                     <div className="sm:col-span-2 space-y-2">
-                                        <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Propriétaire</dt>
+                                        <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">{t('property_detail.details.owner')}</dt>
                                         <dd className="font-bold">
                                             {property.owner ? (
                                                 <div className="flex items-center gap-2.5 p-2 rounded-xl bg-white/50 border border-slate-100 w-fit">
@@ -636,7 +638,7 @@ export default function PropertyDetail() {
                                                     <span className="text-xs tracking-tight">{property.owner_name}</span>
                                                 </div>
                                             ) : (
-                                                <span className="text-emerald-500 font-bold uppercase tracking-widest text-[9px] italic">Disponible (Mandat)</span>
+                                                <span className="text-emerald-500 font-bold uppercase tracking-widest text-[9px] italic">{t('property_detail.details.available_mandate')}</span>
                                             )}
                                         </dd>
                                     </div>
@@ -648,10 +650,10 @@ export default function PropertyDetail() {
                                     <div className="p-2 rounded-lg bg-black text-white shadow-md">
                                         <FileText className="h-4 w-4" />
                                     </div>
-                                    Description
+                                    {t('property_detail.details.description_title')}
                                 </h3>
                                 <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed whitespace-pre-wrap font-medium opacity-80">
-                                    {property.description || "Aucune description détaillée."}
+                                    {property.description || t('property_detail.details.no_description')}
                                 </p>
                             </div>
                         </div>
@@ -664,22 +666,22 @@ export default function PropertyDetail() {
                                         <div className="p-2 rounded-lg bg-black text-white shadow-md">
                                             <Euro className="h-4 w-4" />
                                         </div>
-                                        Vente
+                                        {t('property_detail.details.sale')}
                                     </h3>
                                     <div className="space-y-4">
                                         <div className="flex justify-between items-end pb-3 border-b border-slate-100">
-                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Mise en vente</span>
+                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">{t('property_detail.details.asking_price')}</span>
                                             <span className="text-lg md:text-xl font-bold tracking-tight">{formatCurrency(property.prix_acquisition, true)}</span>
                                         </div>
                                         <div className="flex justify-between items-end pb-3 border-b border-slate-100">
-                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Honoraires/Frais</span>
+                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">{t('property_detail.details.fees')}</span>
                                             <span className="text-sm md:text-base font-bold text-muted-foreground tracking-tight">+{formatCurrency(property.frais_acquisition_annexes, true)}</span>
                                         </div>
                                         <div className="flex items-center gap-2.5 pt-1">
                                             <div className={cn("p-1.5 rounded-lg", property.negociable ? "bg-emerald-500 text-white shadow-md" : "bg-slate-100 text-slate-400")}>
                                                 <Check className="h-3 w-3" />
                                             </div>
-                                            <span className={cn("text-[8px] md:text-[9px] font-bold uppercase tracking-widest", property.negociable ? "text-emerald-600" : "text-slate-400 opacity-60")}>Négociable</span>
+                                            <span className={cn("text-[8px] md:text-[9px] font-bold uppercase tracking-widest", property.negociable ? "text-emerald-600" : "text-slate-400 opacity-60")}>{t('property_detail.details.negotiable')}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -691,20 +693,20 @@ export default function PropertyDetail() {
                                         <div className="p-2 rounded-lg bg-black text-white shadow-md">
                                             <Home className="h-4 w-4" />
                                         </div>
-                                        Location
+                                        {t('property_detail.details.rental')}
                                     </h3>
                                     <div className="space-y-4">
                                         <div className="flex justify-between items-end pb-3 border-b border-slate-100">
-                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Loyer</span>
+                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">{t('property_detail.details.rent')}</span>
                                             <span className="text-lg md:text-xl font-bold text-primary tracking-tight">{formatCurrency(property.loyer_mensuel, true)}</span>
                                         </div>
                                         <div className="grid grid-cols-2 gap-4 md:gap-6">
                                             <div className="space-y-0.5">
-                                                <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Charges</dt>
+                                                <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">{t('property_detail.details.charges')}</dt>
                                                 <dd className="font-bold text-sm md:text-base tracking-tight">{formatCurrency(property.charges_mensuelles, true)}</dd>
                                             </div>
                                             <div className="space-y-0.5">
-                                                <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Garantie</dt>
+                                                <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">{t('property_detail.details.deposit')}</dt>
                                                 <dd className="font-bold text-sm md:text-base tracking-tight">{formatCurrency(property.depot_garantie, true)}</dd>
                                             </div>
                                         </div>
@@ -718,11 +720,11 @@ export default function PropertyDetail() {
                                         <div className="p-2 rounded-lg bg-black text-white shadow-md">
                                             <Wrench className="h-4 w-4" />
                                         </div>
-                                        Chantier
+                                        {t('property_detail.details.construction')}
                                     </h3>
                                     <div className="space-y-4">
                                         <div className="flex flex-col gap-0.5 pb-3 border-b border-slate-100">
-                                            <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Budget Global</dt>
+                                            <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">{t('property_detail.details.total_budget')}</dt>
                                             <dd className="font-bold text-xl md:text-2xl tracking-tight text-black">{formatCurrency(property.budget_total, true)}</dd>
                                         </div>
                                     </div>
@@ -791,8 +793,8 @@ export default function PropertyDetail() {
                                 <div className="mx-auto h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
                                     <TrendingUp className="h-8 w-8 text-muted-foreground" />
                                 </div>
-                                <h3 className="text-lg font-semibold mb-2">Pas encore de données de performance</h3>
-                                <p className="text-muted-foreground text-sm">Veuillez enregistrer des revenus ou des dépenses pour voir l'analyse.</p>
+                                <h3 className="text-lg font-semibold mb-2">{t('property_detail.finance.no_data')}</h3>
+                                <p className="text-muted-foreground text-sm">{t('property_detail.finance.no_data_desc')}</p>
                             </div>
                         ) : (
                             <div className="space-y-8 animate-fade-in">
@@ -811,15 +813,15 @@ export default function PropertyDetail() {
                                                 <>
                                                     <div className="solaris-glass rounded-[1.2rem] p-5 md:p-6 border-none shadow-lg">
                                                         <div className="flex items-center justify-between mb-3">
-                                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Budget Travaux</span>
+                                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">{t('property_detail.finance.works_budget')}</span>
                                                             <div className="p-1.5 rounded-lg bg-black text-white"><Wrench className="h-3.5 w-3.5" /></div>
                                                         </div>
                                                         <div className="text-xl md:text-2xl font-bold tracking-tight">{budget.toLocaleString()}€</div>
-                                                        <p className="text-[8px] md:text-[9px] text-muted-foreground mt-1.5 font-bold uppercase tracking-widest">Prévisionnel</p>
+                                                        <p className="text-[8px] md:text-[9px] text-muted-foreground mt-1.5 font-bold uppercase tracking-widest">{t('property_detail.finance.planned')}</p>
                                                     </div>
                                                     <div className="solaris-glass rounded-[1.2rem] p-5 md:p-6 border-none shadow-lg">
                                                         <div className="flex items-center justify-between mb-3">
-                                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Consommé</span>
+                                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">{t('property_detail.finance.consumed')}</span>
                                                             <div className="p-1.5 rounded-lg bg-rose-500 text-white"><TrendingDown className="h-3.5 w-3.5" /></div>
                                                         </div>
                                                         <div className="text-xl md:text-2xl font-bold tracking-tight text-rose-500">{spent.toLocaleString()}€</div>
@@ -827,15 +829,15 @@ export default function PropertyDetail() {
                                                     </div>
                                                     <div className="solaris-glass rounded-[1.2rem] p-5 md:p-6 border-none shadow-lg">
                                                         <div className="flex items-center justify-between mb-3">
-                                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Reste</span>
+                                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">{t('property_detail.finance.remaining')}</span>
                                                             <div className="p-1.5 rounded-lg bg-emerald-500 text-white"><Euro className="h-3.5 w-3.5" /></div>
                                                         </div>
                                                         <div className="text-xl md:text-2xl font-bold tracking-tight text-emerald-500">{remaining.toLocaleString()}€</div>
-                                                        <p className="text-[8px] md:text-[9px] text-muted-foreground mt-1.5 font-bold uppercase tracking-widest">Disponible</p>
+                                                        <p className="text-[8px] md:text-[9px] text-muted-foreground mt-1.5 font-bold uppercase tracking-widest">{t('property_detail.finance.available')}</p>
                                                     </div>
                                                     <div className="solaris-glass rounded-[1.2rem] p-5 md:p-6 border-none shadow-lg">
                                                         <div className="flex items-center justify-between mb-3">
-                                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Progression</span>
+                                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">{t('property_detail.finance.progress')}</span>
                                                             <div className="p-1.5 rounded-lg bg-blue-500 text-white"><Activity className="h-3.5 w-3.5" /></div>
                                                         </div>
                                                         <div className="text-xl md:text-2xl font-bold tracking-tight text-blue-600">{progress.toFixed(0)}%</div>
@@ -879,7 +881,7 @@ export default function PropertyDetail() {
                                                     <div className="solaris-glass rounded-[1.2rem] p-5 md:p-6 border-none shadow-lg lg:col-span-2">
                                                         <div className="flex items-center justify-between mb-3">
                                                             <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">
-                                                                Plus-value nette {signedTx ? '(Réelle)' : '(Estimée)'}
+                                                                {signedTx ? t('property_detail.finance.net_capital_gain_real') : t('property_detail.finance.net_capital_gain_est')}
                                                             </span>
                                                             <div className={cn("p-1.5 rounded-lg text-white shadow-md", isPlusValueNegative ? "bg-rose-500" : "bg-emerald-500")}>
                                                                 <TrendingUp className="h-3.5 w-3.5" />
@@ -889,13 +891,13 @@ export default function PropertyDetail() {
                                                             {netPlusValue !== null ? `${netPlusValue.toLocaleString()}€` : 'N/A'}
                                                         </div>
                                                         <p className="text-[8px] md:text-[9px] text-muted-foreground mt-1.5 font-bold uppercase tracking-widest max-w-[200px]">
-                                                            Fonds nets après frais
+                                                            {t('property_detail.finance.net_funds')}
                                                         </p>
                                                     </div>
                                                     <div className="solaris-glass rounded-[1.2rem] p-5 md:p-6 border-none shadow-lg lg:col-span-2">
                                                         <div className="flex items-center justify-between mb-3">
                                                             <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">
-                                                                ROI {signedTx ? '(Net)' : '(Estimé)'}
+                                                                {signedTx ? t('property_detail.finance.roi_net') : t('property_detail.finance.roi_est')}
                                                             </span>
                                                             <div className={cn("p-1.5 rounded-lg text-white shadow-md", isRoiNegative ? "bg-rose-500" : "bg-emerald-500")}>
                                                                 <Percent className="h-3.5 w-3.5" />
@@ -905,7 +907,7 @@ export default function PropertyDetail() {
                                                             {roi !== null ? `${roi.toFixed(1)}%` : 'N/A'}
                                                         </div>
                                                         <p className="text-[8px] md:text-[9px] text-muted-foreground mt-1.5 font-bold uppercase tracking-widest max-w-[200px]">
-                                                            Rendement sur investissement
+                                                            {t('property_detail.finance.roi_desc')}
                                                         </p>
                                                     </div>
                                                 </>
@@ -915,33 +917,33 @@ export default function PropertyDetail() {
                                                 <>
                                                     <div className="solaris-glass rounded-[1.2rem] p-5 md:p-6 border-none shadow-lg">
                                                         <div className="flex items-center justify-between mb-3">
-                                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Rendement Annuel</span>
+                                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">{t('property_detail.finance.theoretical_yield')}</span>
                                                             <div className="p-1.5 rounded-lg bg-emerald-500 text-white shadow-md"><TrendingUp className="h-3.5 w-3.5" /></div>
                                                         </div>
                                                         <div className="text-xl md:text-2xl font-bold tracking-tight text-emerald-600">{perfData?.property_summary?.theoretical_yield || 0}%</div>
-                                                        <p className="text-[8px] md:text-[9px] text-muted-foreground mt-1.5 font-bold uppercase tracking-widest">Objectif</p>
+                                                        <p className="text-[8px] md:text-[9px] text-muted-foreground mt-1.5 font-bold uppercase tracking-widest">{t('property_detail.finance.objective')}</p>
                                                     </div>
                                                     <div className="solaris-glass rounded-[1.2rem] p-5 md:p-6 border-none shadow-lg">
                                                         <div className="flex items-center justify-between mb-3">
-                                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Rendement Réel</span>
+                                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">{t('property_detail.finance.actual_yield')}</span>
                                                             <div className="p-1.5 rounded-lg bg-black text-white shadow-md"><Activity className="h-3.5 w-3.5" /></div>
                                                         </div>
                                                         <div className="text-xl md:text-2xl font-bold tracking-tight">{perfData?.property_summary?.yield || 0}%</div>
-                                                        <p className="text-[8px] md:text-[9px] text-muted-foreground mt-1.5 font-bold uppercase tracking-widest">Performance</p>
+                                                        <p className="text-[8px] md:text-[9px] text-muted-foreground mt-1.5 font-bold uppercase tracking-widest">{t('property_detail.finance.performance')}</p>
                                                     </div>
                                                     <div className="solaris-glass rounded-[1.2rem] p-5 md:p-6 border-none shadow-lg">
                                                         <div className="flex items-center justify-between mb-3">
-                                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Cashflow Net</span>
+                                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">{t('property_detail.finance.net_cashflow')}</span>
                                                             <div className={cn("p-1.5 rounded-lg text-white shadow-md", (perfData?.property_summary?.net || 0) >= 0 ? "bg-emerald-500" : "bg-rose-500")}><Euro className="h-3.5 w-3.5" /></div>
                                                         </div>
                                                         <div className={cn("text-xl md:text-2xl font-bold tracking-tight", (perfData?.property_summary?.net || 0) >= 0 ? "text-emerald-500" : "text-rose-600")}>
                                                             {(perfData?.property_summary?.net || 0).toLocaleString()}€
                                                         </div>
-                                                        <p className="text-[8px] md:text-[9px] text-muted-foreground mt-1.5 font-bold uppercase tracking-widest">Solde</p>
+                                                        <p className="text-[8px] md:text-[9px] text-muted-foreground mt-1.5 font-bold uppercase tracking-widest">{t('property_detail.finance.balance')}</p>
                                                     </div>
                                                     <div className="solaris-glass rounded-[1.2rem] p-5 md:p-6 border-none shadow-lg">
                                                         <div className="flex items-center justify-between mb-3">
-                                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">Encaïssement</span>
+                                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">{t('property_detail.finance.collection_rate')}</span>
                                                             <div className="p-1.5 rounded-lg bg-blue-500 text-white shadow-md"><Activity className="h-3.5 w-3.5" /></div>
                                                         </div>
                                                         <div className={cn(
@@ -951,7 +953,7 @@ export default function PropertyDetail() {
                                                         )}>
                                                             {perfData.property_summary?.collection_rate !== null && perfData.property_summary?.collection_rate !== undefined ? `${perfData.property_summary.collection_rate}%` : 'N/A'}
                                                         </div>
-                                                        <p className="text-[8px] md:text-[9px] text-muted-foreground mt-1.5 font-bold uppercase tracking-widest">Loyers</p>
+                                                        <p className="text-[8px] md:text-[9px] text-muted-foreground mt-1.5 font-bold uppercase tracking-widest">{t('property_detail.finance.rents')}</p>
                                                     </div>
                                                 </>
                                             );
@@ -968,7 +970,7 @@ export default function PropertyDetail() {
                                                     <div className="p-2 rounded-lg bg-black text-white shadow-md">
                                                         <Calendar className="h-4 w-4" />
                                                     </div>
-                                                    Évolution
+                                                    {t('property_detail.finance.evolution')}
                                                 </h3>
                                                 <div className="h-[220px] md:h-[260px] w-full">
                                                     <ResponsiveContainer width="100%" height="100%">
@@ -1010,21 +1012,21 @@ export default function PropertyDetail() {
                                                                                     </p>
                                                                                     {property.management_type === 'CONSTRUCTION' ? (
                                                                                         <div className="flex justify-between items-center gap-3">
-                                                                                            <span className="font-bold uppercase tracking-widest opacity-60">Dépenses</span>
+                                                                                            <span className="font-bold uppercase tracking-widest opacity-60">{t('property_detail.finance.expenses')}</span>
                                                                                             <span className="font-bold text-rose-500 text-base tracking-tight">{d.expenses.toLocaleString()}€</span>
                                                                                         </div>
                                                                                     ) : (
                                                                                         <>
                                                                                             <div className="flex justify-between items-center gap-3">
-                                                                                                <span className="font-bold uppercase tracking-widest opacity-60 text-emerald-600">Revenus</span>
+                                                                                                <span className="font-bold uppercase tracking-widest opacity-60 text-emerald-600">{t('property_detail.finance.revenues')}</span>
                                                                                                 <span className="font-bold text-emerald-600 text-base tracking-tight">{d.revenues.toLocaleString()}€</span>
                                                                                             </div>
                                                                                             <div className="flex justify-between items-center gap-3">
-                                                                                                <span className="font-bold uppercase tracking-widest opacity-40">Loyers</span>
+                                                                                                <span className="font-bold uppercase tracking-widest opacity-40">{t('property_detail.finance.rents')}</span>
                                                                                                 <span className="font-bold text-black/40 text-xs tracking-tight">{d.actual_rent.toLocaleString()}€</span>
                                                                                             </div>
                                                                                             <div className="flex justify-between items-center gap-3 border-t border-black/5 pt-2 mt-1 underline-offset-4 decoration-2">
-                                                                                                <span className="font-bold uppercase tracking-widest opacity-60">Taux</span>
+                                                                                                <span className="font-bold uppercase tracking-widest opacity-60">{t('property_detail.finance.rate')}</span>
                                                                                                 <span className={cn(
                                                                                                     "font-bold text-base tracking-tight",
                                                                                                     d.collection_rate >= 90 ? "text-emerald-500" : d.collection_rate >= 50 ? "text-orange-500" : "text-rose-600"
@@ -1050,19 +1052,19 @@ export default function PropertyDetail() {
                                                                     />
                                                                 )}
                                                                 {property.management_type === 'CONSTRUCTION' ? (
-                                                                    <Area type="monotone" dataKey="expenses" stroke="#ff0048" strokeWidth={4} fillOpacity={0.1} fill="#ff0048" name="Dépenses" />
+                                                                    <Area type="monotone" dataKey="expenses" stroke="#ff0048" strokeWidth={4} fillOpacity={0.1} fill="#ff0048" name={t('property_detail.finance.expenses')} />
                                                                 ) : (
                                                                     <>
-                                                                        <Area type="monotone" dataKey="revenues" stroke="#10B981" strokeWidth={4} fill="url(#colorRevPerf)" name="Total Revenus" />
-                                                                        <Area type="monotone" dataKey="actual_rent" stroke="#3b82f6" strokeWidth={2} fill="transparent" strokeDasharray="5 5" name="Loyers Reçus" />
-                                                                        <Area type="monotone" dataKey="expenses" stroke="#ff0048" strokeWidth={2} fill="transparent" name="Dépenses" />
+                                                                        <Area type="monotone" dataKey="revenues" stroke="#10B981" strokeWidth={4} fill="url(#colorRevPerf)" name={t('property_detail.finance.total_revenues')} />
+                                                                        <Area type="monotone" dataKey="actual_rent" stroke="#3b82f6" strokeWidth={2} fill="transparent" strokeDasharray="5 5" name={t('property_detail.finance.received_rents')} />
+                                                                        <Area type="monotone" dataKey="expenses" stroke="#ff0048" strokeWidth={2} fill="transparent" name={t('property_detail.finance.expenses')} />
                                                                     </>
                                                                 )}
                                                             </AreaChart>
                                                         ) : (
                                                             <div className="flex flex-col items-center justify-center h-full text-muted-foreground py-8 opacity-40">
                                                                 <TrendingUp className="h-10 w-10 mb-3" />
-                                                                <p className="text-[9px] font-bold uppercase tracking-widest">Initialisation...</p>
+                                                                <p className="text-[9px] font-bold uppercase tracking-widest">{t('property_detail.finance.initializing')}</p>
                                                             </div>
                                                         )}
                                                     </ResponsiveContainer>
@@ -1075,7 +1077,7 @@ export default function PropertyDetail() {
                                                     <div className="p-2 rounded-lg bg-black text-white shadow-md">
                                                         <Activity className="h-4 w-4" />
                                                     </div>
-                                                    Répartition
+                                                    {t('property_detail.finance.distribution')}
                                                 </h3>
                                                 <div className="space-y-6">
                                                     {perfData?.category_stats?.map((cat) => (
@@ -1093,7 +1095,7 @@ export default function PropertyDetail() {
                                                         </div>
                                                     ))}
                                                     {(!perfData || !perfData.category_stats || perfData.category_stats.length === 0) && (
-                                                        <p className="text-center text-muted-foreground text-[9px] font-bold uppercase tracking-widest py-12 opacity-40">Aucune donnée</p>
+                                                        <p className="text-center text-muted-foreground text-[9px] font-bold uppercase tracking-widest py-12 opacity-40">{t('property_detail.finance.no_data_chart')}</p>
                                                     )}
                                                 </div>
                                             </div>
@@ -1111,31 +1113,31 @@ export default function PropertyDetail() {
                                                         <div className="p-2 rounded-lg bg-black text-white shadow-md">
                                                             <History className="h-4 w-4" />
                                                         </div>
-                                                        {property.transaction_nature === 'VENTE' ? "Opérations" : "Opérations de Régie"}
+                                                        {property.transaction_nature === 'VENTE' ? t('property_detail.operations.title_sale') : t('property_detail.operations.title_management')}
                                                     </h3>
-                                                    <p className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60 ml-0 md:ml-11">Appels & Reversements</p>
+                                                    <p className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60 ml-0 md:ml-11">{t('property_detail.operations.subtitle')}</p>
                                                 </div>
                                                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black text-white text-[8px] md:text-[9px] font-bold uppercase tracking-widest w-fit">
                                                     <div className="w-1 h-1 rounded-full bg-primary animate-pulse" />
-                                                    En cours
+                                                    {t('property_detail.operations.in_progress')}
                                                 </div>
                                             </div>
                                             <div className="overflow-x-auto">
                                                 <table className="w-full">
                                                     <thead>
                                                         <tr className="bg-black text-[9px] font-bold uppercase tracking-widest text-white/60">
-                                                            <th className="px-6 py-4 text-left font-bold">Flux</th>
-                                                            <th className="px-6 py-4 text-left font-bold">Libellé</th>
-                                                            <th className="px-6 py-4 text-left font-bold text-white">Montant</th>
-                                                            <th className="px-6 py-4 text-left font-bold">Status</th>
-                                                            <th className="px-6 py-4 text-right font-bold">Actions</th>
+                                                            <th className="px-6 py-4 text-left font-bold">{t('property_detail.operations.flow')}</th>
+                                                            <th className="px-6 py-4 text-left font-bold">{t('property_detail.operations.label')}</th>
+                                                            <th className="px-6 py-4 text-left font-bold text-white">{t('property_detail.operations.amount')}</th>
+                                                            <th className="px-6 py-4 text-left font-bold">{t('property_detail.operations.status')}</th>
+                                                            <th className="px-6 py-4 text-right font-bold">{t('property_detail.operations.actions')}</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody className="divide-y divide-black/5">
                                                         {cashCalls.filter(cc => cc.status !== 'PAID' && cc.status !== 'CANCELLED').map((cc) => (
                                                             <tr key={`cc-${cc.id}`} className="hover:bg-white/50 transition-colors group">
                                                                 <td className="px-6 py-5">
-                                                                    <span className="font-bold text-[9px] uppercase tracking-widest text-emerald-600 block px-3 py-1 rounded-full bg-emerald-50 w-fit">Appel</span>
+                                                                    <span className="font-bold text-[9px] uppercase tracking-widest text-emerald-600 block px-3 py-1 rounded-full bg-emerald-50 w-fit">{t('property_detail.operations.call')}</span>
                                                                 </td>
                                                                 <td className="px-6 py-5">
                                                                     <div className="font-bold text-xs tracking-tight">{cc.reason}</div>
@@ -1161,7 +1163,7 @@ export default function PropertyDetail() {
                                                                                 onClick={() => updateOpStatus('CASH_CALL', cc.id, 'PENDING')}
                                                                                 className="px-4 py-1.5 bg-black text-white rounded-lg text-[8px] font-bold uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-md"
                                                                             >
-                                                                                Payer
+                                                                                {t('property_detail.operations.pay')}
                                                                             </button>
                                                                         )}
                                                                         {cc.status === 'PENDING' && isAdmin && (
@@ -1172,7 +1174,7 @@ export default function PropertyDetail() {
                                                                                         target="_blank"
                                                                                         rel="noopener noreferrer"
                                                                                         className="p-1.5 bg-black/5 text-black rounded-lg hover:bg-black hover:text-white transition-all shadow-sm"
-                                                                                        title="Voir Justificatif"
+                                                                                        title={t('property_detail.operations.view_proof')}
                                                                                     >
                                                                                         <FileText className="h-3.5 w-3.5" />
                                                                                     </a>
@@ -1204,11 +1206,11 @@ export default function PropertyDetail() {
                                                         {settlements.filter(s => s.status !== 'PAID' && s.status !== 'CANCELLED').map((s) => (
                                                             <tr key={`s-${s.id}`} className="hover:bg-white/50 transition-colors group">
                                                                 <td className="px-6 py-5">
-                                                                    <span className="font-bold text-[9px] uppercase tracking-widest text-rose-500 block px-3 py-1 rounded-full bg-rose-50 w-fit">Reversement</span>
+                                                                    <span className="font-bold text-[9px] uppercase tracking-widest text-rose-500 block px-3 py-1 rounded-full bg-rose-50 w-fit">{t('property_detail.operations.transfer')}</span>
                                                                 </td>
                                                                 <td className="px-6 py-5">
                                                                     <div className="font-bold text-xs tracking-tight">{format(new Date(s.period_start), 'dd/MM/yy')} - {format(new Date(s.period_end), 'dd/MM/yy')}</div>
-                                                                    <div className="text-[8px] text-muted-foreground uppercase font-bold tracking-widest mt-0.5 opacity-40">REGLEMENT</div>
+                                                                    <div className="text-[8px] text-muted-foreground uppercase font-bold tracking-widest mt-0.5 opacity-40">{t('property_detail.operations.regulation')}</div>
                                                                 </td>
                                                                 <td className="px-6 py-5 font-bold text-base tracking-tight text-rose-600">{Number(s.amount).toLocaleString('fr-FR')} €</td>
                                                                 <td className="px-6 py-5">
@@ -1222,7 +1224,7 @@ export default function PropertyDetail() {
                                                                         onClick={() => updateOpStatus('SETTLEMENT', s.id, 'PAID')}
                                                                         className="px-4 py-1.5 bg-black text-white rounded-lg text-[8px] font-bold uppercase tracking-widest hover:scale-105 transition-all shadow-md opacity-80 group-hover:opacity-100"
                                                                     >
-                                                                        Valider
+                                                                        {t('property_detail.operations.validate')}
                                                                     </button>
                                                                 </td>
                                                             </tr>
@@ -1249,20 +1251,20 @@ export default function PropertyDetail() {
                                                 <div className="p-2 rounded-lg bg-black text-white shadow-md">
                                                     <Activity className="h-4 w-4" />
                                                 </div>
-                                                Historique des Flux
+                                                {t('property_detail.history.title')}
                                             </h3>
-                                            <p className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60 ml-0 md:ml-11">Transactions validées</p>
+                                            <p className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60 ml-0 md:ml-11">{t('property_detail.history.subtitle')}</p>
                                         </div>
                                     </div>
                                     <div className="overflow-x-auto">
                                         <table className="w-full">
                                             <thead>
                                                 <tr className="bg-black text-[9px] font-bold uppercase tracking-widest text-white/60">
-                                                    <th className="px-6 py-4 text-left font-bold">Flux</th>
-                                                    <th className="px-6 py-4 text-left font-bold">Catégorie</th>
-                                                    <th className="px-6 py-4 text-left font-bold text-white">Montant</th>
-                                                    <th className="px-6 py-4 text-left font-bold">Période</th>
-                                                    <th className="px-6 py-4 text-right font-bold">Date</th>
+                                                    <th className="px-6 py-4 text-left font-bold">{t('property_detail.operations.flow')}</th>
+                                                    <th className="px-6 py-4 text-left font-bold">{t('property_detail.history.category')}</th>
+                                                    <th className="px-6 py-4 text-left font-bold text-white">{t('property_detail.operations.amount')}</th>
+                                                    <th className="px-6 py-4 text-left font-bold">{t('property_detail.history.period')}</th>
+                                                    <th className="px-6 py-4 text-right font-bold">{t('property_detail.history.date')}</th>
                                                 </tr>
                                             </thead>
                                             <tbody className="divide-y divide-black/5">
@@ -1273,7 +1275,7 @@ export default function PropertyDetail() {
                                                                 "inline-flex items-center px-3 py-1 rounded-full text-[8px] font-bold uppercase tracking-widest",
                                                                 tx.type === 'INFLOW' ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
                                                             )}>
-                                                                {tx.type === 'INFLOW' ? 'Revenu' : 'Dépense'}
+                                                                {tx.type === 'INFLOW' ? t('property_detail.history.income') : t('property_detail.history.expense')}
                                                             </span>
                                                         </td>
                                                         <td className="px-6 py-4 font-bold text-xs tracking-tight">{tx.category}</td>
@@ -1285,9 +1287,9 @@ export default function PropertyDetail() {
                                                         </td>
                                                         <td className="px-6 py-4 font-bold text-[9px] uppercase tracking-widest text-muted-foreground opacity-60">
                                                             {tx.period_month && tx.period_year ? (
-                                                                `${new Date(2000, tx.period_month - 1).toLocaleString('fr-FR', { month: 'short' }).toUpperCase()} ${tx.period_year}`
+                                                                `${new Date(2000, tx.period_month - 1).toLocaleString(navigator.language, { month: 'short' }).toUpperCase()} ${tx.period_year}`
                                                             ) : (
-                                                                'REGL.'
+                                                                t('property_detail.operations.regulation')
                                                             )}
                                                         </td>
                                                         <td className="px-6 py-4 text-right font-bold text-[10px] tracking-tight">
@@ -1300,7 +1302,7 @@ export default function PropertyDetail() {
                                                         <td colSpan={5} className="px-6 py-12 text-center opacity-40">
                                                             <div className="flex flex-col items-center gap-3">
                                                                 <Activity className="h-8 w-8 opacity-20" />
-                                                                <p className="text-[9px] font-bold uppercase tracking-widest">Aucune donnée</p>
+                                                                <p className="text-[9px] font-bold uppercase tracking-widest">{t('property_detail.finance.no_data_chart')}</p>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -1310,11 +1312,11 @@ export default function PropertyDetail() {
                                     </div>
                                     <div className="p-6 bg-black/5 border-t border-black/5 flex flex-col sm:flex-row items-center justify-between gap-4">
                                         <div className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60 max-w-[400px]">
-                                            Données exportées du grand livre.
+                                            {t('property_detail.history.export_note')}
                                         </div>
                                         <div className="flex flex-wrap items-center gap-4">
                                             <Link to="/dashboard/finance/transactions" className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-black hover:underline underline-offset-2 decoration-2">
-                                                Module Finance
+                                                {t('property_detail.history.finance_module')}
                                             </Link>
                                         </div>
                                     </div>
@@ -1345,7 +1347,7 @@ export default function PropertyDetail() {
                                     className="inline-flex items-center justify-center rounded-xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all bg-black text-white shadow-md hover:scale-105 active:scale-95 h-9 md:h-10 px-5 md:px-8"
                                 >
                                     <Plus className="mr-2 h-3 w-3" />
-                                    {property.management_type === 'GESTION' ? 'Intervention' : 'Projet'}
+                                    {property.management_type === 'GESTION' ? t('property_detail.projects.new_intervention') : t('property_detail.projects.new_project')}
                                 </Link>
                             )}
                         </div>
@@ -1353,7 +1355,7 @@ export default function PropertyDetail() {
                         {loadingProjects ? (
                             <div className="flex flex-col items-center justify-center py-20 gap-4">
                                 <Loader2 className="h-8 w-8 animate-spin text-black" />
-                                <p className="text-[10px] font-black uppercase tracking-widest opacity-40">Chargement des projets...</p>
+                                <p className="text-[10px] font-black uppercase tracking-widest opacity-40">{t('property_detail.projects.loading')}</p>
                             </div>
                         ) : associatedProjects.filter(p => {
                             if (property.management_type === 'CONSTRUCTION') return p.category === 'CONSTRUCTION';
@@ -1369,12 +1371,12 @@ export default function PropertyDetail() {
                                     )}
                                 </div>
                                 <h3 className="text-xl font-black uppercase tracking-tighter mb-2">
-                                    {property.management_type === 'GESTION' ? 'Aucune intervention' : 'Aucun projet associé'}
+                                    {property.management_type === 'GESTION' ? t('property_detail.projects.no_intervention') : t('property_detail.projects.no_project')}
                                 </h3>
                                 <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-40 max-w-sm mx-auto">
                                     {property.management_type === 'GESTION'
-                                        ? "Il n'y a pas encore d'interventions de maintenance pour ce bien."
-                                        : "Il n'y a pas encore de projets de développement pour ce bien."}
+                                        ? t('property_detail.projects.no_intervention_desc')
+                                        : t('property_detail.projects.no_project_desc')}
                                 </p>
                             </div>
                         ) : (
@@ -1412,7 +1414,7 @@ export default function PropertyDetail() {
                                                         </div>
                                                     </div>
                                                     <div className="flex flex-col gap-0.5">
-                                                        <span className="text-[7px] md:text-[8px] font-bold uppercase tracking-widest opacity-40">Début</span>
+                                                        <span className="text-[7px] md:text-[8px] font-bold uppercase tracking-widest opacity-40">{t('property_detail.projects.start')}</span>
                                                         <div className="flex items-center gap-1 font-bold text-[9px] md:text-xs tracking-tight">
                                                             <Clock className="h-2.5 w-2.5 text-blue-500" />
                                                             <span>{project.start_date ? format(new Date(project.start_date), 'd MMM yy', { locale: fr }).toUpperCase() : 'N/A'}</span>
@@ -1438,10 +1440,10 @@ export default function PropertyDetail() {
                                     <div className="p-2 rounded-lg bg-black text-white shadow-md">
                                         <TrendingUp className="h-4 w-4" />
                                     </div>
-                                    Pipeline Commercial
+                                    {t('property_detail.pipeline.title')}
                                 </h3>
                                 <p className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60 ml-0 md:ml-12">
-                                    Suivi des offres, candidatures et transactions
+                                    {t('property_detail.pipeline.subtitle')}
                                 </p>
                             </div>
                             {user?.role === 'ADMIN_MADIS' && (
@@ -1450,7 +1452,7 @@ export default function PropertyDetail() {
                                     className="inline-flex items-center justify-center rounded-xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all bg-black text-white shadow-md hover:scale-105 active:scale-95 h-9 md:h-10 px-5 md:px-8"
                                 >
                                     <Plus className="mr-2 h-3 w-3" />
-                                    Ajouter une offre
+                                    {t('property_detail.pipeline.add_offer')}
                                 </button>
                             )}
                         </div>
@@ -1475,11 +1477,11 @@ export default function PropertyDetail() {
                                             <div className={cn("p-1.5 md:p-2 rounded-lg text-white shadow-md", colorClass)}>
                                                 {icon}
                                             </div>
-                                            <span className="text-[7px] md:text-[8px] font-bold uppercase tracking-widest opacity-40">{status === 'DISPONIBLE' ? 'Offres' : status === 'NEGOCIATION' ? 'Négos' : status === 'SIGNE' ? 'Signées' : 'Annulées'}</span>
+                                            <span className="text-[7px] md:text-[8px] font-bold uppercase tracking-widest opacity-40">{status === 'DISPONIBLE' ? t('property_detail.pipeline.offers') : status === 'NEGOCIATION' ? t('property_detail.pipeline.negotiations') : status === 'SIGNE' ? t('property_detail.pipeline.signed') : t('property_detail.pipeline.cancelled')}</span>
                                         </div>
                                         <div className="flex items-baseline gap-1.5">
                                             <span className="text-xl md:text-2xl font-bold tracking-tight">{count}</span>
-                                            <span className="text-[7px] md:text-[8px] font-bold uppercase tracking-widest opacity-20">Dossiers</span>
+                                            <span className="text-[7px] md:text-[8px] font-bold uppercase tracking-widest opacity-20">{t('property_detail.pipeline.files')}</span>
                                         </div>
                                     </div>
                                 );
@@ -1487,7 +1489,7 @@ export default function PropertyDetail() {
                         </div>
 
                         <div className="space-y-6">
-                            <h4 className="text-[11px] font-black uppercase tracking-[0.2em] opacity-40 mb-8 border-b border-black/5 pb-4">Historique des Offres Récentes</h4>
+                            <h4 className="text-[11px] font-black uppercase tracking-[0.2em] opacity-40 mb-8 border-b border-black/5 pb-4">{t('property_detail.pipeline.recent_history')}</h4>
                             {property.transactions && property.transactions.length > 0 ? (
                                 <div className="grid gap-6">
                                     {property.transactions
@@ -1513,10 +1515,10 @@ export default function PropertyDetail() {
 
                                                     <div className="flex flex-row md:items-center justify-between lg:justify-end gap-6 md:gap-8">
                                                         <div className="text-left md:text-right">
-                                                            <div className="text-[7px] md:text-[8px] font-bold uppercase tracking-widest opacity-40 mb-0.5">Offre</div>
+                                                            <div className="text-[7px] md:text-[8px] font-bold uppercase tracking-widest opacity-40 mb-0.5">{t('property_detail.pipeline.offer')}</div>
                                                             <div className="text-lg md:text-xl font-bold tracking-tight text-black">{Number(tx.asking_price).toLocaleString('fr-FR')} €</div>
                                                             {tx.final_price && tx.status === 'SIGNE' && (
-                                                                <div className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-emerald-600 mt-0.5">Final: {Number(tx.final_price).toLocaleString('fr-FR')} €</div>
+                                                                <div className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-emerald-600 mt-0.5">{t('property_detail.pipeline.final')} {Number(tx.final_price).toLocaleString('fr-FR')} €</div>
                                                             )}
                                                         </div>
 
@@ -1558,7 +1560,7 @@ export default function PropertyDetail() {
                                                                                     className="w-full text-left px-4 py-2 text-[10px] font-black uppercase tracking-widest text-rose-600 hover:bg-rose-600 hover:text-white rounded-xl transition-all flex items-center gap-3"
                                                                                 >
                                                                                     <Trash2 className="h-3.5 w-3.5" />
-                                                                                    Supprimer
+                                                                                    {t('property_detail.pipeline.delete')}
                                                                                 </button>
                                                                             </div>
                                                                         </div>
@@ -1581,8 +1583,8 @@ export default function PropertyDetail() {
                                     <div className="mx-auto h-20 w-20 rounded-3xl bg-white shadow-sm flex items-center justify-center mb-6">
                                         <ClipboardList className="h-10 w-10 text-black/20" />
                                     </div>
-                                    <h3 className="text-xl font-black uppercase tracking-tighter mb-2">Aucune transaction</h3>
-                                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-40">Il n'y a pas encore d'offres ou de transactions pour ce bien.</p>
+                                    <h3 className="text-xl font-black uppercase tracking-tighter mb-2">{t('property_detail.pipeline.no_transaction')}</h3>
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-40">{t('property_detail.pipeline.no_transaction_desc')}</p>
                                 </div>
                             )}
                         </div>
@@ -1597,10 +1599,10 @@ export default function PropertyDetail() {
                                     <div className="p-2 rounded-lg bg-black text-white shadow-md">
                                         <FileText className="h-4 w-4" />
                                     </div>
-                                    Coffre-Fort Numérique
+                                    {t('property_detail.documents.title')}
                                 </h3>
                                 <p className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60 ml-0 md:ml-12">
-                                    Documents légaux, plans et justificatifs
+                                    {t('property_detail.documents.subtitle')}
                                 </p>
                             </div>
                             <div className="flex items-center gap-3">
@@ -1612,13 +1614,13 @@ export default function PropertyDetail() {
                                                     onClick={() => { setIsSelectionMode(false); setSelectedDocuments([]); }}
                                                     className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground hover:text-black px-2 md:px-3 py-1.5"
                                                 >
-                                                    Annuler
+                                                    {t('property_detail.documents.cancel')}
                                                 </button>
                                                 <button
                                                     onClick={selectAllFiltered}
                                                     className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-black hover:underline underline-offset-2 decoration-2 px-2 md:px-3 py-1.5"
                                                 >
-                                                    Tout
+                                                    {t('property_detail.documents.all')}
                                                 </button>
                                                 <button
                                                     onClick={handleDeleteSelectedDocuments}
@@ -1635,7 +1637,7 @@ export default function PropertyDetail() {
                                                 className="inline-flex items-center justify-center rounded-xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all bg-white text-black border-2 border-black/5 hover:border-black/20 h-9 md:h-10 px-4 md:px-6"
                                             >
                                                 <CheckCircle2 className="mr-2 h-3.5 w-3.5" />
-                                                Sélectionner
+                                                {t('property_detail.documents.select')}
                                             </button>
                                         )}
                                         <Link
@@ -1643,7 +1645,7 @@ export default function PropertyDetail() {
                                             className="inline-flex items-center justify-center rounded-xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all bg-black text-white shadow-md hover:scale-105 active:scale-95 h-9 md:h-10 px-5 md:px-8"
                                         >
                                             <Plus className="mr-2 h-3.5 w-3.5" />
-                                            Ajouter
+                                            {t('property_detail.documents.add')}
                                         </Link>
                                     </>
                                 )}
@@ -1652,12 +1654,12 @@ export default function PropertyDetail() {
 
                         <div className="flex flex-wrap gap-2 md:gap-3 mb-8 md:mb-12">
                             {[
-                                { id: 'all', label: 'Tous' },
-                                { id: 'TITRE_PROPRIETE', label: 'Titres' },
-                                { id: 'DIAGNOSTIC', label: 'Diags' },
-                                { id: 'PLANS', label: 'Plans' },
-                                { id: 'VERIF_FONCIERE', label: 'Vérification' },
-                                { id: 'AUTRE', label: 'Autres' }
+                                { id: 'all', label: t('property_detail.documents.filter_all') },
+                                { id: 'TITRE_PROPRIETE', label: t('property_detail.documents.filter_titles') },
+                                { id: 'DIAGNOSTIC', label: t('property_detail.documents.filter_diags') },
+                                { id: 'PLANS', label: t('property_detail.documents.filter_plans') },
+                                { id: 'VERIF_FONCIERE', label: t('property_detail.documents.filter_verification') },
+                                { id: 'AUTRE', label: t('property_detail.documents.filter_others') }
                             ].map((f) => (
                                 <button
                                     key={f.id}
@@ -1677,15 +1679,15 @@ export default function PropertyDetail() {
                         {loadingDocuments ? (
                             <div className="flex flex-col items-center justify-center py-20 gap-4">
                                 <Loader2 className="h-8 w-8 animate-spin text-black" />
-                                <p className="text-[10px] font-black uppercase tracking-widest opacity-40">Accès au coffre...</p>
+                                <p className="text-[10px] font-black uppercase tracking-widest opacity-40">{t('property_detail.documents.accessing')}</p>
                             </div>
                         ) : filteredDocuments.length === 0 ? (
                             <div className="bg-black/[0.02] border-2 border-dashed border-black/5 rounded-[2rem] p-20 text-center">
                                 <div className="mx-auto h-20 w-20 rounded-3xl bg-white shadow-sm flex items-center justify-center mb-6">
                                     <FileText className="h-10 w-10 text-black/20" />
                                 </div>
-                                <h3 className="text-xl font-black uppercase tracking-tighter mb-2">Aucun document</h3>
-                                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-40">Il n'y a pas encore de documents pour cette catégorie.</p>
+                                <h3 className="text-xl font-black uppercase tracking-tighter mb-2">{t('property_detail.documents.no_document')}</h3>
+                                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-40">{t('property_detail.documents.no_document_desc')}</p>
                             </div>
                         ) : (
                             <div className="grid gap-4 md:gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -1715,7 +1717,7 @@ export default function PropertyDetail() {
                                                         <button
                                                             onClick={(e) => { e.preventDefault(); handleDeleteDocument(doc.id); }}
                                                             className="text-muted-foreground hover:text-rose-600 opacity-0 group-hover:opacity-100 transition-all p-1"
-                                                            title="Supprimer"
+                                                            title={t('property_detail.pipeline.delete')}
                                                         >
                                                             <Trash2 className="h-3.5 w-3.5" />
                                                         </button>
@@ -1737,7 +1739,7 @@ export default function PropertyDetail() {
                                                 className="inline-flex items-center gap-1.5 text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-black hover:underline underline-offset-2 decoration-2 transition-all"
                                             >
                                                 <Download className="h-3 w-3" />
-                                                Télécharger
+                                                {t('property_detail.documents.download')}
                                             </a>
                                         </div>
                                     </div>
@@ -1754,14 +1756,14 @@ export default function PropertyDetail() {
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setShowTxModal(false)}>
                         <div className="bg-card border rounded-xl shadow-2xl w-full max-w-lg mx-4 animate-fade-in" onClick={e => e.stopPropagation()}>
                             <div className="flex items-center justify-between p-5 border-b">
-                                <h3 className="text-base font-bold uppercase tracking-tight">Nouvelle Offre</h3>
+                                <h3 className="text-base font-bold uppercase tracking-tight">{t('property_detail.modals.new_offer')}</h3>
                                 <button onClick={() => setShowTxModal(false)} className="p-1 rounded-full hover:bg-muted transition-colors">
                                     <X className="h-4 w-4" />
                                 </button>
                             </div>
                             <div className="p-5 space-y-3">
                                 <div>
-                                    <label className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground mb-1 block">Identité / Tiers</label>
+                                    <label className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground mb-1 block">{t('property_detail.modals.identity')}</label>
                                     <div className="relative">
                                         <Users className="absolute left-3 top-2 h-3.5 w-3.5 text-muted-foreground" />
                                         <input
@@ -1774,7 +1776,7 @@ export default function PropertyDetail() {
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground mb-1 block">Montant (€)</label>
+                                    <label className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground mb-1 block">{t('property_detail.modals.amount')}</label>
                                     <div className="relative">
                                         <DollarSign className="absolute left-3 top-2 h-3.5 w-3.5 text-muted-foreground" />
                                         <input
@@ -1787,9 +1789,9 @@ export default function PropertyDetail() {
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground mb-1 block">Notes</label>
+                                    <label className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground mb-1 block">{t('property_detail.modals.notes')}</label>
                                     <textarea
-                                        placeholder="Commentaires..."
+                                        placeholder={`${t('property_detail.modals.notes')}...`}
                                         value={txForm.notes}
                                         onChange={e => setTxForm({ ...txForm, notes: e.target.value })}
                                         className="w-full p-3 rounded-lg border bg-background text-xs focus:outline-none focus:ring-1 focus:ring-black/5 min-h-[80px]"
@@ -1798,7 +1800,7 @@ export default function PropertyDetail() {
                             </div>
                             <div className="flex items-center justify-end gap-2 p-5 border-t bg-muted/5">
                                 <button onClick={() => setShowTxModal(false)} className="px-4 py-1.5 text-[9px] font-bold uppercase tracking-widest rounded-lg border hover:bg-muted transition-colors">
-                                    Annuler
+                                    {t('property_detail.modals.cancel')}
                                 </button>
                                 <button
                                     onClick={createTransaction}
@@ -1806,7 +1808,7 @@ export default function PropertyDetail() {
                                     className="inline-flex items-center gap-2 px-5 py-1.5 bg-black text-white rounded-lg text-[9px] font-bold uppercase tracking-widest hover:bg-black/90 transition-all shadow-md disabled:opacity-50"
                                 >
                                     {txLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Plus className="h-3 w-3" />}
-                                    Enregistrer
+                                    {t('property_detail.modals.save')}
                                 </button>
                             </div>
                         </div>

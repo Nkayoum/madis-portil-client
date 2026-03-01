@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import api from '../../lib/axios';
 import { FileText, Download, Search, Loader2, File } from 'lucide-react';
 import { format } from 'date-fns';
-import { fr } from 'date-fns/locale';
+import { fr, enUS } from 'date-fns/locale';
+import { useTranslation } from 'react-i18next';
 import { useToast } from '../../context/ToastContext';
 import { useAuth } from '../../context/AuthContext';
 import { Trash2 } from 'lucide-react';
@@ -11,6 +12,8 @@ import { cn } from '../../lib/utils';
 import { useNavigate } from 'react-router-dom';
 
 export default function DocumentsList() {
+    const { t, i18n } = useTranslation();
+    const dateLocale = i18n.language === 'fr' ? fr : enUS;
     const { showToast } = useToast();
     const { user } = useAuth();
     const navigate = useNavigate();
@@ -42,7 +45,7 @@ export default function DocumentsList() {
             const response = await api.get('/documents/');
             setDocuments(response.data.results || []);
         } catch (err) {
-            setError('Impossible de charger les documents.');
+            setError(t('documents.list.load_error'));
             console.error(err);
         } finally {
             setLoading(false);
@@ -50,16 +53,16 @@ export default function DocumentsList() {
     };
 
     const handleDelete = async (id, title) => {
-        if (!window.confirm(`Êtes-vous sûr de vouloir supprimer le document "${title}" ?`)) return;
+        if (!window.confirm(t('documents.list.confirm_delete', { title }))) return;
 
         setDeletingId(id);
         try {
             await api.delete(`/documents/${id}/`);
-            showToast({ message: 'Document supprimé avec succès.', type: 'success' });
+            showToast({ message: t('documents.list.delete_success'), type: 'success' });
             setDocuments(prev => prev.filter(doc => doc.id !== id));
         } catch (err) {
             console.error('Failed to delete document', err);
-            showToast({ message: 'Erreur lors de la suppression.', type: 'error' });
+            showToast({ message: t('documents.list.delete_error'), type: 'error' });
         } finally {
             setDeletingId(null);
         }
@@ -73,13 +76,13 @@ export default function DocumentsList() {
     });
 
     const categories = [
-        { value: 'ALL', label: 'Tous' },
-        { value: 'CONTRAT', label: 'Contrats' },
-        { value: 'FACTURE', label: 'Factures' },
-        { value: 'PLAN', label: 'Plans' },
-        { value: 'PHOTO', label: 'Photos' },
-        { value: 'VERIF_FONCIERE', label: 'Vérif. Foncière' },
-        { value: 'ADMINISTRATIF', label: 'Administratif' },
+        { value: 'ALL', label: t('documents.list.cat_all') },
+        { value: 'CONTRAT', label: t('documents.list.cat_contract') },
+        { value: 'FACTURE', label: t('documents.list.cat_invoice') },
+        { value: 'PLAN', label: t('documents.list.cat_plan') },
+        { value: 'PHOTO', label: t('documents.list.cat_photo') },
+        { value: 'VERIF_FONCIERE', label: t('documents.list.cat_verif') },
+        { value: 'ADMINISTRATIF', label: t('documents.list.cat_admin') },
     ];
 
     const getCategoryStyles = (category) => {
@@ -108,8 +111,8 @@ export default function DocumentsList() {
             {/* Solaris Header Area */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-8 mb-8 md:mb-12 pb-6 border-b border-black/5 dark:border-white/5">
                 <div>
-                    <h1 className="text-2xl md:text-4xl font-bold tracking-tight uppercase leading-tight md:leading-none mb-1.5">Documents</h1>
-                    <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] opacity-30">Registre des actifs documentaires</p>
+                    <h1 className="text-2xl md:text-4xl font-bold tracking-tight uppercase leading-tight md:leading-none mb-1.5">{t('documents.list.title')}</h1>
+                    <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] opacity-30">{t('documents.list.subtitle')}</p>
                 </div>
 
                 <Link
@@ -117,7 +120,7 @@ export default function DocumentsList() {
                     className="h-10 md:h-11 px-6 md:px-7 bg-primary dark:solaris-neon-pink text-white rounded-xl flex items-center justify-center gap-2 text-[9px] md:text-[10px] font-bold uppercase tracking-widest shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all group w-full md:w-auto shrink-0"
                 >
                     <FileText className="h-4 w-4" />
-                    Nouveau document
+                    {t('documents.list.btn_new')}
                 </Link>
             </div>
 
@@ -127,7 +130,7 @@ export default function DocumentsList() {
                     <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-4 w-4 text-black/20 dark:text-white/20 group-focus-within:text-primary transition-colors" />
                     <input
                         type="text"
-                        placeholder="RECHERCHER..."
+                        placeholder={t('documents.list.search_placeholder')}
                         className="w-full h-11 pl-14 pr-6 bg-black/[0.02] dark:bg-black/40 border dark:border-white/5 rounded-xl text-[10px] font-bold uppercase tracking-widest focus:bg-white dark:focus:bg-black/60 focus:ring-4 focus:ring-primary/10 transition-all outline-none"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
@@ -140,7 +143,7 @@ export default function DocumentsList() {
                         value={selectedPropertyId}
                         onChange={(e) => setSelectedPropertyId(e.target.value)}
                     >
-                        <option value="ALL">TOUS LES BIENS</option>
+                        <option value="ALL">{t('documents.list.property_all')}</option>
                         {properties.map(p => (
                             <option key={p.id} value={p.id}>{p.name.toUpperCase()}</option>
                         ))}
@@ -174,9 +177,9 @@ export default function DocumentsList() {
                         <div className="mx-auto h-16 w-16 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center mb-4">
                             <File className="h-8 w-8 text-black/10 dark:text-white/10" />
                         </div>
-                        <h3 className="text-xl font-bold uppercase tracking-tight opacity-20">Archive Vierge</h3>
+                        <h3 className="text-xl font-bold uppercase tracking-tight opacity-20">{t('documents.list.empty_title')}</h3>
                         <p className="text-[9px] font-bold uppercase tracking-widest opacity-20 mt-1">
-                            Aucun protocole documentaire ne correspond.
+                            {t('documents.list.empty_desc')}
                         </p>
                     </div>
                 ) : (
@@ -197,7 +200,7 @@ export default function DocumentsList() {
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 className="h-9 w-9 md:h-10 md:w-10 rounded-lg bg-black dark:bg-white/10 text-white flex items-center justify-center transition-all shadow-md active:scale-95"
-                                                title="TÉLÉCHARGER"
+                                                title={t('documents.list.btn_download')}
                                             >
                                                 <Download className="h-4 w-4" />
                                             </a>
@@ -206,7 +209,7 @@ export default function DocumentsList() {
                                                     onClick={() => handleDelete(doc.id, doc.title)}
                                                     disabled={deletingId === doc.id}
                                                     className="h-9 w-9 md:h-10 md:w-10 rounded-lg bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 hover:bg-rose-600 hover:text-white flex items-center justify-center transition-all shadow-sm active:scale-95 disabled:opacity-50"
-                                                    title="SUPPRIMER"
+                                                    title={t('documents.list.btn_delete')}
                                                 >
                                                     {deletingId === doc.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Trash2 className="h-4 w-4" />}
                                                 </button>
@@ -242,7 +245,7 @@ export default function DocumentsList() {
                                             </span>
                                         </div>
                                         <div className="text-[9px] font-mono tracking-tighter font-bold opacity-30 uppercase">
-                                            {format(new Date(doc.uploaded_at), 'dd/MM/yyyy', { locale: fr })}
+                                            {format(new Date(doc.uploaded_at), 'dd/MM/yyyy', { locale: dateLocale })}
                                         </div>
                                     </div>
                                 </div>

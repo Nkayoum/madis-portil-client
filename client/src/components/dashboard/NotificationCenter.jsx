@@ -4,9 +4,11 @@ import { Link } from 'react-router-dom';
 import api from '../../lib/axios';
 import { cn } from '../../lib/utils';
 import { formatDistanceToNow } from 'date-fns';
-import { fr } from 'date-fns/locale';
+import { fr, enUS } from 'date-fns/locale';
+import { useTranslation } from 'react-i18next';
 
 export default function NotificationCenter() {
+    const { t, i18n } = useTranslation();
     const [notifications, setNotifications] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -70,7 +72,7 @@ export default function NotificationCenter() {
                     <div className="fixed inset-0 z-[100]" onClick={() => setIsOpen(false)} />
                     <div className="fixed inset-x-4 top-16 sm:absolute sm:inset-x-auto sm:top-auto sm:right-0 sm:mt-4 sm:w-96 bg-white dark:bg-[#0a1628] rounded-[1.5rem] sm:rounded-[2rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.3)] dark:shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)] z-[101] overflow-hidden animate-in fade-in zoom-in duration-300 border border-black/10 dark:border-white/10">
                         <div className="p-3.5 sm:p-6 border-b border-black/10 dark:border-white/10 flex items-center justify-between bg-gray-50 dark:bg-white/5">
-                            <h3 className="text-sm sm:text-xl font-black uppercase tracking-widest sm:tracking-tighter">Notifications</h3>
+                            <h3 className="text-sm sm:text-xl font-black uppercase tracking-widest sm:tracking-tighter">{t('notification_center.title')}</h3>
                             {unreadCount > 0 && (
                                 <button
                                     onClick={markAllAsRead}
@@ -78,7 +80,7 @@ export default function NotificationCenter() {
                                     className="text-[10px] font-black uppercase tracking-[0.2em] text-primary hover:text-primary/80 transition-colors flex items-center gap-2"
                                 >
                                     {loading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Check className="h-3 w-3" />}
-                                    Tout lire
+                                    {t('notification_center.btn_read_all')}
                                 </button>
                             )}
                         </div>
@@ -104,7 +106,7 @@ export default function NotificationCenter() {
                                                 <button
                                                     onClick={() => markAsRead(notification.id)}
                                                     className="p-1.5 sm:p-2 bg-primary/10 hover:bg-primary/20 rounded-full text-primary transition-colors opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
-                                                    title="Marquer comme lu"
+                                                    title={t('notification_center.btn_mark_read')}
                                                 >
                                                     <Check className="h-3 sm:h-3.5 w-3 sm:w-3.5" />
                                                 </button>
@@ -115,7 +117,7 @@ export default function NotificationCenter() {
                                         </p>
                                         <div className="flex justify-between items-center mt-3 sm:mt-4">
                                             <span className="text-[9px] font-black uppercase tracking-widest opacity-40">
-                                                {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true, locale: fr })}
+                                                {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true, locale: i18n.language === 'fr' ? fr : enUS })}
                                             </span>
                                             {notification.link && (
                                                 <Link
@@ -126,7 +128,7 @@ export default function NotificationCenter() {
                                                     }}
                                                     className="text-[10px] font-black uppercase tracking-widest text-primary hover:text-primary/80 flex items-center gap-1.5 transition-colors"
                                                 >
-                                                    Voir <ExternalLink className="h-3 w-3" />
+                                                    {t('notification_center.btn_view')} <ExternalLink className="h-3 w-3" />
                                                 </Link>
                                             )}
                                         </div>
@@ -137,7 +139,7 @@ export default function NotificationCenter() {
                                     <div className="h-16 w-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
                                         <Bell className="h-8 w-8 text-muted-foreground opacity-20" />
                                     </div>
-                                    <p className="text-[10px] font-black uppercase tracking-widest opacity-40">Aucune notification</p>
+                                    <p className="text-[10px] font-black uppercase tracking-widest opacity-40">{t('notification_center.empty_text')}</p>
                                 </div>
                             )}
                         </div>

@@ -3,9 +3,11 @@ import { useNavigate, Link } from 'react-router-dom';
 import api from '../../lib/axios';
 import { useToast } from '../../context/ToastContext';
 import { UserPlus, Loader2, Mail, Lock, Shield, X, User, ArrowLeft } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '../../lib/utils';
 
 export default function CreateUser() {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const { showToast } = useToast();
     const [loading, setLoading] = useState(false);
@@ -23,11 +25,11 @@ export default function CreateUser() {
         setLoading(true);
         try {
             await api.post('/auth/users/', formData);
-            showToast({ message: 'Client créé avec succès !', type: 'success' });
+            showToast({ message: t('users.create.toast_success'), type: 'success' });
             navigate('/dashboard/users');
         } catch (err) {
             console.error(err);
-            let msg = 'Erreur lors de la création.';
+            let msg = t('users.create.toast_error');
             if (err.response?.data) {
                 const data = err.response.data;
                 if (data.email) msg = data.email[0];
@@ -51,7 +53,7 @@ export default function CreateUser() {
                 className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-all group"
             >
                 <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-                Retour au Registre
+                {t('users.create.back')}
             </Link>
 
             <div className="solaris-glass rounded-[3rem] border border-white/20 overflow-hidden shadow-2xl">
@@ -62,10 +64,10 @@ export default function CreateUser() {
                         </div>
                         <div>
                             <div className="flex items-center gap-2 mb-1">
-                                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Onboarding MaDis</span>
+                                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">{t('users.create.pre_title')}</span>
                             </div>
                             <h1 className="text-4xl font-black tracking-tighter">
-                                Inscrire <span className="opacity-40">Client</span>
+                                {t('users.create.title')} <span className="opacity-40">{t('users.create.subtitle')}</span>
                             </h1>
                         </div>
                     </div>
@@ -76,7 +78,7 @@ export default function CreateUser() {
                         <div className="space-y-3">
                             <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-2 px-1">
                                 <User className="h-3.5 w-3.5" />
-                                Prénom
+                                {t('users.create.first_name')}
                             </label>
                             <input
                                 type="text"
@@ -91,7 +93,7 @@ export default function CreateUser() {
                         <div className="space-y-3">
                             <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-2 px-1">
                                 <User className="h-3.5 w-3.5" />
-                                Nom
+                                {t('users.create.last_name')}
                             </label>
                             <input
                                 type="text"
@@ -108,7 +110,7 @@ export default function CreateUser() {
                     <div className="space-y-3">
                         <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-2 px-1">
                             <Mail className="h-3.5 w-3.5" />
-                            Email de Connexion
+                            {t('users.create.email')}
                         </label>
                         <input
                             type="email"
@@ -124,7 +126,7 @@ export default function CreateUser() {
                     <div className="space-y-3">
                         <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-2 px-1">
                             <Lock className="h-3.5 w-3.5" />
-                            Mot de Passe
+                            {t('users.create.password')}
                         </label>
                         <input
                             type="password"
@@ -136,13 +138,13 @@ export default function CreateUser() {
                             value={formData.password}
                             onChange={handleChange}
                         />
-                        <p className="text-[9px] font-black uppercase tracking-[0.1em] text-muted-foreground/40 px-1">Minimum 8 caractères requis.</p>
+                        <p className="text-[9px] font-black uppercase tracking-[0.1em] text-muted-foreground/40 px-1">{t('users.create.password_hint')}</p>
                     </div>
 
                     <div className="space-y-3">
                         <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-2 px-1">
                             <Shield className="h-3.5 w-3.5" />
-                            Rôle & Permissions
+                            {t('users.create.role')}
                         </label>
                         <select
                             name="role"
@@ -150,9 +152,9 @@ export default function CreateUser() {
                             value={formData.role}
                             onChange={handleChange}
                         >
-                            <option value="CLIENT">Client (Accès limité à ses biens)</option>
-                            <option value="CHEF_CHANTIER">Chef de Chantier (Accès aux chantiers)</option>
-                            <option value="ADMIN_MADIS">Administrateur MaDis (Tous les accès)</option>
+                            <option value="CLIENT">{t('users.create.role_client')}</option>
+                            <option value="CHEF_CHANTIER">{t('users.create.role_chef')}</option>
+                            <option value="ADMIN_MADIS">{t('users.create.role_admin')}</option>
                         </select>
                     </div>
 
@@ -161,7 +163,7 @@ export default function CreateUser() {
                             to="/dashboard/users"
                             className="h-14 px-10 rounded-2xl solaris-glass border border-slate-200 text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all flex items-center justify-center shadow-sm"
                         >
-                            Annuler
+                            {t('users.create.btn_cancel')}
                         </Link>
                         <button
                             type="submit"
@@ -169,9 +171,9 @@ export default function CreateUser() {
                             className="h-14 px-12 rounded-2xl bg-black text-white text-[10px] font-black uppercase tracking-widest hover:bg-zinc-800 transition-all flex items-center justify-center gap-2 shadow-2xl disabled:opacity-50 whitespace-nowrap"
                         >
                             {loading ? (
-                                <><Loader2 className="h-4 w-4 animate-spin" /> Inscription...</>
+                                <><Loader2 className="h-4 w-4 animate-spin" /> {t('users.create.btn_submitting')}</>
                             ) : (
-                                <><UserPlus className="h-4 w-4" /> Créer le Client</>
+                                <><UserPlus className="h-4 w-4" /> {t('users.create.btn_submit')}</>
                             )}
                         </button>
                     </div>

@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { X, DollarSign, StickyNote, Calendar, Loader2, Plus, Info, Upload } from 'lucide-react';
 import api from '../../lib/axios';
+import { useTranslation } from 'react-i18next';
 
 export default function CashCallModal({ propertyId, onClose, onSuccess }) {
+    const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
     const [form, setForm] = useState({
         amount: '',
@@ -34,7 +36,7 @@ export default function CashCallModal({ propertyId, onClose, onSuccess }) {
             onClose();
         } catch (err) {
             console.error('Error creating cash call', err);
-            alert('Erreur lors de la création de l\'appel de fonds.');
+            alert(t('cash_call.alert_error'));
         } finally {
             setLoading(false);
         }
@@ -48,7 +50,7 @@ export default function CashCallModal({ propertyId, onClose, onSuccess }) {
                         <div className="p-2 rounded-lg bg-emerald-100 text-emerald-600">
                             <Plus className="h-5 w-5" />
                         </div>
-                        <h3 className="text-lg font-bold">Nouvel Appel de Fonds</h3>
+                        <h3 className="text-lg font-bold">{t('cash_call.title')}</h3>
                     </div>
                     <button onClick={onClose} className="p-1 rounded-full hover:bg-muted transition-colors text-muted-foreground">
                         <X className="h-5 w-5" />
@@ -59,13 +61,13 @@ export default function CashCallModal({ propertyId, onClose, onSuccess }) {
                     <div className="p-6 space-y-5">
                         <div className="p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-xl flex gap-3 text-xs text-blue-800 dark:text-blue-300">
                             <Info className="h-4 w-4 shrink-0 mt-0.5" />
-                            <p>L'appel de fonds permet de demander une avance de trésorerie au propriétaire pour couvrir des frais exceptionnels ou constituer une provision.</p>
+                            <p>{t('cash_call.info')}</p>
                         </div>
 
                         <div>
                             <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1.5 block">
                                 <DollarSign className="h-3 w-3 inline mr-1" />
-                                Montant Demandé (€)
+                                {t('cash_call.amount')}
                             </label>
                             <input
                                 required
@@ -81,12 +83,12 @@ export default function CashCallModal({ propertyId, onClose, onSuccess }) {
                         <div>
                             <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1.5 block">
                                 <Plus className="h-3 w-3 inline mr-1" />
-                                Motif (Court)
+                                {t('cash_call.reason')}
                             </label>
                             <input
                                 required
                                 type="text"
-                                placeholder="ex: Provision travaux, Taxe foncière..."
+                                placeholder={t('cash_call.reason_ph')}
                                 value={form.reason}
                                 onChange={e => setForm(p => ({ ...p, reason: e.target.value }))}
                                 className="w-full rounded-xl border bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
@@ -96,7 +98,7 @@ export default function CashCallModal({ propertyId, onClose, onSuccess }) {
                         <div>
                             <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1.5 block">
                                 <Calendar className="h-3 w-3 inline mr-1" />
-                                Date Limite de Paiement
+                                {t('cash_call.due_date')}
                             </label>
                             <input
                                 required
@@ -110,11 +112,11 @@ export default function CashCallModal({ propertyId, onClose, onSuccess }) {
                         <div>
                             <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1.5 block">
                                 <StickyNote className="h-3 w-3 inline mr-1" />
-                                Détails & Instructions
+                                {t('cash_call.details')}
                             </label>
                             <textarea
                                 rows={2}
-                                placeholder="Précisez ici les détails pour le propriétaire..."
+                                placeholder={t('cash_call.details_ph')}
                                 value={form.description}
                                 onChange={e => setForm(p => ({ ...p, description: e.target.value }))}
                                 className="w-full rounded-xl border bg-background px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none transition-all"
@@ -124,7 +126,7 @@ export default function CashCallModal({ propertyId, onClose, onSuccess }) {
                         <div>
                             <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1.5 block">
                                 <Upload className="h-3 w-3 inline mr-1" />
-                                Justificatif de Paiement (Optionnel)
+                                {t('cash_call.proof')}
                             </label>
                             <input
                                 type="file"
@@ -136,7 +138,7 @@ export default function CashCallModal({ propertyId, onClose, onSuccess }) {
 
                     <div className="flex items-center justify-end gap-3 p-6 border-t bg-muted/20">
                         <button type="button" onClick={onClose} className="px-5 py-2 text-sm font-bold uppercase tracking-wider rounded-xl border hover:bg-muted transition-colors">
-                            Annuler
+                            {t('cash_call.btn_cancel')}
                         </button>
                         <button
                             type="submit"
@@ -144,7 +146,7 @@ export default function CashCallModal({ propertyId, onClose, onSuccess }) {
                             className="inline-flex items-center gap-2 px-6 py-2 bg-primary text-white rounded-xl text-sm font-bold uppercase tracking-wider shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all scale-100 active:scale-95 disabled:opacity-50"
                         >
                             {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
-                            Envoyer l'appel
+                            {t('cash_call.btn_send')}
                         </button>
                     </div>
                 </form>

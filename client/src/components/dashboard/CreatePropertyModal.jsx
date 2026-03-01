@@ -1,28 +1,29 @@
 import { useState, useEffect } from 'react';
 import api from '../../lib/axios';
 import { useToast } from '../../context/ToastContext';
+import { useTranslation } from 'react-i18next';
 import { ArrowLeft, Building, Loader2, Save, Ruler, Bed, Hash, MapPin, Image as ImageIcon, X, Tag, ShoppingBag, Briefcase, Euro, Settings, HardHat, Home, Percent, User, Calendar, Wrench, Sofa, Shield, Check, ShieldCheck, Globe } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
 const PROPERTY_CATEGORIES = [
-    { value: 'RESIDENTIEL', label: 'Résidentiel', icon: Building },
-    { value: 'COMMERCIAL', label: 'Commercial', icon: ShoppingBag },
-    { value: 'PROFESSIONNEL', label: 'Professionnel', icon: Briefcase },
+    { value: 'RESIDENTIEL', labelKey: 'property_types_data.residential', icon: Building },
+    { value: 'COMMERCIAL', labelKey: 'property_types_data.commercial', icon: ShoppingBag },
+    { value: 'PROFESSIONNEL', labelKey: 'property_types_data.professional', icon: Briefcase },
 ];
 
 const MAIN_CATEGORIES = [
     {
         value: 'MANAGED',
-        label: 'Gestion de Patrimoine',
+        labelKey: 'property_modal.managed_assets',
+        descKey: 'property_modal.managed_assets_desc',
         icon: ShieldCheck,
-        description: 'Actifs immobiliers sous gestion (Vente ou Location).',
         color: 'blue',
     },
     {
         value: 'CONSTRUCTION',
-        label: 'Suivi de chantier',
+        labelKey: 'property_modal.construction_tracking',
+        descKey: 'property_modal.construction_tracking_desc',
         icon: HardHat,
-        description: 'Bien avec un projet de construction en cours.',
         color: 'rose',
     },
 ];
@@ -30,41 +31,42 @@ const MAIN_CATEGORIES = [
 const MANAGEMENT_TYPES = [
     {
         value: 'MANDAT',
-        label: 'À Vendre (Mandat)',
+        labelKey: 'property_modal.to_sell',
+        descKey: 'property_modal.to_sell_desc',
         icon: Tag,
-        description: 'Mandat MaDis pour la vente du bien.',
     },
     {
         value: 'GESTION',
-        label: 'À Louer (Gestion)',
+        labelKey: 'property_modal.to_rent',
+        descKey: 'property_modal.to_rent_desc',
         icon: Home,
-        description: 'Confier le bien pour la gestion locative.',
     },
 ];
 
 const PROPERTY_TYPES_BY_CATEGORY = {
     RESIDENTIEL: [
-        { value: 'APPARTEMENT', label: 'Appartement' },
-        { value: 'MAISON', label: 'Maison' },
-        { value: 'VILLA', label: 'Villa' },
+        { value: 'APPARTEMENT', labelKey: 'property_types_data.apartment' },
+        { value: 'MAISON', labelKey: 'property_types_data.house' },
+        { value: 'VILLA', labelKey: 'property_types_data.villa' },
     ],
     COMMERCIAL: [
-        { value: 'BOUTIQUE', label: 'Boutique / Commerce' },
-        { value: 'ENTREPOT', label: 'Entrepôt' },
-        { value: 'LOCAL_ACTIVITE', label: "Local d'activité" },
+        { value: 'BOUTIQUE', labelKey: 'property_types_data.boutique' },
+        { value: 'ENTREPOT', labelKey: 'property_types_data.warehouse' },
+        { value: 'LOCAL_ACTIVITE', labelKey: 'property_types_data.activity' },
     ],
     PROFESSIONNEL: [
-        { value: 'BUREAU', label: 'Bureau' },
-        { value: 'LOCAL_ACTIVITE', label: "Local d'activité" },
+        { value: 'BUREAU', labelKey: 'property_types_data.office' },
+        { value: 'LOCAL_ACTIVITE', labelKey: 'property_types_data.activity' },
     ],
     GLOBAL: [
-        { value: 'TERRAIN', label: 'Terrain' },
-        { value: 'IMMEUBLE', label: 'Immeuble' },
-        { value: 'AUTRE', label: 'Autre' },
+        { value: 'TERRAIN', labelKey: 'property_types_data.land' },
+        { value: 'IMMEUBLE', labelKey: 'property_types_data.building' },
+        { value: 'AUTRE', labelKey: 'property_types_data.other' },
     ]
 };
 
 export default function CreatePropertyModal({ isOpen, onClose, onSuccess }) {
+    const { t } = useTranslation();
     const { showToast } = useToast();
     const [loading, setLoading] = useState(false);
     const [users, setUsers] = useState([]);
@@ -206,12 +208,12 @@ export default function CreatePropertyModal({ isOpen, onClose, onSuccess }) {
             await api.post('/properties/', data, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
-            showToast({ message: 'Bien immobilier créé avec succès !', type: 'success' });
+            showToast({ message: t('property_modal.toast_create_success'), type: 'success' });
             if (onSuccess) onSuccess();
             onClose();
         } catch (err) {
             console.error(err);
-            showToast({ message: 'Impossible de créer le bien immobilier.', type: 'error' });
+            showToast({ message: t('property_modal.toast_create_error'), type: 'error' });
         } finally {
             setLoading(false);
         }
@@ -231,8 +233,8 @@ export default function CreatePropertyModal({ isOpen, onClose, onSuccess }) {
                             <Building className="h-5 w-5 text-primary" />
                         </div>
                         <div>
-                            <h2 className="text-xl font-bold tracking-tight">Nouveau <span className="text-primary tracking-tight">Bien Immobilier</span></h2>
-                            <p className="text-xs text-muted-foreground uppercase font-bold tracking-wider mt-0.5">Ajouter au portefeuille</p>
+                            <h2 className="text-xl font-bold tracking-tight">{t('property_modal.title_new')} <span className="text-primary tracking-tight">{t('property_modal.title_highlight')}</span></h2>
+                            <p className="text-xs text-muted-foreground uppercase font-bold tracking-wider mt-0.5">{t('property_modal.subtitle_new')}</p>
                         </div>
                     </div>
                     <button onClick={onClose} className="p-2 hover:bg-muted rounded-full transition-colors">
@@ -246,7 +248,7 @@ export default function CreatePropertyModal({ isOpen, onClose, onSuccess }) {
                         <div className="space-y-4">
                             <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
                                 <Settings className="h-4 w-4 text-primary" />
-                                Nature du Projet
+                                {t('property_modal.label_project_nature')}
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {MAIN_CATEGORIES.map(cat => {
@@ -266,8 +268,8 @@ export default function CreatePropertyModal({ isOpen, onClose, onSuccess }) {
                                                 <cat.icon className="h-6 w-6" />
                                             </div>
                                             <div>
-                                                <div className="text-sm font-bold">{cat.label}</div>
-                                                <div className="text-[10px] text-muted-foreground">{cat.description}</div>
+                                                <div className="text-sm font-bold">{t(cat.labelKey)}</div>
+                                                <div className="text-[10px] text-muted-foreground">{t(cat.descKey)}</div>
                                             </div>
                                         </button>
                                     );
@@ -289,7 +291,7 @@ export default function CreatePropertyModal({ isOpen, onClose, onSuccess }) {
                                                 )}
                                             >
                                                 <mt.icon className="h-4 w-4 text-primary" />
-                                                <span className="text-xs font-bold">{mt.label}</span>
+                                                <span className="text-xs font-bold">{t(mt.labelKey)}</span>
                                             </button>
                                         );
                                     })}
@@ -302,42 +304,42 @@ export default function CreatePropertyModal({ isOpen, onClose, onSuccess }) {
                             <div className="space-y-6">
                                 <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
                                     <User className="h-4 w-4 text-primary" />
-                                    Propriétaire & Identification
+                                    {t('property_modal.label_characteristics')} {/* Using existing identifier */}
                                 </h3>
                                 <div className="grid gap-2">
-                                    <label className="text-xs font-bold text-muted-foreground uppercase">Propriétaire *</label>
+                                    <label className="text-xs font-bold text-muted-foreground uppercase">{t('property_modal.label_owner')}</label>
                                     <select name="owner" required className={inputClasses} value={formData.owner} onChange={handleChange}>
-                                        <option value="">-- Sélectionner un client --</option>
+                                        <option value="">{t('property_modal.select_owner')}</option>
                                         {users.map(u => (
                                             <option key={u.id} value={u.id}>{u.first_name} {u.last_name} ({u.email})</option>
                                         ))}
                                     </select>
                                 </div>
                                 <div className="grid gap-2">
-                                    <label className="text-xs font-bold text-muted-foreground uppercase">Nom du bien *</label>
-                                    <input type="text" name="name" required className={inputClasses} placeholder="Ex: Résidence Les Lilas" value={formData.name} onChange={handleChange} />
+                                    <label className="text-xs font-bold text-muted-foreground uppercase">{t('property_modal.label_name')}</label>
+                                    <input type="text" name="name" required className={inputClasses} placeholder={t('property_modal.ph_name')} value={formData.name} onChange={handleChange} />
                                 </div>
                                 <div className="grid gap-2">
-                                    <label className="text-xs font-bold text-muted-foreground uppercase">Adresse *</label>
+                                    <label className="text-xs font-bold text-muted-foreground uppercase">{t('property_modal.label_address')}</label>
                                     <input type="text" name="address" required className={inputClasses} value={formData.address} onChange={handleChange} />
                                 </div>
                                 <div className="grid grid-cols-2 gap-3">
                                     <div className="grid gap-2">
-                                        <label className="text-xs font-bold text-muted-foreground uppercase">Ville *</label>
+                                        <label className="text-xs font-bold text-muted-foreground uppercase">{t('property_modal.label_city')}</label>
                                         <input type="text" name="city" required className={inputClasses} value={formData.city} onChange={handleChange} />
                                     </div>
                                     <div className="grid gap-2">
-                                        <label className="text-xs font-bold text-muted-foreground uppercase">Code Postal</label>
+                                        <label className="text-xs font-bold text-muted-foreground uppercase">{t('property_modal.label_postal')}</label>
                                         <input type="text" name="postal_code" className={inputClasses} value={formData.postal_code} onChange={handleChange} />
                                     </div>
                                 </div>
                                 <div className="grid gap-2">
-                                    <label className="text-xs font-bold text-muted-foreground uppercase">Devise d'origine</label>
+                                    <label className="text-xs font-bold text-muted-foreground uppercase">{t('property_modal.label_currency')}</label>
                                     <select name="devise_origine" className={inputClasses} value={formData.devise_origine} onChange={handleChange}>
-                                        <option value="EUR">Euro (€)</option>
-                                        <option value="USD">Dollar ($)</option>
-                                        <option value="AED">Dirham (AED)</option>
-                                        <option value="XOF">Franc CFA (XOF)</option>
+                                        <option value="EUR">{t('property_modal.curr_eur')}</option>
+                                        <option value="USD">{t('property_modal.curr_usd')}</option>
+                                        <option value="AED">{t('property_modal.curr_aed')}</option>
+                                        <option value="XOF">{t('property_modal.curr_xof')}</option>
                                     </select>
                                 </div>
                             </div>
@@ -346,10 +348,10 @@ export default function CreatePropertyModal({ isOpen, onClose, onSuccess }) {
                             <div className="space-y-6">
                                 <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
                                     <Ruler className="h-4 w-4 text-primary" />
-                                    Caractéristiques & État
+                                    {t('property_modal.label_characteristics')}
                                 </h3>
                                 <div className="grid gap-2">
-                                    <label className="text-xs font-bold text-muted-foreground uppercase">Catégorie</label>
+                                    <label className="text-xs font-bold text-muted-foreground uppercase">{t('property_modal.label_category')}</label>
                                     <div className="grid grid-cols-3 gap-2">
                                         {PROPERTY_CATEGORIES.map(cat => (
                                             <button
@@ -361,41 +363,41 @@ export default function CreatePropertyModal({ isOpen, onClose, onSuccess }) {
                                                     formData.category === cat.value ? "border-primary bg-primary/5 text-primary" : "border-muted"
                                                 )}
                                             >
-                                                <cat.icon className="h-4 w-4" /> {cat.label}
+                                                <cat.icon className="h-4 w-4" /> {t(cat.labelKey)}
                                             </button>
                                         ))}
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="grid gap-2">
-                                        <label className="text-xs font-bold text-muted-foreground uppercase">Type de bien</label>
+                                        <label className="text-xs font-bold text-muted-foreground uppercase">{t('property_modal.label_type')}</label>
                                         <select name="property_type" className={inputClasses} value={formData.property_type} onChange={handleChange}>
-                                            {(PROPERTY_TYPES_BY_CATEGORY[formData.category] || []).map(t => (
-                                                <option key={t.value} value={t.value}>{t.label}</option>
+                                            {(PROPERTY_TYPES_BY_CATEGORY[formData.category] || []).map(tOpt => (
+                                                <option key={tOpt.value} value={tOpt.value}>{t(tOpt.labelKey)}</option>
                                             ))}
-                                            {PROPERTY_TYPES_BY_CATEGORY.GLOBAL.map(t => (
-                                                <option key={t.value} value={t.value}>{t.label}</option>
+                                            {PROPERTY_TYPES_BY_CATEGORY.GLOBAL.map(tOpt => (
+                                                <option key={tOpt.value} value={tOpt.value}>{t(tOpt.labelKey)}</option>
                                             ))}
                                         </select>
                                     </div>
                                     <div className="grid gap-2">
-                                        <label className="text-xs font-bold text-muted-foreground uppercase">Surface (m²)</label>
+                                        <label className="text-xs font-bold text-muted-foreground uppercase">{t('property_modal.label_surface')}</label>
                                         <input type="number" name="surface" className={inputClasses} value={formData.surface} onChange={handleChange} />
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="grid gap-2">
-                                        <label className="text-xs font-bold text-muted-foreground uppercase">Pièces</label>
+                                        <label className="text-xs font-bold text-muted-foreground uppercase">{t('property_modal.label_rooms')}</label>
                                         <input type="number" name="room_count" className={inputClasses} value={formData.room_count} onChange={handleChange} />
                                     </div>
                                     <div className="grid gap-2">
-                                        <label className="text-xs font-bold text-muted-foreground uppercase">Chambres</label>
+                                        <label className="text-xs font-bold text-muted-foreground uppercase">{t('property_modal.label_bedrooms')}</label>
                                         <input type="number" name="bedroom_count" className={inputClasses} value={formData.bedroom_count} onChange={handleChange} />
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-3 p-4 border rounded-xl bg-muted/20">
                                     <ShieldCheck className="h-5 w-5 text-emerald-500" />
-                                    <div className="flex-1 text-xs font-medium">Vérification Foncière ?</div>
+                                    <div className="flex-1 text-xs font-medium">{t('property_modal.label_verification')}</div>
                                     <input
                                         type="checkbox"
                                         checked={formData.is_verified_fonciere}
@@ -411,55 +413,55 @@ export default function CreatePropertyModal({ isOpen, onClose, onSuccess }) {
                             <div className="space-y-6">
                                 <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
                                     <Euro className="h-4 w-4 text-primary" />
-                                    Données Financières
+                                    {t('property_modal.label_financial')}
                                 </h3>
                                 {formData.transaction_nature === 'VENTE' ? (
                                     <div className="grid gap-4">
                                         <div className="grid gap-2">
-                                            <label className="text-xs font-bold text-muted-foreground uppercase">Prix de vente (€) *</label>
+                                            <label className="text-xs font-bold text-muted-foreground uppercase">{t('property_modal.label_sale_price')}</label>
                                             <input type="number" name="prix_vente" required className={inputClasses} value={formData.prix_vente} onChange={handleChange} />
                                         </div>
                                         <label className="flex items-center gap-2 text-xs font-medium cursor-pointer">
                                             <input type="checkbox" checked={formData.negociable} onChange={e => setFormData(p => ({ ...p, negociable: e.target.checked }))} className="accent-primary h-4 w-4" />
-                                            Prix négociable
+                                            {t('property_modal.label_negotiable')}
                                         </label>
                                     </div>
                                 ) : (
                                     <div className="grid grid-cols-2 gap-4">
                                         <div className="grid gap-2">
-                                            <label className="text-xs font-bold text-muted-foreground uppercase">Loyer (€) *</label>
+                                            <label className="text-xs font-bold text-muted-foreground uppercase">{t('property_modal.label_rent')}</label>
                                             <input type="number" name="loyer_mensuel" required className={inputClasses} value={formData.loyer_mensuel} onChange={handleChange} />
                                         </div>
                                         <div className="grid gap-2">
-                                            <label className="text-xs font-bold text-muted-foreground uppercase">Nuitée (€)</label>
+                                            <label className="text-xs font-bold text-muted-foreground uppercase">{t('property_modal.label_night')}</label>
                                             <input type="number" name="prix_nuitee" className={inputClasses} value={formData.prix_nuitee} onChange={handleChange} />
                                         </div>
                                     </div>
                                 )}
                                 <div className="grid gap-2">
-                                    <label className="text-xs font-bold text-muted-foreground uppercase">Type de Commission</label>
+                                    <label className="text-xs font-bold text-muted-foreground uppercase">{t('property_modal.label_commission_type')}</label>
                                     <div className="grid grid-cols-2 gap-2">
-                                        <button type="button" onClick={() => setFormData(p => ({ ...p, commission_type: 'POURCENTAGE' }))} className={cn("p-2 rounded-md border text-xs font-bold", formData.commission_type === 'POURCENTAGE' ? "bg-primary text-white" : "bg-muted")}>%</button>
-                                        <button type="button" onClick={() => setFormData(p => ({ ...p, commission_type: 'FIXE' }))} className={cn("p-2 rounded-md border text-xs font-bold", formData.commission_type === 'FIXE' ? "bg-primary text-white" : "bg-muted")}>FIXE</button>
+                                        <button type="button" onClick={() => setFormData(p => ({ ...p, commission_type: 'POURCENTAGE' }))} className={cn("p-2 rounded-md border text-xs font-bold", formData.commission_type === 'POURCENTAGE' ? "bg-primary text-white" : "bg-muted")}>{t('property_modal.btn_percent')}</button>
+                                        <button type="button" onClick={() => setFormData(p => ({ ...p, commission_type: 'FIXE' }))} className={cn("p-2 rounded-md border text-xs font-bold", formData.commission_type === 'FIXE' ? "bg-primary text-white" : "bg-muted")}>{t('property_modal.btn_fixed')}</button>
                                     </div>
                                 </div>
                                 {formData.commission_type === 'POURCENTAGE' ? (
-                                    <input type="number" name="commission_rate" placeholder="Taux (%)" className={inputClasses} value={formData.commission_rate} onChange={handleChange} />
+                                    <input type="number" name="commission_rate" placeholder={t('property_modal.ph_rate')} className={inputClasses} value={formData.commission_rate} onChange={handleChange} />
                                 ) : (
-                                    <input type="number" name="commission_fixe" placeholder="Montant (€)" className={inputClasses} value={formData.commission_fixe} onChange={handleChange} />
+                                    <input type="number" name="commission_fixe" placeholder={t('property_modal.ph_amount')} className={inputClasses} value={formData.commission_fixe} onChange={handleChange} />
                                 )}
                             </div>
 
                             <div className="space-y-6">
                                 <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
                                     <ImageIcon className="h-4 w-4 text-primary" />
-                                    Média & Photos
+                                    {t('property_modal.label_media')}
                                 </h3>
                                 <div className="flex items-center justify-center border-2 border-dashed rounded-xl h-24 bg-muted/20 relative cursor-pointer hover:bg-muted/40 transition-colors">
                                     <input type="file" multiple accept="image/*" className="absolute inset-0 opacity-0 cursor-pointer" onChange={handleImageChange} />
                                     <div className="text-center">
                                         <ImageIcon className="h-6 w-6 mx-auto text-muted-foreground mb-1" />
-                                        <span className="text-[10px] font-bold text-muted-foreground uppercase">Ajouter des photos</span>
+                                        <span className="text-[10px] font-bold text-muted-foreground uppercase">{t('property_modal.btn_add_photos')}</span>
                                     </div>
                                 </div>
                                 {previews.length > 0 && (
@@ -476,7 +478,7 @@ export default function CreatePropertyModal({ isOpen, onClose, onSuccess }) {
                         </div>
 
                         <div className="grid gap-2">
-                            <label className="text-xs font-bold text-muted-foreground uppercase">Description</label>
+                            <label className="text-xs font-bold text-muted-foreground uppercase">{t('property_modal.label_desc')}</label>
                             <textarea name="description" rows="2" className={`${inputClasses} h-auto py-2`} value={formData.description} onChange={handleChange} />
                         </div>
                     </form>
@@ -485,10 +487,10 @@ export default function CreatePropertyModal({ isOpen, onClose, onSuccess }) {
                 {/* Footer */}
                 <div className="flex justify-end gap-3 p-6 border-t bg-muted/30 shrink-0">
                     <button type="button" onClick={onClose} className="inline-flex items-center justify-center rounded-md text-sm font-medium border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-10 px-6">
-                        Annuler
+                        {t('property_modal.btn_cancel')}
                     </button>
                     <button form="create-property-form" type="submit" disabled={loading} className="inline-flex items-center justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground shadow hover:bg-primary/90 h-10 px-8 disabled:opacity-50">
-                        {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Enregistrement...</> : <><Save className="mr-2 h-4 w-4" /> Créer le bien</>}
+                        {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('property_modal.btn_saving')}</> : <><Save className="mr-2 h-4 w-4" /> {t('property_modal.btn_create')}</>}
                     </button>
                 </div>
             </div>

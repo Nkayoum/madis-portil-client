@@ -12,7 +12,8 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { format } from 'date-fns';
-import { fr } from 'date-fns/locale';
+import { fr, enUS } from 'date-fns/locale';
+import { useTranslation } from 'react-i18next';
 import { cn } from '../../lib/utils';
 import {
     PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend
@@ -25,6 +26,8 @@ import EditTransactionModal from '../../components/dashboard/EditTransactionModa
 export default function ConstructionDetail() {
     const { id } = useParams();
     const { user } = useAuth();
+    const { t, i18n } = useTranslation();
+    const dateLocale = i18n.language === 'fr' ? fr : enUS;
     const { showToast } = useToast();
     const navigate = useNavigate();
     const location = useLocation();
@@ -76,7 +79,7 @@ export default function ConstructionDetail() {
             setDocuments(docsRes.data.results || docsRes.data || []);
             setTransactions(transRes.data.results || transRes.data || []);
         } catch (err) {
-            setError('Impossible de charger le chantier.');
+            setError(t('construction.detail.load_error'));
             console.error(err);
         } finally {
             setLoading(false);
@@ -85,11 +88,11 @@ export default function ConstructionDetail() {
 
     const getStatusConfig = (status) => {
         switch (status) {
-            case 'EN_COURS': return { color: 'text-primary', bg: 'bg-primary/10', label: 'En cours', icon: Clock };
-            case 'TERMINE': return { color: 'text-green-600 dark:text-green-400', bg: 'bg-green-100 dark:bg-green-900/20', label: 'Terminé', icon: CheckCircle2 };
-            case 'SUSPENDU': return { color: 'text-yellow-600 dark:text-yellow-400', bg: 'bg-yellow-100 dark:bg-yellow-900/20', label: 'Suspendu', icon: Pause };
-            case 'PREPARATION': return { color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-100 dark:bg-blue-900/20', label: 'Préparation', icon: HardHat };
-            case 'ANNULE': return { color: 'text-red-600 dark:text-red-400', bg: 'bg-red-100 dark:bg-red-900/20', label: 'Annulé', icon: Ban };
+            case 'EN_COURS': return { color: 'text-primary', bg: 'bg-primary/10', label: t('construction.status.EN_COURS'), icon: Clock };
+            case 'TERMINE': return { color: 'text-green-600 dark:text-green-400', bg: 'bg-green-100 dark:bg-green-900/20', label: t('construction.status.TERMINE'), icon: CheckCircle2 };
+            case 'SUSPENDU': return { color: 'text-yellow-600 dark:text-yellow-400', bg: 'bg-yellow-100 dark:bg-yellow-900/20', label: t('construction.status.SUSPENDU'), icon: Pause };
+            case 'PREPARATION': return { color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-100 dark:bg-blue-900/20', label: t('construction.status.PREPARATION'), icon: HardHat };
+            case 'ANNULE': return { color: 'text-red-600 dark:text-red-400', bg: 'bg-red-100 dark:bg-red-900/20', label: t('construction.status.ANNULE'), icon: Ban };
             default: return { color: 'text-muted-foreground', bg: 'bg-muted', label: status, icon: HardHat };
         }
     };
@@ -110,7 +113,7 @@ export default function ConstructionDetail() {
         return (
             <div className="flex flex-col items-center justify-center p-32 gap-6 animate-fade-in">
                 <Loader2 className="h-12 w-12 animate-spin text-black opacity-10" />
-                <p className="text-[10px] font-black uppercase tracking-widest opacity-30">Chargement de la console de supervision...</p>
+                <p className="text-[10px] font-black uppercase tracking-widest opacity-30">{t('construction.detail.loading_console')}</p>
             </div>
         );
     }
@@ -120,11 +123,11 @@ export default function ConstructionDetail() {
             <div className="max-w-4xl mx-auto py-12 px-6 animate-fade-in">
                 <Link to="/dashboard/construction" className="flex items-center text-[9px] font-bold uppercase tracking-widest text-muted-foreground hover:text-black transition-all mb-6 group">
                     <ArrowLeft className="mr-2 h-3.5 w-3.5 group-hover:-translate-x-1 transition-transform" />
-                    Retour aux chantiers
+                    {t('construction.detail.back_to_list')}
                 </Link>
                 <div className="solaris-glass rounded-[1.5rem] p-8 border-none shadow-lg text-red-600 flex items-center gap-3">
                     <AlertCircle className="h-5 w-5" />
-                    <span className="font-bold text-[11px] uppercase tracking-widest">{error || "Chantier non trouvé."}</span>
+                    <span className="font-bold text-[11px] uppercase tracking-widest">{error || t('construction.detail.not_found')}</span>
                 </div>
             </div>
         );
@@ -136,7 +139,7 @@ export default function ConstructionDetail() {
         <div className="space-y-10 animate-fade-in pb-8 md:pb-16">
             <Link to="/dashboard/construction" className="flex items-center text-[9px] font-bold uppercase tracking-widest text-muted-foreground hover:text-black transition-all group w-fit">
                 <ArrowLeft className="mr-2 h-3.5 w-3.5 group-hover:-translate-x-1 transition-transform" />
-                Retour aux chantiers
+                {t('construction.detail.back_to_list')}
             </Link>
 
             {/* Header Solaris Style */}
@@ -149,7 +152,7 @@ export default function ConstructionDetail() {
                         </div>
                         <div>
                             <div className="flex flex-col sm:flex-row sm:items-center gap-2 md:gap-3 mb-1">
-                                <h1 className="text-lg sm:text-xl md:text-2xl font-bold tracking-tight uppercase leading-tight">Chantier: {site.name}</h1>
+                                <h1 className="text-lg sm:text-xl md:text-2xl font-bold tracking-tight uppercase leading-tight">{t('construction.detail.site_title')} {site.name}</h1>
                                 <span className={cn(
                                     "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[8px] font-bold uppercase tracking-widest shadow-sm whitespace-nowrap w-fit",
                                     status.bg, status.color
@@ -169,7 +172,7 @@ export default function ConstructionDetail() {
                                 <div className="mt-3 p-3.5 rounded-xl bg-amber-50 dark:bg-amber-900/10 border border-amber-200/50 dark:border-amber-800/50 text-amber-800 dark:text-amber-300 animate-in slide-in-from-top-2 duration-500">
                                     <div className="flex items-center gap-2 mb-1">
                                         <AlertCircle className="h-3 w-3 opacity-60" />
-                                        <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest">Motif de suspension</span>
+                                        <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest">{t('construction.detail.suspension_reason')}</span>
                                     </div>
                                     <p className="text-[10px] md:text-[11px] font-medium leading-relaxed">{site.suspension_reason}</p>
                                 </div>
@@ -180,7 +183,7 @@ export default function ConstructionDetail() {
                     <div className="flex flex-col xl:items-end gap-3 xl:border-l xl:pl-8 border-black/5 dark:border-white/5">
                         <div className="flex flex-col items-start lg:items-end w-full">
                             <span className="text-[8px] font-bold uppercase tracking-widest opacity-30 mb-1 text-left lg:text-right">
-                                Progression
+                                {t('construction.detail.progress')}
                             </span>
                             <div className="flex items-center gap-3 w-full lg:w-auto">
                                 <div className="flex-1 lg:w-40 h-1.5 bg-black/[0.03] dark:bg-white/10 rounded-full overflow-hidden p-[1px] border border-black/5 dark:border-white/5 shadow-inner">
@@ -200,7 +203,7 @@ export default function ConstructionDetail() {
                                         onClick={() => setIsSuspensionModalOpen(true)}
                                         className="inline-flex items-center justify-center rounded-lg md:rounded-xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 hover:bg-amber-200 dark:hover:bg-amber-900/50 h-8 md:h-9 px-3 md:px-4 shadow-sm whitespace-nowrap"
                                     >
-                                        <Pause className="mr-1.5 h-3 w-3" /> Suspendre
+                                        <Pause className="mr-1.5 h-3 w-3" /> {t('construction.detail.btn_suspend')}
                                     </button>
                                 )}
                                 {(site.status === 'SUSPENDU' || site.status === 'PREPARATION') && (
@@ -211,7 +214,7 @@ export default function ConstructionDetail() {
                                         }}
                                         className="inline-flex items-center justify-center rounded-lg md:rounded-xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 h-8 md:h-9 px-3 md:px-4 shadow-sm whitespace-nowrap"
                                     >
-                                        <Clock className="mr-1.5 h-3 w-3" /> Relancer
+                                        <Clock className="mr-1.5 h-3 w-3" /> {t('construction.detail.btn_resume')}
                                     </button>
                                 )}
 
@@ -221,19 +224,19 @@ export default function ConstructionDetail() {
                                             to={`/dashboard/construction/${id}/edit`}
                                             className="inline-flex items-center justify-center rounded-lg md:rounded-xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all bg-white dark:bg-white/10 border border-black/5 dark:border-white/10 shadow-sm hover:bg-black/5 dark:hover:bg-white/20 h-8 md:h-9 px-3 md:px-4 dark:text-white whitespace-nowrap"
                                         >
-                                            <Edit className="mr-1.5 h-3 w-3" /> Modifier
+                                            <Edit className="mr-1.5 h-3 w-3" /> {t('construction.detail.btn_edit')}
                                         </Link>
                                         <button
                                             onClick={async () => {
-                                                if (window.confirm('ATTENTION: Voulez-vous vraiment SUPPRIMER définitivement ce chantier et toutes ses données associées ?')) {
+                                                if (window.confirm(t('construction.detail.confirm_delete'))) {
                                                     await api.delete(`/construction/sites/${id}/`);
-                                                    showToast({ message: 'Chantier supprimé.', type: 'success' });
+                                                    showToast({ message: t('construction.detail.msg_delete_success'), type: 'success' });
                                                     navigate('/dashboard/construction');
                                                 }
                                             }}
                                             className="inline-flex items-center justify-center rounded-lg md:rounded-xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all bg-red-500 text-white hover:bg-red-600 h-8 md:h-9 px-3 md:px-4 shadow-md whitespace-nowrap"
                                         >
-                                            <Trash2 className="mr-1.5 h-3 w-3" /> Supprimer
+                                            <Trash2 className="mr-1.5 h-3 w-3" /> {t('construction.detail.btn_delete')}
                                         </button>
                                     </>
                                 )}
@@ -247,11 +250,11 @@ export default function ConstructionDetail() {
             <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }} className="mb-6 md:mb-8 [&::-webkit-scrollbar]:hidden">
                 <div style={{ width: 'max-content' }} className="solaris-glass rounded-xl p-1.5 flex gap-2 md:gap-3 shadow-md px-2 md:px-3 whitespace-nowrap border-none">
                     {[
-                        { id: 'overview', label: "Vue d'ensemble", icon: Layout },
-                        { id: 'journal', label: "Journal", icon: FileText },
-                        { id: 'photos', label: "Photos", icon: Image },
-                        { id: 'documents', label: "Documents", icon: File },
-                        { id: 'finance', label: "Finance", icon: DollarSign }
+                        { id: 'overview', label: t('construction.detail.tabs.overview'), icon: Layout },
+                        { id: 'journal', label: t('construction.detail.tabs.journal'), icon: FileText },
+                        { id: 'photos', label: t('construction.detail.tabs.photos'), icon: Image },
+                        { id: 'documents', label: t('construction.detail.tabs.documents'), icon: File },
+                        { id: 'finance', label: t('construction.detail.tabs.finance'), icon: DollarSign }
                     ].map((tab) => (
                         <button
                             key={tab.id}
@@ -279,10 +282,10 @@ export default function ConstructionDetail() {
                             <div className="solaris-glass rounded-[1.2rem] p-5 md:p-6 border-none shadow-sm">
                                 <h3 className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-30 mb-3 flex items-center gap-2">
                                     <FileText className="h-3.5 w-3.5 opacity-40" />
-                                    Description Technique
+                                    {t('construction.detail.overview.tech_desc')}
                                 </h3>
                                 <p className="text-[11px] font-medium text-muted-foreground whitespace-pre-wrap leading-relaxed opacity-70">
-                                    {site.description || "Aucune description fournie pour ce chantier."}
+                                    {site.description || t('construction.detail.overview.no_desc')}
                                 </p>
                             </div>
 
@@ -291,7 +294,7 @@ export default function ConstructionDetail() {
                                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5 md:mb-6">
                                     <h3 className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-30 flex items-center gap-2">
                                         <CheckCircle2 className="h-3.5 w-3.5 opacity-40" />
-                                        Jalons
+                                        {t('construction.detail.overview.milestones')}
                                     </h3>
 
                                     {(user?.role === 'ADMIN_MADIS' || user?.role === 'CHEF_CHANTIER') && site.status !== 'SUSPENDU' && (
@@ -300,7 +303,7 @@ export default function ConstructionDetail() {
                                             className="inline-flex items-center justify-center rounded-xl text-[9px] font-bold uppercase tracking-widest transition-all bg-black text-white hover:bg-zinc-800 h-8 px-4 shadow-md w-fit"
                                         >
                                             <Edit className="mr-1.5 h-3 w-3" />
-                                            Configurer
+                                            {t('construction.detail.overview.btn_configure')}
                                         </Link>
                                     )}
                                 </div>
@@ -347,18 +350,18 @@ export default function ConstructionDetail() {
                                                             </p>
                                                             <div className="flex items-center gap-2 shrink-0">
                                                                 {isOverdue && !milestone.completed && (
-                                                                    <span className="text-[7px] font-bold text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-100 uppercase tracking-widest">RETARD</span>
+                                                                    <span className="text-[7px] font-bold text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-100 uppercase tracking-widest">{t('construction.detail.overview.overdue')}</span>
                                                                 )}
                                                             </div>
                                                         </div>
                                                         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
                                                             <div className="flex items-center gap-1.5 text-[8px] font-bold text-muted-foreground opacity-40">
                                                                 <Calendar className="h-2.5 w-2.5" />
-                                                                {milestone.end_date ? format(new Date(milestone.end_date), 'd MMM yy', { locale: fr }).toUpperCase() : 'NON DÉT.'}
+                                                                {milestone.end_date ? format(new Date(milestone.end_date), 'd MMM yy', { locale: dateLocale }).toUpperCase() : t('construction.detail.overview.not_determined')}
                                                             </div>
                                                             <div className="flex items-center gap-1.5 text-[8px] font-bold text-muted-foreground opacity-40">
                                                                 <UserIcon className="h-2.5 w-2.5" />
-                                                                {milestone.responsible || 'Non assigné'}
+                                                                {milestone.responsible || t('construction.detail.overview.unassigned')}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -367,7 +370,7 @@ export default function ConstructionDetail() {
                                         })
                                     ) : (
                                         <div className="p-8 md:p-12 text-center border-2 border-dashed border-black/5 dark:border-white/5 rounded-2xl">
-                                            <p className="text-[10px] font-bold uppercase tracking-widest opacity-20">Aucun jalon défini</p>
+                                            <p className="text-[10px] font-bold uppercase tracking-widest opacity-20">{t('construction.detail.overview.no_milestone')}</p>
                                         </div>
                                     )}
                                 </div>
@@ -379,18 +382,18 @@ export default function ConstructionDetail() {
                             <div className="solaris-glass rounded-[1.2rem] p-5 md:p-6 border-none shadow-sm">
                                 <h3 className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-30 mb-5 flex items-center gap-2">
                                     <DollarSign className="h-3.5 w-3.5 opacity-40" />
-                                    Budget
+                                    {t('construction.detail.overview.budget')}
                                 </h3>
                                 <div className="space-y-4 md:space-y-5">
                                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-2">
                                         <div>
-                                            <p className="text-[7px] md:text-[8px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Dépenses réelles</p>
+                                            <p className="text-[7px] md:text-[8px] font-bold uppercase tracking-widest text-muted-foreground mb-1">{t('construction.detail.overview.real_expenses')}</p>
                                             <p className="text-base md:text-xl font-bold tracking-tight">
                                                 {formatCurrency(site.budget_spent || 0)}
                                             </p>
                                         </div>
                                         <div className="sm:text-right">
-                                            <p className="text-[7px] md:text-[8px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Cible</p>
+                                            <p className="text-[7px] md:text-[8px] font-bold uppercase tracking-widest text-muted-foreground mb-1">{t('construction.detail.overview.target')}</p>
                                             <p className="font-bold text-[9px] md:text-[10px] opacity-40">
                                                 {formatCurrency(site.budget || 0)}
                                             </p>
@@ -418,7 +421,7 @@ export default function ConstructionDetail() {
                                                 to={`/dashboard/finance/transactions/new?site=${id}`}
                                                 className="inline-flex items-center justify-center gap-2 h-9 px-4 rounded-xl bg-black text-white text-[8px] md:text-[9px] font-bold uppercase tracking-widest shadow-md hover:bg-zinc-800 transition-all w-full lg:w-auto"
                                             >
-                                                <Plus className="h-3 w-3" /> Nouvelle dépense
+                                                <Plus className="h-3 w-3" /> {t('construction.detail.overview.btn_new_expense')}
                                             </Link>
                                         </div>
                                     )}
@@ -428,29 +431,29 @@ export default function ConstructionDetail() {
                             <div className="solaris-glass rounded-[1.2rem] p-5 md:p-6 border-none shadow-sm">
                                 <h3 className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-30 mb-5 flex items-center gap-2">
                                     <MapIcon className="h-3.5 w-3.5 opacity-40" />
-                                    Logistique
+                                    {t('construction.detail.overview.logistics')}
                                 </h3>
                                 <dl className="space-y-3.5">
                                     <div className="flex justify-between items-center pb-2.5 border-b border-black/[0.03]">
-                                        <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-40">Chef de chantier</dt>
+                                        <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-40">{t('construction.detail.overview.site_manager')}</dt>
                                         <dd className="text-[10px] font-bold uppercase tracking-tight text-black">
-                                            {site.chef_de_chantier_name || 'Non assigné'}
+                                            {site.chef_de_chantier_name || t('construction.detail.overview.unassigned')}
                                         </dd>
                                     </div>
                                     <div className="flex justify-between items-center pb-2.5 border-b border-black/[0.03]">
-                                        <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-40">Début</dt>
+                                        <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-40">{t('construction.detail.overview.start')}</dt>
                                         <dd className="text-[10px] font-bold font-mono opacity-60 uppercase">
-                                            {site.start_date ? format(new Date(site.start_date), 'd MMM yy', { locale: fr }) : '-'}
+                                            {site.start_date ? format(new Date(site.start_date), 'd MMM yy', { locale: dateLocale }) : '-'}
                                         </dd>
                                     </div>
                                     <div className="flex justify-between items-center pb-2.5 border-b border-black/[0.03]">
-                                        <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-40">Fin prévue</dt>
+                                        <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-40">{t('construction.detail.overview.expected_end')}</dt>
                                         <dd className="text-[10px] font-bold font-mono text-amber-600 uppercase">
-                                            {site.end_date ? format(new Date(site.end_date), 'd MMM yy', { locale: fr }) : '-'}
+                                            {site.end_date ? format(new Date(site.end_date), 'd MMM yy', { locale: dateLocale }) : '-'}
                                         </dd>
                                     </div>
                                     <div className="flex justify-between items-center">
-                                        <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-40">CP / Ville</dt>
+                                        <dt className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-40">{t('construction.detail.overview.location')}</dt>
                                         <dd className="text-[10px] font-bold uppercase tracking-tight text-right opacity-60">{site.postal_code || '-'} / {site.city || '-'}</dd>
                                     </div>
                                 </dl>
@@ -468,7 +471,7 @@ export default function ConstructionDetail() {
                                     className="inline-flex items-center justify-center rounded-xl text-[9px] font-black uppercase tracking-widest transition-all bg-primary text-white hover:shadow-lg hover:scale-[1.01] active:scale-[0.99] h-9 px-6 shadow-md shadow-primary/20 dark:shadow-[0_0_15px_rgba(236,72,153,0.2)]"
                                 >
                                     <Plus className="mr-2 h-4 w-4" />
-                                    Nouveau Rapport
+                                    {t('construction.detail.journal.btn_new_report')}
                                 </button>
                             </div>
                         )}
@@ -483,7 +486,7 @@ export default function ConstructionDetail() {
                                                 <div className="flex items-center gap-4 md:gap-6">
                                                     <div className="flex flex-col">
                                                         <span className="text-[11px] md:text-[12px] font-black uppercase tracking-tighter">
-                                                            {format(new Date(entry.date), 'EEEE d MMMM yyyy', { locale: fr })}
+                                                            {format(new Date(entry.date), 'EEEE d MMMM yyyy', { locale: dateLocale })}
                                                         </span>
                                                         <span className="text-[9px] md:text-[10px] font-bold text-muted-foreground uppercase tracking-widest opacity-60 flex items-center gap-2 mt-1">
                                                             <UserIcon className="h-3 w-3" /> {entry.author_name}
@@ -497,7 +500,7 @@ export default function ConstructionDetail() {
                                                     </div>
                                                     <div className="flex items-center gap-2 px-2.5 py-1 md:py-1.5 rounded-xl bg-black/5 dark:bg-white/5 text-[9px] md:text-[10px] font-black uppercase tracking-widest">
                                                         <Users className="h-3 md:h-3.5 w-3 md:w-3.5 text-black/40 dark:text-white/40" />
-                                                        {entry.workers_count} ouvriers
+                                                        {entry.workers_count} {t('construction.detail.journal.workers')}
                                                     </div>
                                                     {(user?.role === 'ADMIN_MADIS' || user?.role === 'CHEF_CHANTIER') && site.status !== 'SUSPENDU' && (
                                                         <button
@@ -522,7 +525,7 @@ export default function ConstructionDetail() {
                                                             <div key={photo.id} className="aspect-square rounded-xl md:rounded-2xl overflow-hidden border-none bg-black/5 relative group cursor-pointer shadow-sm hover:shadow-md transition-all">
                                                                 <img
                                                                     src={photo.image}
-                                                                    alt={photo.caption || "Photo de chantier"}
+                                                                    alt={photo.caption || t('construction.detail.journal.photo_alt')}
                                                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                                                     onClick={() => window.open(photo.image, '_blank')}
                                                                 />
@@ -543,9 +546,9 @@ export default function ConstructionDetail() {
                                 <div className="mx-auto h-16 w-16 md:h-20 md:w-20 rounded-full bg-black/[0.03] flex items-center justify-center mb-6 md:mb-8">
                                     <FileText className="h-8 w-8 md:h-10 md:w-10 text-black/10" />
                                 </div>
-                                <h3 className="text-[11px] md:text-[12px] font-black uppercase tracking-[0.2em] mb-2 md:mb-3">Journal de Supervision Vide</h3>
+                                <h3 className="text-[11px] md:text-[12px] font-black uppercase tracking-[0.2em] mb-2 md:mb-3">{t('construction.detail.journal.empty_title')}</h3>
                                 <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest opacity-30 max-w-xs mx-auto">
-                                    Aucune entrée journalière n'a été enregistrée pour ce chantier industriel.
+                                    {t('construction.detail.journal.empty_desc')}
                                 </p>
                             </div>
                         )}
@@ -564,8 +567,8 @@ export default function ConstructionDetail() {
                                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                         />
                                         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 md:p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out">
-                                            <p className="text-white text-[9px] md:text-[10px] font-black uppercase tracking-widest line-clamp-1 mb-1">{photo.caption || "Sans légende"}</p>
-                                            <p className="text-white/40 text-[8px] font-bold uppercase">{format(new Date(photo.created_at), 'd MMM yyyy', { locale: fr })}</p>
+                                            <p className="text-white text-[9px] md:text-[10px] font-black uppercase tracking-widest line-clamp-1 mb-1">{photo.caption || t('construction.detail.photos.no_caption')}</p>
+                                            <p className="text-white/40 text-[8px] font-bold uppercase">{format(new Date(photo.created_at), 'd MMM yyyy', { locale: dateLocale })}</p>
                                         </div>
                                     </div>
                                 ))
@@ -574,8 +577,8 @@ export default function ConstructionDetail() {
                                     <div className="mx-auto h-16 w-16 md:h-20 md:w-20 rounded-full bg-black/[0.03] flex items-center justify-center mb-6 md:mb-8">
                                         <Image className="h-8 w-8 md:h-10 md:w-10 text-black/10" />
                                     </div>
-                                    <h3 className="text-[11px] md:text-[12px] font-black uppercase tracking-[0.2em] mb-2 md:mb-3">Galerie Photos Vide</h3>
-                                    <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest opacity-30">Les visuels du chantier apparaîtront après documentation dans le journal.</p>
+                                    <h3 className="text-[11px] md:text-[12px] font-black uppercase tracking-[0.2em] mb-2 md:mb-3">{t('construction.detail.photos.empty_title')}</h3>
+                                    <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest opacity-30">{t('construction.detail.photos.empty_desc')}</p>
                                 </div>
                             )}
                         </div>
@@ -591,7 +594,7 @@ export default function ConstructionDetail() {
                                     className="inline-flex items-center justify-center rounded-xl text-[9px] font-black uppercase tracking-widest transition-all bg-primary text-white hover:shadow-lg hover:scale-[1.01] active:scale-[0.99] h-9 px-6 shadow-md shadow-primary/20 dark:shadow-[0_0_15px_rgba(236,72,153,0.2)]"
                                 >
                                     <Plus className="mr-2 h-4 w-4" />
-                                    Ajouter un Document
+                                    {t('construction.detail.documents.btn_add')}
                                 </button>
                             </div>
                         )}
@@ -609,12 +612,12 @@ export default function ConstructionDetail() {
                                             </div>
                                             <div className="flex-1 min-w-0 pt-0.5 md:pt-1">
                                                 <h4 className="text-[11px] md:text-[12px] font-black uppercase tracking-tight truncate mb-1">{doc.title}</h4>
-                                                <p className="text-[9px] md:text-[10px] font-bold text-muted-foreground opacity-60 mb-3 md:mb-4 line-clamp-1">{doc.description || "Aucun détail technique"}</p>
+                                                <p className="text-[9px] md:text-[10px] font-bold text-muted-foreground opacity-60 mb-3 md:mb-4 line-clamp-1">{doc.description || t('construction.detail.documents.no_detail')}</p>
                                                 <div className="flex items-center justify-between text-[8px] md:text-[9px] font-black uppercase tracking-widest">
                                                     <span className="px-2 py-0.5 md:px-2.5 md:py-1 rounded-lg bg-black/5 dark:bg-white/5 text-black/60 dark:text-white/60">
-                                                        {doc.category || 'Document'}
+                                                        {doc.category || t('construction.detail.documents.default_category')}
                                                     </span>
-                                                    <span className="opacity-40">{format(new Date(doc.uploaded_at), 'd MMM yyyy', { locale: fr })}</span>
+                                                    <span className="opacity-40">{format(new Date(doc.uploaded_at), 'd MMM yyyy', { locale: dateLocale })}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -623,7 +626,7 @@ export default function ConstructionDetail() {
                                                 onClick={() => window.open(doc.file, '_blank')}
                                                 className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-black dark:text-white hover:opacity-70 flex items-center gap-2 transition-opacity"
                                             >
-                                                <Download className="h-3 md:h-3.5 w-3 md:w-3.5" /> Télécharger
+                                                <Download className="h-3 md:h-3.5 w-3 md:w-3.5" /> {t('construction.detail.documents.btn_download')}
                                             </button>
                                         </div>
                                     </div>
@@ -634,8 +637,8 @@ export default function ConstructionDetail() {
                                 <div className="mx-auto h-16 w-16 md:h-20 md:w-20 rounded-full bg-black/[0.03] flex items-center justify-center mb-6 md:mb-8">
                                     <File className="h-8 w-8 md:h-10 md:w-10 text-black/10" />
                                 </div>
-                                <h3 className="text-[11px] md:text-[12px] font-black uppercase tracking-[0.2em] mb-2 md:mb-3">Coffre-fort Documentaire Vide</h3>
-                                <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest opacity-30 max-w-xs mx-auto">Aucun plan technique ou contrat n'a été téléversé pour ce chantier.</p>
+                                <h3 className="text-[11px] md:text-[12px] font-black uppercase tracking-[0.2em] mb-2 md:mb-3">{t('construction.detail.documents.empty_title')}</h3>
+                                <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest opacity-30 max-w-xs mx-auto">{t('construction.detail.documents.empty_desc')}</p>
                             </div>
                         )}
                     </div>
@@ -648,7 +651,7 @@ export default function ConstructionDetail() {
                             <div className="solaris-glass rounded-[1.2rem] p-5 md:p-6 border-none shadow-sm">
                                 <h3 className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-30 mb-5 flex items-center gap-2">
                                     <DollarSign className="h-3.5 w-3.5 opacity-40" />
-                                    Répartition
+                                    {t('construction.detail.finance.distribution')}
                                 </h3>
                                 <div className="h-[250px] md:h-[300px] w-full">
                                     {Object.keys(site.budget_by_category || {}).length > 0 ? (
@@ -656,7 +659,7 @@ export default function ConstructionDetail() {
                                             <PieChart>
                                                 <Pie
                                                     data={Object.entries(site.budget_by_category).map(([key, value]) => ({
-                                                        name: key === 'MATERIAUX' ? 'Matériaux' : key === 'MAIN_D_OEUVRE' ? 'Main d\'œuvre' : key === 'SERVICES' ? 'Services' : key,
+                                                        name: key === 'MATERIAUX' ? t('construction.detail.finance.materials') : key === 'MAIN_D_OEUVRE' ? t('construction.detail.finance.labor') : key === 'SERVICES' ? t('construction.detail.finance.services') : key,
                                                         value: parseFloat(value)
                                                     }))}
                                                     cx="50%"
@@ -689,7 +692,7 @@ export default function ConstructionDetail() {
                                     ) : (
                                         <div className="h-full flex flex-col items-center justify-center text-muted-foreground border-2 border-dashed border-black/5 dark:border-white/5 rounded-3xl">
                                             <DollarSign className="h-10 w-10 mb-4 opacity-10" />
-                                            <p className="text-[10px] font-black uppercase tracking-widest opacity-20">Données Insuffisantes</p>
+                                            <p className="text-[10px] font-black uppercase tracking-widest opacity-20">{t('construction.detail.finance.insufficient_data')}</p>
                                         </div>
                                     )}
                                 </div>
@@ -699,7 +702,7 @@ export default function ConstructionDetail() {
                             <div className="solaris-glass rounded-[1.2rem] p-5 md:p-6 border-none shadow-sm flex flex-col justify-center">
                                 <div className="space-y-6">
                                     <div>
-                                        <p className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground mb-1.5 opacity-40">Compteur Consommation</p>
+                                        <p className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground mb-1.5 opacity-40">{t('construction.detail.finance.consumption_meter')}</p>
                                         <div className="flex items-baseline gap-2">
                                             <span className="text-2xl md:text-3xl font-bold tracking-tight text-black dark:text-white">
                                                 {formatCurrency(site.budget_spent || 0, true)}
@@ -712,7 +715,7 @@ export default function ConstructionDetail() {
 
                                     <div className="space-y-3.5">
                                         {Object.entries(site.budget_by_category || {}).map(([key, value], index) => {
-                                            const label = key === 'MATERIAUX' ? 'Matériaux' : key === 'MAIN_D_OEUVRE' ? 'Main d\'œuvre' : key === 'SERVICES' ? 'Services' : key;
+                                            const label = key === 'MATERIAUX' ? t('construction.detail.finance.materials') : key === 'MAIN_D_OEUVRE' ? t('construction.detail.finance.labor') : key === 'SERVICES' ? t('construction.detail.finance.services') : key;
                                             const colors = ['#ff0048', '#00f2ff', '#a855f7', '#f59e0b', '#10b981'];
                                             const percentage = site.budget_spent > 0 ? (parseFloat(value) / site.budget_spent) * 100 : 0;
 
@@ -744,18 +747,18 @@ export default function ConstructionDetail() {
                             <div className="p-4 md:p-5 border-b border-black/[0.03] bg-black/[0.01] flex items-center justify-between">
                                 <h3 className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-30 flex items-center gap-2">
                                     <Clock className="h-3.5 w-3.5 opacity-40" />
-                                    Flux Financiers
+                                    {t('construction.detail.finance.financial_flows')}
                                 </h3>
                             </div>
                             <div className="overflow-x-auto no-scrollbar">
                                 <table className="w-full text-left min-w-[600px] md:min-w-full">
                                     <thead className="bg-black/[0.02] dark:bg-white/5 text-muted-foreground uppercase text-[7px] md:text-[8px] font-bold tracking-widest">
                                         <tr>
-                                            <th className="px-5 md:px-6 py-3.5">Date</th>
-                                            <th className="px-5 md:px-6 py-3.5">Catégorie</th>
-                                            <th className="px-5 md:px-6 py-3.5">Description</th>
-                                            <th className="px-5 md:px-6 py-3.5 text-right">Montant</th>
-                                            <th className="px-5 md:px-6 py-3.5 text-right">Actions</th>
+                                            <th className="px-5 md:px-6 py-3.5">{t('construction.detail.finance.col_date')}</th>
+                                            <th className="px-5 md:px-6 py-3.5">{t('construction.detail.finance.col_category')}</th>
+                                            <th className="px-5 md:px-6 py-3.5">{t('construction.detail.finance.col_description')}</th>
+                                            <th className="px-5 md:px-6 py-3.5 text-right">{t('construction.detail.finance.col_amount')}</th>
+                                            <th className="px-5 md:px-6 py-3.5 text-right">{t('construction.detail.finance.col_actions')}</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-black/[0.03] dark:divide-white/5">
@@ -783,7 +786,7 @@ export default function ConstructionDetail() {
                                                                     href={tx.invoice}
                                                                     target="_blank"
                                                                     rel="noopener noreferrer"
-                                                                    title="Voir le justificatif"
+                                                                    title={t('construction.detail.finance.btn_view_proof')}
                                                                     className="p-2 bg-black/[0.03] dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 rounded-xl transition-all shadow-sm group/btn"
                                                                 >
                                                                     <Eye className="h-3.5 w-3.5 text-primary group-hover/btn:scale-110 transition-transform" />
@@ -798,7 +801,7 @@ export default function ConstructionDetail() {
                                                                         setIsEditTransactionModalOpen(true);
                                                                     }}
                                                                     className="p-1.5 md:p-2 bg-black/[0.03] dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 rounded-xl transition-all shadow-sm group/btn"
-                                                                    title="Modifier"
+                                                                    title={t('construction.detail.btn_edit')}
                                                                 >
                                                                     <Edit className="h-3.5 w-3.5 text-black dark:text-white group-hover/btn:scale-110 transition-transform" />
                                                                 </button>
@@ -808,18 +811,18 @@ export default function ConstructionDetail() {
                                                             {(user?.role === 'ADMIN_MADIS' || user?.role === 'CHEF_CHANTIER') && (
                                                                 <button
                                                                     onClick={async () => {
-                                                                        if (!window.confirm('Supprimer cette transaction ? Cette action est irréversible.')) return;
+                                                                        if (!window.confirm(t('construction.detail.finance.confirm_delete_tx'))) return;
                                                                         try {
                                                                             await api.delete(`/finance/transactions/${tx.id}/`);
-                                                                            showToast({ message: 'Transaction supprimée.', type: 'success' });
+                                                                            showToast({ message: t('construction.detail.finance.msg_delete_tx_success'), type: 'success' });
                                                                             fetchSiteDetails();
                                                                         } catch (err) {
                                                                             console.error(err);
-                                                                            showToast({ message: 'Erreur lors de la suppression.', type: 'error' });
+                                                                            showToast({ message: t('construction.detail.finance.msg_delete_tx_error'), type: 'error' });
                                                                         }
                                                                     }}
                                                                     className="p-1.5 md:p-2 bg-red-50 dark:bg-red-900/10 hover:bg-red-100 dark:hover:bg-red-900/20 rounded-xl transition-all shadow-sm group/btn"
-                                                                    title="Supprimer"
+                                                                    title={t('construction.detail.btn_delete')}
                                                                 >
                                                                     <Trash2 className="h-3.5 w-3.5 text-red-500 group-hover/btn:scale-110 transition-transform" />
                                                                 </button>
@@ -831,7 +834,7 @@ export default function ConstructionDetail() {
                                         ) : (
                                             <tr>
                                                 <td colSpan="5" className="px-8 py-20 text-center">
-                                                    <p className="text-[10px] font-black uppercase tracking-widest opacity-20">Aucune transaction enregistrée</p>
+                                                    <p className="text-[10px] font-black uppercase tracking-widest opacity-20">{t('construction.detail.finance.empty_tx')}</p>
                                                 </td>
                                             </tr>
                                         )}
@@ -908,8 +911,8 @@ export default function ConstructionDetail() {
                             <div className="p-8 md:p-10 space-y-8">
                                 <div className="flex justify-between items-start">
                                     <div className="space-y-2">
-                                        <h3 className="text-2xl font-black tracking-tighter uppercase">Suspendre le chantier</h3>
-                                        <p className="text-[10px] font-bold uppercase tracking-widest opacity-40">Veuillez indiquer le motif de cette suspension</p>
+                                        <h3 className="text-2xl font-black tracking-tighter uppercase">{t('construction.detail.suspend_modal.title')}</h3>
+                                        <p className="text-[10px] font-bold uppercase tracking-widest opacity-40">{t('construction.detail.suspend_modal.subtitle')}</p>
                                     </div>
                                     <button
                                         onClick={() => {
@@ -926,7 +929,7 @@ export default function ConstructionDetail() {
                                     <textarea
                                         value={suspensionReason}
                                         onChange={(e) => setSuspensionReason(e.target.value)}
-                                        placeholder="Ex: En attente de matériaux, décision administrative, intempéries..."
+                                        placeholder={t('construction.detail.suspend_modal.placeholder')}
                                         className="w-full h-40 bg-black/[0.02] dark:bg-white/[0.02] rounded-3xl p-6 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-amber-500/50 transition-all border border-black/5 dark:border-white/5"
                                     />
                                 </div>
@@ -939,12 +942,12 @@ export default function ConstructionDetail() {
                                         }}
                                         className="flex-1 h-14 rounded-full text-[10px] font-black uppercase tracking-widest border border-black/5 dark:border-white/5 hover:bg-black/5 dark:hover:bg-white/5 transition-all"
                                     >
-                                        Annuler
+                                        {t('construction.detail.suspend_modal.btn_cancel')}
                                     </button>
                                     <button
                                         onClick={async () => {
                                             if (!suspensionReason.trim()) {
-                                                showToast({ message: 'Veuillez saisir un motif.', type: 'error' });
+                                                showToast({ message: t('construction.detail.suspend_modal.err_reason'), type: 'error' });
                                                 return;
                                             }
                                             try {
@@ -954,15 +957,15 @@ export default function ConstructionDetail() {
                                                 });
                                                 setIsSuspensionModalOpen(false);
                                                 setSuspensionReason('');
-                                                showToast({ message: 'Chantier suspendu.', type: 'success' });
+                                                showToast({ message: t('construction.detail.suspend_modal.msg_success'), type: 'success' });
                                                 fetchSiteDetails();
                                             } catch (err) {
-                                                showToast({ message: 'Erreur lors de la suspension.', type: 'error' });
+                                                showToast({ message: t('construction.detail.suspend_modal.msg_error'), type: 'error' });
                                             }
                                         }}
                                         className="flex-1 h-14 rounded-full text-[10px] font-black uppercase tracking-widest bg-amber-500 text-white shadow-lg shadow-amber-500/20 hover:scale-[1.02] transition-all"
                                     >
-                                        Confirmer la suspension
+                                        {t('construction.detail.suspend_modal.btn_confirm')}
                                     </button>
                                 </div>
                             </div>

@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import api from '../../lib/axios';
 import { useToast } from '../../context/ToastContext';
+import { useTranslation } from 'react-i18next';
 import { Save, Loader2, Mail, Shield, User, Phone, CheckCircle2, XCircle, Lock, X } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
 export default function EditUserModal({ isOpen, onClose, userId, onSuccess }) {
+    const { t } = useTranslation();
     const { showToast } = useToast();
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -40,7 +42,7 @@ export default function EditUserModal({ isOpen, onClose, userId, onSuccess }) {
             });
         } catch (err) {
             console.error(err);
-            showToast({ message: "Impossible de charger les données de l'utilisateur.", type: 'error' });
+            showToast({ message: t('user_modal.toast_load_error'), type: 'error' });
             onClose();
         } finally {
             setLoading(false);
@@ -58,18 +60,18 @@ export default function EditUserModal({ isOpen, onClose, userId, onSuccess }) {
     const handlePasswordReset = async (e) => {
         e.preventDefault();
         if (!newPassword || newPassword.length < 8) {
-            showToast({ message: 'Le mot de passe doit faire au moins 8 caractères.', type: 'error' });
+            showToast({ message: t('user_modal.pwd_min_error'), type: 'error' });
             return;
         }
 
         setResetingPassword(true);
         try {
             await api.post(`/auth/users/${userId}/set-password/`, { new_password: newPassword });
-            showToast({ message: 'Mot de passe mis à jour avec succès !', type: 'success' });
+            showToast({ message: t('user_modal.toast_pwd_success'), type: 'success' });
             setNewPassword('');
         } catch (err) {
             console.error(err);
-            showToast({ message: 'Erreur lors du changement de mot de passe.', type: 'error' });
+            showToast({ message: t('user_modal.toast_pwd_error'), type: 'error' });
         } finally {
             setResetingPassword(false);
         }
@@ -80,12 +82,12 @@ export default function EditUserModal({ isOpen, onClose, userId, onSuccess }) {
         setSaving(true);
         try {
             await api.patch(`/auth/users/${userId}/`, formData);
-            showToast({ message: 'Utilisateur mis à jour avec succès !', type: 'success' });
+            showToast({ message: t('user_modal.toast_update_success'), type: 'success' });
             if (onSuccess) onSuccess();
             onClose();
         } catch (err) {
             console.error(err);
-            let msg = 'Erreur lors de la mise à jour.';
+            let msg = t('user_modal.toast_update_error');
             if (err.response?.data) {
                 const data = err.response.data;
                 if (typeof data === 'object') {
@@ -112,7 +114,7 @@ export default function EditUserModal({ isOpen, onClose, userId, onSuccess }) {
                             <User className="h-5 w-5 text-primary" />
                         </div>
                         <div>
-                            <h2 className="text-xl font-bold tracking-tight">Modifier <span className="text-primary tracking-tight">Utilisateur</span></h2>
+                            <h2 className="text-xl font-bold tracking-tight">{t('user_modal.title_edit')} <span className="text-primary tracking-tight">{t('user_modal.title_highlight')}</span></h2>
                         </div>
                     </div>
                     <button onClick={onClose} className="p-2 hover:bg-muted rounded-full transition-colors">
@@ -130,48 +132,48 @@ export default function EditUserModal({ isOpen, onClose, userId, onSuccess }) {
                         <form id="edit-user-form" onSubmit={handleSubmit} className="space-y-4">
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="grid gap-2">
-                                    <label className="text-xs font-bold text-muted-foreground uppercase">Prénom *</label>
-                                    <input type="text" name="first_name" required className={ic} placeholder="Jean" value={formData.first_name} onChange={handleChange} />
+                                    <label className="text-xs font-bold text-muted-foreground uppercase">{t('user_modal.label_first_name')}</label>
+                                    <input type="text" name="first_name" required className={ic} placeholder={t('user_modal.ph_first_name')} value={formData.first_name} onChange={handleChange} />
                                 </div>
                                 <div className="grid gap-2">
-                                    <label className="text-xs font-bold text-muted-foreground uppercase">Nom *</label>
-                                    <input type="text" name="last_name" required className={ic} placeholder="Dupont" value={formData.last_name} onChange={handleChange} />
+                                    <label className="text-xs font-bold text-muted-foreground uppercase">{t('user_modal.label_last_name')}</label>
+                                    <input type="text" name="last_name" required className={ic} placeholder={t('user_modal.ph_last_name')} value={formData.last_name} onChange={handleChange} />
                                 </div>
                             </div>
                             <div className="grid gap-2">
-                                <label className="text-xs font-bold text-muted-foreground uppercase">Email *</label>
+                                <label className="text-xs font-bold text-muted-foreground uppercase">{t('user_modal.label_email')}</label>
                                 <div className="relative">
                                     <Mail className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                                    <input type="email" name="email" required className={`${ic} pl-9`} placeholder="jean@email.com" value={formData.email} onChange={handleChange} />
+                                    <input type="email" name="email" required className={`${ic} pl-9`} placeholder={t('user_modal.ph_email')} value={formData.email} onChange={handleChange} />
                                 </div>
                             </div>
                             <div className="grid gap-2">
-                                <label className="text-xs font-bold text-muted-foreground uppercase">Téléphone</label>
+                                <label className="text-xs font-bold text-muted-foreground uppercase">{t('user_modal.label_phone')}</label>
                                 <div className="relative">
                                     <Phone className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                                    <input type="text" name="phone" className={`${ic} pl-9`} placeholder="+33 6 12 34 56 78" value={formData.phone} onChange={handleChange} />
+                                    <input type="text" name="phone" className={`${ic} pl-9`} placeholder={t('user_modal.ph_phone')} value={formData.phone} onChange={handleChange} />
                                 </div>
                             </div>
                             <div className="grid gap-2">
-                                <label className="text-xs font-bold text-muted-foreground uppercase flex items-center gap-2">Rôle</label>
+                                <label className="text-xs font-bold text-muted-foreground uppercase flex items-center gap-2">{t('user_modal.label_role')}</label>
                                 <div className="relative">
                                     <Shield className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
                                     <select name="role" className={`${ic} pl-9`} value={formData.role} onChange={handleChange}>
-                                        <option value="CLIENT">Client</option>
-                                        <option value="CHEF_CHANTIER">Chef de Chantier</option>
-                                        <option value="ADMIN_MADIS">Administrateur MaDis</option>
+                                        <option value="CLIENT">{t('user_modal.role_client')}</option>
+                                        <option value="CHEF_CHANTIER">{t('user_modal.role_manager')}</option>
+                                        <option value="ADMIN_MADIS">{t('user_modal.role_admin')}</option>
                                     </select>
                                 </div>
                             </div>
                             <div className="flex items-center gap-4 py-3 px-4 rounded-xl bg-muted/30 border border-dashed">
                                 <label className="text-sm font-medium flex items-center gap-3 cursor-pointer select-none">
                                     <input type="checkbox" name="is_active" checked={formData.is_active} onChange={handleChange} className="h-5 w-5 rounded-md border-input text-primary focus:ring-primary/20 accent-primary" />
-                                    <span>Compte Actif</span>
+                                    <span>{t('user_modal.label_active')}</span>
                                 </label>
                                 <div className="text-[10px] font-bold uppercase tracking-wider">
                                     {formData.is_active ?
-                                        <span className="text-emerald-600 flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5" /> Accès Autorisé</span> :
-                                        <span className="text-rose-600 flex items-center gap-1.5"><XCircle className="w-3.5 h-3.5" /> Accès Bloqué</span>
+                                        <span className="text-emerald-600 flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5" /> {t('user_modal.label_authorized')}</span> :
+                                        <span className="text-rose-600 flex items-center gap-1.5"><XCircle className="w-3.5 h-3.5" /> {t('user_modal.label_blocked')}</span>
                                     }
                                 </div>
                             </div>
@@ -181,15 +183,15 @@ export default function EditUserModal({ isOpen, onClose, userId, onSuccess }) {
                         <div className="pt-6 border-t">
                             <div className="flex items-center gap-2 text-rose-600 mb-4">
                                 <Lock className="h-4 w-4" />
-                                <h3 className="text-sm font-bold uppercase tracking-wider">Réinitialiser le mot de passe</h3>
+                                <h3 className="text-sm font-bold uppercase tracking-wider">{t('user_modal.title_reset_pwd')}</h3>
                             </div>
                             <form onSubmit={handlePasswordReset} className="flex gap-3">
                                 <div className="flex-1 relative">
                                     <Lock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                                    <input type="password" className={`${ic} pl-9`} placeholder="Nouveau mot de passe (min 8 car.)" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} minLength={8} />
+                                    <input type="password" className={`${ic} pl-9`} placeholder={t('user_modal.ph_new_password')} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} minLength={8} />
                                 </div>
                                 <button type="submit" disabled={resetingPassword || !newPassword} className="inline-flex items-center justify-center rounded-md text-xs font-bold px-4 h-10 bg-rose-100 text-rose-700 hover:bg-rose-600 hover:text-white transition-all disabled:opacity-50">
-                                    {resetingPassword ? <Loader2 className="h-4 w-4 animate-spin" /> : "Actualiser"}
+                                    {resetingPassword ? <Loader2 className="h-4 w-4 animate-spin" /> : t('user_modal.btn_refresh')}
                                 </button>
                             </form>
                         </div>
@@ -198,10 +200,10 @@ export default function EditUserModal({ isOpen, onClose, userId, onSuccess }) {
 
                 <div className="flex justify-end gap-3 p-6 border-t bg-muted/30">
                     <button type="button" onClick={onClose} className="inline-flex items-center justify-center rounded-md text-sm font-medium border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">
-                        Annuler
+                        {t('user_modal.btn_cancel')}
                     </button>
                     <button form="edit-user-form" type="submit" disabled={saving || loading} className="inline-flex items-center justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground shadow hover:bg-primary/90 h-10 px-6 disabled:opacity-50 transition-all font-bold">
-                        {saving ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Enregistrement...</> : <><Save className="mr-2 h-4 w-4" /> Enregistrer les modifications</>}
+                        {saving ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('user_modal.btn_saving')}</> : <><Save className="mr-2 h-4 w-4" /> {t('user_modal.btn_save')}</>}
                     </button>
                 </div>
             </div>

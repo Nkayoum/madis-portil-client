@@ -6,19 +6,21 @@ import {
     Sun, Cloud, CloudRain, Wind, Snowflake, Zap,
     Camera, X
 } from 'lucide-react';
-
-const WEATHER_OPTIONS = [
-    { value: 'ENSOLEILLE', label: 'Ensoleillé', icon: Sun },
-    { value: 'NUAGEUX', label: 'Nuageux', icon: Cloud },
-    { value: 'PLUIE', label: 'Pluie', icon: CloudRain },
-    { value: 'VENT', label: 'Vent', icon: Wind },
-    { value: 'NEIGE', label: 'Neige', icon: Snowflake },
-    { value: 'ORAGE', label: 'Orage', icon: Zap },
-];
+import { useTranslation } from 'react-i18next';
 
 export default function EditJournalEntryModal({ isOpen, onClose, entryId, onSuccess, site }) {
+    const { t } = useTranslation();
     const { showToast } = useToast();
     const [loading, setLoading] = useState(false);
+
+    const WEATHER_OPTIONS = [
+        { value: 'ENSOLEILLE', label: t('journal_modal.weather_sunny'), icon: Sun },
+        { value: 'NUAGEUX', label: t('journal_modal.weather_cloudy'), icon: Cloud },
+        { value: 'PLUIE', label: t('journal_modal.weather_rain'), icon: CloudRain },
+        { value: 'VENT', label: t('journal_modal.weather_wind'), icon: Wind },
+        { value: 'NEIGE', label: t('journal_modal.weather_snow'), icon: Snowflake },
+        { value: 'ORAGE', label: t('journal_modal.weather_storm'), icon: Zap },
+    ];
     const [fetching, setFetching] = useState(true);
     const [siteName, setSiteName] = useState('');
     const [siteId, setSiteId] = useState(null);
@@ -57,7 +59,7 @@ export default function EditJournalEntryModal({ isOpen, onClose, entryId, onSucc
             setFetching(false);
         } catch (err) {
             console.error(err);
-            showToast({ message: 'Erreur lors du chargement du rapport.', type: 'error' });
+            showToast({ message: t('journal_modal.toast_loaded_err'), type: 'error' });
             onClose();
         }
     };
@@ -79,14 +81,14 @@ export default function EditJournalEntryModal({ isOpen, onClose, entryId, onSucc
     };
 
     const deleteExistingPhoto = async (photoId) => {
-        if (!window.confirm('Voulez-vous vraiment supprimer cette photo ?')) return;
+        if (!window.confirm(t('journal_modal.confirm_delete_photo'))) return;
         try {
             await api.delete(`/construction/photos/${photoId}/`);
             setExistingPhotos(prev => prev.filter(p => p.id !== photoId));
-            showToast({ message: 'Photo supprimée.', type: 'success' });
+            showToast({ message: t('journal_modal.toast_photo_del'), type: 'success' });
         } catch (err) {
             console.error(err);
-            showToast({ message: 'Erreur lors de la suppression de la photo.', type: 'error' });
+            showToast({ message: t('journal_modal.toast_photo_del_err'), type: 'error' });
         }
     };
 
@@ -111,12 +113,12 @@ export default function EditJournalEntryModal({ isOpen, onClose, entryId, onSucc
                 }));
             }
 
-            showToast({ message: 'Rapport mis à jour avec succès !', type: 'success' });
+            showToast({ message: t('journal_modal.toast_updated'), type: 'success' });
             if (onSuccess) onSuccess();
             onClose();
         } catch (err) {
             console.error(err);
-            let msg = 'Erreur lors de la mise à jour du rapport.';
+            let msg = t('journal_modal.toast_update_err');
             if (err.response?.data) {
                 const data = err.response.data;
                 if (data.non_field_errors) {
@@ -146,7 +148,7 @@ export default function EditJournalEntryModal({ isOpen, onClose, entryId, onSucc
                             <FileText className="h-5 w-5 text-primary" />
                         </div>
                         <div>
-                            <h2 className="text-xl font-black tracking-tight">Modifier le <span className="text-primary">Rapport de Chantier</span></h2>
+                            <h2 className="text-xl font-black tracking-tight">{t('journal_modal.title_edit')} <span className="text-primary">{t('journal_modal.title_highlight')}</span></h2>
                             <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest mt-1">{site?.name || siteName}</p>
                         </div>
                     </div>
@@ -167,11 +169,11 @@ export default function EditJournalEntryModal({ isOpen, onClose, entryId, onSucc
                         <form id="edit-journal-form" onSubmit={handleSubmit} className="space-y-6">
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div className="space-y-1.5">
-                                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Date *</label>
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t('journal_modal.label_date')}</label>
                                     <input type="date" name="date" required className={`${inputClasses} dark:[color-scheme:dark]`} value={formData.date} onChange={handleChange} />
                                 </div>
                                 <div className="space-y-1.5">
-                                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Météo</label>
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t('journal_modal.label_weather')}</label>
                                     <select name="weather" className={inputClasses} value={formData.weather} onChange={handleChange}>
                                         {WEATHER_OPTIONS.map(opt => (
                                             <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -179,33 +181,33 @@ export default function EditJournalEntryModal({ isOpen, onClose, entryId, onSucc
                                     </select>
                                 </div>
                                 <div className="space-y-1.5">
-                                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Ouvriers présents *</label>
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t('journal_modal.label_workers')}</label>
                                     <input type="number" name="workers_count" min="0" required className={inputClasses} value={formData.workers_count} onChange={handleChange} />
                                 </div>
                             </div>
 
                             <div className="space-y-1.5">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Description des travaux *</label>
+                                <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t('journal_modal.label_desc')}</label>
                                 <textarea
                                     name="content"
                                     required
                                     rows="6"
                                     className={`${inputClasses} h-auto min-h-[120px] resize-none py-3 rounded-2xl dark:placeholder:text-white/30`}
-                                    placeholder="Détaillez les activités de la journée..."
+                                    placeholder={t('journal_modal.ph_desc')}
                                     value={formData.content}
                                     onChange={handleChange}
                                 />
                             </div>
 
                             <div className="space-y-3">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Photos</label>
+                                <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t('journal_modal.label_photos')}</label>
                                 <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
                                     {/* Existing Photos */}
                                     {existingPhotos.map((photo) => (
                                         <div key={photo.id} className="relative aspect-square rounded-xl overflow-hidden border border-black/5 dark:border-white/10 bg-muted group shadow-sm">
                                             <img
                                                 src={photo.image}
-                                                alt="Chantier"
+                                                alt={t('journal_modal.alt_site')}
                                                 className="w-full h-full object-cover"
                                             />
                                             <button
@@ -223,7 +225,7 @@ export default function EditJournalEntryModal({ isOpen, onClose, entryId, onSucc
                                         <div key={`new-${index}`} className="relative aspect-square rounded-xl overflow-hidden border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/10 group shadow-sm">
                                             <img
                                                 src={URL.createObjectURL(photo)}
-                                                alt="Nouveau"
+                                                alt={t('journal_modal.alt_new')}
                                                 className="w-full h-full object-cover"
                                             />
                                             <button
@@ -233,13 +235,13 @@ export default function EditJournalEntryModal({ isOpen, onClose, entryId, onSucc
                                             >
                                                 <X className="h-3 w-3" />
                                             </button>
-                                            <div className="absolute bottom-0 inset-x-0 bg-blue-600 text-[8px] text-white text-center py-0.5 font-bold uppercase">Nouveau</div>
+                                            <div className="absolute bottom-0 inset-x-0 bg-blue-600 text-[8px] text-white text-center py-0.5 font-bold uppercase">{t('journal_modal.badge_new')}</div>
                                         </div>
                                     ))}
 
                                     <label className="aspect-square rounded-xl border-2 border-dashed border-black/10 dark:border-white/10 flex flex-col items-center justify-center cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-all">
                                         <Camera className="h-6 w-6 text-muted-foreground mb-1" />
-                                        <span className="text-[10px] uppercase font-black text-muted-foreground tracking-tighter">Photo</span>
+                                        <span className="text-[10px] uppercase font-black text-muted-foreground tracking-tighter">{t('journal_modal.label_photo_btn')}</span>
                                         <input type="file" multiple accept="image/*" className="hidden" onChange={handlePhotoChange} />
                                     </label>
                                 </div>
@@ -255,7 +257,7 @@ export default function EditJournalEntryModal({ isOpen, onClose, entryId, onSucc
                         onClick={onClose}
                         className="inline-flex items-center justify-center rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border border-black/5 dark:border-white/10 bg-white dark:bg-white/10 shadow-sm hover:bg-black/5 dark:hover:bg-white/20 h-11 px-6 dark:text-white"
                     >
-                        Annuler
+                        {t('journal_modal.btn_cancel')}
                     </button>
                     <button
                         form="edit-journal-form"
@@ -263,7 +265,7 @@ export default function EditJournalEntryModal({ isOpen, onClose, entryId, onSucc
                         disabled={loading || fetching}
                         className="inline-flex items-center justify-center rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all bg-primary text-white shadow-lg shadow-primary/20 dark:shadow-[0_0_20px_rgba(236,72,153,0.3)] hover:shadow-xl h-11 px-8 disabled:opacity-50"
                     >
-                        {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Mise à jour...</> : <><Save className="mr-2 h-4 w-4" /><span className="hidden sm:inline">Enregistrer les modifications</span><span className="sm:hidden">Enregistrer</span></>}
+                        {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('journal_modal.btn_updating')}</> : <><Save className="mr-2 h-4 w-4" /><span className="hidden sm:inline">{t('journal_modal.btn_save_changes')}</span><span className="sm:hidden">{t('journal_modal.btn_save_mobile')}</span></>}
                     </button>
                 </div>
             </div>

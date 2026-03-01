@@ -9,22 +9,24 @@ import {
     Euro, CheckCircle, ArrowRight, Phone, Mail, User, MessageSquare,
     ShieldCheck, FileText, Download
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { cn, formatCurrency } from '../../lib/utils';
 
 const CATEGORIES = [
-    { value: '', label: 'Toutes', icon: Filter },
-    { value: 'RESIDENTIEL', label: 'Résidentiel', icon: Home },
-    { value: 'COMMERCIAL', label: 'Commercial', icon: ShoppingBag },
-    { value: 'PROFESSIONNEL', label: 'Professionnel', icon: Briefcase },
+    { value: '', labelKey: 'marketplace.cat_all', icon: Filter },
+    { value: 'RESIDENTIEL', labelKey: 'marketplace.cat_residential', icon: Home },
+    { value: 'COMMERCIAL', labelKey: 'marketplace.cat_commercial', icon: ShoppingBag },
+    { value: 'PROFESSIONNEL', labelKey: 'marketplace.cat_professional', icon: Briefcase },
 ];
 
 const NATURES = [
-    { value: '', label: 'Tout' },
-    { value: 'VENTE', label: 'À Vendre' },
-    { value: 'LOCATION', label: 'À Louer' },
+    { value: '', labelKey: 'marketplace.nature_all' },
+    { value: 'VENTE', labelKey: 'marketplace.nature_sale' },
+    { value: 'LOCATION', labelKey: 'marketplace.nature_rent' },
 ];
 
 export default function DashboardMarketplace() {
+    const { t } = useTranslation();
     const { user } = useAuth();
     const { showToast } = useToast();
     const [properties, setProperties] = useState([]);
@@ -71,10 +73,10 @@ export default function DashboardMarketplace() {
                 prospect_phone: user.phone || '',
             });
             setOfferSent(true);
-            showToast({ message: 'Votre offre a été envoyée avec succès !', type: 'success' });
+            showToast({ message: t('marketplace.toast_offer_success'), type: 'success' });
         } catch (err) {
             console.error('offer error', err);
-            showToast({ message: "Erreur lors de l'envoi de l'offre.", type: 'error' });
+            showToast({ message: t('marketplace.toast_offer_error'), type: 'error' });
         } finally {
             setSending(false);
         }
@@ -106,8 +108,8 @@ export default function DashboardMarketplace() {
             {/* Header Area */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-3 border-b border-black/5 dark:border-white/5">
                 <div>
-                    <h1 className="text-xl md:text-2xl font-bold tracking-tight uppercase leading-tight md:leading-none mb-1.5">Marketplace</h1>
-                    <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] opacity-30">Registre des actifs disponibles</p>
+                    <h1 className="text-xl md:text-2xl font-bold tracking-tight uppercase leading-tight md:leading-none mb-1.5">{t('marketplace.title')}</h1>
+                    <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] opacity-30">{t('marketplace.subtitle')}</p>
                 </div>
 
                 <div className="flex flex-col sm:flex-row items-center gap-3">
@@ -117,7 +119,7 @@ export default function DashboardMarketplace() {
                         </div>
                         <input
                             type="text"
-                            placeholder="RECHERCHER..."
+                            placeholder={t('marketplace.search_placeholder')}
                             value={search}
                             onChange={e => setSearch(e.target.value)}
                             className="w-full h-11 pl-12 pr-6 rounded-xl bg-black/[0.02] dark:bg-white/5 border-black/5 dark:border-white/5 text-[9px] md:text-[10px] font-bold uppercase tracking-widest focus:bg-white dark:focus:bg-white/10 focus:ring-4 focus:ring-primary/10 outline-none transition-all placeholder:opacity-30 dark:text-white"
@@ -125,7 +127,7 @@ export default function DashboardMarketplace() {
                     </div>
 
                     <div className="hidden sm:flex items-center gap-2.5 px-5 h-11 rounded-xl bg-black/[0.02] dark:bg-white/5 border border-black/5 dark:border-white/5">
-                        <span className="text-[9px] font-bold uppercase tracking-[0.2em] opacity-30">Total:</span>
+                        <span className="text-[9px] font-bold uppercase tracking-[0.2em] opacity-30">{t('marketplace.total')}</span>
                         <span className="text-[12px] font-bold">{properties.length}</span>
                     </div>
                 </div>
@@ -150,7 +152,7 @@ export default function DashboardMarketplace() {
                                     )}
                                 >
                                     <Icon className={cn("h-3.5 w-3.5", isActive ? "text-primary" : "text-black/20 dark:text-white/20")} />
-                                    {c.label}
+                                    {t(c.labelKey)}
                                 </button>
                             );
                         })}
@@ -173,7 +175,7 @@ export default function DashboardMarketplace() {
                                     )}
                                 >
                                     {isActive && <span className="inline-block w-1 h-1 rounded-full bg-primary mr-1.5 animate-pulse" />}
-                                    {n.label}
+                                    {t(n.labelKey)}
                                 </button>
                             );
                         })}
@@ -185,13 +187,13 @@ export default function DashboardMarketplace() {
             {loading ? (
                 <div className="flex flex-col items-center justify-center py-24 space-y-3">
                     <Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" />
-                    <span className="text-[9px] font-bold uppercase tracking-widest opacity-30">Synchronisation Marketplace...</span>
+                    <span className="text-[9px] font-bold uppercase tracking-widest opacity-30">{t('marketplace.syncing')}</span>
                 </div>
             ) : properties.length === 0 ? (
                 <div className="text-center py-24 solaris-glass rounded-[2rem] border-dashed border-2 border-black/5">
                     <Building className="h-16 w-16 mx-auto text-black/5 mb-4" />
-                    <h3 className="text-xl font-bold uppercase tracking-tight mb-2">Aucun actif detecté</h3>
-                    <p className="text-[9px] font-semibold uppercase tracking-widest opacity-40">Modifiez les paramètres du filtrage.</p>
+                    <h3 className="text-xl font-bold uppercase tracking-tight mb-2">{t('marketplace.empty_title')}</h3>
+                    <p className="text-[9px] font-semibold uppercase tracking-widest opacity-40">{t('marketplace.empty_desc')}</p>
                 </div>
             ) : (
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -226,7 +228,7 @@ export default function DashboardMarketplace() {
                                             p.transaction_nature === 'VENTE' ? "bg-white/90 text-black" : "bg-primary/90"
                                         )}>{p.transaction_nature_display}</span>
                                     ) : (
-                                        <span className="px-2 py-0.5 rounded-lg text-[8px] font-bold uppercase tracking-widest text-white bg-red-600 shadow-md">Prototype</span>
+                                        <span className="px-2 py-0.5 rounded-lg text-[8px] font-bold uppercase tracking-widest text-white bg-red-600 shadow-md">{t('marketplace.badge_prototype')}</span>
                                     )}
                                 </div>
 
@@ -256,15 +258,15 @@ export default function DashboardMarketplace() {
                                 <div className="grid grid-cols-3 gap-1.5 border-y border-black/5 py-3">
                                     <div className="text-center">
                                         <div className="text-[12px] font-bold leading-none mb-0.5">{p.surface || '---'}</div>
-                                        <div className="text-[7px] font-bold uppercase tracking-tighter opacity-30">Surface m²</div>
+                                        <div className="text-[7px] font-bold uppercase tracking-tighter opacity-30">{t('marketplace.surface_label')}</div>
                                     </div>
                                     <div className="text-center border-x border-black/5">
                                         <div className="text-[12px] font-bold leading-none mb-0.5">{p.room_count || '---'}</div>
-                                        <div className="text-[7px] font-bold uppercase tracking-tighter opacity-30">Pièces</div>
+                                        <div className="text-[7px] font-bold uppercase tracking-tighter opacity-30">{t('marketplace.room_label')}</div>
                                     </div>
                                     <div className="text-center">
                                         <div className="text-[12px] font-bold leading-none mb-0.5">{p.bedroom_count || '---'}</div>
-                                        <div className="text-[7px] font-bold uppercase tracking-tighter opacity-30">Chambres</div>
+                                        <div className="text-[7px] font-bold uppercase tracking-tighter opacity-30">{t('marketplace.bed_label')}</div>
                                     </div>
                                 </div>
 
@@ -275,7 +277,7 @@ export default function DashboardMarketplace() {
                                     </div>
 
                                     <div className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-widest group-hover:gap-3 transition-all">
-                                        Analyser
+                                        {t('marketplace.btn_analyze')}
                                         <ArrowRight className="h-3.5 w-3.5 text-primary" />
                                     </div>
                                 </div>
@@ -325,7 +327,7 @@ export default function DashboardMarketplace() {
                                 <div className="w-full md:w-1/2 p-6 md:p-8 flex flex-col min-h-0 overflow-y-auto">
                                     <div className="mb-6">
                                         <div className="flex items-center gap-2 mb-2">
-                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-30">ID:</span>
+                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-30">{t('marketplace.detail_id')}</span>
                                             <span className="text-[8px] md:text-[9px] font-mono tracking-tight opacity-100 font-bold bg-black/5 px-2 py-0.5 rounded">MADIS-{selectedProp.id}</span>
                                         </div>
                                         <h2 className="text-xl md:text-2xl font-bold uppercase tracking-tight leading-tight mb-3">{selectedProp.name}</h2>
@@ -337,8 +339,8 @@ export default function DashboardMarketplace() {
 
                                     {/* Financial Focus */}
                                     <div className="p-4 md:p-5 bg-black text-white rounded-[1.25rem] shadow-xl mb-6">
-                                        <div className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-40 mb-1">Valeur Transactionnelle</div>
-                                        <div className="text-xl md:text-2xl font-bold tracking-tight">{getPrice(selectedProp) || 'SUR DEMANDE'}</div>
+                                        <div className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-40 mb-1">{t('marketplace.detail_value')}</div>
+                                        <div className="text-xl md:text-2xl font-bold tracking-tight">{getPrice(selectedProp) || t('marketplace.detail_on_demand')}</div>
                                     </div>
 
                                     {/* Specs Grid */}
@@ -347,14 +349,14 @@ export default function DashboardMarketplace() {
                                             <div className="h-8 w-8 rounded-lg bg-white shadow-sm flex items-center justify-center text-primary shrink-0"><Ruler className="h-4 w-4" /></div>
                                             <div className="min-w-0">
                                                 <div className="text-[12px] font-bold truncate">{selectedProp.surface} m²</div>
-                                                <div className="text-[7px] font-bold uppercase opacity-30">Surface</div>
+                                                <div className="text-[7px] font-bold uppercase opacity-30">{t('marketplace.spec_surface')}</div>
                                             </div>
                                         </div>
                                         <div className="bg-black/[0.03] p-3 rounded-xl flex items-center gap-3">
                                             <div className="h-8 w-8 rounded-lg bg-white shadow-sm flex items-center justify-center text-primary shrink-0"><Home className="h-4 w-4" /></div>
                                             <div className="min-w-0">
                                                 <div className="text-[12px] font-bold truncate">{selectedProp.room_count} Pcs</div>
-                                                <div className="text-[7px] font-bold uppercase opacity-30">Typologie</div>
+                                                <div className="text-[7px] font-bold uppercase opacity-30">{t('marketplace.spec_type')}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -364,7 +366,7 @@ export default function DashboardMarketplace() {
                                         <div className="space-y-3 mb-6">
                                             <h3 className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest flex items-center gap-2 opacity-100">
                                                 <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" />
-                                                Certification Foncière
+                                                {t('marketplace.cert_title')}
                                             </h3>
                                             <div className="space-y-1.5">
                                                 {selectedProp.verification_documents?.map(doc => (
@@ -393,12 +395,12 @@ export default function DashboardMarketplace() {
                                                     className="w-full h-12 md:h-14 rounded-xl bg-primary text-white text-[9px] md:text-[10px] font-bold uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
                                                 >
                                                     <Send className="h-4 w-4" />
-                                                    Engager une offre
+                                                    {t('marketplace.btn_offer')}
                                                 </button>
                                             ) : (
                                                 <div className="space-y-4 animate-in slide-in-from-bottom-5">
                                                     <div className="space-y-2">
-                                                        <label className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-40">Proposition financière (€)</label>
+                                                        <label className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-40">{t('marketplace.offer_amount')}</label>
                                                         <input
                                                             type="number"
                                                             value={offerForm.asking_price}
@@ -411,17 +413,17 @@ export default function DashboardMarketplace() {
                                                         value={offerForm.notes}
                                                         onChange={e => setOfferForm(f => ({ ...f, notes: e.target.value }))}
                                                         className="w-full p-4 rounded-xl bg-black/[0.03] dark:bg-white/5 border-none text-[11px] font-medium min-h-[70px] outline-none transition-all focus:bg-white dark:text-white"
-                                                        placeholder="Notes..."
+                                                        placeholder={t('marketplace.offer_notes')}
                                                     />
                                                     <div className="flex gap-2.5">
-                                                        <button onClick={() => setShowOffer(false)} className="h-12 px-6 rounded-xl border border-black/5 dark:border-white/10 text-[9px] font-bold uppercase tracking-widest hover:bg-black/5 transition-all">Annuler</button>
+                                                        <button onClick={() => setShowOffer(false)} className="h-12 px-6 rounded-xl border border-black/5 dark:border-white/10 text-[9px] font-bold uppercase tracking-widest hover:bg-black/5 transition-all">{t('marketplace.offer_cancel')}</button>
                                                         <button
                                                             disabled={sending || !offerForm.asking_price}
                                                             onClick={submitOffer}
                                                             className="h-12 flex-1 rounded-xl bg-black text-white text-[9px] font-bold uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-neutral-800 disabled:opacity-50 transition-all"
                                                         >
                                                             {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-3.5 w-3.5 text-primary" />}
-                                                            Soumettre
+                                                            {t('marketplace.offer_submit')}
                                                         </button>
                                                     </div>
                                                 </div>
@@ -432,8 +434,8 @@ export default function DashboardMarketplace() {
                                     {offerSent && (
                                         <div className="mt-auto p-6 rounded-[1.25rem] bg-emerald-500 text-white text-center shadow-xl">
                                             <CheckCircle className="h-8 w-8 mx-auto mb-3" />
-                                            <div className="text-[10px] font-bold uppercase tracking-widest mb-1">Offre Transmise</div>
-                                            <div className="text-[9px] opacity-70 font-bold uppercase tracking-tight">Protocole activé</div>
+                                            <div className="text-[10px] font-bold uppercase tracking-widest mb-1">{t('marketplace.offer_success_title')}</div>
+                                            <div className="text-[9px] opacity-70 font-bold uppercase tracking-tight">{t('marketplace.offer_success_desc')}</div>
                                         </div>
                                     )}
                                 </div>

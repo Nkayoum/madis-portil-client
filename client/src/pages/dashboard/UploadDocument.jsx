@@ -3,6 +3,7 @@ import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import api from '../../lib/axios';
 import { useToast } from '../../context/ToastContext';
 import { Upload, Loader2, ArrowLeft, FileText } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '../../lib/utils';
 
 export default function UploadDocument() {
@@ -10,6 +11,7 @@ export default function UploadDocument() {
     const [searchParams] = useSearchParams();
     const propertyId = searchParams.get('propertyId');
     const { showToast } = useToast();
+    const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
     const [propertyName, setPropertyName] = useState('');
     const [formData, setFormData] = useState({
@@ -60,8 +62,8 @@ export default function UploadDocument() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!file) { showToast({ message: 'Veuillez sélectionner un fichier.', type: 'error' }); return; }
-        if (!formData.property) { showToast({ message: 'Veuillez sélectionner un bien.', type: 'error' }); return; }
+        if (!file) { showToast({ message: t('documents.upload.error_no_file'), type: 'error' }); return; }
+        if (!formData.property) { showToast({ message: t('documents.upload.error_no_property'), type: 'error' }); return; }
         setLoading(true);
         try {
             const data = new FormData();
@@ -73,11 +75,11 @@ export default function UploadDocument() {
             if (formData.site) data.append('site', formData.site);
 
             await api.post('/documents/', data, { headers: { 'Content-Type': 'multipart/form-data' } });
-            showToast({ message: 'Document envoyé avec succès !', type: 'success' });
+            showToast({ message: t('documents.upload.success'), type: 'success' });
             navigate(propertyId ? `/dashboard/properties/${propertyId}` : '/dashboard/documents');
         } catch (err) {
             console.error(err);
-            showToast({ message: 'Erreur lors de l\'envoi du document.', type: 'error' });
+            showToast({ message: t('documents.upload.error'), type: 'error' });
         } finally {
             setLoading(false);
         }
@@ -95,12 +97,12 @@ export default function UploadDocument() {
                         className="group flex items-center gap-3 text-[10px] font-black text-black/40 dark:text-white/40 hover:text-primary transition-all uppercase tracking-[0.2em]"
                     >
                         <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-                        {propertyId ? 'Retour au protocole du bien' : 'Retour aux archives'}
+                        {propertyId ? t('documents.upload.back_property') : t('documents.upload.back_list')}
                     </Link>
                     <div>
-                        <h1 className="text-4xl font-black uppercase tracking-tighter leading-none mb-3">Enregistrement Documentaire</h1>
+                        <h1 className="text-4xl font-black uppercase tracking-tighter leading-none mb-3">{t('documents.upload.title')}</h1>
                         <p className="text-[11px] font-black uppercase tracking-[0.2em] opacity-40">
-                            {propertyName ? `Allocation pour l'actif : ${propertyName.toUpperCase()}` : 'Protocole d\'importation de données certifiées'}
+                            {propertyName ? t('documents.upload.subtitle_property', { property: propertyName.toUpperCase() }) : t('documents.upload.subtitle_default')}
                         </p>
                     </div>
                 </div>
@@ -115,19 +117,19 @@ export default function UploadDocument() {
                         <div className="space-y-8">
                             <h3 className="text-[12px] font-black uppercase tracking-[0.25em] flex items-center gap-3 mb-6">
                                 <div className="h-2 w-2 rounded-full bg-black dark:bg-white" />
-                                Contexte de l'Actif
+                                {t('documents.upload.section_context')}
                             </h3>
 
                             {propertyName ? (
                                 <div className="space-y-3">
-                                    <label className="text-[10px] font-black uppercase tracking-widest opacity-40">Bien immobilier affecté</label>
+                                    <label className="text-[10px] font-black uppercase tracking-widest opacity-40">{t('documents.upload.label_property_locked')}</label>
                                     <div className="w-full h-16 px-6 flex items-center bg-black/5 dark:bg-white/5 rounded-2xl text-[12px] font-bold text-black dark:text-white border border-black/5 dark:border-white/5 opacity-60">
                                         {propertyName.toUpperCase()}
                                     </div>
                                 </div>
                             ) : (
                                 <div className="space-y-3">
-                                    <label className="text-[10px] font-black uppercase tracking-widest opacity-40">Bien immobilier *</label>
+                                    <label className="text-[10px] font-black uppercase tracking-widest opacity-40">{t('documents.upload.label_property')}</label>
                                     <select
                                         name="property"
                                         required
@@ -139,7 +141,7 @@ export default function UploadDocument() {
                                             else { setProjects([]); setSites([]); }
                                         }}
                                     >
-                                        <option value="">SÉLECTIONNER UN BIEN</option>
+                                        <option value="">{t('documents.upload.select_property')}</option>
                                         {properties.map(p => (
                                             <option key={p.id} value={p.id}>{p.name.toUpperCase()}</option>
                                         ))}
@@ -151,9 +153,9 @@ export default function UploadDocument() {
                                 <div className="space-y-6 pt-6 border-t border-black/5 dark:border-white/5 animate-fade-in">
                                     {projects.length > 0 && (
                                         <div className="space-y-3">
-                                            <label className="text-[10px] font-black uppercase tracking-widest opacity-40">Projet analytique (Optionnel)</label>
+                                            <label className="text-[10px] font-black uppercase tracking-widest opacity-40">{t('documents.upload.label_project')}</label>
                                             <select name="project" className="w-full h-16 px-6 bg-black/[0.03] dark:bg-white/5 border-none rounded-2xl text-[11px] font-black uppercase tracking-widest focus:bg-white dark:focus:bg-white/10 focus:ring-4 focus:ring-primary/10 transition-all outline-none dark:text-white" value={formData.project} onChange={handleChange}>
-                                                <option value="">AUCUN PROJET</option>
+                                                <option value="">{t('documents.upload.select_project')}</option>
                                                 {projects.map(p => (
                                                     <option key={p.id} value={p.id}>{p.name.toUpperCase()}</option>
                                                 ))}
@@ -162,9 +164,9 @@ export default function UploadDocument() {
                                     )}
                                     {sites.length > 0 && (
                                         <div className="space-y-3">
-                                            <label className="text-[10px] font-black uppercase tracking-widest opacity-40">Unité de Chantier (Optionnel)</label>
+                                            <label className="text-[10px] font-black uppercase tracking-widest opacity-40">{t('documents.upload.label_site')}</label>
                                             <select name="site" className="w-full h-16 px-6 bg-black/[0.03] dark:bg-white/5 border-none rounded-2xl text-[11px] font-black uppercase tracking-widest focus:bg-white dark:focus:bg-white/10 focus:ring-4 focus:ring-primary/10 transition-all outline-none dark:text-white" value={formData.site} onChange={handleChange}>
-                                                <option value="">AUCUNE UNITÉ</option>
+                                                <option value="">{t('documents.upload.select_site')}</option>
                                                 {sites.map(s => (
                                                     <option key={s.id} value={s.id}>{s.name.toUpperCase()}</option>
                                                 ))}
@@ -178,91 +180,113 @@ export default function UploadDocument() {
                         {/* Metadata Section */}
                         <div className="space-y-8">
                             <h3 className="text-[12px] font-black uppercase tracking-[0.25em] flex items-center gap-3 mb-6">
-                                <div className="h-2 w-2 rounded-full bg-primary" />
-                                Spécifications du Fichier
+                                <div className="h-2 w-2 rounded-full bg-black dark:bg-white" />
+                                {t('documents.upload.section_specs')}
                             </h3>
 
-                            <div className="space-y-3">
-                                <label className="text-[10px] font-black uppercase tracking-widest opacity-40">Titre du document *</label>
-                                <input
-                                    type="text"
-                                    name="title"
-                                    required
-                                    className="w-full h-16 px-6 bg-black/[0.03] dark:bg-white/5 border-none rounded-2xl text-[14px] font-bold focus:bg-white dark:focus:bg-white/10 focus:ring-4 focus:ring-primary/10 transition-all outline-none dark:text-white dark:placeholder:text-white/30"
-                                    placeholder="Libellé analytique..."
-                                    value={formData.title}
-                                    onChange={handleChange}
-                                />
-                            </div>
-
-                            <div className="space-y-3">
-                                <label className="text-[10px] font-black uppercase tracking-widest opacity-40">Classification</label>
-                                <select name="category" className="w-full h-16 px-6 bg-black/[0.03] dark:bg-white/5 border-none rounded-2xl text-[11px] font-black uppercase tracking-widest focus:bg-white dark:focus:bg-white/10 focus:ring-4 focus:ring-primary/10 transition-all outline-none dark:text-white" value={formData.category} onChange={handleChange}>
-                                    <option value="CONTRAT">CONTRAT / PROTOCOLE</option>
-                                    <option value="FACTURE">FACTURE / REÇU</option>
-                                    <option value="PLAN">PLAN ARCHITECTURAL</option>
-                                    <option value="PHOTO">RELEVÉ PHOTOGRAPHIQUE</option>
-                                    <option value="VERIF_FONCIERE">CERTIFICAT FONCIER</option>
-                                    <option value="ADMINISTRATIF">PIÈCE ADMINISTRATIVE</option>
-                                    <option value="AUTRE">CLASSIFICATION DIVERSE</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* File Dropzone */}
-                    <div className="space-y-4">
-                        <label className="text-[10px] font-black uppercase tracking-widest opacity-40">Fichier de données *</label>
-                        <div
-                            className="group relative border-2 border-dashed border-black/10 dark:border-white/10 rounded-[2rem] p-16 text-center hover:border-primary/50 hover:bg-primary/[0.02] transition-all cursor-pointer overflow-hidden"
-                            onClick={() => document.getElementById('file-input').click()}
-                        >
-                            <input id="file-input" type="file" className="hidden" onChange={(e) => setFile(e.target.files[0])} />
-
-                            <div className="relative z-10">
-                                <div className="mx-auto h-20 w-20 rounded-2xl bg-black text-white flex items-center justify-center mb-6 shadow-2xl group-hover:scale-110 group-hover:bg-primary transition-all duration-500">
-                                    <Upload className="h-10 w-10" />
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="space-y-3">
+                                    <label className="text-[10px] font-black uppercase tracking-widest opacity-40">{t('documents.upload.label_title')}</label>
+                                    <input
+                                        type="text"
+                                        name="title"
+                                        required
+                                        className="w-full h-16 px-6 bg-black/[0.03] dark:bg-white/5 border border-black/5 dark:border-white/5 rounded-2xl text-[12px] font-bold text-black dark:text-white placeholder:text-black/20 dark:placeholder:text-white/20 focus:bg-white dark:focus:bg-white/10 focus:ring-4 focus:ring-primary/10 transition-all outline-none"
+                                        placeholder={t('documents.upload.placeholder_title')}
+                                        onChange={handleChange}
+                                    />
                                 </div>
-                                {file ? (
-                                    <div className="space-y-2 animate-in fade-in scale-in-95">
-                                        <div className="flex items-center justify-center gap-3 text-2xl font-black tracking-tighter text-black dark:text-white">
-                                            <FileText className="h-6 w-6 text-primary" />
-                                            {file.name.toUpperCase()}
-                                        </div>
-                                        <p className="text-[10px] font-black uppercase tracking-widest opacity-30">Fichier prêt pour l'archivage • {(file.size / 1024 / 1024).toFixed(2)} MB</p>
-                                    </div>
-                                ) : (
-                                    <>
-                                        <h4 className="text-xl font-black uppercase tracking-tighter mb-2">Engager l'importation</h4>
-                                        <p className="text-[10px] font-black uppercase tracking-widest opacity-30">PDF, DOC, JPG, PNG — Capacité max 10 MO</p>
-                                    </>
-                                )}
+                                <div className="space-y-3">
+                                    <label className="text-[10px] font-black uppercase tracking-widest opacity-40">{t('documents.upload.label_category')}</label>
+                                    <select
+                                        name="category"
+                                        className="w-full h-16 px-6 bg-black/[0.03] dark:bg-white/5 border border-black/5 dark:border-white/5 rounded-2xl text-[11px] font-black uppercase tracking-widest text-black dark:text-white focus:bg-white dark:focus:bg-white/10 focus:ring-4 focus:ring-primary/10 transition-all outline-none appearance-none cursor-pointer"
+                                        onChange={handleChange}
+                                    >
+                                        <option value="CONTRAT">{t('documents.upload.cat_contract')}</option>
+                                        <option value="FACTURE">{t('documents.upload.cat_invoice')}</option>
+                                        <option value="PLAN">{t('documents.upload.cat_plan')}</option>
+                                        <option value="PHOTO">{t('documents.upload.cat_photo')}</option>
+                                        <option value="VERIF_FONCIERE">{t('documents.upload.cat_verif')}</option>
+                                        <option value="ADMINISTRATIF">{t('documents.upload.cat_admin')}</option>
+                                        <option value="AUTRE">{t('documents.upload.cat_other')}</option>
+                                    </select>
+                                </div>
                             </div>
 
-                            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <div className="space-y-3">
+                                <label className="text-[10px] font-black uppercase tracking-widest opacity-40">{t('documents.upload.label_file')}</label>
+                                <div className="relative group">
+                                    <input
+                                        type="file"
+                                        required
+                                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                                        onChange={handleFileChange}
+                                        accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                                    />
+                                    <div className={cn(
+                                        "w-full rounded-3xl border-2 border-dashed flex flex-col items-center justify-center p-12 text-center transition-all bg-black/[0.02] dark:bg-white/[0.02] group-hover:bg-primary/5",
+                                        file ? "border-primary/50 text-primary" : "border-black/10 dark:border-white/10 text-black/40 dark:text-white/40"
+                                    )}>
+                                        {file ? (
+                                            <>
+                                                <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                                                    <FileText className="h-8 w-8 text-primary" />
+                                                </div>
+                                                <p className="text-[12px] font-bold mb-1">{file.name}</p>
+                                                <p className="text-[10px] font-bold uppercase tracking-widest opacity-50">{t('documents.upload.file_ready')}</p>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <div className="h-16 w-16 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                                    <Upload className="h-8 w-8 text-black/20 dark:text-white/20 group-hover:text-primary transition-colors" />
+                                                </div>
+                                                <h4 className="text-xl font-black uppercase tracking-tighter mb-2 group-hover:text-primary transition-colors">{t('documents.upload.import_start')}</h4>
+                                                <p className="text-[10px] font-black uppercase tracking-widest opacity-30">{t('documents.upload.formats')}</p>
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row justify-end gap-6 pt-10 border-t border-black/5 dark:border-white/5">
-                        <Link
-                            to="/dashboard/documents"
-                            className="h-16 px-12 rounded-2xl border border-black/5 dark:border-white/10 text-[11px] font-black uppercase tracking-widest hover:bg-black/5 dark:hover:bg-white/5 flex items-center justify-center transition-all dark:text-white"
+                    <div className="flex flex-col sm:flex-row gap-4 pt-12 mt-12 border-t border-black/5 dark:border-white/5">
+                        <button
+                            type="button"
+                            onClick={() => navigate(propertyId ? `/dashboard/properties/${propertyId}` : "/dashboard/documents")}
+                            className="flex-1 h-16 rounded-2xl bg-black/5 dark:bg-white/5 text-black dark:text-white font-black uppercase tracking-widest text-[11px] hover:bg-black/10 dark:hover:bg-white/10 transition-all"
                         >
-                            Abandonner
-                        </Link>
+                            {t('documents.upload.btn_cancel')}
+                        </button>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="h-14 px-10 bg-primary text-white text-[11px] font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center whitespace-nowrap"
+                            className={cn(
+                                "flex-[2] h-16 rounded-2xl bg-black dark:bg-white text-white dark:text-black font-black uppercase tracking-widest text-[11px] flex items-center justify-center transition-all group hover:scale-[1.02] active:scale-[0.98] shadow-xl",
+                                loading ? "opacity-70 cursor-not-allowed" : "hover:shadow-2xl hover:shadow-primary/20"
+                            )}
                         >
                             {loading ? (
-                                <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Audit en cours...</>
+                                <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    {t('documents.upload.submitting')}
+                                </>
                             ) : (
-                                <><Upload className="mr-2 h-4 w-4" /> Engager la mise en ligne</>
+                                <>
+                                    <Upload className="mr-3 h-4 w-4 group-hover:-translate-y-1 transition-transform" />
+                                    {t('documents.upload.btn_submit')}
+                                </>
                             )}
                         </button>
                     </div>
                 </form>
+
+                <div className="mt-12 text-center pb-12">
+                    <p className="text-[9px] font-bold uppercase tracking-[0.2em] opacity-20">
+                        {t('documents.upload.footer_text')}
+                    </p>
+                </div>
             </div>
 
             {/* Security Footer */}

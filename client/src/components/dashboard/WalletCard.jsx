@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import api from '../../lib/axios';
 import { Wallet, ArrowDownLeft, ArrowUpRight, Loader2, History, PlusSquare, ExternalLink } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
 export default function WalletCard({ propertyId, onCashCall, onSettlement }) {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const [wallet, setWallet] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -22,7 +24,7 @@ export default function WalletCard({ propertyId, onCashCall, onSettlement }) {
             }
         } catch (err) {
             console.error('Failed to fetch wallet', err);
-            setError('Erreur lors de la récupération du solde.');
+            setError(t('wallet_card.error_fetch'));
         } finally {
             setLoading(false);
         }
@@ -57,7 +59,7 @@ export default function WalletCard({ propertyId, onCashCall, onSettlement }) {
     if (!wallet) return (
         <div className="bg-card border rounded-2xl p-6 shadow-sm border-dashed text-center">
             <Wallet className="h-8 w-8 text-muted-foreground mx-auto mb-2 opacity-20" />
-            <p className="text-xs text-muted-foreground font-medium italic">Aucun compte mandat actif pour ce bien.</p>
+            <p className="text-xs text-muted-foreground font-medium italic">{t('wallet_card.empty_wallet')}</p>
         </div>
     );
 
@@ -72,8 +74,8 @@ export default function WalletCard({ propertyId, onCashCall, onSettlement }) {
                             <Wallet className="h-5 w-5 transition-transform group-hover:scale-110" />
                         </div>
                         <div>
-                            <h3 className="text-sm font-bold tracking-tight">Compte Mandat MaDis</h3>
-                            <p className="text-[10px] text-muted-foreground uppercase font-black tracking-[0.1em] opacity-80">Régie & Trésorerie</p>
+                            <h3 className="text-sm font-bold tracking-tight">{t('wallet_card.title')}</h3>
+                            <p className="text-[10px] text-muted-foreground uppercase font-black tracking-[0.1em] opacity-80">{t('wallet_card.subtitle')}</p>
                         </div>
                     </div>
                 </div>
@@ -99,14 +101,14 @@ export default function WalletCard({ propertyId, onCashCall, onSettlement }) {
                         className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl border border-primary/20 bg-primary/[0.02] hover:bg-primary/5 transition-all active:scale-95 group/btn overflow-hidden relative">
                         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover/btn:opacity-100 transition-opacity" />
                         <ArrowDownLeft className="h-5 w-5 text-[#10B981] group-hover/btn:translate-y-0.5 transition-transform relative z-10" />
-                        <span className="text-[10px] font-black uppercase tracking-wider relative z-10">Appel à fonds</span>
+                        <span className="text-[10px] font-black uppercase tracking-wider relative z-10">{t('wallet_card.btn_call')}</span>
                     </button>
                     <button
                         onClick={onSettlement}
                         className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl border border-rose-200/50 bg-rose-50/20 hover:bg-rose-50/50 transition-all active:scale-95 group/btn overflow-hidden relative text-rose-900 dark:text-rose-400">
                         <div className="absolute inset-0 bg-gradient-to-br from-rose-500/5 to-transparent opacity-0 group-hover/btn:opacity-100 transition-opacity" />
                         <ArrowUpRight className="h-5 w-5 text-rose-600 group-hover/btn:-translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform relative z-10" />
-                        <span className="text-[10px] font-black uppercase tracking-wider relative z-10">Reversement</span>
+                        <span className="text-[10px] font-black uppercase tracking-wider relative z-10">{t('wallet_card.btn_pay')}</span>
                     </button>
                 </div>
             </div>
@@ -115,7 +117,7 @@ export default function WalletCard({ propertyId, onCashCall, onSettlement }) {
                 <div className="flex items-center justify-between text-[10px] text-muted-foreground mb-3">
                     <div className="flex items-center gap-1.5 font-bold uppercase tracking-widest opacity-60">
                         <History className="h-3 w-3" />
-                        Dernière opération
+                        {t('wallet_card.last_op')}
                     </div>
                     <span className="font-medium whitespace-nowrap">
                         {new Date(wallet.last_updated).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
@@ -126,7 +128,7 @@ export default function WalletCard({ propertyId, onCashCall, onSettlement }) {
                         onClick={() => navigate(`/dashboard/properties/${propertyId}/ledger`)}
                         className="text-[10px] font-black text-primary hover:text-primary/80 transition-colors flex items-center gap-1.5 uppercase tracking-wide"
                     >
-                        Voir le Grand Livre
+                        {t('wallet_card.view_ledger')}
                         <ExternalLink className="h-3 w-3" />
                     </button>
                 </div>

@@ -7,13 +7,16 @@ import {
     ArrowLeft, Loader2, Save, GripVertical, AlertCircle, Edit
 } from 'lucide-react';
 import { format } from 'date-fns';
-import { fr } from 'date-fns/locale';
+import { fr, enUS } from 'date-fns/locale';
+import { useTranslation } from 'react-i18next';
 import { cn } from '../../lib/utils';
 
 export default function ManageMilestones() {
     const { id } = useParams();
     const navigate = useNavigate();
     const { showToast } = useToast();
+    const { t, i18n } = useTranslation();
+    const dateLocale = i18n.language === 'fr' ? fr : enUS;
     const [site, setSite] = useState(null);
     const [milestones, setMilestones] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -39,7 +42,7 @@ export default function ManageMilestones() {
             setMilestones(milestonesRes.data.results || milestonesRes.data || []);
         } catch (err) {
             console.error(err);
-            showToast({ message: 'Erreur lors du chargement des données.', type: 'error' });
+            showToast({ message: t('construction.milestones.messages.load_error'), type: 'error' });
         } finally {
             setLoading(false);
         }
@@ -52,7 +55,7 @@ export default function ManageMilestones() {
     const handleAdd = async (e) => {
         e.preventDefault();
         if (!newM.description || !newM.responsible || !newM.start_date || !newM.end_date) {
-            showToast({ message: 'Veuillez remplir tous les champs obligatoires.', type: 'warning' });
+            showToast({ message: t('construction.milestones.messages.fill_required'), type: 'warning' });
             return;
         }
 
@@ -65,22 +68,22 @@ export default function ManageMilestones() {
             });
             setNewM({ description: '', responsible: '', start_date: '', end_date: '' });
             fetchData();
-            showToast({ message: 'Jalon ajouté avec succès.', type: 'success' });
+            showToast({ message: t('construction.milestones.messages.add_success'), type: 'success' });
         } catch (err) {
-            showToast({ message: 'Erreur lors de l\'ajout.', type: 'error' });
+            showToast({ message: t('construction.milestones.messages.add_error'), type: 'error' });
         } finally {
             setSaving(false);
         }
     };
 
     const handleDelete = async (mId) => {
-        if (!window.confirm('Supprimer ce jalon ?')) return;
+        if (!window.confirm(t('construction.milestones.messages.confirm_delete'))) return;
         try {
             await api.delete(`/construction/milestones/${mId}/`);
             fetchData();
-            showToast({ message: 'Jalon supprimé.', type: 'success' });
+            showToast({ message: t('construction.milestones.messages.delete_success'), type: 'success' });
         } catch (err) {
-            showToast({ message: 'Erreur lors de la suppression.', type: 'error' });
+            showToast({ message: t('construction.milestones.messages.delete_error'), type: 'error' });
         }
     };
 
@@ -91,7 +94,7 @@ export default function ManageMilestones() {
             });
             fetchData();
         } catch (err) {
-            showToast({ message: 'Erreur lors de la mise à jour.', type: 'error' });
+            showToast({ message: t('construction.milestones.messages.update_error'), type: 'error' });
         }
     };
 
@@ -118,9 +121,9 @@ export default function ManageMilestones() {
             setEditingId(null);
             setEditFormData(null);
             fetchData();
-            showToast({ message: 'Jalon mis à jour.', type: 'success' });
+            showToast({ message: t('construction.milestones.messages.update_success'), type: 'success' });
         } catch (err) {
-            showToast({ message: 'Erreur lors de la mise à jour.', type: 'error' });
+            showToast({ message: t('construction.milestones.messages.update_error'), type: 'error' });
         } finally {
             setSaving(false);
         }
@@ -140,7 +143,7 @@ export default function ManageMilestones() {
         <div className="max-w-[1600px] mx-auto space-y-10 animate-fade-in pb-20 px-4 md:px-10">
             <Link to={`/dashboard/construction/${id}`} className="flex items-center text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-black dark:hover:text-white transition-all group w-fit">
                 <ArrowLeft className="mr-3 h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-                Retour au chantier
+                {t('construction.milestones.back_to_site')}
             </Link>
 
             <div className="solaris-glass rounded-[2rem] p-6 border-none shadow-xl relative overflow-hidden">
@@ -151,14 +154,14 @@ export default function ManageMilestones() {
                             <div className="absolute -inset-1 bg-black/5 rounded-[1.2rem] -z-10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
                         </div>
                         <div>
-                            <h1 className="text-2xl font-black tracking-tighter uppercase leading-none mb-1.5">Gestion des Jalons</h1>
-                            <p className="text-[10px] font-bold uppercase tracking-wider opacity-60">Planification et suivi des étapes de {site?.name}</p>
+                            <h1 className="text-2xl font-black tracking-tighter uppercase leading-none mb-1.5">{t('construction.milestones.title')}</h1>
+                            <p className="text-[10px] font-bold uppercase tracking-wider opacity-60">{t('construction.milestones.subtitle')} {site?.name}</p>
                         </div>
                     </div>
 
                     <div className="flex flex-col items-end lg:border-l lg:pl-8 border-black/5">
                         <span className="text-[9px] font-black uppercase tracking-[0.2em] opacity-30 mb-2">
-                            Progression Actuelle
+                            {t('construction.milestones.current_progress')}
                         </span>
                         <div className="flex items-center gap-4">
                             <div className="w-48 h-2 bg-black/[0.03] dark:bg-white/10 rounded-full overflow-hidden p-[1px] border border-black/5 dark:border-white/5 shadow-inner">
@@ -179,15 +182,15 @@ export default function ManageMilestones() {
                     <div className="solaris-glass rounded-[1.5rem] p-6 border-none shadow-xl sticky top-24">
                         <h3 className="text-[8px] font-black uppercase tracking-[0.2em] opacity-30 mb-6 flex items-center gap-2.5">
                             <Plus className="h-3.5 w-3.5" />
-                            Nouveau Jalon
+                            {t('construction.milestones.new_milestone')}
                         </h3>
                         <form onSubmit={handleAdd} className="space-y-5">
                             <div className="space-y-1.5">
-                                <label className="text-[8px] font-black uppercase tracking-widest opacity-40 ml-1">Désignation *</label>
+                                <label className="text-[8px] font-black uppercase tracking-widest opacity-40 ml-1">{t('construction.milestones.fields.designation')}</label>
                                 <input
                                     type="text"
                                     className="ic w-full p-3 rounded-xl bg-black/[0.01] dark:bg-white/5 border border-black/5 dark:border-white/10 focus:bg-white dark:focus:bg-white/10 transition-all text-[11px] font-bold dark:text-white dark:placeholder:text-white/30"
-                                    placeholder="Ex: Fondation terminée"
+                                    placeholder={t('construction.milestones.fields.designation_ph')}
                                     value={newM.description}
                                     onChange={e => setNewM({ ...newM, description: e.target.value })}
                                     required
@@ -195,11 +198,11 @@ export default function ManageMilestones() {
                             </div>
 
                             <div className="space-y-1.5">
-                                <label className="text-[8px] font-black uppercase tracking-widest opacity-40 ml-1">Responsable *</label>
+                                <label className="text-[8px] font-black uppercase tracking-widest opacity-40 ml-1">{t('construction.milestones.fields.responsible_req')}</label>
                                 <input
                                     type="text"
                                     className="ic w-full p-3 rounded-xl bg-black/[0.01] border-black/5 focus:bg-white transition-all text-[11px] font-bold"
-                                    placeholder="Ex: Entreprise Martin"
+                                    placeholder={t('construction.milestones.fields.responsible_ph')}
                                     value={newM.responsible}
                                     onChange={e => setNewM({ ...newM, responsible: e.target.value })}
                                     required
@@ -208,7 +211,7 @@ export default function ManageMilestones() {
 
                             <div className="grid grid-cols-2 gap-3">
                                 <div className="space-y-1.5">
-                                    <label className="text-[8px] font-black uppercase tracking-widest opacity-40 ml-1">Début *</label>
+                                    <label className="text-[8px] font-black uppercase tracking-widest opacity-40 ml-1">{t('construction.milestones.fields.start_req')}</label>
                                     <input
                                         type="date"
                                         className="ic w-full p-3 rounded-xl bg-black/[0.01] dark:bg-white/5 border border-black/5 dark:border-white/10 focus:bg-white dark:focus:bg-white/10 transition-all text-[11px] font-bold font-mono dark:text-white dark:[color-scheme:dark]"
@@ -218,7 +221,7 @@ export default function ManageMilestones() {
                                     />
                                 </div>
                                 <div className="space-y-1.5">
-                                    <label className="text-[8px] font-black uppercase tracking-widest opacity-40 ml-1">Fin Estimée *</label>
+                                    <label className="text-[8px] font-black uppercase tracking-widest opacity-40 ml-1">{t('construction.milestones.fields.end_est_req')}</label>
                                     <input
                                         type="date"
                                         className="ic w-full p-3 rounded-xl bg-black/[0.01] border-black/5 focus:bg-white transition-all text-[11px] font-bold font-mono"
@@ -235,7 +238,7 @@ export default function ManageMilestones() {
                                 className="w-full inline-flex items-center justify-center rounded-xl text-[9px] font-black uppercase tracking-widest transition-all bg-primary text-white hover:shadow-lg hover:scale-[1.01] active:scale-[0.99] h-10 px-6 mt-2 shadow shadow-primary/20 group"
                             >
                                 {saving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Plus className="h-4 w-4 mr-2 group-hover:scale-110 transition-transform" />}
-                                Ajouter au Planning
+                                {t('construction.milestones.buttons.add_to_planning')}
                             </button>
                         </form>
                     </div>
@@ -254,7 +257,7 @@ export default function ManageMilestones() {
                                         <form onSubmit={handleUpdate} className="space-y-6">
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                 <div className="space-y-2">
-                                                    <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Description</label>
+                                                    <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">{t('construction.milestones.fields.description')}</label>
                                                     <input
                                                         type="text"
                                                         className="ic w-full p-4 rounded-2xl bg-black/[0.01] dark:bg-white/5 border border-black/5 dark:border-white/10 focus:bg-white dark:focus:bg-white/10 transition-all text-[12px] font-bold dark:text-white dark:placeholder:text-white/30"
@@ -264,7 +267,7 @@ export default function ManageMilestones() {
                                                     />
                                                 </div>
                                                 <div className="space-y-2">
-                                                    <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Responsable</label>
+                                                    <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">{t('construction.milestones.fields.responsible')}</label>
                                                     <input
                                                         type="text"
                                                         className="ic w-full p-4 rounded-2xl bg-black/[0.01] dark:bg-white/5 border border-black/5 dark:border-white/10 focus:bg-white dark:focus:bg-white/10 transition-all text-[12px] font-bold dark:text-white dark:placeholder:text-white/30"
@@ -274,7 +277,7 @@ export default function ManageMilestones() {
                                                     />
                                                 </div>
                                                 <div className="space-y-2">
-                                                    <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Début</label>
+                                                    <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">{t('construction.milestones.fields.start')}</label>
                                                     <input
                                                         type="date"
                                                         className="ic w-full p-4 rounded-2xl bg-black/[0.01] dark:bg-white/5 border border-black/5 dark:border-white/10 focus:bg-white dark:focus:bg-white/10 transition-all text-[12px] font-bold font-mono dark:text-white dark:[color-scheme:dark]"
@@ -284,7 +287,7 @@ export default function ManageMilestones() {
                                                     />
                                                 </div>
                                                 <div className="space-y-2">
-                                                    <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Fin</label>
+                                                    <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">{t('construction.milestones.fields.end')}</label>
                                                     <input
                                                         type="date"
                                                         className="ic w-full p-4 rounded-2xl bg-black/[0.01] dark:bg-white/5 border border-black/5 dark:border-white/10 focus:bg-white dark:focus:bg-white/10 transition-all text-[12px] font-bold font-mono dark:text-white dark:[color-scheme:dark]"
@@ -300,7 +303,7 @@ export default function ManageMilestones() {
                                                     onClick={cancelEdit}
                                                     className="inline-flex items-center justify-center rounded-xl text-[10px] font-black uppercase tracking-widest transition-all bg-white dark:bg-white/10 border border-black/5 dark:border-white/10 shadow-sm hover:bg-black/5 dark:hover:bg-white/20 h-11 px-6 dark:text-white"
                                                 >
-                                                    Annuler
+                                                    {t('construction.milestones.buttons.cancel')}
                                                 </button>
                                                 <button
                                                     type="submit"
@@ -308,7 +311,7 @@ export default function ManageMilestones() {
                                                     className="inline-flex items-center justify-center rounded-xl text-[10px] font-black uppercase tracking-widest transition-all bg-primary text-white hover:shadow-xl h-11 px-6 shadow-lg shadow-primary/20 dark:shadow-[0_0_20px_rgba(236,72,153,0.3)]"
                                                 >
                                                     {saving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
-                                                    Mettre à jour
+                                                    {t('construction.milestones.buttons.update')}
                                                 </button>
                                             </div>
                                         </form>
@@ -352,12 +355,12 @@ export default function ManageMilestones() {
                                                         <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-widest opacity-40">
                                                             <Calendar className="h-3 w-3" />
                                                             <span className="font-mono text-[9px] font-bold text-black dark:text-white opacity-100">
-                                                                {m.start_date ? format(new Date(m.start_date), 'dd MMM', { locale: fr }) : '-'} — {m.end_date ? format(new Date(m.end_date), 'dd MMM yyyy', { locale: fr }) : 'Non déterm.'}
+                                                                {m.start_date ? format(new Date(m.start_date), 'dd MMM', { locale: dateLocale }) : '-'} — {m.end_date ? format(new Date(m.end_date), 'dd MMM yyyy', { locale: dateLocale }) : t('construction.milestones.status.undetermined')}
                                                             </span>
                                                         </div>
                                                         <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-widest opacity-40">
                                                             <User className="h-3 w-3" />
-                                                            <span className="text-black dark:text-white opacity-100 text-[9px]">{m.responsible || 'Non renseigné'}</span>
+                                                            <span className="text-black dark:text-white opacity-100 text-[9px]">{m.responsible || t('construction.milestones.status.unassigned')}</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -366,14 +369,14 @@ export default function ManageMilestones() {
                                                     <button
                                                         onClick={() => startEdit(m)}
                                                         className="p-2 text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white/20 bg-white dark:bg-white/10 border border-black/5 dark:border-white/10 rounded-xl shadow-sm transition-all"
-                                                        title="Modifier"
+                                                        title={t('construction.milestones.buttons.edit')}
                                                     >
                                                         <Edit className="h-3.5 w-3.5" />
                                                     </button>
                                                     <button
                                                         onClick={() => handleDelete(m.id)}
                                                         className="p-2 text-red-500 hover:bg-red-600 hover:text-white bg-white dark:bg-white/10 border border-black/5 dark:border-white/10 rounded-xl shadow-sm transition-all"
-                                                        title="Supprimer"
+                                                        title={t('construction.milestones.buttons.delete')}
                                                     >
                                                         <Trash2 className="h-3.5 w-3.5" />
                                                     </button>
@@ -383,7 +386,7 @@ export default function ManageMilestones() {
                                             {isOverdue && !m.completed && (
                                                 <div className="mt-3 flex items-center gap-2 text-[8px] font-black uppercase tracking-[0.2em] text-primary">
                                                     <AlertCircle className="h-3 w-3" />
-                                                    Dépassement de délais
+                                                    {t('construction.milestones.status.overdue')}
                                                 </div>
                                             )}
                                         </div>
@@ -396,8 +399,8 @@ export default function ManageMilestones() {
                             <div className="mx-auto h-20 w-20 rounded-full bg-black/[0.03] flex items-center justify-center mb-8">
                                 <Plus className="h-10 w-10 text-black/10" />
                             </div>
-                            <h3 className="text-[12px] font-black uppercase tracking-[0.2em] mb-3">Planning Vierge</h3>
-                            <p className="text-[10px] font-black uppercase tracking-widest opacity-30 max-w-xs mx-auto">Définissez les phases critiques du chantier pour une gestion optimale.</p>
+                            <h3 className="text-[12px] font-black uppercase tracking-[0.2em] mb-3">{t('construction.milestones.empty.title')}</h3>
+                            <p className="text-[10px] font-black uppercase tracking-widest opacity-30 max-w-xs mx-auto">{t('construction.milestones.empty.desc')}</p>
                         </div>
                     )}
                 </div>

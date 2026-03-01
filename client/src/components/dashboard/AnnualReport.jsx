@@ -4,9 +4,11 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { cn, formatCurrency } from '../../lib/utils';
 import { useAuth } from '../../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 import FormalAnnualReport from './FormalAnnualReport';
 
 export default function AnnualReport({ data, selectedYear, isAdmin }) {
+    const { t } = useTranslation();
     const { user, updateUser } = useAuth();
     const [generating, setGenerating] = useState(false);
     const [uploading, setUploading] = useState(false);
@@ -146,7 +148,7 @@ export default function AnnualReport({ data, selectedYear, isAdmin }) {
                 pageNum++;
             }
 
-            pdf.save(`Rapport_Annuel_MaDis_${selectedYear}.pdf`);
+            pdf.save(`${t('annual_report.file_name_prefix')}${selectedYear}.pdf`);
         } catch (err) {
             console.error('PDF generation failed:', err);
         } finally {
@@ -167,7 +169,7 @@ export default function AnnualReport({ data, selectedYear, isAdmin }) {
                         <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full -mr-12 -mt-12 blur-2xl group-hover:bg-emerald-500/10 transition-colors" />
                         <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 mb-3">
                             <TrendingUp className="h-4 w-4" />
-                            <span className="text-[10px] font-black uppercase tracking-widest opacity-70">Revenus Totaux {selectedYear}</span>
+                            <span className="text-[10px] font-black uppercase tracking-widest opacity-70">{t('annual_report.total_revenue')} {selectedYear}</span>
                         </div>
                         <div className="text-4xl font-black text-foreground tracking-tighter dark:text-white whitespace-nowrap">
                             <span className="hidden xl:inline">{formatCurrency(totalRevenue)}</span>
@@ -179,7 +181,7 @@ export default function AnnualReport({ data, selectedYear, isAdmin }) {
                         <div className="absolute top-0 right-0 w-24 h-24 bg-rose-500/5 rounded-full -mr-12 -mt-12 blur-2xl group-hover:bg-rose-500/10 transition-colors" />
                         <div className="flex items-center gap-2 text-rose-600 dark:text-rose-400 mb-3">
                             <TrendingDown className="h-4 w-4" />
-                            <span className="text-[10px] font-black uppercase tracking-widest opacity-70">Charges Totales {selectedYear}</span>
+                            <span className="text-[10px] font-black uppercase tracking-widest opacity-70">{t('annual_report.total_expenses')} {selectedYear}</span>
                         </div>
                         <div className="text-4xl font-black text-foreground tracking-tighter dark:text-white whitespace-nowrap">
                             <span className="hidden xl:inline">{formatCurrency(totalExpense)}</span>
@@ -200,7 +202,7 @@ export default function AnnualReport({ data, selectedYear, isAdmin }) {
                             <span className={cn(
                                 "text-[10px] font-black uppercase tracking-widest opacity-70",
                                 netResult >= 0 ? "text-primary/70" : "text-orange-500/70"
-                            )}>Résultat Net {selectedYear}</span>
+                            )}>{t('annual_report.net_result')} {selectedYear}</span>
                         </div>
                         <div className={cn(
                             "text-4xl font-black tracking-tighter whitespace-nowrap",
@@ -217,23 +219,23 @@ export default function AnnualReport({ data, selectedYear, isAdmin }) {
                     <div className="px-8 py-6 border-b dark:border-white/5 bg-muted/30 dark:bg-white/[0.02] flex items-center justify-between">
                         <h3 className="font-bold flex items-center gap-2 text-sm uppercase tracking-wider">
                             <Table className="h-4 w-4 text-primary" />
-                            Récapitulatif par Catégorie ({selectedYear})
+                            {t('annual_report.summary_category')} ({selectedYear})
                         </h3>
                         <div className="text-[10px] font-bold text-muted-foreground bg-background dark:bg-white/5 px-3 py-1.5 rounded-xl border border-black/5 dark:border-white/10 uppercase tracking-widest">
-                            TOTAL CONSOLIDÉ
+                            {t('annual_report.total_consolidated')}
                         </div>
                     </div>
                     <div className="overflow-x-auto no-scrollbar">
                         <table className="w-full text-sm">
                             <thead>
                                 <tr className="bg-muted/10 dark:bg-white/[0.02] border-b dark:border-white/5">
-                                    <th className="px-6 py-3 text-left font-bold text-[10px] uppercase text-muted-foreground">Catégorie</th>
-                                    <th className="px-6 py-3 text-right font-bold text-[10px] uppercase text-muted-foreground">Montant (€)</th>
-                                    <th className="px-6 py-3 text-right font-bold text-[10px] uppercase text-muted-foreground">% Total</th>
+                                    <th className="px-6 py-3 text-left font-bold text-[10px] uppercase text-muted-foreground">{t('annual_report.th_category')}</th>
+                                    <th className="px-6 py-3 text-right font-bold text-[10px] uppercase text-muted-foreground">{t('annual_report.th_amount')}</th>
+                                    <th className="px-6 py-3 text-right font-bold text-[10px] uppercase text-muted-foreground">{t('annual_report.th_percent')}</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y dark:divide-white/5">
-                                <tr className="bg-muted/5 dark:bg-white/[0.01]"><td colSpan="3" className="px-8 py-4 text-[10px] font-black uppercase text-emerald-600 tracking-widest">Encaissements (Revenus)</td></tr>
+                                <tr className="bg-muted/5 dark:bg-white/[0.01]"><td colSpan="3" className="px-8 py-4 text-[10px] font-black uppercase text-emerald-600 tracking-widest">{t('annual_report.revenues_title')}</td></tr>
                                 {revenueCategories.map(cat => (
                                     <tr key={cat.category} className="group hover:bg-muted/30 transition-colors">
                                         <td className="px-6 py-3 font-medium">{cat.label}</td>
@@ -244,10 +246,10 @@ export default function AnnualReport({ data, selectedYear, isAdmin }) {
                                     </tr>
                                 ))}
                                 {revenueCategories.length === 0 && (
-                                    <tr><td colSpan="3" className="px-6 py-4 text-center text-muted-foreground italic text-xs">Aucun revenu enregistré</td></tr>
+                                    <tr><td colSpan="3" className="px-6 py-4 text-center text-muted-foreground italic text-xs">{t('annual_report.no_revenues')}</td></tr>
                                 )}
 
-                                <tr className="bg-muted/5"><td colSpan="3" className="px-6 py-2 text-[10px] font-black uppercase text-rose-600 tracking-widest">Décaissements (Charges)</td></tr>
+                                <tr className="bg-muted/5"><td colSpan="3" className="px-6 py-2 text-[10px] font-black uppercase text-rose-600 tracking-widest">{t('annual_report.expenses_title')}</td></tr>
                                 {expenseCategories.map(cat => (
                                     <tr key={cat.category} className="group hover:bg-muted/30 transition-colors">
                                         <td className="px-6 py-3 font-medium">{cat.label}</td>
@@ -258,12 +260,12 @@ export default function AnnualReport({ data, selectedYear, isAdmin }) {
                                     </tr>
                                 ))}
                                 {expenseCategories.length === 0 && (
-                                    <tr><td colSpan="3" className="px-6 py-4 text-center text-muted-foreground italic text-xs">Aucune charge enregistrée</td></tr>
+                                    <tr><td colSpan="3" className="px-6 py-4 text-center text-muted-foreground italic text-xs">{t('annual_report.no_expenses')}</td></tr>
                                 )}
                             </tbody>
                             <tfoot className="bg-muted/30 font-bold border-t-2 border-primary/20">
                                 <tr>
-                                    <td className="px-6 py-4 text-[11px] uppercase tracking-widest text-primary">BILAN ANNUEL NET</td>
+                                    <td className="px-6 py-4 text-[11px] uppercase tracking-widest text-primary">{t('annual_report.net_annual_balance')}</td>
                                     <td className={cn(
                                         "px-6 py-4 text-right text-lg font-black whitespace-nowrap",
                                         netResult >= 0 ? "text-primary" : "text-rose-600"
@@ -282,10 +284,10 @@ export default function AnnualReport({ data, selectedYear, isAdmin }) {
                 <div className="p-6 bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30 rounded-xl">
                     <h4 className="font-bold text-blue-800 dark:text-blue-400 text-sm mb-2 flex items-center gap-2">
                         <Calendar className="h-4 w-4" />
-                        Aide à la déclaration fiscale
+                        {t('annual_report.tax_help_title')}
                     </h4>
                     <p className="text-xs text-blue-700/80 dark:text-blue-400/80 leading-relaxed">
-                        Ce rapport consolide l'ensemble des flux financiers pour l'année {selectedYear}. Pour une déclaration en régime réel (LMNP/Réel), les charges de maintenance, taxes et assurances sont généralement déductibles. Les commissions MaDis (Intermédiation) sont également à intégrer dans vos charges de gestion.
+                        {t('annual_report.tax_help_text', { year: selectedYear })}
                     </p>
                     <div className="mt-4 flex flex-wrap items-center gap-3">
                         <button
@@ -298,7 +300,7 @@ export default function AnnualReport({ data, selectedYear, isAdmin }) {
                             ) : (
                                 <Download className="h-3 w-3" />
                             )}
-                            {generating ? 'Génération en cours...' : 'Télécharger le récapitulatif PDF'}
+                            {generating ? t('annual_report.btn_generating_pdf') : t('annual_report.btn_download_pdf')}
                         </button>
 
                         <input
@@ -313,7 +315,7 @@ export default function AnnualReport({ data, selectedYear, isAdmin }) {
                             className="px-4 py-2 border rounded-lg text-xs font-bold shadow-sm hover:shadow transition-all flex items-center gap-2 bg-white dark:bg-background"
                         >
                             {letterheadUrl ? <FileImage className="h-3 w-3 text-emerald-600" /> : <Upload className="h-3 w-3" />}
-                            {letterheadUrl ? 'Papier à en-tête chargé ✓' : 'Charger papier à en-tête'}
+                            {letterheadUrl ? t('annual_report.btn_letterhead_loaded') : t('annual_report.btn_letterhead_upload')}
                         </button>
 
                         {letterheadUrl && (
@@ -323,12 +325,12 @@ export default function AnnualReport({ data, selectedYear, isAdmin }) {
                                 className="text-[10px] text-rose-500 hover:underline font-medium flex items-center gap-1 disabled:opacity-50"
                             >
                                 <Trash2 className="h-2.5 w-2.5" />
-                                Retirer l'en-tête
+                                {t('annual_report.btn_letterhead_remove')}
                             </button>
                         )}
                     </div>
                     <p className="text-[10px] text-muted-foreground italic mt-3">
-                        Note: Les amortissements ne sont pas inclus dans ce rapport de trésorerie.
+                        {t('annual_report.note_depreciation')}
                     </p>
                 </div>
             </div>

@@ -8,19 +8,21 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
-
-const WEATHER_OPTIONS = [
-    { value: 'ENSOLEILLE', label: 'Ensoleillé', icon: Sun },
-    { value: 'NUAGEUX', label: 'Nuageux', icon: Cloud },
-    { value: 'PLUIE', label: 'Pluie', icon: CloudRain },
-    { value: 'VENT', label: 'Vent', icon: Wind },
-    { value: 'NEIGE', label: 'Neige', icon: Snowflake },
-    { value: 'ORAGE', label: 'Orage', icon: Zap },
-];
+import { useTranslation } from 'react-i18next';
 
 export default function JournalEntryModal({ isOpen, onClose, site, onSuccess, onOpenEdit }) {
+    const { t } = useTranslation();
     const { showToast } = useToast();
     const [loading, setLoading] = useState(false);
+
+    const WEATHER_OPTIONS = [
+        { value: 'ENSOLEILLE', label: t('journal_modal.weather_sunny'), icon: Sun },
+        { value: 'NUAGEUX', label: t('journal_modal.weather_cloudy'), icon: Cloud },
+        { value: 'PLUIE', label: t('journal_modal.weather_rain'), icon: CloudRain },
+        { value: 'VENT', label: t('journal_modal.weather_wind'), icon: Wind },
+        { value: 'NEIGE', label: t('journal_modal.weather_snow'), icon: Snowflake },
+        { value: 'ORAGE', label: t('journal_modal.weather_storm'), icon: Zap },
+    ];
     const [photos, setPhotos] = useState([]);
     const [existingEntry, setExistingEntry] = useState(null);
     const [checkingExisting, setCheckingExisting] = useState(false);
@@ -103,12 +105,12 @@ export default function JournalEntryModal({ isOpen, onClose, site, onSuccess, on
                 }));
             }
 
-            showToast({ message: 'Rapport enregistré avec succès !', type: 'success' });
+            showToast({ message: t('journal_modal.toast_created'), type: 'success' });
             if (onSuccess) onSuccess();
             onClose();
         } catch (err) {
             console.error(err);
-            let msg = 'Erreur lors de la création du rapport.';
+            let msg = t('journal_modal.toast_create_err');
             if (err.response?.data) {
                 const data = err.response.data;
                 if (data.non_field_errors) {
@@ -138,7 +140,7 @@ export default function JournalEntryModal({ isOpen, onClose, site, onSuccess, on
                             <FileText className="h-5 w-5 text-primary" />
                         </div>
                         <div>
-                            <h2 className="text-xl font-black tracking-tight">Nouveau <span className="text-primary">Rapport de Chantier</span></h2>
+                            <h2 className="text-xl font-black tracking-tight">{t('journal_modal.title_new')} <span className="text-primary">{t('journal_modal.title_highlight')}</span></h2>
                             <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest mt-1">{site?.name}</p>
                         </div>
                     </div>
@@ -156,10 +158,10 @@ export default function JournalEntryModal({ isOpen, onClose, site, onSuccess, on
                             <AlertCircle className="h-5 w-5 text-amber-600 mt-0.5" />
                             <div className="space-y-1">
                                 <p className="text-sm font-semibold text-amber-800 dark:text-amber-400">
-                                    Un rapport existe déjà pour cette date.
+                                    {t('journal_modal.alert_exists_title')}
                                 </p>
                                 <p className="text-xs text-amber-700 dark:text-amber-500">
-                                    Il est impossible de créer deux rapports pour le même jour.
+                                    {t('journal_modal.alert_exists_desc')}
                                 </p>
                                 <button
                                     type="button"
@@ -168,7 +170,7 @@ export default function JournalEntryModal({ isOpen, onClose, site, onSuccess, on
                                     }}
                                     className="inline-flex items-center text-xs font-bold text-amber-900 dark:text-amber-300 hover:underline mt-1"
                                 >
-                                    Modifier le rapport existant <ArrowRight className="ml-1 h-3 w-3" />
+                                    {t('journal_modal.btn_edit_existing')} <ArrowRight className="ml-1 h-3 w-3" />
                                 </button>
                             </div>
                         </div>
@@ -177,11 +179,11 @@ export default function JournalEntryModal({ isOpen, onClose, site, onSuccess, on
                     <form id="journal-form" onSubmit={handleSubmit} className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div className="space-y-1.5">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Date *</label>
+                                <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t('journal_modal.label_date')}</label>
                                 <input type="date" name="date" required className={`${inputClasses} dark:[color-scheme:dark]`} value={formData.date} onChange={handleChange} />
                             </div>
                             <div className="space-y-1.5">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Météo</label>
+                                <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t('journal_modal.label_weather')}</label>
                                 <select name="weather" className={inputClasses} value={formData.weather} onChange={handleChange}>
                                     {WEATHER_OPTIONS.map(opt => (
                                         <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -189,32 +191,32 @@ export default function JournalEntryModal({ isOpen, onClose, site, onSuccess, on
                                 </select>
                             </div>
                             <div className="space-y-1.5">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Ouvriers présents *</label>
+                                <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t('journal_modal.label_workers')}</label>
                                 <input type="number" name="workers_count" min="0" required className={inputClasses} value={formData.workers_count} onChange={handleChange} />
                             </div>
                         </div>
 
                         <div className="space-y-1.5">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Description des travaux *</label>
+                            <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t('journal_modal.label_desc')}</label>
                             <textarea
                                 name="content"
                                 required
                                 rows="6"
                                 className={`${inputClasses} h-auto min-h-[120px] resize-none py-3 rounded-2xl dark:placeholder:text-white/30`}
-                                placeholder="Détaillez les activités de la journée, les incidents éventuels..."
+                                placeholder={t('journal_modal.ph_desc')}
                                 value={formData.content}
                                 onChange={handleChange}
                             />
                         </div>
 
                         <div className="space-y-3">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Photos (Optionnel)</label>
+                            <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t('journal_modal.label_photos_opt')}</label>
                             <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
                                 {photos.map((photo, index) => (
                                     <div key={index} className="relative aspect-square rounded-xl overflow-hidden border border-black/5 dark:border-white/10 bg-muted group shadow-sm">
                                         <img
                                             src={URL.createObjectURL(photo)}
-                                            alt="Aperçu"
+                                            alt={t('journal_modal.alt_preview')}
                                             className="w-full h-full object-cover"
                                         />
                                         <button
@@ -228,7 +230,7 @@ export default function JournalEntryModal({ isOpen, onClose, site, onSuccess, on
                                 ))}
                                 <label className="aspect-square rounded-xl border-2 border-dashed border-black/10 dark:border-white/10 flex flex-col items-center justify-center cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-all">
                                     <Camera className="h-6 w-6 text-muted-foreground mb-1" />
-                                    <span className="text-[10px] uppercase font-black text-muted-foreground tracking-tighter">Photo</span>
+                                    <span className="text-[10px] uppercase font-black text-muted-foreground tracking-tighter">{t('journal_modal.label_photo_btn')}</span>
                                     <input type="file" multiple accept="image/*" className="hidden" onChange={handlePhotoChange} />
                                 </label>
                             </div>
@@ -243,7 +245,7 @@ export default function JournalEntryModal({ isOpen, onClose, site, onSuccess, on
                         onClick={onClose}
                         className="inline-flex items-center justify-center rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border border-black/5 dark:border-white/10 bg-white dark:bg-white/10 shadow-sm hover:bg-black/5 dark:hover:bg-white/20 h-11 px-6 dark:text-white"
                     >
-                        Annuler
+                        {t('journal_modal.btn_cancel')}
                     </button>
                     <button
                         form="journal-form"
@@ -251,8 +253,8 @@ export default function JournalEntryModal({ isOpen, onClose, site, onSuccess, on
                         disabled={loading || !!existingEntry || checkingExisting}
                         className="inline-flex items-center justify-center rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all bg-primary text-white shadow-lg shadow-primary/20 dark:shadow-[0_0_20px_rgba(236,72,153,0.3)] hover:shadow-xl h-11 px-8 disabled:opacity-50"
                     >
-                        {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Enregistrement...</> : (
-                            checkingExisting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Vérification...</> : <><Save className="mr-2 h-4 w-4" /> Enregistrer le rapport</>
+                        {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('journal_modal.btn_saving')}</> : (
+                            checkingExisting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('journal_modal.btn_checking')}</> : <><Save className="mr-2 h-4 w-4" /> {t('journal_modal.btn_save_report')}</>
                         )}
                     </button>
                 </div>

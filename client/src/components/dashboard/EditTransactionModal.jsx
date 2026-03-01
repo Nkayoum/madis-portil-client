@@ -6,10 +6,12 @@ import {
     Euro, Calendar, FileText, TrendingUp,
     TrendingDown, HardHat, Wallet
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '../../lib/utils';
 
 export default function EditTransactionModal({ isOpen, onClose, transactionId, onSuccess }) {
     const { showToast } = useToast();
+    const { t, i18n } = useTranslation();
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [properties, setProperties] = useState([]);
@@ -61,7 +63,7 @@ export default function EditTransactionModal({ isOpen, onClose, transactionId, o
             });
         } catch (err) {
             console.error(err);
-            showToast({ message: 'Erreur lors du chargement des données.', type: 'error' });
+            showToast({ message: t('finance.edit_transaction.errors.load_error'), type: 'error' });
             onClose();
         } finally {
             setLoading(false);
@@ -102,12 +104,12 @@ export default function EditTransactionModal({ isOpen, onClose, transactionId, o
             await api.patch(`/finance/transactions/${transactionId}/`, data, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
-            showToast({ message: 'Transaction mise à jour.', type: 'success' });
+            showToast({ message: t('finance.edit_transaction.errors.update_success'), type: 'success' });
             if (onSuccess) onSuccess();
             onClose();
         } catch (err) {
             console.error(err);
-            showToast({ message: 'Erreur lors de la mise à jour.', type: 'error' });
+            showToast({ message: t('finance.edit_transaction.errors.update_error'), type: 'error' });
         } finally {
             setSaving(false);
         }
@@ -134,11 +136,9 @@ export default function EditTransactionModal({ isOpen, onClose, transactionId, o
                             <div className="p-2 bg-primary/10 rounded-xl">
                                 <Wallet className="h-5 w-5 text-primary" />
                             </div>
-                            <h2 className="text-2xl md:text-3xl font-black tracking-tighter uppercase">
-                                Modifier <span className="text-primary italic">Transaction</span>
-                            </h2>
+                            <h2 className="text-2xl md:text-3xl font-black tracking-tighter uppercase" dangerouslySetInnerHTML={{ __html: t('finance.edit_transaction.title') }}></h2>
                         </div>
-                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-40 ml-1">Mise à jour des flux financiers.</p>
+                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-40 ml-1">{t('finance.edit_transaction.subtitle')}</p>
                     </div>
                     <button
                         onClick={onClose}
@@ -152,7 +152,7 @@ export default function EditTransactionModal({ isOpen, onClose, transactionId, o
                     {loading ? (
                         <div className="py-20 flex flex-col items-center justify-center gap-4">
                             <Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" />
-                            <p className="text-[10px] font-black uppercase tracking-widest opacity-20">Chargement des données...</p>
+                            <p className="text-[10px] font-black uppercase tracking-widest opacity-20">{t('finance.edit_transaction.loading')}</p>
                         </div>
                     ) : (
                         <form id="edit-transaction-form" onSubmit={handleSubmit} className="space-y-8 py-4">
@@ -160,10 +160,10 @@ export default function EditTransactionModal({ isOpen, onClose, transactionId, o
                                 <div className="space-y-6">
                                     <div className="space-y-3">
                                         <label className={labelClasses}>
-                                            <Building2 size={10} /> Bien immobilier *
+                                            <Building2 size={10} /> {t('finance.edit_transaction.property')}
                                         </label>
                                         <select name="property" required className={inputClasses} value={formData.property} onChange={handleChange}>
-                                            <option value="">Sélectionnez un bien...</option>
+                                            <option value="">{t('finance.edit_transaction.select_property')}</option>
                                             {properties.map(p => (
                                                 <option key={p.id} value={p.id}>{p.name}</option>
                                             ))}
@@ -172,28 +172,28 @@ export default function EditTransactionModal({ isOpen, onClose, transactionId, o
 
                                     <div className="space-y-3">
                                         <label className={labelClasses}>
-                                            <TrendingUp size={10} /> Type de mouvement
+                                            <TrendingUp size={10} /> {t('finance.edit_transaction.movement_type')}
                                         </label>
                                         <select name="type" className={inputClasses} value={formData.type} onChange={handleChange}>
-                                            <option value="INFLOW">Entrée (Revenu)</option>
-                                            <option value="OUTFLOW">Sortie (Dépense)</option>
+                                            <option value="INFLOW">{t('finance.add_transaction.inflow')}</option>
+                                            <option value="OUTFLOW">{t('finance.add_transaction.outflow')}</option>
                                         </select>
                                     </div>
 
                                     <div className="space-y-3">
                                         <label className={labelClasses}>
-                                            <FileText size={10} /> Catégorie
+                                            <FileText size={10} /> {t('finance.edit_transaction.category')}
                                         </label>
                                         <select name="category" className={inputClasses} value={formData.category} onChange={handleChange}>
-                                            <option value="RENT">Loyer perçu</option>
-                                            <option value="COMMISSION">Commission MaDis</option>
-                                            <option value="MAINTENANCE">Maintenance</option>
-                                            <option value="MATERIAUX">Chantier: Matériaux</option>
-                                            <option value="MAIN_D_OEUVRE">Chantier: Main d'œuvre</option>
-                                            <option value="SERVICES">Chantier: Services</option>
-                                            <option value="TAX">Taxe / Impôt</option>
-                                            <option value="INSURANCE">Assurance</option>
-                                            <option value="OTHER">Autre</option>
+                                            <option value="RENT">{t('finance.add_transaction.cat_rent')}</option>
+                                            <option value="COMMISSION">{t('finance.add_transaction.cat_commission')}</option>
+                                            <option value="MAINTENANCE">{t('finance.add_transaction.cat_maintenance')}</option>
+                                            <option value="MATERIAUX">{t('finance.add_transaction.cat_materials')}</option>
+                                            <option value="MAIN_D_OEUVRE">{t('finance.add_transaction.cat_labor')}</option>
+                                            <option value="SERVICES">{t('finance.add_transaction.cat_services')}</option>
+                                            <option value="TAX">{t('finance.add_transaction.cat_tax')}</option>
+                                            <option value="INSURANCE">{t('finance.add_transaction.cat_insurance')}</option>
+                                            <option value="OTHER">{t('finance.add_transaction.cat_other')}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -201,30 +201,30 @@ export default function EditTransactionModal({ isOpen, onClose, transactionId, o
                                 <div className="space-y-6">
                                     <div className="space-y-3">
                                         <label className={labelClasses}>
-                                            <Euro size={10} /> Montant (€) *
+                                            <Euro size={10} /> {t('finance.edit_transaction.amount')}
                                         </label>
                                         <input type="number" step="0.01" name="amount" required placeholder="0.00" className={inputClasses} value={formData.amount} onChange={handleChange} />
                                     </div>
 
                                     <div className="space-y-3">
                                         <label className={labelClasses}>
-                                            <Calendar size={10} /> Date de paiement *
+                                            <Calendar size={10} /> {t('finance.edit_transaction.payment_date')}
                                         </label>
                                         <input type="date" name="date" required className={inputClasses} value={formData.date} onChange={handleChange} />
                                     </div>
 
                                     <div className="grid grid-cols-2 gap-4">
                                         <div className="space-y-3">
-                                            <label className={labelClasses}>Mois</label>
+                                            <label className={labelClasses}>{t('finance.edit_transaction.month_label')}</label>
                                             <select name="period_month" className={inputClasses} value={formData.period_month} onChange={handleChange}>
                                                 <option value="">N/A</option>
                                                 {[...Array(12)].map((_, i) => (
-                                                    <option key={i + 1} value={i + 1}>{new Date(2000, i).toLocaleString('fr-FR', { month: 'short' })}</option>
+                                                    <option key={i + 1} value={i + 1}>{new Date(2000, i).toLocaleString(i18n.language === 'fr' ? 'fr-FR' : 'en-US', { month: 'short' })}</option>
                                                 ))}
                                             </select>
                                         </div>
                                         <div className="space-y-3">
-                                            <label className={labelClasses}>Année</label>
+                                            <label className={labelClasses}>{t('finance.edit_transaction.year_label')}</label>
                                             <select name="period_year" className={inputClasses} value={formData.period_year} onChange={handleChange}>
                                                 <option value="">N/A</option>
                                                 {[...Array(5)].map((_, i) => {
@@ -240,10 +240,10 @@ export default function EditTransactionModal({ isOpen, onClose, transactionId, o
                             <div className="grid gap-8 md:grid-cols-2">
                                 <div className="space-y-3">
                                     <label className={labelClasses}>
-                                        <HardHat size={10} /> Chantier associé
+                                        <HardHat size={10} /> {t('finance.edit_transaction.associated_site')}
                                     </label>
                                     <select name="site" className={inputClasses} value={formData.site} onChange={handleChange}>
-                                        <option value="">Aucun...</option>
+                                        <option value="">{t('finance.edit_transaction.no_site')}</option>
                                         {sites
                                             .filter(s => s.property === parseInt(formData.property) || s.project_property === parseInt(formData.property))
                                             .map(s => (
@@ -253,7 +253,7 @@ export default function EditTransactionModal({ isOpen, onClose, transactionId, o
                                     </select>
                                 </div>
                                 <div className="space-y-3">
-                                    <label className={labelClasses}>Justificatif (Remplacer)</label>
+                                    <label className={labelClasses}>{t('finance.edit_transaction.replace_file')}</label>
                                     <div className="relative group">
                                         <input
                                             type="file"
@@ -261,19 +261,19 @@ export default function EditTransactionModal({ isOpen, onClose, transactionId, o
                                             className={`${inputClasses} cursor-pointer file:hidden`}
                                         />
                                         <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[8px] font-black uppercase tracking-widest opacity-20 group-hover:opacity-40 transition-opacity">
-                                            Parcourir
+                                            {t('finance.edit_transaction.browse')}
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             <div className="space-y-3">
-                                <label className={labelClasses}>Description</label>
+                                <label className={labelClasses}>{t('finance.edit_transaction.description')}</label>
                                 <textarea
                                     name="description"
                                     rows="3"
                                     className={`${inputClasses} h-auto py-4 resize-none`}
-                                    placeholder="Ajouter des détails sur cette opération..."
+                                    placeholder={t('finance.edit_transaction.description_placeholder')}
                                     value={formData.description}
                                     onChange={handleChange}
                                 ></textarea>
@@ -288,7 +288,7 @@ export default function EditTransactionModal({ isOpen, onClose, transactionId, o
                         onClick={onClose}
                         className="inline-flex items-center justify-center rounded-full text-[10px] font-black uppercase tracking-widest transition-all border border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 h-11 px-8"
                     >
-                        Annuler
+                        {t('finance.edit_transaction.cancel')}
                     </button>
                     <button
                         form="edit-transaction-form"
@@ -297,9 +297,9 @@ export default function EditTransactionModal({ isOpen, onClose, transactionId, o
                         className="inline-flex items-center justify-center rounded-full text-[10px] font-black uppercase tracking-widest transition-all bg-primary text-white shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none h-11 px-10"
                     >
                         {saving ? (
-                            <><Loader2 className="mr-3 h-4 w-4 animate-spin" /> Enregistrement...</>
+                            <><Loader2 className="mr-3 h-4 w-4 animate-spin" /> {t('finance.edit_transaction.saving')}</>
                         ) : (
-                            <><Save className="mr-3 h-4 w-4" /> Enregistrer les modifications</>
+                            <><Save className="mr-3 h-4 w-4" /> {t('finance.edit_transaction.save_changes')}</>
                         )}
                     </button>
                 </div>

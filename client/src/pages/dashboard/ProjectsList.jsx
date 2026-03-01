@@ -3,12 +3,14 @@ import { Link } from 'react-router-dom';
 import api from '../../lib/axios';
 import { Building2, Calendar, Euro, ArrowRight, Loader2, Plus, HardHat, ClipboardList } from 'lucide-react';
 import { format } from 'date-fns';
-import { fr } from 'date-fns/locale';
+import { fr, enUS } from 'date-fns/locale';
 import { useAuth } from '../../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 import { cn, formatCurrency } from '../../lib/utils';
 
 export default function ProjectsList() {
     const { user } = useAuth();
+    const { t, i18n } = useTranslation();
     const [projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -23,7 +25,7 @@ export default function ProjectsList() {
             const response = await api.get('/projects/');
             setProjects(response.data.results || response.data || []);
         } catch (err) {
-            setError('Impossible de charger les projets.');
+            setError(t('projects.load_error'));
             console.error(err);
         } finally {
             setLoading(false);
@@ -44,7 +46,7 @@ export default function ProjectsList() {
         return (
             <div className="flex h-[50vh] flex-col items-center justify-center gap-4">
                 <Loader2 className="h-10 w-10 animate-spin text-black opacity-20" />
-                <p className="text-[10px] font-black uppercase tracking-widest opacity-40">Chargement des chantiers...</p>
+                <p className="text-[10px] font-black uppercase tracking-widest opacity-40">{t('projects.loading')}</p>
             </div>
         );
     }
@@ -64,12 +66,12 @@ export default function ProjectsList() {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                 <div className="space-y-0.5">
                     <h1 className="text-xl md:text-2xl font-bold tracking-tight uppercase leading-none">
-                        {activeTab === 'CONSTRUCTION' ? 'Projets' : 'Maintenance'}
+                        {activeTab === 'CONSTRUCTION' ? t('projects.list_title_construction') : t('projects.list_title_maintenance')}
                     </h1>
                     <p className="text-[9px] font-bold uppercase tracking-wider opacity-40 leading-relaxed">
                         {activeTab === 'CONSTRUCTION'
-                            ? "Suivi de vos projets immobiliers."
-                            : "Suivi des interventions techniques."}
+                            ? t('projects.list_subtitle_construction')
+                            : t('projects.list_subtitle_maintenance')}
                     </p>
                 </div>
             </div>
@@ -86,7 +88,7 @@ export default function ProjectsList() {
                         )}
                     >
                         <HardHat className="h-3.5 w-3.5" />
-                        Développement
+                        {t('projects.tab_construction')}
                         <span className={cn(
                             "ml-1.5 min-w-[16px] h-[16px] flex items-center justify-center rounded-full text-[7px] font-bold shadow-sm",
                             activeTab === 'CONSTRUCTION' ? "bg-black dark:bg-white text-white dark:text-black" : "bg-black/5 dark:bg-white/10 text-black dark:text-white"
@@ -104,7 +106,7 @@ export default function ProjectsList() {
                         )}
                     >
                         <ClipboardList className="h-3.5 w-3.5" />
-                        Maintenance
+                        {t('projects.tab_maintenance')}
                         <span className={cn(
                             "ml-1.5 min-w-[16px] h-[16px] flex items-center justify-center rounded-full text-[7px] font-bold shadow-sm",
                             activeTab === 'MAINTENANCE' ? "bg-black dark:bg-white text-white dark:text-black" : "bg-black/5 dark:bg-white/10 text-black dark:text-white"
@@ -125,10 +127,10 @@ export default function ProjectsList() {
                         )}
                     </div>
                     <h3 className="text-xl font-bold tracking-tight uppercase mb-2">
-                        {activeTab === 'CONSTRUCTION' ? 'Aucun projet' : 'Aucune intervention'}
+                        {activeTab === 'CONSTRUCTION' ? t('projects.no_projects') : t('projects.no_maintenance')}
                     </h3>
                     <p className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-40 max-w-sm mx-auto">
-                        Registre opérationnel vierge.
+                        {t('projects.empty_register')}
                     </p>
                 </div>
             ) : (
@@ -150,7 +152,7 @@ export default function ProjectsList() {
                                         </h3>
                                         <div className="flex items-center gap-1.5 mt-0.5 opacity-40">
                                             <Building2 className="h-2.5 w-2.5 flex-shrink-0" />
-                                            <span className="text-[7.5px] font-bold uppercase tracking-widest truncate">{project.property_name || 'Non défini'}</span>
+                                            <span className="text-[7.5px] font-bold uppercase tracking-widest truncate">{project.property_name || t('projects.not_defined')}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -168,7 +170,7 @@ export default function ProjectsList() {
 
                             <div className="grid grid-cols-2 gap-3 mt-auto pt-3 border-t border-black/5 dark:border-white/5">
                                 <div className="flex flex-col gap-0.5">
-                                    <span className="text-[7px] font-bold uppercase tracking-widest opacity-30 text-[6.5px]">Budget</span>
+                                    <span className="text-[7px] font-bold uppercase tracking-widest opacity-30 text-[6.5px]">{t('projects.budget')}</span>
                                     <div className="flex items-center gap-1 font-bold text-[9.5px] tracking-tight text-black dark:text-white">
                                         <div className="p-0.5 rounded bg-emerald-500/10 text-emerald-600">
                                             <Euro className="h-2.5 w-2.5" />
@@ -177,12 +179,12 @@ export default function ProjectsList() {
                                     </div>
                                 </div>
                                 <div className="flex flex-col gap-0.5">
-                                    <span className="text-[7px] font-bold uppercase tracking-widest opacity-30 text-[6.5px]">Lancement</span>
+                                    <span className="text-[7px] font-bold uppercase tracking-widest opacity-30 text-[6.5px]">{t('projects.launch')}</span>
                                     <div className="flex items-center gap-1 font-bold text-[9.5px] tracking-tight text-black dark:text-white">
                                         <div className="p-0.5 rounded bg-blue-500/10 text-blue-600">
                                             <Calendar className="h-2.5 w-2.5" />
                                         </div>
-                                        <span>{project.start_date ? format(new Date(project.start_date), 'd MMM yy', { locale: fr }).toUpperCase() : '---'}</span>
+                                        <span>{project.start_date ? format(new Date(project.start_date), 'd MMM yy', { locale: i18n.language === 'en' ? enUS : fr }).toUpperCase() : '---'}</span>
                                     </div>
                                 </div>
                             </div>
