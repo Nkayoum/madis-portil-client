@@ -144,11 +144,11 @@ export default function LoginPage() {
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <button
                             type="button"
-                            onClick={() => fillDemo('admin@madis.com')}
+                            onClick={() => fillDemo('harisfares4@gmail.com')}
                             className="text-left p-4 rounded-xl bg-background/50 border border-foreground/10 hover:border-primary/50 hover:bg-primary/5 transition-all group"
                         >
                             <p className="text-[9px] font-black text-primary uppercase tracking-tighter mb-1 transition-transform group-hover:translate-x-1">{t('auth.demo_admin')}</p>
-                            <p className="text-[10px] font-bold text-muted-foreground truncate">admin@madis.com</p>
+                            <p className="text-[10px] font-bold text-muted-foreground truncate">harisfares4@gmail.com</p>
                         </button>
                         <button
                             type="button"
