@@ -286,7 +286,7 @@ export default function EditTransactionModal({ isOpen, onClose, transactionId, o
                     <button
                         type="button"
                         onClick={onClose}
-                        className="inline-flex items-center justify-center rounded-full text-[10px] font-black uppercase tracking-widest transition-all border border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 h-14 px-8"
+                        className="inline-flex items-center justify-center rounded-full text-[10px] font-black uppercase tracking-widest transition-all border border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 h-11 px-8"
                     >
                         Annuler
                     </button>
@@ -294,7 +294,7 @@ export default function EditTransactionModal({ isOpen, onClose, transactionId, o
                         form="edit-transaction-form"
                         type="submit"
                         disabled={saving || loading}
-                        className="inline-flex items-center justify-center rounded-full text-[10px] font-black uppercase tracking-widest transition-all bg-primary text-white shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none h-14 px-10"
+                        className="inline-flex items-center justify-center rounded-full text-[10px] font-black uppercase tracking-widest transition-all bg-primary text-white shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none h-11 px-10"
                     >
                         {saving ? (
                             <><Loader2 className="mr-3 h-4 w-4 animate-spin" /> Enregistrement...</>

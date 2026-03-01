@@ -101,7 +101,7 @@ export default function UsersList() {
                 </div>
                 <Link
                     to="/dashboard/users/new"
-                    className="h-11 md:h-12 px-6 md:px-8 rounded-2xl bg-primary text-white text-[10px] font-bold uppercase tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-2xl shadow-primary/20"
+                    className="h-10 px-6 rounded-2xl bg-primary text-white text-[10px] font-bold uppercase tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-2xl shadow-primary/20"
                 >
                     <Plus className="h-4 w-4" />
                     Inscrire Nouveau Client

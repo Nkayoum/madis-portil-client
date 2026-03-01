@@ -123,7 +123,7 @@ export default function TicketsList() {
                 </div>
                 <Link
                     to="/dashboard/tickets/new"
-                    className="inline-flex items-center justify-center rounded-full text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all bg-black dark:bg-primary text-white hover:bg-black/90 dark:hover:bg-primary/90 h-10 md:h-11 px-6 md:px-8 shadow-lg shadow-black/10 dark:shadow-[0_0_20px_rgba(255,0,72,0.3)] group whitespace-nowrap w-fit"
+                    className="inline-flex items-center justify-center rounded-xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all bg-black dark:bg-primary text-white hover:bg-black/90 dark:hover:bg-primary/90 h-9 px-5 shadow-lg shadow-black/10 dark:shadow-[0_0_20px_rgba(255,0,72,0.3)] group whitespace-nowrap w-fit"
                 >
                     <Plus className="mr-2 h-4 w-4 group-hover:rotate-90 transition-transform duration-500" />
                     Nouveau ticket

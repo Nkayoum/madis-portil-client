@@ -67,7 +67,7 @@ export default function ConstructionList() {
                 {user?.role === 'ADMIN_MADIS' && (
                     <Link
                         to="/dashboard/construction/new"
-                        className="inline-flex items-center justify-center rounded-xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all bg-black text-white dark:bg-primary dark:solaris-neon-pink hover:bg-black/90 h-10 md:h-11 px-6 md:px-8 shadow-md group whitespace-nowrap"
+                        className="inline-flex items-center justify-center rounded-xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all bg-black text-white dark:bg-primary dark:solaris-neon-pink hover:bg-black/90 h-9 px-5 shadow-md group whitespace-nowrap"
                     >
                         <Plus className="mr-2 h-4 w-4 group-hover:rotate-90 transition-transform duration-500" />
                         {activeTab === 'CONSTRUCTION' ? 'Nouveau Chantier' : 'Nouvelle Intervention'}

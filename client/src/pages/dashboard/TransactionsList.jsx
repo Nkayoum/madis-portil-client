@@ -121,7 +121,7 @@ export default function TransactionsList() {
                 <div className="flex items-center gap-4">
                     <button
                         onClick={handleExportCSV}
-                        className="h-14 px-8 flex items-center justify-center rounded-2xl bg-black/[0.02] border border-black/5 text-[11px] font-black uppercase tracking-widest hover:bg-black/5 transition-all text-black/60"
+                        className="h-10 px-6 flex items-center justify-center rounded-2xl bg-black/[0.02] border border-black/5 text-[11px] font-black uppercase tracking-widest hover:bg-black/5 transition-all text-black/60"
                     >
                         <Download className="mr-3 h-4 w-4" />
                         Exporter (CSV)
@@ -129,7 +129,7 @@ export default function TransactionsList() {
                     {isAdmin && (
                         <Link
                             to="/dashboard/finance/transactions/new"
-                            className="h-14 px-8 flex items-center justify-center rounded-2xl bg-primary text-white text-[11px] font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] transition-all"
+                            className="h-10 px-6 flex items-center justify-center rounded-2xl bg-primary text-white text-[11px] font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] transition-all"
                         >
                             <Plus className="mr-3 h-4 w-4" />
                             Initialiser un flux
