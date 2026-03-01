@@ -10,9 +10,15 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const storedUser = localStorage.getItem('madis_user');
         const token = localStorage.getItem('madis_token');
+        const refreshToken = localStorage.getItem('madis_refresh_token');
 
-        if (storedUser && token) {
+        if (storedUser && token && refreshToken) {
             setUser(JSON.parse(storedUser));
+        } else {
+            // Clean up if incomplete Auth State
+            localStorage.removeItem('madis_token');
+            localStorage.removeItem('madis_refresh_token');
+            localStorage.removeItem('madis_user');
         }
         setLoading(false);
     }, []);
@@ -20,9 +26,10 @@ export const AuthProvider = ({ children }) => {
     const login = async (email, password) => {
         try {
             const response = await api.post('/auth/login/', { email, password });
-            const { token, user } = response.data;
+            const { token, refresh, user } = response.data;
 
             localStorage.setItem('madis_token', token);
+            localStorage.setItem('madis_refresh_token', refresh);
             localStorage.setItem('madis_user', JSON.stringify(user));
             setUser(user);
             return { success: true };
@@ -34,12 +41,16 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const logout = () => {
+    const logout = async () => {
+        const refresh = localStorage.getItem('madis_refresh_token');
         localStorage.removeItem('madis_token');
+        localStorage.removeItem('madis_refresh_token');
         localStorage.removeItem('madis_user');
         setUser(null);
         try {
-            api.post('/auth/logout/');
+            if (refresh) {
+                await api.post('/auth/logout/', { refresh });
+            }
         } catch (e) {
             // Ignore error on logout
         }
@@ -57,7 +68,7 @@ export const AuthProvider = ({ children }) => {
                 const fetchRes = await fetch('http://localhost:8000/api/v1/auth/profile/', {
                     method: 'PATCH',
                     headers: {
-                        'Authorization': `Token ${token}`,
+                        'Authorization': `Bearer ${token}`,
                         // Do NOT set Content-Type — browser auto-adds multipart boundary
                     },
                     body: data,

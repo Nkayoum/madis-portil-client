@@ -1,5 +1,33 @@
+import os
+import magic
 from django.db import models
 from django.conf import settings
+from django.core.exceptions import ValidationError
+
+def validate_file_type(upload):
+    # Allowed MIME types for Documents
+    ALLOWED_MIMES = [
+        'application/pdf',
+        'image/jpeg',
+        'image/png',
+        'image/webp',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',  # .docx
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',        # .xlsx
+    ]
+    
+    # Check extension
+    ext = os.path.splitext(upload.name)[1][1:].lower()
+    valid_extensions = ['pdf', 'jpg', 'jpeg', 'png', 'webp', 'docx', 'xlsx']
+    if ext not in valid_extensions:
+        raise ValidationError('Extension de fichier non autorisée.')
+
+    # Check true MIME type via python-magic-bin
+    file_mime_type = magic.from_buffer(upload.read(2048), mime=True)
+    # Reset file pointer for Django to save properly later
+    upload.seek(0)
+    
+    if file_mime_type not in ALLOWED_MIMES:
+        raise ValidationError('Type de fichier suspect détecté.')
 
 
 class Document(models.Model):
@@ -15,7 +43,7 @@ class Document(models.Model):
         AUTRE = 'AUTRE', 'Autre'
 
     title = models.CharField('titre', max_length=255)
-    file = models.FileField('fichier', upload_to='documents/%Y/%m/')
+    file = models.FileField('fichier', upload_to='documents/%Y/%m/', validators=[validate_file_type])
     category = models.CharField(
         'catégorie', max_length=20, choices=Category.choices, default=Category.AUTRE
     )

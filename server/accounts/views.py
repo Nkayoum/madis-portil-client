@@ -1,9 +1,9 @@
 import logging
 
 from rest_framework import generics, permissions, status
-from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import User
 from .permissions import IsAdminMaDis
@@ -31,10 +31,11 @@ class LoginView(APIView):
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
-        token, _ = Token.objects.get_or_create(user=user)
+        refresh = RefreshToken.for_user(user)
         logger.info(f"User logged in: {user.email}")
         return Response({
-            'token': token.key,
+            'token': str(refresh.access_token),
+            'refresh': str(refresh),
             'user': UserSerializer(user).data,
         })
 
@@ -46,10 +47,15 @@ class LogoutView(APIView):
     """
 
     def post(self, request):
-        if hasattr(request.user, 'auth_token'):
-            request.user.auth_token.delete()
-        logger.info(f"User logged out: {request.user.email}")
-        return Response({'detail': 'Déconnexion réussie.'}, status=status.HTTP_200_OK)
+        try:
+            refresh_token = request.data.get("refresh")
+            if refresh_token:
+                token = RefreshToken(refresh_token)
+                token.blacklist()
+            logger.info(f"User logged out: {request.user.email}")
+            return Response({'detail': 'Déconnexion réussie.'}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ProfileView(generics.RetrieveUpdateAPIView):
@@ -77,13 +83,12 @@ class ChangePasswordView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         # Regenerate token after password change
-        if hasattr(request.user, 'auth_token'):
-            request.user.auth_token.delete()
-        token = Token.objects.create(user=request.user)
+        refresh = RefreshToken.for_user(request.user)
         logger.info(f"Password changed for: {request.user.email}")
         return Response({
             'detail': 'Mot de passe modifié avec succès.',
-            'token': token.key,
+            'token': str(refresh.access_token),
+            'refresh': str(refresh),
         })
 
 
@@ -139,10 +144,6 @@ class AdminSetPasswordView(APIView):
         serializer = AdminSetPasswordSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save(user)
-        
-        # Invalidate existing tokens for this user
-        if hasattr(user, 'auth_token'):
-            user.auth_token.delete()
             
         logger.info(f"Password reset by admin {request.user.email} for user {user.email}")
         return Response(
