@@ -58,7 +58,7 @@ export default function DashboardLayout() {
             {/* Sidebar */}
             <aside
                 className={cn(
-                    "fixed top-0 left-0 z-50 h-screen w-64 solaris-sidebar transition-transform duration-300 lg:translate-x-0 lg:static flex flex-col shadow-xl lg:shadow-none",
+                    "fixed top-0 left-0 z-50 h-screen w-56 solaris-sidebar transition-transform duration-300 lg:translate-x-0 lg:static flex flex-col shadow-xl lg:shadow-none",
                     sidebarOpen ? "translate-x-0" : "-translate-x-full"
                 )}
             >
