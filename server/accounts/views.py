@@ -7,6 +7,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import User
 from .permissions import IsAdminMaDis
+from .throttling import LoginRateThrottle, OTPRequestThrottle
 from .serializers import (
     AdminSetPasswordSerializer,
     ChangePasswordSerializer,
@@ -26,6 +27,7 @@ class LoginView(APIView):
     """
 
     permission_classes = [permissions.AllowAny]
+    throttle_classes = [LoginRateThrottle]
 
     def post(self, request):
         serializer = LoginSerializer(data=request.data)

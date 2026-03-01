@@ -188,6 +188,9 @@ class CashCallViewSet(viewsets.ModelViewSet):
                 details=f"Validé par {self.request.user.email}. Montant intégral: {instance.amount}€"
             )
 
+    def destroy(self, request, *args, **kwargs):
+        return Response({"detail": "La suppression des appels de fonds est interdite."}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
 class SettlementViewSet(viewsets.ModelViewSet):
     """
     CRUD for Settlements.
@@ -227,6 +230,9 @@ class SettlementViewSet(viewsets.ModelViewSet):
                 details=f"Paiement au client {owner.email} de {instance.amount}€ validé par {self.request.user.email}."
             )
 
+    def destroy(self, request, *args, **kwargs):
+        return Response({"detail": "La suppression des versements est interdite."}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
 class FinancialTransactionViewSet(viewsets.ModelViewSet):
     """
     CRUD for financial transactions.
@@ -258,6 +264,9 @@ class FinancialTransactionViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         prop = serializer.validated_data.get('property')
         serializer.save(created_by=self.request.user, owner=prop.owner if prop else None)
+
+    def destroy(self, request, *args, **kwargs):
+        return Response({"detail": "La suppression des transactions financières est interdite."}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
     @action(detail=False, methods=['get'], url_path='export-csv')
     def export_csv(self, request):

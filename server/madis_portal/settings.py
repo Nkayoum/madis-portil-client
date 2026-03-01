@@ -139,8 +139,15 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_THROTTLE_RATES': {
         'anon': '1000/day' if DEBUG else '100/day',
-        'user': '10000/day' if DEBUG else '1000/day'
+        'user': '10000/day' if DEBUG else '1000/day',
+        'login': '20/minute' if DEBUG else '5/minute',
+        'otp': '10/minute' if DEBUG else '3/minute',
     },
+    'DEFAULT_PARSER_CLASSES': [
+        'madis_portal.parsers.SanitizedJSONParser',
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser'
+    ],
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
         'rest_framework.filters.SearchFilter',
