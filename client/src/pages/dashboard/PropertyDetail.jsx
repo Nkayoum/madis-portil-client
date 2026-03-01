@@ -1313,15 +1313,6 @@ export default function PropertyDetail() {
                                             Données exportées du grand livre.
                                         </div>
                                         <div className="flex flex-wrap items-center gap-4">
-                                            {isAdmin && (
-                                                <Link
-                                                    to={`/dashboard/finance/transactions/new?propertyId=${id}&returnToProperty=true`}
-                                                    className="inline-flex items-center justify-center rounded-xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all bg-black text-white shadow-md hover:scale-105 active:scale-95 h-10 px-6"
-                                                >
-                                                    <Plus className="mr-2 h-3.5 w-3.5" />
-                                                    Nouveau
-                                                </Link>
-                                            )}
                                             <Link to="/dashboard/finance/transactions" className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-black hover:underline underline-offset-2 decoration-2">
                                                 Module Finance
                                             </Link>

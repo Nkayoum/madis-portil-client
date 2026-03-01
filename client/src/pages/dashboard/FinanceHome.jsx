@@ -27,14 +27,14 @@ export default function FinanceHome() {
                     <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 w-full sm:w-auto">
                         <Link
                             to="/dashboard/finance/transactions"
-                            className="h-12 sm:h-14 px-6 sm:px-8 flex items-center justify-center rounded-2xl bg-black/[0.02] border border-black/5 text-[10px] sm:text-[11px] font-black uppercase tracking-widest hover:bg-black/5 transition-all text-black/60 w-full sm:w-auto"
+                            className="h-10 px-6 flex items-center justify-center rounded-2xl bg-black/[0.02] border border-black/5 text-[10px] sm:text-[11px] font-black uppercase tracking-widest hover:bg-black/5 transition-all text-black/60 w-full sm:w-auto"
                         >
                             <History className="mr-3 h-4 w-4" />
                             Historique
                         </Link>
                         <Link
                             to="/dashboard/finance/transactions/new"
-                            className="h-12 sm:h-14 px-6 sm:px-8 flex items-center justify-center rounded-2xl bg-primary text-white text-[10px] sm:text-[11px] font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] transition-all w-full sm:w-auto"
+                            className="h-10 px-6 flex items-center justify-center rounded-2xl bg-primary text-white text-[10px] sm:text-[11px] font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] transition-all w-full sm:w-auto"
                         >
                             <Plus className="mr-3 h-4 w-4" />
                             Enregistrer
