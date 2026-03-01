@@ -20,6 +20,7 @@ import {
 import UploadDocumentModal from '../../components/dashboard/UploadDocumentModal';
 import JournalEntryModal from '../../components/dashboard/JournalEntryModal';
 import EditJournalEntryModal from '../../components/dashboard/EditJournalEntryModal';
+import EditTransactionModal from '../../components/dashboard/EditTransactionModal';
 
 export default function ConstructionDetail() {
     const { id } = useParams();
@@ -38,8 +39,10 @@ export default function ConstructionDetail() {
     const [isJournalModalOpen, setIsJournalModalOpen] = useState(false);
     const [isEditJournalModalOpen, setIsEditJournalModalOpen] = useState(false);
     const [isSuspensionModalOpen, setIsSuspensionModalOpen] = useState(false);
+    const [isEditTransactionModalOpen, setIsEditTransactionModalOpen] = useState(false);
     const [suspensionReason, setSuspensionReason] = useState('');
     const [selectedEntryId, setSelectedEntryId] = useState(null);
+    const [selectedTransactionId, setSelectedTransactionId] = useState(null);
 
     // Get initial tab from URL query param
     const queryTab = new URLSearchParams(location.search).get('tab');
@@ -777,45 +780,52 @@ export default function ConstructionDetail() {
                                                         {formatCurrency(tx.amount, true)}
                                                     </td>
                                                     <td className="px-5 md:px-6 py-3.5 text-right">
-                                                        <div className="flex items-center justify-end gap-1">
+                                                        <div className="flex items-center justify-end gap-2 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
                                                             {tx.invoice && (
                                                                 <a
                                                                     href={tx.invoice}
                                                                     target="_blank"
                                                                     rel="noopener noreferrer"
                                                                     title="Voir le justificatif"
-                                                                    className="p-1.5 md:p-2 hover:bg-primary/10 dark:hover:bg-primary/20 rounded-xl transition-all inline-block opacity-60 hover:opacity-100"
+                                                                    className="p-2 bg-black/[0.03] dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 rounded-xl transition-all shadow-sm group/btn"
                                                                 >
-                                                                    <Eye className="h-4 w-4 text-primary" />
+                                                                    <Eye className="h-3.5 w-3.5 text-primary group-hover/btn:scale-110 transition-transform" />
                                                                 </a>
                                                             )}
+
+                                                            {/* Only ADMIN_MADIS can edit transactions */}
+                                                            {user?.role === 'ADMIN_MADIS' && (
+                                                                <button
+                                                                    onClick={() => {
+                                                                        setSelectedTransactionId(tx.id);
+                                                                        setIsEditTransactionModalOpen(true);
+                                                                    }}
+                                                                    className="p-1.5 md:p-2 bg-black/[0.03] dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 rounded-xl transition-all shadow-sm group/btn"
+                                                                    title="Modifier"
+                                                                >
+                                                                    <Edit className="h-3.5 w-3.5 text-black dark:text-white group-hover/btn:scale-110 transition-transform" />
+                                                                </button>
+                                                            )}
+
+                                                            {/* Both ADMIN_MADIS and CHEF_CHANTIER can delete transactions */}
                                                             {(user?.role === 'ADMIN_MADIS' || user?.role === 'CHEF_CHANTIER') && (
-                                                                <>
-                                                                    <Link
-                                                                        to={`/dashboard/finance/transactions/${tx.id}/edit?site=${id}`}
-                                                                        className="p-1.5 md:p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-xl transition-all inline-block opacity-100 md:opacity-0 md:group-hover:opacity-100"
-                                                                        title="Modifier"
-                                                                    >
-                                                                        <Edit className="h-4 w-4" />
-                                                                    </Link>
-                                                                    <button
-                                                                        onClick={async () => {
-                                                                            if (!window.confirm('Supprimer cette transaction ? Cette action est irréversible.')) return;
-                                                                            try {
-                                                                                await api.delete(`/finance/transactions/${tx.id}/`);
-                                                                                showToast({ message: 'Transaction supprimée.', type: 'success' });
-                                                                                fetchSiteDetails();
-                                                                            } catch (err) {
-                                                                                console.error(err);
-                                                                                showToast({ message: 'Erreur lors de la suppression.', type: 'error' });
-                                                                            }
-                                                                        }}
-                                                                        className="p-1.5 md:p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all inline-block opacity-100 md:opacity-0 md:group-hover:opacity-100 text-red-500"
-                                                                        title="Supprimer"
-                                                                    >
-                                                                        <Trash2 className="h-4 w-4" />
-                                                                    </button>
-                                                                </>
+                                                                <button
+                                                                    onClick={async () => {
+                                                                        if (!window.confirm('Supprimer cette transaction ? Cette action est irréversible.')) return;
+                                                                        try {
+                                                                            await api.delete(`/finance/transactions/${tx.id}/`);
+                                                                            showToast({ message: 'Transaction supprimée.', type: 'success' });
+                                                                            fetchSiteDetails();
+                                                                        } catch (err) {
+                                                                            console.error(err);
+                                                                            showToast({ message: 'Erreur lors de la suppression.', type: 'error' });
+                                                                        }
+                                                                    }}
+                                                                    className="p-1.5 md:p-2 bg-red-50 dark:bg-red-900/10 hover:bg-red-100 dark:hover:bg-red-900/20 rounded-xl transition-all shadow-sm group/btn"
+                                                                    title="Supprimer"
+                                                                >
+                                                                    <Trash2 className="h-3.5 w-3.5 text-red-500 group-hover/btn:scale-110 transition-transform" />
+                                                                </button>
                                                             )}
                                                         </div>
                                                     </td>
@@ -876,6 +886,20 @@ export default function ConstructionDetail() {
                     fetchSiteDetails();
                     setIsEditJournalModalOpen(false);
                     setSelectedEntryId(null);
+                }}
+            />
+
+            <EditTransactionModal
+                isOpen={isEditTransactionModalOpen}
+                onClose={() => {
+                    setIsEditTransactionModalOpen(false);
+                    setSelectedTransactionId(null);
+                }}
+                transactionId={selectedTransactionId}
+                onSuccess={() => {
+                    fetchSiteDetails();
+                    setIsEditTransactionModalOpen(false);
+                    setSelectedTransactionId(null);
                 }}
             />
 
