@@ -666,14 +666,8 @@ export default function ConstructionDetail() {
                                                     paddingAngle={8}
                                                     dataKey="value"
                                                 >
-                                                    {[
-                                                        '#ff0048', // Primary pink
-                                                        '#00f2ff', // Neon cyan
-                                                        '#a855f7', // Purple
-                                                        '#f59e0b', // Amber
-                                                        '#10b981'  // Emerald
-                                                    ].map((color, index) => (
-                                                        <Cell key={`cell-${index}`} fill={color} stroke="none" />
+                                                    {Object.entries(site.budget_by_category).map(([key, value], index) => (
+                                                        <Cell key={`cell-${key}`} fill={['#ff0048', '#00f2ff', '#a855f7', '#f59e0b', '#10b981'][index % 5]} stroke="none" />
                                                     ))}
                                                 </Pie>
                                                 <RechartsTooltip
@@ -707,7 +701,7 @@ export default function ConstructionDetail() {
                                     <div>
                                         <p className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground mb-1.5 opacity-40">Compteur Consommation</p>
                                         <div className="flex items-baseline gap-2">
-                                            <span className="text-2xl md:text-3xl font-bold tracking-tight text-black">
+                                            <span className="text-2xl md:text-3xl font-bold tracking-tight text-black dark:text-white">
                                                 {formatCurrency(site.budget_spent || 0, true)}
                                             </span>
                                             <span className="text-[9px] md:text-[10px] text-muted-foreground font-bold uppercase tracking-widest opacity-30">
@@ -719,19 +713,22 @@ export default function ConstructionDetail() {
                                     <div className="space-y-3.5">
                                         {Object.entries(site.budget_by_category || {}).map(([key, value], index) => {
                                             const label = key === 'MATERIAUX' ? 'Matériaux' : key === 'MAIN_D_OEUVRE' ? 'Main d\'œuvre' : key === 'SERVICES' ? 'Services' : key;
-                                            const tints = ['bg-black', 'bg-black/60', 'bg-black/40', 'bg-black/20', 'bg-black/10'];
+                                            const colors = ['#ff0048', '#00f2ff', '#a855f7', '#f59e0b', '#10b981'];
                                             const percentage = site.budget_spent > 0 ? (parseFloat(value) / site.budget_spent) * 100 : 0;
 
                                             return (
                                                 <div key={key} className="space-y-1.5">
                                                     <div className="flex justify-between text-[8px] md:text-[9px] font-bold uppercase tracking-widest">
-                                                        <span>{label}</span>
+                                                        <span className="dark:text-white/80">{label}</span>
                                                         <span className="opacity-40">{formatCurrency(value, true)}</span>
                                                     </div>
-                                                    <div className="h-1.5 bg-black/[0.03] rounded-full overflow-hidden p-[1px]">
+                                                    <div className="h-1.5 bg-black/[0.03] dark:bg-white/10 rounded-full overflow-hidden p-[1px]">
                                                         <div
-                                                            className={cn("h-full rounded-full transition-all duration-1000", tints[index % tints.length])}
-                                                            style={{ width: `${percentage}%` }}
+                                                            className="h-full rounded-full transition-all duration-1000"
+                                                            style={{
+                                                                width: `${percentage}%`,
+                                                                backgroundColor: colors[index % colors.length]
+                                                            }}
                                                         />
                                                     </div>
                                                 </div>
