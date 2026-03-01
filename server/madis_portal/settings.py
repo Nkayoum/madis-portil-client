@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'construction.apps.ConstructionConfig',
     'backoffice.apps.BackofficeConfig',
     'finance',
+    'axes',
 ]
 
 MIDDLEWARE = [
@@ -51,6 +52,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
+    # Axes Middleware for tracking failed logins
+    'axes.middleware.AxesMiddleware',
 ]
 
 ROOT_URLCONF = 'madis_portal.urls'
@@ -69,6 +73,14 @@ TEMPLATES = [
             ],
         },
     },
+]
+
+# Authentication Backends Setup
+AUTHENTICATION_BACKENDS = [
+    # Axes comes first to handle lockouts
+    'axes.backends.AxesStandaloneBackend',
+    # Django default
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 WSGI_APPLICATION = 'madis_portal.wsgi.application'
@@ -223,6 +235,12 @@ LOGGING = {
             'filename': BASE_DIR / 'logs' / 'madis_portal.log',
             'formatter': 'verbose',
         },
+        'security_file': {
+            'level': 'WARNING',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs' / 'security.log',
+            'formatter': 'verbose',
+        },
         'console': {
             'class': 'logging.StreamHandler',
             'formatter': 'verbose',
@@ -236,6 +254,11 @@ LOGGING = {
         'django': {
             'handlers': ['console', 'file'],
             'level': 'INFO',
+            'propagate': False,
+        },
+        'security': {
+            'handlers': ['console', 'security_file'],
+            'level': 'WARNING',
             'propagate': False,
         },
     },
@@ -253,3 +276,11 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='MaDis Portail <noreply@madis.fr>')
 ADMIN_EMAIL = config('ADMIN_EMAIL', default='admin@madis.fr')
+
+# django-axes Configuration (Account Lockout)
+AXES_FAILURE_LIMIT = 5  # Lockout after 5 mistakes
+AXES_COOLOFF_TIME = 1   # Wait 1 hour to try again
+AXES_LOCK_OUT_BY_COMBINATION_USER_AND_IP = True
+AXES_RESET_ON_SUCCESS = True
+# Only block logins, not the whole site
+AXES_LOCKOUT_PARAMETERS = [["username", "ip_address"]]

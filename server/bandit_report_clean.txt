@@ -1,0 +1,91 @@
+Run started:2026-03-01 23:39:31.894919+00:00
+
+Test results:
+>> Issue: [B311:blacklist] Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+   Severity: Low   Confidence: High
+   CWE: CWE-330 (https://cwe.mitre.org/data/definitions/330.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_calls.html#b311-random
+   Location: .\accounts\models.py:75:23
+74	    def generate_code(self):
+75	        self.code = f"{random.randint(100000, 999999)}"
+76	        self.created_at = timezone.now()
+
+--------------------------------------------------
+>> Issue: [B310:blacklist] Audit url open for permitted schemes. Allowing use of file:/ or custom schemes is often unexpected.
+   Severity: Medium   Confidence: High
+   CWE: CWE-22 (https://cwe.mitre.org/data/definitions/22.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_calls.html#b310-urllib-urlopen
+   Location: .\test_api_debug.py:10:9
+9	try:
+10	    with urllib.request.urlopen(req) as response:
+11	        print(f"Status: {response.status}")
+
+--------------------------------------------------
+>> Issue: [B310:blacklist] Audit url open for permitted schemes. Allowing use of file:/ or custom schemes is often unexpected.
+   Severity: Medium   Confidence: High
+   CWE: CWE-22 (https://cwe.mitre.org/data/definitions/22.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_calls.html#b310-urllib-urlopen
+   Location: .\test_dashboard_data.py:10:9
+9	try:
+10	    with urllib.request.urlopen(req) as response:
+11	        data = json.loads(response.read().decode('utf-8'))
+
+--------------------------------------------------
+>> Issue: [B310:blacklist] Audit url open for permitted schemes. Allowing use of file:/ or custom schemes is often unexpected.
+   Severity: Medium   Confidence: High
+   CWE: CWE-22 (https://cwe.mitre.org/data/definitions/22.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_calls.html#b310-urllib-urlopen
+   Location: .\test_dashboard_full.py:17:13
+16	    try:
+17	        with urllib.request.urlopen(req) as response:
+18	            data = json.loads(response.read().decode('utf-8'))
+
+--------------------------------------------------
+>> Issue: [B310:blacklist] Audit url open for permitted schemes. Allowing use of file:/ or custom schemes is often unexpected.
+   Severity: Medium   Confidence: High
+   CWE: CWE-22 (https://cwe.mitre.org/data/definitions/22.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_calls.html#b310-urllib-urlopen
+   Location: .\test_login.py:12:9
+11	    req = urllib.request.Request(url, data=json.dumps(data).encode('utf-8'), headers=headers)
+12	    with urllib.request.urlopen(req) as response:
+13	        print(f"Status: {response.status}")
+
+--------------------------------------------------
+>> Issue: [B310:blacklist] Audit url open for permitted schemes. Allowing use of file:/ or custom schemes is often unexpected.
+   Severity: Medium   Confidence: High
+   CWE: CWE-22 (https://cwe.mitre.org/data/definitions/22.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_calls.html#b310-urllib-urlopen
+   Location: .\test_projects.py:11:5
+10	req = urllib.request.Request(login_url, data=json.dumps(login_data).encode('utf-8'), headers=headers)
+11	with urllib.request.urlopen(req) as response:
+12	    login_resp = json.loads(response.read().decode('utf-8'))
+
+--------------------------------------------------
+>> Issue: [B310:blacklist] Audit url open for permitted schemes. Allowing use of file:/ or custom schemes is often unexpected.
+   Severity: Medium   Confidence: High
+   CWE: CWE-22 (https://cwe.mitre.org/data/definitions/22.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_calls.html#b310-urllib-urlopen
+   Location: .\test_projects.py:26:9
+25	    req = urllib.request.Request(projects_url, headers=projects_headers)
+26	    with urllib.request.urlopen(req) as response:
+27	        print(f"Status: {response.status}")
+
+--------------------------------------------------
+
+Code scanned:
+	Total lines of code: 6961
+	Total lines skipped (#nosec): 0
+	Total potential issues skipped due to specifically being disabled (e.g., #nosec BXXX): 0
+
+Run metrics:
+	Total issues (by severity):
+		Undefined: 0
+		Low: 1
+		Medium: 6
+		High: 0
+	Total issues (by confidence):
+		Undefined: 0
+		Low: 0
+		Medium: 0
+		High: 7
+Files skipped (0):

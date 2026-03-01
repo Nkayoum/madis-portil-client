@@ -72,7 +72,8 @@ class UserOTP(models.Model):
     created_at = models.DateTimeField('généré le', auto_now_add=True)
 
     def generate_code(self):
-        self.code = f"{random.randint(100000, 999999)}"
+        # Bandit SAST Fix: Use secrets instead of random for security-sensitive tokens
+        self.code = ''.join(secrets.choice('0123456789') for _ in range(6))
         self.created_at = timezone.now()
         self.save()
 

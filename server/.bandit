@@ -1,0 +1,13 @@
+# .bandit
+exclude_dirs:
+  - 'venv'
+  - 'media'
+  - 'staticfiles'
+  - 'tests'
+  - '__pycache__'
+
+skips:
+  - 'B101' # assert_used - acceptable in tests/debug
+  - 'B105' # hardcoded_password_string - acceptable in tests/scripts
+  - 'B106' # hardcoded_password_funcarg - acceptable in tests/scripts
+  - 'B113' # request_without_timeout - acceptable in local debug scripts

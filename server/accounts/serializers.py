@@ -1,7 +1,9 @@
+import logging
 from django.contrib.auth import authenticate
 from rest_framework import serializers
 from .models import User
 
+logger = logging.getLogger('security')
 
 class UserSerializer(serializers.ModelSerializer):
     """Serializer for user profile data."""
@@ -87,9 +89,14 @@ class LoginSerializer(serializers.Serializer):
     def validate(self, attrs):
         email = attrs.get('email')
         password = attrs.get('password')
+        request = self.context.get('request')
 
-        user = authenticate(username=email, password=password)
+        # django-axes requires the request object
+        user = authenticate(request=request, username=email, password=password)
         if not user:
+            # Security Log: Fail2Ban target
+            ip = request.META.get('REMOTE_ADDR') if request else 'Unknown'
+            logger.warning(f"[AuthFailure] Failed login attempt for '{email}' from IP: {ip}")
             raise serializers.ValidationError('Identifiants invalides.')
         if not user.is_active:
             raise serializers.ValidationError('Ce compte est désactivé.')
