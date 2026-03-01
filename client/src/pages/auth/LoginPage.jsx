@@ -11,6 +11,8 @@ export default function LoginPage() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [requireOtp, setRequireOtp] = useState(false);
+    const [otp, setOtp] = useState('');
 
     const { login } = useAuth();
     const navigate = useNavigate();
@@ -28,10 +30,15 @@ export default function LoginPage() {
         setError('');
         setLoading(true);
 
-        const result = await login(email, password);
+        const result = await login(email, password, requireOtp ? otp : null);
 
         if (result.success) {
-            navigate(from, { replace: true });
+            if (result.require_otp) {
+                setRequireOtp(true);
+                setLoading(false);
+            } else {
+                navigate(from, { replace: true });
+            }
         } else {
             setError(result.error || t('auth.login_error'));
             setLoading(false);
@@ -89,6 +96,26 @@ export default function LoginPage() {
                             />
                         </div>
                     </div>
+
+                    {requireOtp && (
+                        <div className="space-y-2 animate-in fade-in slide-in-from-top-2">
+                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-primary ml-1">
+                                Code OTP (Valid 10 mins)
+                            </label>
+                            <div className="relative group">
+                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary transition-colors group-focus-within:text-primary" />
+                                <input
+                                    type="text"
+                                    required
+                                    maxLength={6}
+                                    className="w-full h-14 bg-foreground/5 dark:bg-white/5 border border-primary/50 dark:border-primary/50 rounded-2xl pl-12 pr-4 text-sm font-bold tracking-widest transition-all focus:bg-foreground/10 dark:focus:bg-white/10 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none placeholder:text-muted-foreground/40 placeholder:uppercase"
+                                    placeholder="123456"
+                                    value={otp}
+                                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
+                                />
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 <button

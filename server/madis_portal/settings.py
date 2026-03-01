@@ -169,11 +169,16 @@ SPECTACULAR_SETTINGS = {
 }
 
 # CORS
-CORS_ALLOWED_ORIGINS = config(
-    'CORS_ALLOWED_ORIGINS',
-    default='http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173,http://127.0.0.1:5173,http://localhost:5174,http://127.0.0.1:5174',
-    cast=Csv()
-)
+# When in DEBUG (local development), allow common local frontend ports.
+# When in Production (DEBUG=False), strictly require CORS_ALLOWED_ORIGINS from env.
+if DEBUG:
+    default_cors = 'http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173,http://127.0.0.1:5173,http://localhost:5174,http://localhost:5175'
+else:
+    default_cors = '' # Force explicit configuration in production
+
+CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', default=default_cors, cast=Csv())
+# Strip empty strings to prevent malformed CORS origins
+CORS_ALLOWED_ORIGINS = [origin for origin in CORS_ALLOWED_ORIGINS if origin]
 CORS_ALLOW_CREDENTIALS = True
 
 # Security settings (production-ready defaults)

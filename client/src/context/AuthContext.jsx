@@ -23,9 +23,18 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
     }, []);
 
-    const login = async (email, password) => {
+    const login = async (email, password, otp = null) => {
         try {
-            const response = await api.post('/auth/login/', { email, password });
+            const payload = { email, password };
+            if (otp) {
+                payload.otp = otp;
+            }
+            const response = await api.post('/auth/login/', payload);
+
+            if (response.data.require_otp) {
+                return { success: true, require_otp: true, email: response.data.email };
+            }
+
             const { token, refresh, user } = response.data;
 
             localStorage.setItem('madis_token', token);

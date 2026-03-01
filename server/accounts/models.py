@@ -1,3 +1,5 @@
+import random
+from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -63,3 +65,23 @@ class User(AbstractUser):
     @property
     def is_chef_chantier(self):
         return self.role == self.Role.CHEF_CHANTIER
+
+class UserOTP(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='otp')
+    code = models.CharField('code OTP', max_length=6)
+    created_at = models.DateTimeField('généré le', auto_now_add=True)
+
+    def generate_code(self):
+        self.code = f"{random.randint(100000, 999999)}"
+        self.created_at = timezone.now()
+        self.save()
+
+    def is_valid(self):
+        return timezone.now() < self.created_at + timezone.timedelta(minutes=10)
+
+    class Meta:
+        verbose_name = 'Code OTP'
+        verbose_name_plural = 'Codes OTP'
+
+    def __str__(self):
+        return f"OTP pour {self.user.email}"

@@ -31,6 +31,39 @@ class LoginView(APIView):
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
+        
+        if user.is_admin_madis:
+            otp_code = request.data.get('otp')
+            from .models import UserOTP
+            if not otp_code:
+                # Generate and send OTP
+                otp, created = UserOTP.objects.get_or_create(user=user)
+                otp.generate_code()
+                
+                from django.core.mail import send_mail
+                try:
+                    send_mail(
+                        'Code de validation MaDis',
+                        f'Votre code de validation (OTP) est: {otp.code}\nIl expirera dans 10 minutes.',
+                        'noreply@madis.fr',
+                        [user.email],
+                        fail_silently=False,
+                    )
+                except Exception as e:
+                    logger.error(f"Erreur d'envoi OTP à {user.email}: {e}")
+                
+                return Response({'require_otp': True, 'email': user.email}, status=status.HTTP_200_OK)
+            else:
+                # Validate OTP
+                try:
+                    otp = UserOTP.objects.get(user=user)
+                    if not otp.is_valid() or otp.code != otp_code:
+                        return Response({'detail': 'Code de validation invalide ou expiré.'}, status=status.HTTP_400_BAD_REQUEST)
+                    # OTP is valid, proceed and delete
+                    otp.delete()
+                except UserOTP.DoesNotExist:
+                    return Response({'detail': 'Aucun code généré pour cet utilisateur.'}, status=status.HTTP_400_BAD_REQUEST)
+
         refresh = RefreshToken.for_user(user)
         logger.info(f"User logged in: {user.email}")
         return Response({
