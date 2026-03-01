@@ -85,6 +85,9 @@ DATABASES = {
     }
 }
 
+if not DEBUG or config('DB_SSL_REQUIRE', default=False, cast=bool):
+    DATABASES['default']['OPTIONS'] = {'sslmode': 'require'}
+
 # Custom User Model
 AUTH_USER_MODEL = 'accounts.User'
 
@@ -199,6 +202,9 @@ if not DEBUG:
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
+    
+    # Trust Nginx/Load Balancer for HTTPS
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Logging — Journalisation
 LOGGING = {

@@ -152,6 +152,24 @@ class ProgressUpdateAdmin(admin.ModelAdmin):
     ordering = ['-updated_at']
 
 
+from backoffice.models import AuditLog
+
+@admin.register(AuditLog)
+class AuditLogAdmin(admin.ModelAdmin):
+    list_display = ('created_at', 'user', 'action', 'ip_address')
+    list_filter = ('created_at', 'user')
+    search_fields = ('action', 'details', 'user__email')
+    readonly_fields = ('user', 'action', 'ip_address', 'details', 'created_at')
+    
+    def has_add_permission(self, request):
+        return False
+        
+    def has_change_permission(self, request, obj=None):
+        return False
+        
+    def has_delete_permission(self, request, obj=None):
+        return False
+
 # ─── Admin Site Configuration ────────────────────────────────
 
 admin.site.site_header = 'MADIS — Administration'
