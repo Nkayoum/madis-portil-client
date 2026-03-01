@@ -48,15 +48,35 @@ export const AuthProvider = ({ children }) => {
     const updateUser = async (data) => {
         try {
             const isFormData = data instanceof FormData;
-            // For FormData, delete Content-Type so browser sets multipart boundary automatically
-            const response = await api.patch('/auth/profile/', data, {
-                headers: isFormData ? { 'Content-Type': undefined } : {},
-            });
-            const updatedUser = response.data;
-            setUser(updatedUser);
-            localStorage.setItem('madis_user', JSON.stringify(updatedUser));
-            return { success: true, user: updatedUser };
+            let responseData;
+
+            if (isFormData) {
+                // Use native fetch for file uploads — axios default headers
+                // interfere with multipart boundary required by Django
+                const token = localStorage.getItem('madis_token');
+                const fetchRes = await fetch('http://localhost:8000/api/v1/auth/profile/', {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `Token ${token}`,
+                        // Do NOT set Content-Type — browser auto-adds multipart boundary
+                    },
+                    body: data,
+                });
+                if (!fetchRes.ok) {
+                    const errBody = await fetchRes.json().catch(() => ({}));
+                    return { success: false, error: errBody };
+                }
+                responseData = await fetchRes.json();
+            } else {
+                const response = await api.patch('/auth/profile/', data);
+                responseData = response.data;
+            }
+
+            setUser(responseData);
+            localStorage.setItem('madis_user', JSON.stringify(responseData));
+            return { success: true, user: responseData };
         } catch (error) {
+            console.error('updateUser error:', error);
             return {
                 success: false,
                 error: error.response?.data || 'Mise à jour échouée',
