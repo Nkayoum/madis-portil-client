@@ -10,7 +10,7 @@ from decouple import config, Csv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY
+# SECURITY - Use a strong, unique secret key in production!
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-me-in-production')
 DEBUG = config('DEBUG', default=True, cast=bool)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
@@ -210,8 +210,8 @@ if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     X_FRAME_OPTIONS = 'DENY'
-    SECURE_SSL_REDIRECT = True
-    SECURE_HSTS_SECONDS = 31536000
+    SECURE_SSL_REDIRECT = config('SECURE_SSL_REDIRECT', default=True, cast=bool)
+    SECURE_HSTS_SECONDS = 31536000  # 1 year
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
     
@@ -280,7 +280,6 @@ ADMIN_EMAIL = config('ADMIN_EMAIL', default='admin@madis.fr')
 # django-axes Configuration (Account Lockout)
 AXES_FAILURE_LIMIT = 5  # Lockout after 5 mistakes
 AXES_COOLOFF_TIME = 1   # Wait 1 hour to try again
-AXES_LOCK_OUT_BY_COMBINATION_USER_AND_IP = True
 AXES_RESET_ON_SUCCESS = True
 # Only block logins, not the whole site
 AXES_LOCKOUT_PARAMETERS = [["username", "ip_address"]]
