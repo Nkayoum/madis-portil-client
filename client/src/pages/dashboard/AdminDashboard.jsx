@@ -124,17 +124,17 @@ export default function AdminDashboard() {
     return (
         <div className="space-y-12 pb-24 animate-fade-in">
             {/* Standard Solaris Header Area */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 pb-8 border-b border-black/5 dark:border-white/5">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-8 pb-8 border-b border-black/5 dark:border-white/5">
                 <div>
                     <div className="flex items-center gap-2 mb-2">
-                        <Activity className="h-4 w-4 text-primary" />
+                        <Activity className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
                         <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">{t('admin_dashboard.pre_title')}</span>
                     </div>
-                    <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight leading-tight md:leading-none">
-                        {t('admin_dashboard.title')} <span className="opacity-40">{t('admin_dashboard.subtitle')}</span>
+                    <h1 className="text-2xl sm:text-2xl md:text-3xl font-bold tracking-tight leading-tight md:leading-none">
+                        {t('admin_dashboard.title')} <br className="sm:hidden" /> <span className="opacity-40">{t('admin_dashboard.subtitle')}</span>
                     </h1>
                 </div>
-                <div className="flex flex-col sm:flex-row gap-4">
+                <div className="grid grid-cols-1 sm:flex sm:flex-row gap-3 sm:gap-4">
                     <Link to="/dashboard/users/new" className="h-11 md:h-12 px-6 md:px-8 rounded-2xl solaris-glass border border-slate-200 dark:border-white/10 dark:bg-white/5 text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-white/10 transition-all flex items-center justify-center gap-2 shadow-sm">
                         <Users className="h-4 w-4" />
                         {t('admin_dashboard.btn_new_client')}
@@ -148,13 +148,13 @@ export default function AdminDashboard() {
 
             <div
                 style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-                className="flex justify-start no-scrollbar [&::-webkit-scrollbar]:hidden shrink-0"
+                className="flex justify-start no-scrollbar [&::-webkit-scrollbar]:hidden shrink-0 -mx-4 px-4 sm:mx-0 sm:px-0"
             >
-                <div style={{ display: 'flex', width: 'max-content' }} className="p-1.5 solaris-glass dark:bg-black/60 dark:border-white/5 rounded-[1.5rem] border border-white/40 shadow-xl flex">
+                <div style={{ display: 'flex', width: 'max-content' }} className="p-1 sm:p-1.5 solaris-glass dark:bg-black/60 dark:border-white/5 rounded-2xl sm:rounded-[1.5rem] border border-white/40 shadow-xl flex">
                     <button
                         onClick={() => setActiveTab('overview')}
                         className={cn(
-                            "px-4 sm:px-8 py-3 text-[10px] font-black uppercase tracking-[0.2em] rounded-xl transition-all duration-300 flex items-center gap-2 whitespace-nowrap",
+                            "px-4 sm:px-8 py-2.5 sm:py-3 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] rounded-xl transition-all duration-300 flex items-center gap-2 whitespace-nowrap",
                             activeTab === 'overview'
                                 ? "bg-black text-white shadow-2xl dark:solaris-neon-blue dark:bg-white/10 dark:text-white"
                                 : "text-muted-foreground hover:text-foreground hover:bg-white/40 dark:hover:bg-white/5"
@@ -166,7 +166,7 @@ export default function AdminDashboard() {
                     <button
                         onClick={() => setActiveTab('finance')}
                         className={cn(
-                            "px-4 sm:px-8 py-3 text-[10px] font-black uppercase tracking-[0.2em] rounded-xl transition-all duration-300 flex items-center gap-2 whitespace-nowrap",
+                            "px-4 sm:px-8 py-2.5 sm:py-3 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] rounded-xl transition-all duration-300 flex items-center gap-2 whitespace-nowrap",
                             activeTab === 'finance'
                                 ? "bg-black text-white shadow-2xl dark:solaris-neon-blue dark:bg-white/5 dark:text-white"
                                 : "text-muted-foreground hover:text-foreground hover:bg-white/40 dark:hover:bg-white/5"
@@ -185,17 +185,17 @@ export default function AdminDashboard() {
                         <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
                             {statCards.map((card, idx) => (
                                 <Link key={idx} to={card.link}
-                                    className="group relative overflow-hidden rounded-[2rem] md:rounded-[2.5rem] solaris-glass border border-white/20 dark:border-white/5 p-6 md:p-8 shadow-sm transition-all duration-500 hover:scale-[1.05] hover:shadow-2xl hover:border-primary/20 dark:hover:solaris-neon-blue"
+                                    className="group relative overflow-hidden rounded-[2rem] solaris-glass border border-white/20 dark:border-white/5 p-6 md:p-8 shadow-sm transition-all duration-500 hover:scale-[1.05] hover:shadow-2xl hover:border-primary/20 dark:hover:solaris-neon-blue"
                                 >
-                                    <div className="flex justify-between items-start mb-6 md:mb-8">
-                                        <div className={cn("p-3 md:p-4 rounded-[1rem] md:rounded-[1.25rem] shadow-inner", card.bg)}>
+                                    <div className="flex justify-between items-start mb-6">
+                                        <div className={cn("p-3 md:p-4 rounded-2xl shadow-inner", card.bg)}>
                                             <card.icon className={cn("h-5 w-5 md:h-6 md:w-6", card.color)} />
                                         </div>
                                         <ArrowRight className="h-4 w-4 text-muted-foreground opacity-20 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                                     </div>
                                     <div>
-                                        <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-1">{card.label}</p>
-                                        <div className="text-3xl md:text-4xl font-bold tracking-tight">{card.value}</div>
+                                        <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-1">{card.label}</p>
+                                        <div className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">{card.value}</div>
                                     </div>
                                     <div className="absolute -bottom-6 -right-6 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity pointer-events-none">
                                         <card.icon className="h-24 w-24 md:h-32 md:w-32 text-black" />

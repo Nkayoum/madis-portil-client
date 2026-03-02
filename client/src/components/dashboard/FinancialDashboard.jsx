@@ -3,7 +3,7 @@ import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
     AreaChart, Area, PieChart, Pie, Cell, Sector
 } from 'recharts';
-import { TrendingUp, TrendingDown, DollarSign, PieChart as PieIcon, Calendar, Loader2, Building, Percent, Filter, Wallet, History, Globe, Hammer, Box, Users, ShieldCheck } from 'lucide-react';
+import { TrendingUp, TrendingDown, DollarSign, PieChart as PieIcon, Calendar, Loader2, Building, Percent, Filter, Wallet, History, Globe, Hammer, Box, Users, ShieldCheck, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import api from '../../lib/axios';
 import { cn, formatCurrency } from '../../lib/utils';
@@ -429,7 +429,7 @@ export default function FinancialDashboard({ isAdmin = false }) {
                                 </div>
                             </div>
 
-                            <div className="h-[400px] w-full">
+                            <div className="h-[300px] sm:h-[400px] w-full">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <AreaChart data={chartData}>
                                         <defs>
@@ -524,38 +524,108 @@ export default function FinancialDashboard({ isAdmin = false }) {
 
             {/* Global Wallets Overview Section (Admin Only) */}
             {isAdmin && (
-                <div className="bg-card border rounded-xl overflow-hidden shadow-sm animate-fade-in mt-8">
-                    <div className="p-4 sm:p-6 border-b bg-muted/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="solaris-glass border dark:border-white/5 dark:bg-black/40 rounded-[2rem] overflow-hidden shadow-sm animate-fade-in mt-8">
+                    <div className="p-6 sm:p-8 border-b dark:border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <div className="flex items-center gap-3 min-w-0">
-                            <div className="p-2 rounded-lg bg-primary/10 text-primary shrink-0">
-                                <Wallet className="h-5 w-5" />
+                            <div className="p-3 rounded-2xl bg-primary/10 text-primary shrink-0">
+                                <Wallet className="h-6 w-6" />
                             </div>
-                            <h3 className="font-semibold text-sm sm:text-lg truncate">{t('dashboard.treasury.title')}</h3>
+                            <div>
+                                <h3 className="font-bold text-lg tracking-tight">{t('dashboard.treasury.title')}</h3>
+                                <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground opacity-40 leading-none mt-1">Surveillance des mandats</p>
+                            </div>
                         </div>
-                        <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+                        <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-6 shrink-0 bg-white/40 dark:bg-white/5 p-3 sm:p-0 rounded-2xl sm:bg-transparent">
                             <div className="text-left sm:text-right">
-                                <p className="text-[10px] uppercase font-bold text-muted-foreground leading-tight">{t('dashboard.treasury.total_liquidity')}</p>
-                                <p className="text-sm font-bold text-primary whitespace-nowrap">
+                                <p className="text-[10px] uppercase font-black text-muted-foreground tracking-widest leading-tight mb-1">{t('dashboard.treasury.total_liquidity')}</p>
+                                <p className="text-lg font-black text-primary whitespace-nowrap">
                                     {formatCurrency(wallets.reduce((sum, w) => sum + Number(w.balance), 0))}
                                 </p>
                             </div>
                             <button
                                 onClick={fetchWallets}
                                 disabled={loadingWallets}
-                                className="p-2 rounded-full hover:bg-muted transition-colors text-muted-foreground disabled:opacity-50"
+                                className="h-10 w-10 flex items-center justify-center rounded-xl bg-white dark:bg-white/10 hover:bg-muted transition-colors text-muted-foreground disabled:opacity-50 shadow-sm"
                             >
                                 <History className={cn("h-4 w-4", loadingWallets && "animate-spin")} />
                             </button>
                         </div>
                     </div>
-                    <div className="overflow-x-auto no-scrollbar">
+
+                    {/* Mobile Card View (shown only on mobile) */}
+                    <div className="md:hidden divide-y divide-black/5 dark:divide-white/5">
+                        {wallets.length > 0 ? (
+                            wallets.map((w) => {
+                                const bal = Number(w.balance);
+                                return (
+                                    <div key={w.id} className="p-6 space-y-4">
+                                        <div className="flex justify-between items-start">
+                                            <div>
+                                                <p className="font-black text-xs uppercase tracking-tight">{w.property_name}</p>
+                                                <p className="text-[9px] text-muted-foreground uppercase font-black tracking-widest mt-0.5">{t('dashboard.treasury.mandate')}{w.id}</p>
+                                            </div>
+                                            <div className="text-right">
+                                                <p className={cn(
+                                                    "font-black text-sm",
+                                                    bal < 0 ? "text-[#ff0048]" : bal === 0 ? "text-muted-foreground" : "text-foreground"
+                                                )}>
+                                                    {formatCurrency(bal)}
+                                                </p>
+                                                <div className="mt-1">
+                                                    {bal < 0 ? (
+                                                        <span className="text-[8px] font-black uppercase text-[#ff0048] flex items-center gap-1 justify-end animate-pulse">
+                                                            <AlertCircle className="h-2.5 w-2.5" /> {t('dashboard.treasury.critical_deficit')}
+                                                        </span>
+                                                    ) : (
+                                                        <span className={cn(
+                                                            "text-[8px] font-black uppercase tracking-widest",
+                                                            bal === 0 ? "text-muted-foreground" : "text-emerald-500"
+                                                        )}>
+                                                            {bal === 0 ? t('dashboard.treasury.empty_account') : t('dashboard.treasury.creditor_balance')}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <Link
+                                                to={`/dashboard/properties/${w.property}`}
+                                                className="flex-1 h-10 flex items-center justify-center gap-2 rounded-xl bg-white dark:bg-white/5 border dark:border-white/10 text-[9px] font-black uppercase tracking-widest"
+                                            >
+                                                <Building className="h-3.5 w-3.5" />
+                                                Voir Bien
+                                            </Link>
+                                            <button
+                                                onClick={() => {
+                                                    setSelectedPropertyId(w.property.toString());
+                                                    fetchStats(w.property.toString(), selectedYear);
+                                                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                                                }}
+                                                className="flex-1 h-10 rounded-xl bg-black dark:bg-primary text-white text-[9px] font-black uppercase tracking-widest shadow-lg"
+                                            >
+                                                Filtrer
+                                            </button>
+                                        </div>
+                                    </div>
+                                );
+                            })
+                        ) : (
+                            <div className="py-12 text-center opacity-30">
+                                <Wallet className="h-8 w-8 mx-auto mb-2" />
+                                <p className="text-[10px] font-black uppercase tracking-widest">Aucun mandat</p>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Desktop Table View (hidden on mobile) */}
+                    <div className="hidden md:block overflow-x-auto no-scrollbar">
                         <table className="w-full text-sm">
                             <thead>
-                                <tr className="border-b bg-muted/10">
-                                    <th className="px-6 py-4 text-left font-medium text-muted-foreground text-[10px] uppercase tracking-wider">{t('dashboard.treasury.property_col')}</th>
-                                    <th className="px-6 py-4 text-right font-medium text-muted-foreground text-[10px] uppercase tracking-wider">{t('dashboard.treasury.balance_col')}</th>
-                                    <th className="px-6 py-4 text-center font-medium text-muted-foreground text-[10px] uppercase tracking-wider">{t('dashboard.treasury.status_col')}</th>
-                                    <th className="px-6 py-4 text-right font-medium text-muted-foreground text-[10px] uppercase tracking-wider">{t('dashboard.treasury.actions_col')}</th>
+                                <tr className="border-b dark:border-white/5 bg-muted/10">
+                                    <th className="px-6 py-4 text-left font-black text-muted-foreground text-[10px] uppercase tracking-[0.2em]">{t('dashboard.treasury.property_col')}</th>
+                                    <th className="px-6 py-4 text-right font-black text-muted-foreground text-[10px] uppercase tracking-[0.2em]">{t('dashboard.treasury.balance_col')}</th>
+                                    <th className="px-6 py-4 text-center font-black text-muted-foreground text-[10px] uppercase tracking-[0.2em]">{t('dashboard.treasury.status_col')}</th>
+                                    <th className="px-6 py-4 text-right font-black text-muted-foreground text-[10px] uppercase tracking-[0.2em]">{t('dashboard.treasury.actions_col')}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -563,41 +633,42 @@ export default function FinancialDashboard({ isAdmin = false }) {
                                     wallets.map((w) => {
                                         const bal = Number(w.balance);
                                         return (
-                                            <tr key={w.id} className="border-b last:border-0 hover:bg-muted/5 transition-colors group">
-                                                <td className="px-6 py-4">
+                                            <tr key={w.id} className="border-b last:border-0 dark:border-white/5 hover:bg-white/40 dark:hover:bg-white/[0.03] transition-colors group">
+                                                <td className="px-6 py-6">
                                                     <div className="flex flex-col">
                                                         <span className="font-bold text-foreground">{w.property_name}</span>
-                                                        <span className="text-[10px] text-muted-foreground uppercase font-medium">{t('dashboard.treasury.mandate')}{w.id}</span>
+                                                        <span className="text-[10px] text-muted-foreground uppercase font-black tracking-widest mt-0.5 opacity-40">{t('dashboard.treasury.mandate')}{w.id}</span>
                                                     </div>
                                                 </td>
-                                                <td className="px-6 py-4 text-right">
+                                                <td className="px-6 py-6 text-right">
                                                     <span className={cn(
-                                                        "font-black text-base",
+                                                        "font-black text-base transition-colors",
                                                         bal < 0 ? "text-[#ff0048]" : bal === 0 ? "text-muted-foreground" : "text-foreground"
                                                     )}>
                                                         {formatCurrency(bal)}
                                                     </span>
                                                 </td>
-                                                <td className="px-6 py-4 text-center">
+                                                <td className="px-6 py-6 text-center">
                                                     {bal < 0 ? (
-                                                        <span className="px-2.5 py-1 rounded-full bg-rose-100 text-[#ff0048] text-[10px] font-bold uppercase flex items-center gap-1 justify-center w-fit mx-auto animate-pulse">
+                                                        <span className="px-3 py-1 rounded-full bg-rose-50 dark:bg-rose-900/20 text-[#ff0048] text-[9px] font-black uppercase flex items-center gap-1.5 justify-center w-fit mx-auto border border-rose-100 dark:border-rose-500/20 animate-pulse">
+                                                            <AlertCircle className="h-3 w-3" />
                                                             {t('dashboard.treasury.critical_deficit')}
                                                         </span>
                                                     ) : bal === 0 ? (
-                                                        <span className="px-2.5 py-1 rounded-full bg-muted text-muted-foreground text-[10px] font-semibold uppercase w-fit mx-auto">
+                                                        <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-white/5 text-muted-foreground text-[9px] font-black uppercase tracking-widest w-fit mx-auto border border-slate-200 dark:border-white/5">
                                                             {t('dashboard.treasury.empty_account')}
                                                         </span>
                                                     ) : (
-                                                        <span className="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-bold uppercase w-fit mx-auto">
+                                                        <span className="px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 text-[9px] font-black uppercase tracking-widest w-fit mx-auto border border-emerald-100 dark:border-emerald-500/10">
                                                             {t('dashboard.treasury.creditor_balance')}
                                                         </span>
                                                     )}
                                                 </td>
-                                                <td className="px-6 py-4 text-right">
-                                                    <div className="flex items-center justify-end gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+                                                <td className="px-6 py-6 text-right">
+                                                    <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all translate-x-1 group-hover:translate-x-0">
                                                         <Link
                                                             to={`/dashboard/properties/${w.property}`}
-                                                            className="p-2 rounded-lg bg-primary/5 text-primary hover:bg-primary/20 transition-colors"
+                                                            className="h-9 w-9 flex items-center justify-center rounded-xl bg-white dark:bg-white/5 border dark:border-white/10 text-primary hover:bg-white hover:shadow-md transition-all"
                                                             title={t('dashboard.treasury.access_property')}
                                                         >
                                                             <Building className="h-4 w-4" />
@@ -608,7 +679,7 @@ export default function FinancialDashboard({ isAdmin = false }) {
                                                                 fetchStats(w.property.toString(), selectedYear);
                                                                 window.scrollTo({ top: 0, behavior: 'smooth' });
                                                             }}
-                                                            className="px-3 py-1.5 rounded-lg border text-[10px] font-bold uppercase tracking-wider hover:bg-muted transition-colors"
+                                                            className="h-9 px-4 rounded-xl bg-black dark:bg-primary text-white text-[9px] font-black uppercase tracking-widest shadow-lg hover:bg-zinc-800 transition-all"
                                                         >
                                                             {t('dashboard.treasury.filter_stats')}
                                                         </button>
@@ -619,13 +690,13 @@ export default function FinancialDashboard({ isAdmin = false }) {
                                     })
                                 ) : (
                                     <tr>
-                                        <td colSpan={4} className="px-6 py-12 text-center text-muted-foreground">
+                                        <td colSpan={4} className="px-6 py-20 text-center text-muted-foreground">
                                             {loadingWallets ? (
-                                                <Loader2 className="h-6 w-6 animate-spin mx-auto opacity-20" />
+                                                <Loader2 className="h-8 w-8 animate-spin mx-auto opacity-10" />
                                             ) : (
-                                                <div className="flex flex-col items-center gap-2">
-                                                    <Wallet className="h-8 w-8 opacity-10" />
-                                                    <p className="text-xs italic font-medium">{t('dashboard.treasury.no_wallets')}</p>
+                                                <div className="flex flex-col items-center gap-4 opacity-20">
+                                                    <Wallet className="h-12 w-12" />
+                                                    <p className="text-[10px] font-black uppercase tracking-[0.2em]">{t('dashboard.treasury.no_wallets')}</p>
                                                 </div>
                                             )}
                                         </td>

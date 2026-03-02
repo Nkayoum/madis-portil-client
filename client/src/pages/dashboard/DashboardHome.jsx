@@ -129,37 +129,37 @@ export default function DashboardHome() {
     return (
         <div className="space-y-8 md:space-y-10 pb-16 animate-fade-in">
             {/* Solaris Hero Welcome Section */}
-            <div className="relative overflow-hidden rounded-[2rem] solaris-glass p-8 md:p-10 border border-white/20 dark:border-white/5 dark:bg-black/40 shadow-xl">
-                <div className="absolute top-0 right-0 p-8 opacity-5 pointer-events-none">
+            <div className="relative overflow-hidden rounded-[2rem] solaris-glass p-6 md:p-10 border border-white/20 dark:border-white/5 dark:bg-black/40 shadow-xl">
+                <div className="absolute top-0 right-0 p-8 opacity-5 pointer-events-none hidden sm:block">
                     <Activity className="h-48 w-48 text-black dark:text-white" />
                 </div>
 
                 <div className="relative z-10 max-w-3xl">
                     <div className="flex items-center gap-2 mb-4">
-                        <span className="px-3 py-1 rounded-full bg-black dark:bg-primary text-white text-[9px] font-bold uppercase tracking-[0.2em]">
+                        <span className="px-3 py-1 rounded-full bg-black dark:bg-primary text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.2em] text-white">
                             Tableau de bord
                         </span>
-                        <div className="h-px w-8 bg-black/10 dark:bg-white/10" />
-                        <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">
-                            {new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
+                        <div className="h-px w-6 sm:w-8 bg-black/10 dark:bg-white/10" />
+                        <span className="text-[8px] sm:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">
+                            {new Date().toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' })}
                         </span>
                     </div>
 
-                    <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4 leading-tight">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4 leading-tight">
                         {statsData.propertiesCount > 0 ? (
                             <>Votre <span className="text-primary">Patrimoine</span></>
                         ) : (
-                            <>Bienvenue, <span className="text-primary">{user?.first_name || 'Partenaire'}</span></>
+                            <>Bienvenue, <br className="sm:hidden" /> <span className="text-primary">{user?.first_name || 'Partenaire'}</span></>
                         )}
                     </h1>
-                    <p className="text-base text-muted-foreground font-medium max-w-xl leading-relaxed mb-8">
+                    <p className="text-sm sm:text-base text-muted-foreground font-medium max-w-xl leading-relaxed mb-6 sm:mb-8">
                         {statsData.propertiesCount > 0
                             ? "Analyse en temps réel de vos actifs immobiliers et de la performance de vos investissements MaDis."
                             : "Votre écosystème immobilier MaDis est prêt. Voici l'état actuel de vos futures opérations."
                         }
                     </p>
 
-                    <div className="flex flex-wrap gap-3">
+                    <div className="grid grid-cols-1 sm:flex sm:flex-wrap gap-3">
                         <Link to="/contact" className="h-11 px-6 rounded-xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-[9px] font-bold uppercase tracking-widest shadow-md hover:bg-slate-50 dark:hover:bg-white/10 transition-all flex items-center justify-center">
                             Assistance Directe
                         </Link>
