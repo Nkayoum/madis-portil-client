@@ -48,7 +48,7 @@ export default function DashboardLayout() {
     const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
     return (
-        <div className="min-h-screen bg-transparent flex">
+        <div className="min-h-[100dvh] h-[100dvh] bg-transparent flex overflow-hidden">
             {/* Mobile Sidebar Overlay */}
             {sidebarOpen && (
                 <div
@@ -60,7 +60,7 @@ export default function DashboardLayout() {
             {/* Sidebar */}
             <aside
                 className={cn(
-                    "fixed top-0 left-0 z-50 h-screen w-56 solaris-sidebar transition-transform duration-300 lg:translate-x-0 lg:static flex flex-col shadow-xl lg:shadow-none",
+                    "fixed top-0 left-0 z-[200] h-[100dvh] w-56 solaris-sidebar transition-transform duration-300 lg:translate-x-0 lg:static flex flex-col shadow-xl lg:shadow-none",
                     sidebarOpen ? "translate-x-0" : "-translate-x-full"
                 )}
             >
@@ -116,9 +116,9 @@ export default function DashboardLayout() {
             </aside>
 
             {/* Main Content */}
-            <div className="flex-1 flex flex-col h-screen overflow-hidden relative">
-                {/* Header */}
-                <header className="h-16 md:h-20 bg-white/20 dark:bg-black/20 backdrop-blur-md border-b border-primary/5 dark:border-white/5 flex items-center justify-between px-4 md:px-8 sticky top-0 z-[100]">
+            <div className="flex-1 flex flex-col h-[100dvh] overflow-hidden relative">
+                {/* Header - Fixed for stability on mobile */}
+                <header className="h-16 md:h-20 bg-white/20 dark:bg-black/20 backdrop-blur-md border-b border-primary/5 dark:border-white/5 flex items-center justify-between px-4 md:px-8 fixed lg:absolute top-0 right-0 left-0 lg:left-0 z-[100]">
                     <button className="lg:hidden p-2 -ml-2" onClick={toggleSidebar}>
                         <Menu className="h-6 w-6" />
                     </button>
@@ -163,12 +163,43 @@ export default function DashboardLayout() {
                     </div>
                 </header>
 
-                {/* Page Content */}
-                <main className="flex-1 overflow-auto p-4 md:p-8 lg:p-12 bg-transparent dark:bg-black min-h-0 no-scrollbar [&::-webkit-scrollbar]:hidden" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                {/* Page Content - Compensation for fixed header */}
+                <main className="flex-1 overflow-auto p-4 md:p-8 lg:p-12 pt-20 md:pt-28 pb-24 md:pb-8 bg-transparent dark:bg-black min-h-0 no-scrollbar [&::-webkit-scrollbar]:hidden" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                     <div className="max-w-[1600px] mx-auto animate-fade-in">
                         <Outlet />
                     </div>
                 </main>
+
+                {/* Mobile Bottom Navigation - Premium Solaris Style */}
+                <div className="lg:hidden fixed bottom-0 left-0 w-full p-4 z-[150] pointer-events-none">
+                    <div className="max-w-md mx-auto h-20 solaris-glass rounded-[2.5rem] border border-white/40 dark:border-white/10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.3)] flex items-center justify-around px-4 pointer-events-auto">
+                        {filteredNavigation.slice(0, 4).map((item) => {
+                            const isActive = item.href === '/dashboard'
+                                ? location.pathname === '/dashboard'
+                                : location.pathname.startsWith(item.href);
+                            return (
+                                <Link
+                                    key={item.href}
+                                    to={item.href}
+                                    className={cn(
+                                        "flex flex-col items-center justify-center gap-1.5 p-2 transition-all duration-300",
+                                        isActive ? "text-primary scale-110" : "text-muted-foreground"
+                                    )}
+                                >
+                                    <item.icon className={cn("h-5 w-5", isActive ? "fill-primary/10" : "")} />
+                                    <span className="text-[8px] font-black uppercase tracking-widest">{t(item.key)}</span>
+                                </Link>
+                            );
+                        })}
+                        <button
+                            onClick={toggleSidebar}
+                            className="flex flex-col items-center justify-center gap-1.5 p-2 text-muted-foreground"
+                        >
+                            <Menu className="h-5 w-5" />
+                            <span className="text-[8px] font-black uppercase tracking-widest">Menu</span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div >
     );

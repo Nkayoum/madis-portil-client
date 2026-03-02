@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create axios instance
 const api = axios.create({
-    baseURL: 'http://localhost:8000/api/v1',
+    baseURL: 'http://172.20.10.2:8000/api/v1',
     headers: {
         'Content-Type': 'application/json',
     },
@@ -60,7 +60,7 @@ api.interceptors.response.use(
                 }
 
                 // Call the refresh endpoint using standard axios to avoid interceptor loop
-                const response = await axios.post('http://localhost:8000/api/v1/auth/token/refresh/', {
+                const response = await axios.post('http://172.20.10.2:8000/api/v1/auth/token/refresh/', {
                     refresh: refreshToken
                 });
 

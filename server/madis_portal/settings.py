@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY - Use a strong, unique secret key in production!
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-me-in-production')
 DEBUG = config('DEBUG', default=True, cast=bool)
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,172.20.10.2', cast=Csv())
 
 # Application definition
 INSTALLED_APPS = [
@@ -55,6 +55,9 @@ MIDDLEWARE = [
     
     # Axes Middleware for tracking failed logins
     'axes.middleware.AxesMiddleware',
+    
+    # Automated Action Auditing
+    'backoffice.middleware.AuditLogMiddleware',
 ]
 
 ROOT_URLCONF = 'madis_portal.urls'
@@ -194,7 +197,7 @@ SPECTACULAR_SETTINGS = {
 # When in DEBUG (local development), allow common local frontend ports.
 # When in Production (DEBUG=False), strictly require CORS_ALLOWED_ORIGINS from env.
 if DEBUG:
-    default_cors = 'http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173,http://127.0.0.1:5173,http://localhost:5174,http://localhost:5175'
+    default_cors = 'http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173,http://127.0.0.1:5173,http://localhost:5174,http://localhost:5175,http://172.20.10.2:5173'
 else:
     default_cors = '' # Force explicit configuration in production
 
@@ -266,6 +269,13 @@ LOGGING = {
 # Security Headers Enforcements
 SECURE_REFERRER_POLICY = 'same-origin'
 SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin'
+# Disable unused browser features
+SECURE_PERMISSIONS_POLICY = {
+    "geolocation": [],
+    "microphone": [],
+    "camera": [],
+    "payment": [],
+}
 
 # Email Configuration
 EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')

@@ -24,6 +24,9 @@ class User(AbstractUser):
         choices=Role.choices,
         default=Role.CLIENT,
     )
+    last_login_ip = models.GenericIPAddressField('dernière IP de connexion', null=True, blank=True)
+    last_login_ua = models.TextField('dernier agent utilisateur', blank=True)
+
     created_by = models.ForeignKey(
         'self',
         on_delete=models.SET_NULL,

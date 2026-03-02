@@ -34,6 +34,11 @@ class LoginView(APIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         
+        # Project Phase 7: Track connection details
+        user.last_login_ip = request.META.get('REMOTE_ADDR')
+        user.last_login_ua = request.META.get('HTTP_USER_AGENT', '')
+        user.save(update_fields=['last_login_ip', 'last_login_ua'])
+        
         if user.is_admin_madis:
             otp_code = request.data.get('otp')
             from .models import UserOTP

@@ -74,7 +74,7 @@ export const AuthProvider = ({ children }) => {
                 // Use native fetch for file uploads — axios default headers
                 // interfere with multipart boundary required by Django
                 const token = localStorage.getItem('madis_token');
-                const fetchRes = await fetch('http://localhost:8000/api/v1/auth/profile/', {
+                const fetchRes = await fetch('http://172.20.10.2:8000/api/v1/auth/profile/', {
                     method: 'PATCH',
                     headers: {
                         'Authorization': `Bearer ${token}`,

@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
-const API = 'http://localhost:8000/api/v1';
+const API = 'http://172.20.10.2:8000/api/v1';
 
 const CATEGORIES = [
     { value: '', label: 'Toutes', icon: Filter },

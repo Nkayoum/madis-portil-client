@@ -1,13 +1,15 @@
+import { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
-import { Sun, Moon } from 'lucide-react';
+import { Sun, Moon, Menu as MenuIcon, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import logo from '../assets/logo.png';
 
 export default function PublicLayout() {
     const { theme, setTheme } = useTheme();
     const { user } = useAuth();
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const location = useLocation();
     const isHome = location.pathname === '/';
@@ -20,17 +22,20 @@ export default function PublicLayout() {
         { label: 'Contact', href: '/contact' },
     ];
 
+    const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
     return (
-        <div className="min-h-screen flex flex-col bg-background text-foreground transition-colors duration-500">
-            {/* Navbar - Solaris Glass */}
-            <nav className="sticky top-0 z-50 w-full px-6 py-4">
+        <div className="min-h-[100dvh] flex flex-col bg-background text-foreground transition-colors duration-500">
+            {/* Navbar - Solaris Glass - Fixed for stability */}
+            <nav className="fixed top-0 left-0 z-50 w-full px-6 py-4">
                 <div className="container mx-auto">
-                    <div className="solaris-glass rounded-[2rem] border border-white/40 dark:border-white/5 h-16 md:h-20 px-6 md:px-10 flex items-center justify-between shadow-2xl">
+                    <div className="solaris-glass rounded-[2rem] border border-white/40 dark:border-white/5 h-16 md:h-20 px-6 md:px-10 flex items-center justify-between shadow-2xl relative">
                         <Link to="/" className="flex items-center gap-2 group">
                             <img src={logo} alt="MaDis Logo" className="h-8 md:h-10 w-auto group-hover:scale-105 transition-transform duration-500" />
                         </Link>
 
                         <div className="flex items-center gap-6 md:gap-10">
+                            {/* Desktop Nav */}
                             <div className="hidden lg:flex gap-8 items-center">
                                 {navLinks.map((link) => (
                                     <Link
@@ -44,7 +49,8 @@ export default function PublicLayout() {
                                 ))}
                             </div>
 
-                            <div className="flex items-center gap-4 border-l border-black/5 pl-6 md:pl-10">
+                            <div className="flex items-center gap-4 lg:border-l lg:border-black/5 lg:pl-10 dark:lg:border-white/10">
+                                {/* Theme Toggle - Desktop preferred, but kept for mobile too */}
                                 <button
                                     onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                                     className="p-2.5 rounded-xl hover:bg-foreground/5 transition-all text-muted-foreground hover:text-foreground group"
@@ -53,23 +59,89 @@ export default function PublicLayout() {
                                     {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
                                 </button>
 
-                                {user ? (
-                                    <Link to="/dashboard" className="h-10 md:h-12 px-6 md:px-8 rounded-2xl bg-black text-white text-[10px] font-black uppercase tracking-widest hover:bg-zinc-800 transition-all flex items-center justify-center shadow-lg active:scale-95">
-                                        Mon Espace
-                                    </Link>
-                                ) : (
-                                    <Link to="/login" className="h-10 md:h-12 px-6 md:px-8 rounded-2xl bg-primary text-white text-[10px] font-black uppercase tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center shadow-lg shadow-primary/20 active:scale-95">
-                                        Connexion
-                                    </Link>
-                                )}
+                                {/* Desktop Auth Button */}
+                                <div className="hidden sm:flex">
+                                    {user ? (
+                                        <Link to="/dashboard" className="h-10 md:h-12 px-6 md:px-8 rounded-2xl bg-black text-white text-[10px] font-black uppercase tracking-widest hover:bg-zinc-800 transition-all flex items-center justify-center shadow-lg active:scale-95">
+                                            Mon Espace
+                                        </Link>
+                                    ) : (
+                                        <Link to="/login" className="h-10 md:h-12 px-6 md:px-8 rounded-2xl bg-primary text-white text-[10px] font-black uppercase tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center shadow-lg shadow-primary/20 active:scale-95">
+                                            Connexion
+                                        </Link>
+                                    )}
+                                </div>
+
+                                {/* Mobile Menu Trigger */}
+                                <button
+                                    onClick={toggleMenu}
+                                    className="lg:hidden p-2.5 rounded-xl bg-foreground/5 hover:bg-foreground/10 transition-all text-foreground"
+                                >
+                                    {isMenuOpen ? <X className="h-5 w-5" /> : <MenuIcon className="h-5 w-5" />}
+                                </button>
                             </div>
                         </div>
+
+                        {/* Mobile Menu Overlay */}
+                        <AnimatePresence>
+                            {isMenuOpen && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: -20, scale: 0.95 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                                    className="absolute top-24 left-0 w-full p-4 lg:hidden"
+                                >
+                                    <div className="solaris-glass rounded-[2.5rem] border border-white/40 dark:border-white/10 p-8 shadow-2xl flex flex-col gap-6">
+                                        {navLinks.map((link, i) => (
+                                            <motion.div
+                                                key={link.label}
+                                                initial={{ opacity: 0, x: -20 }}
+                                                animate={{ opacity: 1, x: 0 }}
+                                                transition={{ delay: i * 0.1 }}
+                                            >
+                                                <Link
+                                                    to={link.href}
+                                                    onClick={() => setIsMenuOpen(false)}
+                                                    className="text-xl font-black uppercase tracking-tighter hover:text-primary transition-colors block"
+                                                >
+                                                    {link.label}
+                                                </Link>
+                                            </motion.div>
+                                        ))}
+                                        <div className="h-px bg-foreground/5 my-2" />
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: 0.5 }}
+                                        >
+                                            {user ? (
+                                                <Link
+                                                    to="/dashboard"
+                                                    onClick={() => setIsMenuOpen(false)}
+                                                    className="w-full h-16 rounded-[1.5rem] bg-black text-white text-[10px] font-black uppercase tracking-widest flex items-center justify-center shadow-xl active:scale-95 transition-all"
+                                                >
+                                                    Mon Espace Personnel
+                                                </Link>
+                                            ) : (
+                                                <Link
+                                                    to="/login"
+                                                    onClick={() => setIsMenuOpen(false)}
+                                                    className="w-full h-16 rounded-[1.5rem] bg-primary text-white text-[10px] font-black uppercase tracking-widest flex items-center justify-center shadow-xl shadow-primary/20 active:scale-95 transition-all"
+                                                >
+                                                    Accéder à mon compte
+                                                </Link>
+                                            )}
+                                        </motion.div>
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </div>
                 </div>
             </nav>
 
-            {/* Content */}
-            <main className="flex-1">
+            {/* Content - Extra padding top for fixed nav */}
+            <main className="flex-1 pt-24 md:pt-32">
                 <Outlet />
             </main>
 

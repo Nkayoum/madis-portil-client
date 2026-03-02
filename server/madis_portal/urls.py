@@ -39,6 +39,7 @@ api_v1_patterns = [
     path('', include('messaging.urls')),
     path('construction/', include('construction.urls')),
     path('finance/', include('finance.urls')),
+    path('backoffice/', include('backoffice.urls')),
     path('version/', api_version, name='api-version'),
 
     # API Documentation
