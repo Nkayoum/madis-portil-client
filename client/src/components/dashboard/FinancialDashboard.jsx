@@ -29,30 +29,6 @@ export default function FinancialDashboard({ isAdmin = false }) {
 
 
 
-    useEffect(() => {
-        const initDashboard = async () => {
-            setLoading(true);
-            try {
-                // Fetch properties for the filter
-                const propsRes = await api.get('/properties/');
-                setProperties(propsRes.data.results || []);
-
-                if (isAdmin) {
-                    fetchWallets();
-                }
-
-                // Fetch initial stats
-                await fetchStats('', selectedYear);
-            } catch (err) {
-                console.error("Failed to initialize finance dashboard", err);
-            } finally {
-                setLoading(false);
-            }
-        };
-        initDashboard();
-    }, [isAdmin, fetchWallets, fetchStats, selectedYear]);
-
-    // fetch wallets for admin
     const fetchWallets = useCallback(async () => {
         setLoadingWallets(true);
         try {
@@ -94,6 +70,29 @@ export default function FinancialDashboard({ isAdmin = false }) {
             setLoadingStats(false);
         }
     }, [showToast]);
+
+    useEffect(() => {
+        const initDashboard = async () => {
+            setLoading(true);
+            try {
+                // Fetch properties for the filter
+                const propsRes = await api.get('/properties/');
+                setProperties(propsRes.data.results || []);
+
+                if (isAdmin) {
+                    fetchWallets();
+                }
+
+                // Fetch initial stats
+                await fetchStats('', selectedYear);
+            } catch (err) {
+                console.error("Failed to initialize finance dashboard", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        initDashboard();
+    }, [isAdmin, fetchWallets, fetchStats, selectedYear]);
 
     const handlePropertyChange = (e) => {
         const id = e.target.value;
