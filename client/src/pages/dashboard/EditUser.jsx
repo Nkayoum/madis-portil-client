@@ -4,6 +4,7 @@ import api from '../../lib/axios';
 import { useToast } from '../../context/ToastContext';
 import { Save, Loader2, Mail, Shield, User, Phone, CheckCircle2, XCircle, Lock, ArrowLeft } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { cn } from '../../lib/utils';
 
 export default function EditUser() {
     const { t } = useTranslation();
