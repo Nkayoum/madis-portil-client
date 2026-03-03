@@ -659,7 +659,7 @@ export default function EditProperty() {
                                                 <div className="grid gap-3">
                                                     <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">{t('property_detail.details.type') || 'Type de bien'}</label>
                                                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-                                                        {[...(PROPERTY_TYPES_BY_CATEGORY(t)[formData.category] || []), ...PROPERTY_TYPES_BY_CATEGORY(t).GLOBAL].map(t => {
+                                                        {[...(PROPERTY_TYPES_BY_CATEGORY(t)[formData.category] || []), ...PROPERTY_TYPES_BY_CATEGORY(t).GLOBAL].map(type => {
                                                             const Icon = {
                                                                 APPARTEMENT: Building2,
                                                                 MAISON: Home,
@@ -671,15 +671,15 @@ export default function EditProperty() {
                                                                 TERRAIN: Trees,
                                                                 IMMEUBLE: Building,
                                                                 AUTRE: Settings
-                                                            }[t.value] || Building;
+                                                            }[type.value] || Building;
 
-                                                            const isSelected = formData.property_type === t.value;
+                                                            const isSelected = formData.property_type === type.value;
 
                                                             return (
                                                                 <button
-                                                                    key={t.value}
+                                                                    key={type.value}
                                                                     type="button"
-                                                                    onClick={() => handleChange({ target: { name: 'property_type', value: t.value } })}
+                                                                    onClick={() => handleChange({ target: { name: 'property_type', value: type.value } })}
                                                                     className={cn(
                                                                         "relative flex flex-col items-center justify-center gap-2 p-2.5 rounded-xl border-2 transition-all hover:scale-[1.02] min-h-[90px]",
                                                                         isSelected
@@ -693,7 +693,7 @@ export default function EditProperty() {
                                                                     )}>
                                                                         <Icon className="h-4 w-4" />
                                                                     </div>
-                                                                    <span className="text-[9px] font-bold uppercase text-center leading-tight tracking-tighter px-0.5">{t.label}</span>
+                                                                    <span className="text-[9px] font-bold uppercase text-center leading-tight tracking-tighter px-0.5">{type.label}</span>
                                                                     {isSelected && (
                                                                         <div className="absolute top-1.5 right-1.5">
                                                                             <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />

@@ -291,6 +291,24 @@ export default function CreateProperty() {
         }
     };
 
+    const handleNextTab = () => {
+        if (validateStep(activeTab)) {
+            const currentIndex = TABS.findIndex(t => t.id === activeTab);
+            if (currentIndex < TABS.length - 1) {
+                setActiveTab(TABS[currentIndex + 1].id);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+    };
+
+    const handlePrevTab = () => {
+        const currentIndex = TABS.findIndex(t => t.id === activeTab);
+        if (currentIndex > 0) {
+            setActiveTab(TABS[currentIndex - 1].id);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    };
+
     const inputClasses = "flex h-11 w-full rounded-xl border border-input bg-background/50 px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary/50 outline-none transition-all placeholder:text-muted-foreground/50 hover:bg-accent/5";
 
     return (
@@ -598,8 +616,8 @@ export default function CreateProperty() {
                                                 <div className="grid gap-3">
                                                     <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">{t('property_detail.details.type')}</label>
                                                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-                                                        {(PROPERTY_TYPES_BY_CATEGORY(t)[formData.category] || []).map(t => {
-                                                            const isSelected = formData.property_type === t.value;
+                                                        {(PROPERTY_TYPES_BY_CATEGORY(t)[formData.category] || []).map(type => {
+                                                            const isSelected = formData.property_type === type.value;
                                                             const Icon = {
                                                                 APPARTEMENT: Building2,
                                                                 MAISON: Home,
@@ -611,14 +629,14 @@ export default function CreateProperty() {
                                                                 TERRAIN: Trees,
                                                                 IMMEUBLE: Building,
                                                                 AUTRE: Settings
-                                                            }[t.value] || Building;
+                                                            }[type.value] || Building;
 
 
                                                             return (
                                                                 <button
-                                                                    key={t.value}
+                                                                    key={type.value}
                                                                     type="button"
-                                                                    onClick={() => handleChange({ target: { name: 'property_type', value: t.value } })}
+                                                                    onClick={() => handleChange({ target: { name: 'property_type', value: type.value } })}
                                                                     className={cn(
                                                                         "relative flex flex-col items-center justify-center gap-2 p-2.5 rounded-xl border-2 transition-all hover:scale-[1.02] min-h-[90px]",
                                                                         isSelected
@@ -632,7 +650,7 @@ export default function CreateProperty() {
                                                                     )}>
                                                                         <Icon className="h-4 w-4" />
                                                                     </div>
-                                                                    <span className="text-[9px] font-bold uppercase text-center leading-tight tracking-tighter px-0.5">{t.label}</span>
+                                                                    <span className="text-[9px] font-bold uppercase text-center leading-tight tracking-tighter px-0.5">{type.label}</span>
                                                                     {isSelected && (
                                                                         <div className="absolute top-1.5 right-1.5">
                                                                             <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
@@ -881,7 +899,7 @@ export default function CreateProperty() {
                                 {t('common.next') || 'Suivant'}
                             </button>
                         ) : (
-                            <button type="submit" disabled={loading} className="inline-flex items-center justify-center rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest bg-primary text-white shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:bg-primary/90 hover:translate-y-[-2px] transition-all h-10 sm:h-12 px-6 sm:px-12 disabled:opacity-50 disabled:translate-y-0">
+                            <button form="create-property-form" type="submit" disabled={loading} className="inline-flex items-center justify-center rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest bg-primary text-white shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:bg-primary/90 hover:translate-y-[-2px] transition-all h-10 sm:h-12 px-6 sm:px-12 disabled:opacity-50 disabled:translate-y-0">
                                 {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('common.saving') || 'Sauvegarde...'}</> : <><Save className="mr-2 h-4 w-4" /> {t('common.save') || 'Enregistrer'}</>}
                             </button>
                         )}
