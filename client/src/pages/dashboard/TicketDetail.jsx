@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import api from '../../lib/axios';
 import { useAuth } from '../../context/AuthContext';
@@ -32,9 +32,9 @@ export default function TicketDetail() {
     useEffect(() => {
         fetchTicketData();
         markNotificationsAsRead();
-    }, [id]);
+    }, [fetchTicketData, markNotificationsAsRead]);
 
-    const markNotificationsAsRead = async () => {
+    const markNotificationsAsRead = useCallback(async () => {
         try {
             await api.post('/notifications/mark_as_read_by_link/', {
                 link: `/dashboard/tickets/${id}`
@@ -42,9 +42,9 @@ export default function TicketDetail() {
         } catch (err) {
             console.error('Failed to mark notifications as read:', err);
         }
-    };
+    }, [id]);
 
-    const fetchTicketData = async () => {
+    const fetchTicketData = useCallback(async () => {
         try {
             const [ticketRes, messagesRes] = await Promise.all([
                 api.get(`/tickets/${id}/`),
@@ -58,7 +58,7 @@ export default function TicketDetail() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [id, t]);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

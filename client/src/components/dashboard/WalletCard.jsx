@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import api from '../../lib/axios';
@@ -12,14 +12,12 @@ export default function WalletCard({ propertyId, onCashCall, onSettlement }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const fetchWallet = async () => {
+    const fetchWallet = useCallback(async () => {
         try {
             const response = await api.get(`/finance/wallets/?property=${propertyId}`);
             if (response.data.results && response.data.results.length > 0) {
                 setWallet(response.data.results[0]);
             } else {
-                // If no wallet exists yet (should be created by signals ideally, or create it here)
-                // But normally it's created when property is created or first transaction occurs.
                 setWallet(null);
             }
         } catch (err) {
@@ -28,13 +26,13 @@ export default function WalletCard({ propertyId, onCashCall, onSettlement }) {
         } finally {
             setLoading(false);
         }
-    };
+    }, [propertyId, t]);
 
     useEffect(() => {
         if (propertyId) {
             fetchWallet();
         }
-    }, [propertyId]);
+    }, [propertyId, fetchWallet]);
 
     // Handle refresh from parent if needed (e.g. after modal success)
     window.refreshWallet = fetchWallet;

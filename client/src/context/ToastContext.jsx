@@ -1,9 +1,12 @@
 import { createContext, useContext, useState, useCallback } from 'react';
 import { X, CheckCircle, AlertCircle, Info, AlertTriangle } from 'lucide-react';
+/* eslint-disable no-unused-vars */
 import { AnimatePresence, motion } from 'framer-motion';
+/* eslint-enable no-unused-vars */
 
 const ToastContext = createContext(null);
 
+/* eslint-disable react-refresh/only-export-components */
 export const useToast = () => {
     const context = useContext(ToastContext);
     if (!context) {
@@ -15,6 +18,10 @@ export const useToast = () => {
 export const ToastProvider = ({ children }) => {
     const [toasts, setToasts] = useState([]);
 
+    const dismissToast = useCallback((id) => {
+        setToasts((prev) => prev.filter((toast) => toast.id !== id));
+    }, []);
+
     const showToast = useCallback(({ message, type = 'info', duration = 3000 }) => {
         const id = Date.now().toString();
         setToasts((prev) => [...prev, { id, message, type }]);
@@ -24,11 +31,7 @@ export const ToastProvider = ({ children }) => {
                 dismissToast(id);
             }, duration);
         }
-    }, []);
-
-    const dismissToast = useCallback((id) => {
-        setToasts((prev) => prev.filter((toast) => toast.id !== id));
-    }, []);
+    }, [dismissToast]);
 
     return (
         <ToastContext.Provider value={{ showToast, dismissToast }}>

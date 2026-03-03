@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import api from '../../lib/axios';
 import { useToast } from '../../context/ToastContext';
@@ -130,13 +130,7 @@ export default function EditProperty() {
         is_verified_fonciere: false,
     });
 
-    useEffect(() => {
-        if (id && id !== 'new') {
-            fetchData();
-        }
-    }, [id]);
-
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         setFetching(true);
         try {
             const [usersRes, propertyRes] = await Promise.all([
@@ -191,7 +185,13 @@ export default function EditProperty() {
         } finally {
             setFetching(false);
         }
-    };
+    }, [id, navigate, showToast]);
+
+    useEffect(() => {
+        if (id && id !== 'new') {
+            fetchData();
+        }
+    }, [id, fetchData]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -249,6 +249,7 @@ export default function EditProperty() {
                 setExistingImages(prev => prev.filter(img => img.id !== imageId));
                 showToast({ message: 'Photo supprimée', type: 'success' });
             } catch (err) {
+                console.error(err);
                 showToast({ message: 'Erreur lors de la suppression', type: 'error' });
             }
         }

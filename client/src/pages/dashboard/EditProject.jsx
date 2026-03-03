@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import api from '../../lib/axios';
 import { useToast } from '../../context/ToastContext';
@@ -27,33 +27,34 @@ export default function EditProject() {
         category: 'CONSTRUCTION'
     });
 
+    const fetchData = useCallback(async () => {
+        try {
+            const [propsRes, projRes] = await Promise.all([
+                api.get('/properties/'),
+                api.get(`/projects/${id}/`)
+            ]);
+            setProperties(propsRes.data.results || []);
+            const proj = projRes.data;
+            setFormData({
+                name: proj.name,
+                property: proj.property,
+                description: proj.description || '',
+                budget: proj.budget,
+                start_date: proj.start_date,
+                end_date: proj.end_date || '',
+                category: proj.category
+            });
+        } catch (err) {
+            console.error(err);
+            showToast({ message: 'Erreur lors du chargement.', type: 'error' });
+        } finally {
+            setLoading(false);
+        }
+    }, [id, showToast]);
+
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const [propsRes, projRes] = await Promise.all([
-                    api.get('/properties/'),
-                    api.get(`/projects/${id}/`)
-                ]);
-                setProperties(propsRes.data.results || []);
-                const proj = projRes.data;
-                setFormData({
-                    name: proj.name,
-                    property: proj.property,
-                    description: proj.description || '',
-                    budget: proj.budget,
-                    start_date: proj.start_date,
-                    end_date: proj.end_date || '',
-                    category: proj.category
-                });
-            } catch (err) {
-                console.error(err);
-                showToast({ message: 'Erreur lors du chargement.', type: 'error' });
-            } finally {
-                setLoading(false);
-            }
-        };
         fetchData();
-    }, [id]);
+    }, [fetchData]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;

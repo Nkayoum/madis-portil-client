@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../lib/axios';
 import { useToast } from '../../context/ToastContext';
@@ -8,7 +8,6 @@ import {
     TrendingUp, TrendingDown, Clock, Loader2
 } from 'lucide-react';
 import { format } from 'date-fns';
-import { fr, enUS } from 'date-fns/locale';
 import { useAuth } from '../../context/AuthContext';
 import { cn, formatCurrency } from '../../lib/utils';
 import { useTranslation } from 'react-i18next';
@@ -22,13 +21,9 @@ export default function TransactionsList() {
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
     const [filterCategory, setFilterCategory] = useState('ALL');
-    const dateLocale = i18n.language === 'fr' ? fr : enUS;
+    // const dateLocale = i18n.language === 'fr' ? fr : enUS;
 
-    useEffect(() => {
-        fetchTransactions();
-    }, []);
-
-    const fetchTransactions = async () => {
+    const fetchTransactions = useCallback(async () => {
         try {
             const response = await api.get('/finance/transactions/');
             setTransactions(response.data.results || []);
@@ -38,7 +33,11 @@ export default function TransactionsList() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [t, showToast]);
+
+    useEffect(() => {
+        fetchTransactions();
+    }, [fetchTransactions]);
 
     const handleDelete = async (id) => {
         if (!window.confirm(t('finance.transactions_list.messages.confirm_delete'))) return;
@@ -47,6 +46,7 @@ export default function TransactionsList() {
             setTransactions(transactions.filter(txn => txn.id !== id));
             showToast({ message: t('finance.transactions_list.messages.delete_success'), type: 'success' });
         } catch (err) {
+            console.error(err);
             showToast({ message: t('finance.transactions_list.messages.delete_error'), type: 'error' });
         }
     };

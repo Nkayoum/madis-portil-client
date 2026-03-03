@@ -1,5 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+/* eslint-disable no-unused-vars */
 import { motion, AnimatePresence } from 'framer-motion';
+/* eslint-enable no-unused-vars */
 import api from '../../lib/axios';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
@@ -42,9 +44,9 @@ export default function DashboardMarketplace() {
 
     useEffect(() => {
         fetchProperties();
-    }, [category, nature, search]);
+    }, [fetchProperties]);
 
-    const fetchProperties = async () => {
+    const fetchProperties = useCallback(async () => {
         setLoading(true);
         try {
             const params = {};
@@ -58,7 +60,7 @@ export default function DashboardMarketplace() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [category, nature, search]);
 
     const submitOffer = async () => {
         if (!offerForm.asking_price) return;

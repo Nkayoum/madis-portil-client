@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../lib/axios';
 import { useAuth } from '../../context/AuthContext';
@@ -11,12 +11,12 @@ import { cn } from '../../lib/utils';
 export default function TicketsList() {
     const [tickets, setTickets] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [, setError] = useState(null);
     const { user } = useAuth();
     const { t, i18n } = useTranslation();
     const dateLocale = i18n.language === 'fr' ? fr : enUS;
     const [properties, setProperties] = useState([]);
-    const [clients, setClients] = useState([]);
+    const [, setClients] = useState([]);
     const [search, setSearch] = useState('');
     const [filters, setFilters] = useState({
         status: '',
@@ -29,16 +29,16 @@ export default function TicketsList() {
         if (user?.role === 'ADMIN_MADIS') {
             fetchFilterData();
         }
-    }, [user]);
+    }, [user, fetchFilterData]);
 
     useEffect(() => {
         const timer = setTimeout(() => {
             fetchTickets();
         }, 300);
         return () => clearTimeout(timer);
-    }, [filters, search]);
+    }, [fetchTickets]);
 
-    const fetchFilterData = async () => {
+    const fetchFilterData = useCallback(async () => {
         try {
             const [propRes, userRes] = await Promise.all([
                 api.get('/properties/'),
@@ -49,9 +49,9 @@ export default function TicketsList() {
         } catch (err) {
             console.error('Failed to fetch filter options:', err);
         }
-    };
+    }, []);
 
-    const fetchTickets = async () => {
+    const fetchTickets = useCallback(async () => {
         try {
             setLoading(true);
             const params = new URLSearchParams();
@@ -69,7 +69,7 @@ export default function TicketsList() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [filters, search, t]);
 
     const handleFilterChange = (e) => {
         const { name, value } = e.target;

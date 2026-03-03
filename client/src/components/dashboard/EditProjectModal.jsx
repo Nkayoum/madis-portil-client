@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import api from '../../lib/axios';
 import { useToast } from '../../context/ToastContext';
 import { useTranslation } from 'react-i18next';
@@ -30,9 +30,9 @@ export default function EditProjectModal({ isOpen, onClose, projectId, onSuccess
         if (isOpen && projectId) {
             fetchData();
         }
-    }, [isOpen, projectId]);
+    }, [isOpen, projectId, fetchData]);
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         setFetching(true);
         try {
             const [propsRes, projectRes] = await Promise.all([
@@ -60,7 +60,7 @@ export default function EditProjectModal({ isOpen, onClose, projectId, onSuccess
         } finally {
             setFetching(false);
         }
-    };
+    }, [projectId, t, showToast, onClose]);
 
     useEffect(() => {
         if (formData.property && properties.length > 0) {

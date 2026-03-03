@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import api from '../../lib/axios';
 import { useToast } from '../../context/ToastContext';
@@ -26,35 +26,36 @@ export default function EditConstructionSite() {
         chef_de_chantier: ''
     });
 
+    const fetchData = useCallback(async () => {
+        try {
+            const [propsRes, siteRes, usersRes] = await Promise.all([
+                api.get('/properties/'),
+                api.get(`/construction/sites/${id}/`),
+                api.get('/auth/users/?role=CHEF_CHANTIER')
+            ]);
+            setProperties(propsRes.data.results || []);
+            setChefs(usersRes.data.results || usersRes.data || []);
+            const site = siteRes.data;
+            setFormData({
+                name: site.name,
+                property: site.property,
+                description: site.description || '',
+                start_date: site.start_date,
+                end_date: site.end_date || '',
+                status: site.status,
+                chef_de_chantier: site.chef_de_chantier || ''
+            });
+        } catch (err) {
+            console.error(err);
+            showToast({ message: 'Erreur lors du chargement.', type: 'error' });
+        } finally {
+            setLoading(false);
+        }
+    }, [id, showToast]);
+
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const [propsRes, siteRes, usersRes] = await Promise.all([
-                    api.get('/properties/'),
-                    api.get(`/construction/sites/${id}/`),
-                    api.get('/auth/users/?role=CHEF_CHANTIER')
-                ]);
-                setProperties(propsRes.data.results || []);
-                setChefs(usersRes.data.results || usersRes.data || []);
-                const site = siteRes.data;
-                setFormData({
-                    name: site.name,
-                    property: site.property,
-                    description: site.description || '',
-                    start_date: site.start_date,
-                    end_date: site.end_date || '',
-                    status: site.status,
-                    chef_de_chantier: site.chef_de_chantier || ''
-                });
-            } catch (err) {
-                console.error(err);
-                showToast({ message: 'Erreur lors du chargement.', type: 'error' });
-            } finally {
-                setLoading(false);
-            }
-        };
         fetchData();
-    }, [id]);
+    }, [fetchData]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;

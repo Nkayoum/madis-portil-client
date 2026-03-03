@@ -12,7 +12,7 @@ export function ThemeProvider({
     ...props
 }) {
     const [theme, setTheme] = useState(
-        () => localStorage.getItem(storageKey) || "dark"
+        () => localStorage.getItem(storageKey) || defaultTheme
     )
 
     useEffect(() => {
@@ -55,6 +55,7 @@ export function ThemeProvider({
     )
 }
 
+/* eslint-disable react-refresh/only-export-components */
 export const useTheme = () => {
     const context = useContext(ThemeContext)
 

@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import api from '../../lib/axios';
 import { useToast } from '../../context/ToastContext';
 import { Upload, Loader2, FileText, X } from 'lucide-react';
-import { cn } from '../../lib/utils';
 import { useTranslation } from 'react-i18next';
 
 export default function UploadDocumentModal({ isOpen, onClose, propertyId, siteId, onSuccess }) {

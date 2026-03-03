@@ -1,6 +1,5 @@
 import { Mail, MapPin, Phone, Send, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { cn } from '../../lib/utils';
 
 export default function ContactPage() {
     return (

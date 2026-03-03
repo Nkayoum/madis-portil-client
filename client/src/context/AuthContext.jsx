@@ -4,23 +4,33 @@ import api from '../lib/axios';
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [user, setUser] = useState(() => {
+        const storedUser = localStorage.getItem('madis_user');
+        const token = localStorage.getItem('madis_token');
+        const refreshToken = localStorage.getItem('madis_refresh_token');
+        if (storedUser && token && refreshToken) {
+            try {
+                return JSON.parse(storedUser);
+            } catch (err) {
+                console.error(err);
+                return null;
+            }
+        }
+        return null;
+    });
+    const [loading] = useState(false);
 
     useEffect(() => {
         const storedUser = localStorage.getItem('madis_user');
         const token = localStorage.getItem('madis_token');
         const refreshToken = localStorage.getItem('madis_refresh_token');
 
-        if (storedUser && token && refreshToken) {
-            setUser(JSON.parse(storedUser));
-        } else {
+        if (!(storedUser && token && refreshToken)) {
             // Clean up if incomplete Auth State
             localStorage.removeItem('madis_token');
             localStorage.removeItem('madis_refresh_token');
             localStorage.removeItem('madis_user');
         }
-        setLoading(false);
     }, []);
 
     const login = async (email, password, otp = null) => {
@@ -61,7 +71,7 @@ export const AuthProvider = ({ children }) => {
                 await api.post('/auth/logout/', { refresh });
             }
         } catch (e) {
-            // Ignore error on logout
+            console.error('Logout error', e);
         }
     };
 
@@ -111,4 +121,6 @@ export const AuthProvider = ({ children }) => {
     );
 };
 
+/* eslint-disable react-refresh/only-export-components */
 export const useAuth = () => useContext(AuthContext);
+/* eslint-enable react-refresh/only-export-components */

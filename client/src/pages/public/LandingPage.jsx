@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
+/* eslint-disable no-unused-vars */
 import { motion } from 'framer-motion';
+/* eslint-enable no-unused-vars */
 import {
     ArrowRight,
     CheckCircle,
@@ -33,6 +35,7 @@ export default function LandingPage() {
                 <div className="absolute bottom-[10%] right-[-5%] w-[35%] h-[35%] bg-primary/5 dark:bg-primary/10 blur-[100px] rounded-full pointer-events-none transition-all" />
 
                 {/* Floating Icons - Solaris Glass */}
+                {/* eslint-disable-next-line no-unused-vars */}
                 {floatingIcons.map(({ Icon, top, left, right, bottom, delay }, i) => (
                     <motion.div
                         key={i}

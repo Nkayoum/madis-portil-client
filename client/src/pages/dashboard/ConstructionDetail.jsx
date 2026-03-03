@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import api from '../../lib/axios';
 import {
@@ -60,11 +60,7 @@ export default function ConstructionDetail() {
         }).format(value);
     };
 
-    useEffect(() => {
-        fetchSiteDetails();
-    }, [id]);
-
-    const fetchSiteDetails = async () => {
+    const fetchSiteDetails = useCallback(async () => {
         try {
             const [siteRes, milestonesRes, journalRes, docsRes, transRes] = await Promise.all([
                 api.get(`/construction/sites/${id}/`),
@@ -84,7 +80,11 @@ export default function ConstructionDetail() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [id, t]);
+
+    useEffect(() => {
+        fetchSiteDetails();
+    }, [fetchSiteDetails]);
 
     const getStatusConfig = (status) => {
         switch (status) {
@@ -669,7 +669,7 @@ export default function ConstructionDetail() {
                                                     paddingAngle={8}
                                                     dataKey="value"
                                                 >
-                                                    {Object.entries(site.budget_by_category).map(([key, value], index) => (
+                                                    {Object.entries(site.budget_by_category).map(([key], index) => (
                                                         <Cell key={`cell-${key}`} fill={['#ff0048', '#00f2ff', '#a855f7', '#f59e0b', '#10b981'][index % 5]} stroke="none" />
                                                     ))}
                                                 </Pie>
@@ -1034,6 +1034,7 @@ export default function ConstructionDetail() {
                                                 showToast({ message: t('construction.detail.suspend_modal.msg_success'), type: 'success' });
                                                 fetchSiteDetails();
                                             } catch (err) {
+                                                console.error(err);
                                                 showToast({ message: t('construction.detail.suspend_modal.msg_error'), type: 'error' });
                                             }
                                         }}

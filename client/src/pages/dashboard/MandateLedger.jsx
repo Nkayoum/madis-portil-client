@@ -184,7 +184,7 @@ export default function MandateLedger() {
                         </thead>
                         <tbody className="divide-y divide-muted/20">
                             {data.ledger.length > 0 ? (
-                                data.ledger.map((row, idx) => (
+                                data.ledger.map((row) => (
                                     <tr key={row.id} className="hover:bg-muted/5 transition-colors group">
                                         <td className="px-6 py-5 whitespace-nowrap">
                                             <div className="flex flex-col">

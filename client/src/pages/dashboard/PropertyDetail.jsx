@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import api from '../../lib/axios';
 import {
@@ -57,8 +57,8 @@ export default function PropertyDetail() {
 
 
     // Diaspora / Converted Currency State
-    const [currencyRate, setCurrencyRate] = useState(null);
-    const [loadingCurrency, setLoadingCurrency] = useState(false);
+    const [, setCurrencyRate] = useState(null);
+    const [, setLoadingCurrency] = useState(false);
 
     // Documents State
     const [documents, setDocuments] = useState([]);
@@ -74,7 +74,7 @@ export default function PropertyDetail() {
         { value: 'ANNULE', label: t('property_detail.pipeline.cancelled'), color: 'bg-red-500', icon: XCircle },
     ];
 
-    const fetchCurrencyRate = async (targetCurrency) => {
+    const fetchCurrencyRate = useCallback(async (targetCurrency) => {
         if (!targetCurrency || targetCurrency === 'EUR') return;
         setLoadingCurrency(true);
         try {
@@ -89,9 +89,9 @@ export default function PropertyDetail() {
         } finally {
             setLoadingCurrency(false);
         }
-    };
+    }, []);
 
-    const fetchProperty = async () => {
+    const fetchProperty = useCallback(async () => {
         try {
             const response = await api.get(`/properties/${id}/`);
             setProperty(response.data);
@@ -112,16 +112,16 @@ export default function PropertyDetail() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [id, t, user, navigate]);
 
-    const fetchPerfData = async () => {
+    const fetchPerfData = useCallback(async () => {
         setLoadingPerf(true);
         try {
             const perfRes = await api.get(`/finance/transactions/dashboard-stats/?property=${id}`);
 
             // Stats specifically for this property
             const summary = perfRes.data.property_stats.find(p => p.id === parseInt(id));
-            const recentTx = perfRes.data.recent_transactions; // Backend already filters by property
+            // const recentTx = perfRes.data.recent_transactions; // Backend already filters by property
 
             setPerfData({
                 ...perfRes.data,
@@ -135,19 +135,19 @@ export default function PropertyDetail() {
         } finally {
             setLoadingPerf(false);
         }
-    };
+    }, [id]);
 
     useEffect(() => {
         if (id && id !== 'new') {
             fetchProperty();
         }
-    }, [id]);
+    }, [id, fetchProperty]);
 
     useEffect(() => {
         if (property?.devise_origine && property.devise_origine !== 'EUR') {
             fetchCurrencyRate(property.devise_origine);
         }
-    }, [property]);
+    }, [property, fetchCurrencyRate]);
 
     const handleDelete = async () => {
         if (!window.confirm(t('property_detail.delete_confirm'))) {
@@ -163,7 +163,7 @@ export default function PropertyDetail() {
         }
     };
 
-    const fetchOperations = async () => {
+    const fetchOperations = useCallback(async () => {
         setLoadingOps(true);
         try {
             const [ccRes, sRes] = await Promise.all([
@@ -177,9 +177,9 @@ export default function PropertyDetail() {
         } finally {
             setLoadingOps(false);
         }
-    };
+    }, [id]);
 
-    const fetchDocuments = async () => {
+    const fetchDocuments = useCallback(async () => {
         setLoadingDocuments(true);
         try {
             const response = await api.get(`/documents/?property=${id}`);
@@ -189,7 +189,7 @@ export default function PropertyDetail() {
         } finally {
             setLoadingDocuments(false);
         }
-    };
+    }, [id]);
 
     const handleDeleteDocument = async (docId) => {
         if (!window.confirm(t('property_detail.errors.confirm_doc_delete'))) return;
@@ -278,19 +278,20 @@ export default function PropertyDetail() {
         }
     };
 
+    const fetchProjects = useCallback(async () => {
+        setLoadingProjects(true);
+        try {
+            const response = await api.get(`/projects/?property=${id}`);
+            setAssociatedProjects(response.data.results || []);
+        } catch (err) {
+            console.error('Failed to fetch associated projects', err);
+        } finally {
+            setLoadingProjects(false);
+        }
+    }, [id]);
+
     useEffect(() => {
         if (activeTab === 'projects') {
-            const fetchProjects = async () => {
-                setLoadingProjects(true);
-                try {
-                    const response = await api.get(`/projects/?property=${id}`);
-                    setAssociatedProjects(response.data.results || []);
-                } catch (err) {
-                    console.error('Failed to fetch associated projects', err);
-                } finally {
-                    setLoadingProjects(false);
-                }
-            };
             fetchProjects();
         }
         if (activeTab === 'transactions' && users.length === 0) {
@@ -303,7 +304,7 @@ export default function PropertyDetail() {
         if (activeTab === 'documents') {
             fetchDocuments();
         }
-    }, [id, activeTab]);
+    }, [id, activeTab, fetchProjects, fetchPerfData, fetchOperations, fetchDocuments, users.length]);
 
     const createTransaction = async () => {
         setTxLoading(true);

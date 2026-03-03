@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../lib/axios';
@@ -14,14 +14,9 @@ export default function PropertiesList() {
     const [error, setError] = useState(null);
     const [selectedIds, setSelectedIds] = useState([]);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [filter, setFilter] = useState('ALL');
 
-    useEffect(() => {
-        fetchProperties();
-    }, []);
-
-    const [filter, setFilter] = useState('ALL'); // 'ALL', 'MANDATES', 'CLIENTS'
-
-    const fetchProperties = async () => {
+    const fetchProperties = useCallback(async () => {
         try {
             const response = await api.get('/properties/');
             setProperties(response.data.results || []);
@@ -31,7 +26,11 @@ export default function PropertiesList() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [t]);
+
+    useEffect(() => {
+        fetchProperties();
+    }, [fetchProperties]);
 
     const filteredProperties = properties.filter(p => {
         if (filter === 'MANDATES') return !p.owner;

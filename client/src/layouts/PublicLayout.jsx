@@ -3,7 +3,9 @@ import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { Sun, Moon, Menu as MenuIcon, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+/* eslint-disable no-unused-vars */
 import { motion, AnimatePresence } from 'framer-motion';
+/* eslint-enable no-unused-vars */
 import logo from '../assets/logo.png';
 
 export default function PublicLayout() {

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import api from '../../lib/axios';
 import { useToast } from '../../context/ToastContext';
 import {
@@ -7,7 +7,6 @@ import {
     TrendingDown, HardHat, Wallet
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { cn } from '../../lib/utils';
 
 export default function EditTransactionModal({ isOpen, onClose, transactionId, onSuccess }) {
     const { showToast } = useToast();
@@ -34,9 +33,9 @@ export default function EditTransactionModal({ isOpen, onClose, transactionId, o
         if (isOpen && transactionId) {
             fetchData();
         }
-    }, [isOpen, transactionId]);
+    }, [isOpen, transactionId, fetchData]);
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         setLoading(true);
         try {
             const [propsRes, sitesRes, transRes] = await Promise.all([
@@ -48,17 +47,17 @@ export default function EditTransactionModal({ isOpen, onClose, transactionId, o
             setProperties(propsRes.data.results || []);
             setSites(sitesRes.data.results || sitesRes.data || []);
 
-            const t = transRes.data;
+            const t_data = transRes.data;
             setFormData({
-                property: t.property,
-                type: t.type,
-                category: t.category,
-                amount: t.amount,
-                date: t.date,
-                period_month: t.period_month || '',
-                period_year: t.period_year || '',
-                description: t.description || '',
-                site: t.site || '',
+                property: t_data.property,
+                type: t_data.type,
+                category: t_data.category,
+                amount: t_data.amount,
+                date: t_data.date,
+                period_month: t_data.period_month || '',
+                period_year: t_data.period_year || '',
+                description: t_data.description || '',
+                site: t_data.site || '',
                 invoice: null
             });
         } catch (err) {
@@ -68,7 +67,7 @@ export default function EditTransactionModal({ isOpen, onClose, transactionId, o
         } finally {
             setLoading(false);
         }
-    };
+    }, [transactionId, t, showToast, onClose]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;

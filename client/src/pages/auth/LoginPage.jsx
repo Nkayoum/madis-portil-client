@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Loader2, Mail, Lock, ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { cn } from '../../lib/utils';
 
 export default function LoginPage() {
     const { t } = useTranslation();

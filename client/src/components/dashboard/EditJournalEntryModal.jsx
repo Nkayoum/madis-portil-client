@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import api from '../../lib/axios';
 import { useToast } from '../../context/ToastContext';
 import {
@@ -38,9 +38,9 @@ export default function EditJournalEntryModal({ isOpen, onClose, entryId, onSucc
         if (isOpen && entryId) {
             fetchData();
         }
-    }, [isOpen, entryId]);
+    }, [isOpen, entryId, fetchData]);
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         setFetching(true);
         try {
             const res = await api.get(`/construction/journal/${entryId}/`);
@@ -62,7 +62,7 @@ export default function EditJournalEntryModal({ isOpen, onClose, entryId, onSucc
             showToast({ message: t('journal_modal.toast_loaded_err'), type: 'error' });
             onClose();
         }
-    };
+    }, [entryId, t, showToast, onClose]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;

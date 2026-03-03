@@ -6,7 +6,6 @@ import {
     Building2, Euro, Calendar, FileText,
     TrendingUp, HardHat, X, Info
 } from 'lucide-react';
-import { cn } from '../../lib/utils';
 import { useTranslation } from 'react-i18next';
 
 export default function AddTransactionModal({ isOpen, onClose, site, onSuccess }) {

@@ -23,7 +23,7 @@ export default function AdminDashboard() {
     });
     const [recentUsers, setRecentUsers] = useState([]);
     const [recentActivity, setRecentActivity] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchDashboardData = async () => {
@@ -110,7 +110,7 @@ export default function AdminDashboard() {
             }
         };
         fetchDashboardData();
-    }, []);
+    }, [t, dateLocale]);
 
     const statCards = [
         { label: t('admin_dashboard.stat_clients'), value: stats.usersCount, icon: Users, color: 'text-primary', bg: 'bg-primary/10 dark:bg-primary/20', link: '/dashboard/users' },

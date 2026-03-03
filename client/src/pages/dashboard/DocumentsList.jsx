@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../lib/axios';
 import { FileText, Download, Search, Loader2, File } from 'lucide-react';
@@ -9,38 +9,31 @@ import { useToast } from '../../context/ToastContext';
 import { useAuth } from '../../context/AuthContext';
 import { Trash2 } from 'lucide-react';
 import { cn } from '../../lib/utils';
-import { useNavigate } from 'react-router-dom';
-
 export default function DocumentsList() {
     const { t, i18n } = useTranslation();
     const dateLocale = i18n.language === 'fr' ? fr : enUS;
     const { showToast } = useToast();
     const { user } = useAuth();
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const [documents, setDocuments] = useState([]);
     const [properties, setProperties] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [, setError] = useState(null);
     const [filter, setFilter] = useState('ALL');
     const [selectedPropertyId, setSelectedPropertyId] = useState('ALL');
     const [search, setSearch] = useState('');
     const [deletingId, setDeletingId] = useState(null);
 
-    useEffect(() => {
-        fetchDocuments();
-        fetchProperties();
-    }, []);
-
-    const fetchProperties = async () => {
+    const fetchProperties = useCallback(async () => {
         try {
             const response = await api.get('/properties/');
             setProperties(response.data.results || []);
         } catch (err) {
             console.error('Failed to fetch properties', err);
         }
-    };
+    }, []);
 
-    const fetchDocuments = async () => {
+    const fetchDocuments = useCallback(async () => {
         try {
             const response = await api.get('/documents/');
             setDocuments(response.data.results || []);
@@ -50,7 +43,12 @@ export default function DocumentsList() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [t]);
+
+    useEffect(() => {
+        fetchDocuments();
+        fetchProperties();
+    }, [fetchDocuments, fetchProperties]);
 
     const handleDelete = async (id, title) => {
         if (!window.confirm(t('documents.list.confirm_delete', { title }))) return;

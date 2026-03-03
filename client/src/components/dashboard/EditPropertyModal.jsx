@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import api from '../../lib/axios';
 import { useToast } from '../../context/ToastContext';
 import { useTranslation } from 'react-i18next';
@@ -116,9 +116,9 @@ export default function EditPropertyModal({ isOpen, onClose, propertyId, onSucce
         if (isOpen && propertyId) {
             fetchData();
         }
-    }, [isOpen, propertyId]);
+    }, [isOpen, propertyId, fetchData]);
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         setFetching(true);
         try {
             const [usersRes, propertyRes] = await Promise.all([
@@ -173,7 +173,7 @@ export default function EditPropertyModal({ isOpen, onClose, propertyId, onSucce
         } finally {
             setFetching(false);
         }
-    };
+    }, [propertyId, t, showToast, onClose]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;

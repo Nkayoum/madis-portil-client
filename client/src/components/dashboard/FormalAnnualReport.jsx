@@ -1,4 +1,4 @@
-import { cn, formatCurrency } from '../../lib/utils';
+import { formatCurrency } from '../../lib/utils';
 
 export default function FormalAnnualReport({ data, selectedYear, letterheadUrl, reportRef }) {
     if (!data) return null;

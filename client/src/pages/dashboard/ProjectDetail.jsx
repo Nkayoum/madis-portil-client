@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import api from '../../lib/axios';
 import {
@@ -24,7 +24,7 @@ export default function ProjectDetail() {
     const [loadingTransactions, setLoadingTransactions] = useState(false);
     const [error, setError] = useState(null);
 
-    const fetchProject = async () => {
+    const fetchProject = useCallback(async () => {
         try {
             const response = await api.get(`/projects/${id}/`);
             setProject(response.data);
@@ -34,11 +34,11 @@ export default function ProjectDetail() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [id, t]);
 
     useEffect(() => {
         fetchProject();
-    }, [id]);
+    }, [fetchProject]);
 
     const handleDelete = async () => {
         if (!window.confirm(t('project_detail.delete_confirm'))) {

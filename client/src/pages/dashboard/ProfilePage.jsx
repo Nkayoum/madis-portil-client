@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 export default function ProfilePage() {
     const { t } = useTranslation();
-    const { user, login } = useAuth();
+    const { user } = useAuth();
     const { showToast } = useToast();
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({

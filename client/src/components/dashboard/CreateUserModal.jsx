@@ -3,7 +3,6 @@ import api from '../../lib/axios';
 import { useToast } from '../../context/ToastContext';
 import { useTranslation } from 'react-i18next';
 import { UserPlus, Loader2, Mail, Lock, Shield, X, User } from 'lucide-react';
-import { cn } from '../../lib/utils';
 
 export default function CreateUserModal({ isOpen, onClose, onSuccess }) {
     const { t } = useTranslation();

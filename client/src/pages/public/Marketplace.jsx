@@ -1,5 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+/* eslint-disable no-unused-vars */
 import { motion, AnimatePresence } from 'framer-motion';
+/* eslint-enable no-unused-vars */
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 import {
@@ -46,9 +48,9 @@ export default function Marketplace() {
 
     useEffect(() => {
         fetchProperties();
-    }, [category, nature, search]);
+    }, [fetchProperties]);
 
-    const fetchProperties = async () => {
+    const fetchProperties = useCallback(async () => {
         setLoading(true);
         try {
             const params = {};
@@ -62,7 +64,7 @@ export default function Marketplace() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [category, nature, search]);
 
     const submitOffer = async () => {
         if (!offerForm.asking_price || !offerForm.prospect_name) return;

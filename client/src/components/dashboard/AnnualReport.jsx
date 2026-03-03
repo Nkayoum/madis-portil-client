@@ -7,7 +7,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 import FormalAnnualReport from './FormalAnnualReport';
 
-export default function AnnualReport({ data, selectedYear, isAdmin }) {
+export default function AnnualReport({ data, selectedYear }) {
     const { t } = useTranslation();
     const { user, updateUser } = useAuth();
     const [generating, setGenerating] = useState(false);
@@ -33,8 +33,8 @@ export default function AnnualReport({ data, selectedYear, isAdmin }) {
     if (!data) return null;
 
     const categories = data.category_stats || [];
-    const rental = data.rental_performance || {};
-    const trans = data.transactional_performance || {};
+    // const rental = data.rental_performance || {};
+    // const trans = data.transactional_performance || {};
 
     const revenueCategories = categories.filter(c =>
         ['RENT', 'PROMOTION_SALE', 'CASH_CALL'].includes(c.category)

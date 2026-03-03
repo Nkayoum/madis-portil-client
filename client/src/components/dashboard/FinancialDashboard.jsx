@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
     AreaChart, Area, PieChart, Pie, Cell, Sector
@@ -50,10 +50,10 @@ export default function FinancialDashboard({ isAdmin = false }) {
             }
         };
         initDashboard();
-    }, []);
+    }, [isAdmin, fetchWallets, fetchStats, selectedYear]);
 
     // fetch wallets for admin
-    const fetchWallets = async () => {
+    const fetchWallets = useCallback(async () => {
         setLoadingWallets(true);
         try {
             const response = await api.get('/finance/wallets/');
@@ -63,9 +63,9 @@ export default function FinancialDashboard({ isAdmin = false }) {
         } finally {
             setLoadingWallets(false);
         }
-    };
+    }, []);
 
-    const fetchStats = async (propertyId, year) => {
+    const fetchStats = useCallback(async (propertyId, year) => {
         setLoadingStats(true);
         try {
             let url = '/finance/transactions/dashboard-stats/?';
@@ -93,7 +93,7 @@ export default function FinancialDashboard({ isAdmin = false }) {
         } finally {
             setLoadingStats(false);
         }
-    };
+    }, [showToast]);
 
     const handlePropertyChange = (e) => {
         const id = e.target.value;
@@ -108,6 +108,7 @@ export default function FinancialDashboard({ isAdmin = false }) {
     };
 
     // Simplified Yield Calculation using backend data
+    /*
     const calculateYield = () => {
         if (!data) return 0;
 
@@ -131,6 +132,7 @@ export default function FinancialDashboard({ isAdmin = false }) {
         const avgYield = data.property_stats?.reduce((sum, p) => sum + (p.yield * p.investment), 0) / totalInvestment;
         return avgYield ? avgYield.toFixed(2) : 0;
     };
+    */
 
     const [dashboardMode, setDashboardMode] = useState('rental'); // 'rental' or 'transactional'
 
@@ -206,7 +208,7 @@ export default function FinancialDashboard({ isAdmin = false }) {
     const totalAssetValue = (data.property_stats || []).reduce((sum, p) => sum + (p.investment || 0), 0);
     const totalLiquidity = wallets.reduce((sum, w) => sum + Number(w.balance), 0);
     const globalTotal = totalAssetValue + totalLiquidity;
-    const liquidityRatio = globalTotal > 0 ? (totalLiquidity / globalTotal) * 100 : 0;
+    // const liquidityRatio = globalTotal > 0 ? (totalLiquidity / globalTotal) * 100 : 0;
     const assetsRatio = globalTotal > 0 ? (totalAssetValue / globalTotal) * 100 : 0;
 
     return (

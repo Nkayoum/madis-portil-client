@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import api from '../../lib/axios';
 import { useToast } from '../../context/ToastContext';
 import { useTranslation } from 'react-i18next';
@@ -30,7 +30,7 @@ export default function CreateProjectModal({ isOpen, onClose, onSuccess, propert
         if (isOpen) {
             fetchProperties();
         }
-    }, [isOpen]);
+    }, [isOpen, fetchProperties]);
 
     useEffect(() => {
         if (propertyIdFromProps) {
@@ -38,7 +38,7 @@ export default function CreateProjectModal({ isOpen, onClose, onSuccess, propert
         }
     }, [propertyIdFromProps]);
 
-    const fetchProperties = async () => {
+    const fetchProperties = useCallback(async () => {
         try {
             const response = await api.get('/properties/');
             setProperties(response.data.results || []);
@@ -48,7 +48,7 @@ export default function CreateProjectModal({ isOpen, onClose, onSuccess, propert
         } finally {
             setFetchingProperties(false);
         }
-    };
+    }, [t, showToast]);
 
     useEffect(() => {
         if (formData.property && properties.length > 0) {
@@ -60,7 +60,7 @@ export default function CreateProjectModal({ isOpen, onClose, onSuccess, propert
                 }
             }
         }
-    }, [formData.property, properties]);
+    }, [formData.property, formData.category, properties]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;

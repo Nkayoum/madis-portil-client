@@ -1,10 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import api from '../../lib/axios';
 import { useToast } from '../../context/ToastContext';
 import { Save, Loader2, Mail, Shield, User, Phone, CheckCircle2, XCircle, Lock, ArrowLeft } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { cn } from '../../lib/utils';
 
 export default function EditUser() {
     const { t } = useTranslation();
@@ -24,13 +23,7 @@ export default function EditUser() {
         is_active: true,
     });
 
-    useEffect(() => {
-        if (id) {
-            fetchUser();
-        }
-    }, [id]);
-
-    const fetchUser = async () => {
+    const fetchUser = useCallback(async () => {
         setLoading(true);
         try {
             const response = await api.get(`/auth/users/${id}/`);
@@ -50,7 +43,13 @@ export default function EditUser() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [id, navigate, showToast, t]);
+
+    useEffect(() => {
+        if (id) {
+            fetchUser();
+        }
+    }, [id, fetchUser]);
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;

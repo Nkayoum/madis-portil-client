@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useState, useEffect, useCallback } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import api from '../../lib/axios';
 import { useToast } from '../../context/ToastContext';
 import {
@@ -13,7 +13,7 @@ import { cn } from '../../lib/utils';
 
 export default function ManageMilestones() {
     const { id } = useParams();
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const { showToast } = useToast();
     const { t, i18n } = useTranslation();
     const dateLocale = i18n.language === 'fr' ? fr : enUS;
@@ -32,7 +32,7 @@ export default function ManageMilestones() {
         end_date: '',
     });
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         try {
             const [siteRes, milestonesRes] = await Promise.all([
                 api.get(`/construction/sites/${id}/`),
@@ -46,11 +46,11 @@ export default function ManageMilestones() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [id, t, showToast]);
 
     useEffect(() => {
         fetchData();
-    }, [id]);
+    }, [fetchData]);
 
     const handleAdd = async (e) => {
         e.preventDefault();
@@ -70,6 +70,7 @@ export default function ManageMilestones() {
             fetchData();
             showToast({ message: t('construction.milestones.messages.add_success'), type: 'success' });
         } catch (err) {
+            console.error(err);
             showToast({ message: t('construction.milestones.messages.add_error'), type: 'error' });
         } finally {
             setSaving(false);
@@ -83,6 +84,7 @@ export default function ManageMilestones() {
             fetchData();
             showToast({ message: t('construction.milestones.messages.delete_success'), type: 'success' });
         } catch (err) {
+            console.error(err);
             showToast({ message: t('construction.milestones.messages.delete_error'), type: 'error' });
         }
     };
@@ -94,6 +96,7 @@ export default function ManageMilestones() {
             });
             fetchData();
         } catch (err) {
+            console.error(err);
             showToast({ message: t('construction.milestones.messages.update_error'), type: 'error' });
         }
     };
@@ -123,6 +126,7 @@ export default function ManageMilestones() {
             fetchData();
             showToast({ message: t('construction.milestones.messages.update_success'), type: 'success' });
         } catch (err) {
+            console.error(err);
             showToast({ message: t('construction.milestones.messages.update_error'), type: 'error' });
         } finally {
             setSaving(false);
@@ -137,7 +141,6 @@ export default function ManageMilestones() {
         );
     }
 
-    const inputClasses = "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50";
 
     return (
         <div className="max-w-[1600px] mx-auto space-y-10 animate-fade-in pb-20 px-4 md:px-10">
@@ -247,7 +250,7 @@ export default function ManageMilestones() {
                 {/* List of milestones */}
                 <div className="lg:col-span-2 space-y-4">
                     {milestones.length > 0 ? (
-                        milestones.map((m, index) => {
+                        milestones.map((m) => {
                             const isOverdue = !m.completed && new Date(m.end_date) < new Date().setHours(0, 0, 0, 0);
                             const isEditing = editingId === m.id;
 

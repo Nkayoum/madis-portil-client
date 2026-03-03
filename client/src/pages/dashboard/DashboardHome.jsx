@@ -26,24 +26,11 @@ export default function DashboardHome() {
     });
     const [recentActivity, setRecentActivity] = useState([]);
 
-    if (loading) {
-        return (
-            <div className="flex flex-col items-center justify-center p-24 gap-4 animate-fade-in">
-                <Loader2 className="h-10 w-10 animate-spin text-black opacity-10" />
-                <p className="text-[9px] font-bold uppercase tracking-widest opacity-30">Initialisation...</p>
-            </div>
-        );
-    }
-
-    if (user?.role === 'ADMIN_MADIS') {
-        return <AdminDashboard />;
-    }
-
-    if (user?.role === 'CHEF_CHANTIER') {
-        return <ChefChantierDashboard />;
-    }
-
     useEffect(() => {
+        if (loading || user?.role === 'ADMIN_MADIS' || user?.role === 'CHEF_CHANTIER') {
+            return;
+        }
+
         const fetchDashboardData = async () => {
             try {
                 const [props, docs, tickets, sites] = await Promise.all([
@@ -109,15 +96,30 @@ export default function DashboardHome() {
                         }))
                 );
 
-            } catch (err) {
-                console.error("Failed to fetch dashboard data", err);
+            } catch (error) {
+                console.error('Error fetching dashboard data:', error);
             }
         };
 
-        if (user && user.role !== 'ADMIN_MADIS') {
-            fetchDashboardData();
-        }
-    }, [user]);
+        fetchDashboardData();
+    }, [user, loading]);
+
+    if (loading) {
+        return (
+            <div className="flex flex-col items-center justify-center p-24 gap-4 animate-fade-in">
+                <Loader2 className="h-10 w-10 animate-spin text-black opacity-10" />
+                <p className="text-[9px] font-bold uppercase tracking-widest opacity-30">Initialisation...</p>
+            </div>
+        );
+    }
+
+    if (user?.role === 'ADMIN_MADIS') {
+        return <AdminDashboard />;
+    }
+
+    if (user?.role === 'CHEF_CHANTIER') {
+        return <ChefChantierDashboard />;
+    }
 
     const stats = [
         { label: 'Mes Biens', value: statsData.propertiesCount, icon: Building, color: 'text-primary', bg: 'bg-primary/10 dark:bg-primary/20', link: '/dashboard/properties' },

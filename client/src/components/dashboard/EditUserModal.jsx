@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import api from '../../lib/axios';
 import { useToast } from '../../context/ToastContext';
 import { useTranslation } from 'react-i18next';
 import { Save, Loader2, Mail, Shield, User, Phone, CheckCircle2, XCircle, Lock, X } from 'lucide-react';
-import { cn } from '../../lib/utils';
 
 export default function EditUserModal({ isOpen, onClose, userId, onSuccess }) {
     const { t } = useTranslation();
@@ -25,9 +24,9 @@ export default function EditUserModal({ isOpen, onClose, userId, onSuccess }) {
         if (isOpen && userId) {
             fetchUser();
         }
-    }, [isOpen, userId]);
+    }, [isOpen, userId, fetchUser]);
 
-    const fetchUser = async () => {
+    const fetchUser = useCallback(async () => {
         setLoading(true);
         try {
             const response = await api.get(`/auth/users/${userId}/`);
@@ -47,7 +46,7 @@ export default function EditUserModal({ isOpen, onClose, userId, onSuccess }) {
         } finally {
             setLoading(false);
         }
-    };
+    }, [userId, t, showToast, onClose]);
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;

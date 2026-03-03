@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../lib/axios';
 import { useToast } from '../../context/ToastContext';
@@ -6,7 +6,6 @@ import { Users, Search, MoreHorizontal, Shield, UserCheck, Loader2, Plus, UserX,
 import { format } from 'date-fns';
 import { fr, enUS } from 'date-fns/locale';
 import { useTranslation } from 'react-i18next';
-import { cn } from '../../lib/utils';
 
 
 export default function UsersList() {
@@ -17,15 +16,10 @@ export default function UsersList() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [search, setSearch] = useState('');
-    const [openMenuId, setOpenMenuId] = useState(null);
 
 
 
-    useEffect(() => {
-        fetchUsers();
-    }, []);
-
-    const fetchUsers = async () => {
+    const fetchUsers = useCallback(async () => {
         try {
             const response = await api.get('/auth/users/');
             setUsers(response.data.results || []);
@@ -35,7 +29,11 @@ export default function UsersList() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [t]);
+
+    useEffect(() => {
+        fetchUsers();
+    }, [fetchUsers]);
 
     const handleDelete = async (id) => {
         if (!window.confirm(t('users.list.confirm_delete'))) {

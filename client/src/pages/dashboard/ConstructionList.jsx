@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../lib/axios';
 import { HardHat, Calendar, MapPin, ArrowRight, Loader2, Camera, Plus, ClipboardList, Building2 } from 'lucide-react';
@@ -14,16 +14,12 @@ export default function ConstructionList() {
     const { t, i18n } = useTranslation();
     const [sites, setSites] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [, setError] = useState(null);
     const [activeTab, setActiveTab] = useState('CONSTRUCTION'); // 'CONSTRUCTION' or 'MAINTENANCE'
     const dateLocale = i18n.language === 'fr' ? fr : enUS;
 
 
-    useEffect(() => {
-        fetchSites();
-    }, []);
-
-    const fetchSites = async () => {
+    const fetchSites = useCallback(async () => {
         try {
             const response = await api.get('/construction/sites/');
             setSites(response.data.results || response.data || []);
@@ -33,7 +29,11 @@ export default function ConstructionList() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [t]);
+
+    useEffect(() => {
+        fetchSites();
+    }, [fetchSites]);
 
     const getStatusColor = (status) => {
         switch (status) {

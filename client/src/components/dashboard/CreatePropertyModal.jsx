@@ -110,10 +110,10 @@ export default function CreatePropertyModal({ isOpen, onClose, onSuccess }) {
         is_verified_fonciere: false,
     });
 
-    const isMandat = formData.management_type === 'MANDAT';
-    const isGestion = formData.management_type === 'GESTION';
-    const isConstruction = formData.management_type === 'CONSTRUCTION';
-    const showPricing = !isConstruction;
+    // const isMandat = formData.management_type === 'MANDAT';
+    // const isGestion = formData.management_type === 'GESTION';
+    // const isConstruction = formData.management_type === 'CONSTRUCTION';
+    // const showPricing = !isConstruction;
 
     useEffect(() => {
         if (isOpen) {

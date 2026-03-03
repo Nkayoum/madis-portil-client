@@ -4,7 +4,6 @@ import api from '../../lib/axios';
 import { useToast } from '../../context/ToastContext';
 import { UserPlus, Loader2, Mail, Lock, Shield, X, User, ArrowLeft } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { cn } from '../../lib/utils';
 
 export default function CreateUser() {
     const { t } = useTranslation();

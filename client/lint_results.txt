@@ -1,0 +1,227 @@
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\components\dashboard\AddTransactionModal.jsx
+  9:10  error  'cn' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\components\dashboard\AnnualReport.jsx
+  10:60  error  'isAdmin' is defined but never used                                                     no-unused-vars
+  36:11  error  'rental' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  37:11  error  'trans' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u   no-unused-vars
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\components\dashboard\CreateConstructionSiteModal.jsx
+  44:8  warning  React Hook useEffect has a missing dependency: 'fetchProjects'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\components\dashboard\CreateProjectModal.jsx
+  33:8  warning  React Hook useEffect has a missing dependency: 'fetchProperties'. Either include it or remove the dependency array    react-hooks/exhaustive-deps
+  63:8  warning  React Hook useEffect has a missing dependency: 'formData.category'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\components\dashboard\CreatePropertyModal.jsx
+  113:11  error  'isMandat' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u     no-unused-vars
+  114:11  error  'isGestion' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u    no-unused-vars
+  116:11  error  'showPricing' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\components\dashboard\CreateUserModal.jsx
+  6:10  error  'cn' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\components\dashboard\EditConstructionSiteModal.jsx
+  33:8  warning  React Hook useEffect has a missing dependency: 'fetchData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\components\dashboard\EditJournalEntryModal.jsx
+  41:8  warning  React Hook useEffect has a missing dependency: 'fetchData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\components\dashboard\EditProjectModal.jsx
+  33:8  warning  React Hook useEffect has a missing dependency: 'fetchData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\components\dashboard\EditPropertyModal.jsx
+  119:8  warning  React Hook useEffect has a missing dependency: 'fetchData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\components\dashboard\EditTransactionModal.jsx
+  10:10  error    'cn' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                     no-unused-vars
+  37:8   warning  React Hook useEffect has a missing dependency: 'fetchData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\components\dashboard\EditUserModal.jsx
+   6:10  error    'cn' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                     no-unused-vars
+  28:8   warning  React Hook useEffect has a missing dependency: 'fetchUser'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\components\dashboard\FinancialDashboard.jsx
+   53:8   warning  React Hook useEffect has missing dependencies: 'fetchStats', 'isAdmin', and 'selectedYear'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  111:11  error    'calculateYield' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                                  no-unused-vars
+  209:11  error    'liquidityRatio' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                                  no-unused-vars
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\components\dashboard\FormalAnnualReport.jsx
+  1:10  error  'cn' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\components\dashboard\UploadDocumentModal.jsx
+  5:10  error  'cn' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\components\dashboard\WalletCard.jsx
+  37:8  warning  React Hook useEffect has a missing dependency: 'fetchWallet'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\context\AuthContext.jsx
+   16:13  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  14 |
+  15 |         if (storedUser && token && refreshToken) {
+> 16 |             setUser(JSON.parse(storedUser));
+     |             ^^^^^^^ Avoid calling setState() directly within an effect
+  17 |         } else {
+  18 |             // Clean up if incomplete Auth State
+  19 |             localStorage.removeItem('madis_token');  react-hooks/set-state-in-effect
+   63:18  error  'e' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     no-unused-vars
+  114:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    react-refresh/only-export-components
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\context\ThemeContext.jsx
+  10:5   error  'defaultTheme' is assigned a value but never used                                                                               no-unused-vars
+  58:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\context\ToastContext.jsx
+   3:27  error    'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  no-unused-vars
+   7:14  error    Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 react-refresh/only-export-components
+  24:17  error    Error: Cannot access variable before it is declared
+
+`dismissToast` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+  22 |         if (duration) {
+  23 |             setTimeout(() => {
+> 24 |                 dismissToast(id);
+     |                 ^^^^^^^^^^^^ `dismissToast` accessed before it is declared
+  25 |             }, duration);
+  26 |         }
+  27 |     }, []);
+
+  27 |     }, []);
+  28 |
+> 29 |     const dismissToast = useCallback((id) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 30 |         setToasts((prev) => prev.filter((toast) => toast.id !== id));
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 31 |     }, []);
+     | ^^^^^^^^^^^^ `dismissToast` is declared here
+  32 |
+  33 |     return (
+  34 |         <ToastContext.Provider value={{ showToast, dismissToast }}>  react-hooks/immutability
+  27:8   warning  React Hook useCallback has a missing dependency: 'dismissToast'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              react-hooks/exhaustive-deps
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\layouts\PublicLayout.jsx
+  6:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\pages\auth\LoginPage.jsx
+  6:10  error  'cn' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\pages\dashboard\AddTransaction.jsx
+  6:10  error  'cn' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\pages\dashboard\AdminDashboard.jsx
+   26:12  error    'loading' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                  no-unused-vars
+  113:8   warning  React Hook useEffect has missing dependencies: 'dateLocale' and 't'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\pages\dashboard\ConstructionDetail.jsx
+    65:8    warning  React Hook useEffect has a missing dependency: 'fetchSiteDetails'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+   672:105  error    'value' is defined but never used                                                                                    no-unused-vars
+  1036:54   error    'err' is defined but never used                                                                                      no-unused-vars
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\pages\dashboard\ConstructionList.jsx
+  17:12  error    'error' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                          no-unused-vars
+  24:8   warning  React Hook useEffect has a missing dependency: 'fetchSites'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\pages\dashboard\CreateUser.jsx
+  7:10  error  'cn' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\pages\dashboard\DashboardHome.jsx
+  46:5  error  React Hook "useEffect" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\pages\dashboard\DashboardMarketplace.jsx
+   2:10  error    'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                       no-unused-vars
+  45:8   warning  React Hook useEffect has a missing dependency: 'fetchProperties'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\pages\dashboard\DocumentsList.jsx
+  19:11  error    'navigate' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                           no-unused-vars
+  23:12  error    'error' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                              no-unused-vars
+  32:8   warning  React Hook useEffect has a missing dependency: 'fetchDocuments'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\pages\dashboard\EditConstructionSite.jsx
+  57:8  warning  React Hook useEffect has a missing dependency: 'showToast'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\pages\dashboard\EditProject.jsx
+  56:8  warning  React Hook useEffect has a missing dependency: 'showToast'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\pages\dashboard\EditProperty.jsx
+  137:8   warning  React Hook useEffect has a missing dependency: 'fetchData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  251:22  error    'err' is defined but never used                                                                               no-unused-vars
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\pages\dashboard\EditUser.jsx
+   7:10  error    'cn' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                     no-unused-vars
+  31:8   warning  React Hook useEffect has a missing dependency: 'fetchUser'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\pages\dashboard\ManageMilestones.jsx
+   16:11  error    'navigate' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                      no-unused-vars
+   53:8   warning  React Hook useEffect has a missing dependency: 'fetchData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+   72:18  error    'err' is defined but never used                                                                               no-unused-vars
+   85:18  error    'err' is defined but never used                                                                               no-unused-vars
+   96:18  error    'err' is defined but never used                                                                               no-unused-vars
+  125:18  error    'err' is defined but never used                                                                               no-unused-vars
+  140:11  error    'inputClasses' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                  no-unused-vars
+  250:44  error    'index' is defined but never used                                                                             no-unused-vars
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\pages\dashboard\MandateLedger.jsx
+  187:55  error  'idx' is defined but never used  no-unused-vars
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\pages\dashboard\ProfilePage.jsx
+  10:19  error  'login' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\pages\dashboard\ProjectDetail.jsx
+  41:8  warning  React Hook useEffect has a missing dependency: 'fetchProject'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\pages\dashboard\ProjectsList.jsx
+  12:13  error    'user' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                              no-unused-vars
+  21:8   warning  React Hook useEffect has a missing dependency: 'fetchProjects'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\pages\dashboard\PropertiesList.jsx
+  20:8  warning  React Hook useEffect has a missing dependency: 'fetchProperties'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\pages\dashboard\PropertyDetail.jsx
+   60:12  error    'currencyRate' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                 no-unused-vars
+   61:12  error    'loadingCurrency' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                                                              no-unused-vars
+  124:19  error    'recentTx' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                     no-unused-vars
+  144:8   warning  React Hook useEffect has a missing dependency: 'fetchProperty'. Either include it or remove the dependency array                                                             react-hooks/exhaustive-deps
+  306:8   warning  React Hook useEffect has missing dependencies: 'fetchDocuments', 'fetchOperations', 'fetchPerfData', and 'users.length'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\pages\dashboard\TicketDetail.jsx
+  35:8  warning  React Hook useEffect has missing dependencies: 'fetchTicketData' and 'markNotificationsAsRead'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\pages\dashboard\TicketsList.jsx
+  14:12  error    'error' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                            no-unused-vars
+  19:12  error    'clients' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                          no-unused-vars
+  39:8   warning  React Hook useEffect has a missing dependency: 'fetchTickets'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\pages\dashboard\TransactionsList.jsx
+  25:11  error    'dateLocale' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                            no-unused-vars
+  29:8   warning  React Hook useEffect has a missing dependency: 'fetchTransactions'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  49:18  error    'err' is defined but never used                                                                                       no-unused-vars
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\pages\dashboard\UploadDocument.jsx
+  94:11  error  'ic' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\pages\dashboard\UsersList.jsx
+   9:10  error    'cn' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                      no-unused-vars
+  20:12  error    'openMenuId' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                     no-unused-vars
+  20:24  error    'setOpenMenuId' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                  no-unused-vars
+  26:8   warning  React Hook useEffect has a missing dependency: 'fetchUsers'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\pages\public\ContactPage.jsx
+  3:10  error  'cn' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\pages\public\LandingPage.jsx
+   2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  36:39  error  'Icon' is defined but never used                                               no-unused-vars
+
+C:\Users\PC\Documents\DEV Bytes\madis-portal\client\src\pages\public\Marketplace.jsx
+   2:10  error    'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                       no-unused-vars
+  49:8   warning  React Hook useEffect has a missing dependency: 'fetchProperties'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+✖ 93 problems (61 errors, 32 warnings)

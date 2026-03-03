@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import api from '../../lib/axios';
 import { useToast } from '../../context/ToastContext';
 import { useTranslation } from 'react-i18next';
@@ -30,9 +30,9 @@ export default function EditConstructionSiteModal({ isOpen, onClose, siteId, onS
         if (isOpen && siteId) {
             fetchData();
         }
-    }, [isOpen, siteId]);
+    }, [isOpen, siteId, fetchData]);
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         setFetching(true);
         try {
             const [projectsRes, usersRes, siteRes] = await Promise.all([
@@ -65,7 +65,7 @@ export default function EditConstructionSiteModal({ isOpen, onClose, siteId, onS
         } finally {
             setFetching(false);
         }
-    };
+    }, [siteId, t, showToast, onClose]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;

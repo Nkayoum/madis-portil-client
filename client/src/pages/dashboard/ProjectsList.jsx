@@ -1,26 +1,21 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../lib/axios';
 import { Building2, Calendar, Euro, ArrowRight, Loader2, Plus, HardHat, ClipboardList } from 'lucide-react';
 import { format } from 'date-fns';
 import { fr, enUS } from 'date-fns/locale';
-import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 import { cn, formatCurrency } from '../../lib/utils';
 
 export default function ProjectsList() {
-    const { user } = useAuth();
+    // const { user } = useAuth();
     const { t, i18n } = useTranslation();
     const [projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [activeTab, setActiveTab] = useState('CONSTRUCTION'); // 'CONSTRUCTION' or 'MAINTENANCE'
 
-    useEffect(() => {
-        fetchProjects();
-    }, []);
-
-    const fetchProjects = async () => {
+    const fetchProjects = useCallback(async () => {
         try {
             const response = await api.get('/projects/');
             setProjects(response.data.results || response.data || []);
@@ -30,7 +25,11 @@ export default function ProjectsList() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [t]);
+
+    useEffect(() => {
+        fetchProjects();
+    }, [fetchProjects]);
 
     const getStatusColor = (status) => {
         switch (status) {

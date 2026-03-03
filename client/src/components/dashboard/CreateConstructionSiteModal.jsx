@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import api from '../../lib/axios';
 import { useToast } from '../../context/ToastContext';
 import { useTranslation } from 'react-i18next';
@@ -25,6 +25,19 @@ export default function CreateConstructionSiteModal({ isOpen, onClose, onSuccess
         status: 'PREPARATION',
     });
 
+    const fetchProjects = useCallback(async () => {
+        setFetchingProjects(true);
+        try {
+            const res = await api.get('/projects/');
+            setProjects(res.data.results || res.data || []);
+        } catch (err) {
+            console.error('Erreur chargement projets', err);
+            showToast({ message: t('construction_modal.toast_load_proj_error'), type: 'error' });
+        } finally {
+            setFetchingProjects(false);
+        }
+    }, [showToast, t]);
+
     useEffect(() => {
         if (isOpen) {
             setFormData({
@@ -41,20 +54,7 @@ export default function CreateConstructionSiteModal({ isOpen, onClose, onSuccess
             });
             fetchProjects();
         }
-    }, [isOpen, initialProjectId]);
-
-    const fetchProjects = async () => {
-        setFetchingProjects(true);
-        try {
-            const res = await api.get('/projects/');
-            setProjects(res.data.results || res.data || []);
-        } catch (err) {
-            console.error('Erreur chargement projets', err);
-            showToast({ message: t('construction_modal.toast_load_proj_error'), type: 'error' });
-        } finally {
-            setFetchingProjects(false);
-        }
-    };
+    }, [isOpen, initialProjectId, fetchProjects]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
