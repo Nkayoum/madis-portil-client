@@ -478,7 +478,7 @@ export default function EditProperty() {
                                         </div>
 
                                         {mainCategory === 'MANAGED' && (
-                                            <div className="flex flex-wrap gap-4 pt-2">
+                                            <div className="flex flex-wrap justify-center gap-4 pt-2">
                                                 {MANAGEMENT_TYPES(t).map(mt => {
                                                     const isActive = formData.management_type === mt.value;
                                                     return (
