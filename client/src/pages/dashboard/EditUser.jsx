@@ -113,50 +113,38 @@ export default function EditUser() {
     }
 
     return (
-        <div className="max-w-3xl mx-auto space-y-12 pb-32 animate-fade-in">
-            <Link
-                to="/dashboard/users"
-                className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-all group"
-            >
-                <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-                {t('users.edit.back')}
-            </Link>
-
-            <div className="solaris-glass rounded-[3rem] border border-black/5 dark:border-white/10 overflow-hidden shadow-2xl bg-white dark:bg-[#09090b]">
-                <div className="p-12 border-b border-black/5 dark:border-white/5 bg-black/[0.02] dark:bg-white/[0.02]">
-                    <div className="flex items-center gap-4">
-                        <div className="h-12 w-12 rounded-2xl bg-zinc-900 flex items-center justify-center text-white shadow-xl">
-                            <User className="h-6 w-6" />
-                        </div>
-                        <div>
-                            <div className="flex items-center gap-2 mb-1">
-                                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">{t('users.edit.pre_title')}</span>
-                            </div>
-                            <h1 className="text-4xl font-black tracking-tighter">
-                                {t('users.edit.title')} <span className="opacity-40">{t('users.edit.subtitle')}</span>
-                            </h1>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 mt-1">
-                                {formData.first_name} {formData.last_name}
-                            </p>
-                        </div>
-                    </div>
+        <div className="max-w-3xl mx-auto py-8 sm:py-12 px-4 sm:px-6 animate-fade-in pb-32">
+            <div className="flex items-center gap-4 sm:gap-6 mb-8 sm:mb-12">
+                <Link
+                    to="/dashboard/users"
+                    className="p-3 bg-black text-white rounded-2xl shadow-xl hover:scale-110 active:scale-95 transition-all shrink-0"
+                >
+                    <ArrowLeft className="h-5 w-5 sm:h-6 sm:w-6" />
+                </Link>
+                <div>
+                    <h1 className="text-2xl sm:text-4xl font-black tracking-tighter uppercase leading-none mb-1 sm:mb-2 text-foreground">
+                        Modifier <span className="text-primary italic">l'Utilisateur</span>
+                    </h1>
+                    <p className="text-[9px] sm:text-[11px] font-bold uppercase tracking-wider opacity-60">Mise à jour des profils d'accès.</p>
                 </div>
+            </div>
 
-                <div className="p-12 space-y-16">
+            <div className="solaris-glass rounded-[2.5rem] border-none shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] overflow-hidden">
+                <div className="p-6 sm:p-12 space-y-16">
                     {/* Information Form */}
                     <form id="edit-user-form" onSubmit={handleSubmit} className="space-y-10">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div className="space-y-3">
+                            <div className="space-y-4">
                                 <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-2 px-1">{t('users.edit.first_name')}</label>
                                 <input type="text" name="first_name" required className={ic} placeholder="JEAN" value={formData.first_name} onChange={handleChange} />
                             </div>
-                            <div className="space-y-3">
+                            <div className="space-y-4">
                                 <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-2 px-1">{t('users.edit.last_name')}</label>
                                 <input type="text" name="last_name" required className={ic} placeholder="DUPONT" value={formData.last_name} onChange={handleChange} />
                             </div>
                         </div>
 
-                        <div className="space-y-3">
+                        <div className="space-y-4">
                             <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-2 px-1">
                                 <Mail className="h-3.5 w-3.5" />
                                 {t('users.edit.email')}
@@ -164,7 +152,7 @@ export default function EditUser() {
                             <input type="email" name="email" required className={ic} placeholder="JEAN@MADIS.COM" value={formData.email} onChange={handleChange} />
                         </div>
 
-                        <div className="space-y-3">
+                        <div className="space-y-4">
                             <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-2 px-1">
                                 <Phone className="h-3.5 w-3.5" />
                                 {t('users.edit.phone')}
@@ -172,19 +160,19 @@ export default function EditUser() {
                             <input type="text" name="phone" className={ic} placeholder="+33 6 12 34 56 78" value={formData.phone} onChange={handleChange} />
                         </div>
 
-                        <div className="space-y-3">
+                        <div className="space-y-4">
                             <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-2 px-1">
                                 <Shield className="h-3.5 w-3.5" />
                                 {t('users.edit.role')}
                             </label>
-                            <select name="role" className={ic} value={formData.role} onChange={handleChange}>
+                            <select name="role" className={cn(ic, "appearance-none")} value={formData.role} onChange={handleChange}>
                                 <option value="CLIENT">{t('users.edit.role_client')}</option>
                                 <option value="CHEF_CHANTIER">{t('users.edit.role_chef')}</option>
                                 <option value="ADMIN_MADIS">{t('users.edit.role_admin')}</option>
                             </select>
                         </div>
 
-                        <div className="flex items-center gap-6 p-8 rounded-[2rem] bg-black/[0.02] border border-black/5">
+                        <div className="flex items-center gap-6 p-6 sm:p-8 rounded-[2rem] bg-black/[0.02] border border-black/5">
                             <label className="flex items-center gap-6 cursor-pointer select-none">
                                 <div className="relative">
                                     <input
@@ -208,15 +196,6 @@ export default function EditUser() {
                                 </div>
                             </label>
                         </div>
-
-                        <div className="flex justify-end gap-6 pt-10 border-t border-black/5 dark:border-white/5">
-                            <Link to="/dashboard/users" className="h-14 px-10 rounded-2xl solaris-glass border border-slate-200 dark:border-white/10 text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-white/5 transition-all flex items-center justify-center shadow-sm dark:text-white">
-                                {t('users.edit.btn_cancel')}
-                            </Link>
-                            <button form="edit-user-form" type="submit" disabled={saving} className="h-14 px-12 rounded-2xl bg-black dark:bg-white text-white dark:text-black text-[10px] font-black uppercase tracking-widest hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-all flex items-center justify-center gap-2 shadow-2xl">
-                                {saving ? <><Loader2 className="h-4 w-4 animate-spin" /> {t('users.edit.btn_submitting')}</> : <><Save className="h-4 w-4" /> {t('users.edit.btn_submit')}</>}
-                            </button>
-                        </div>
                     </form>
 
                     {/* Password Reset Section */}
@@ -225,8 +204,8 @@ export default function EditUser() {
                             <Lock className="h-4 w-4" />
                             <h3 className="text-[10px] font-black uppercase tracking-[0.3em]">{t('users.edit.security_title')}</h3>
                         </div>
-                        <div className="bg-rose-500/5 dark:bg-rose-500/10 border border-rose-500/10 dark:border-rose-500/20 rounded-[2.5rem] p-10">
-                            <p className="text-[10px] text-rose-700/60 dark:text-rose-400/80 mb-8 font-bold uppercase tracking-widest leading-relaxed">
+                        <div className="bg-rose-500/5 dark:bg-rose-500/10 border border-rose-500/10 dark:border-rose-500/20 rounded-[2.5rem] p-6 sm:p-10">
+                            <p className="text-[9px] sm:text-[10px] text-rose-700/60 dark:text-rose-400/80 mb-8 font-bold uppercase tracking-widest leading-relaxed">
                                 {t('users.edit.security_desc')}
                             </p>
                             <form onSubmit={handlePasswordReset} className="flex flex-col md:flex-row gap-4">
@@ -251,6 +230,25 @@ export default function EditUser() {
                             </form>
                         </div>
                     </div>
+                </div>
+
+                {/* Sticky Footer */}
+                <div className="sticky bottom-0 flex items-center justify-between p-4 sm:p-6 border-t border-black/5 bg-white/80 dark:bg-zinc-900/90 backdrop-blur-md z-30">
+                    <Link to="/dashboard/users" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-black dark:hover:text-white transition-all px-4">
+                        {t('users.edit.btn_cancel')}
+                    </Link>
+                    <button
+                        form="edit-user-form"
+                        type="submit"
+                        disabled={saving}
+                        className="inline-flex items-center justify-center rounded-2xl text-[10px] sm:text-[11px] font-black uppercase tracking-widest transition-all bg-black dark:bg-primary text-white hover:bg-black/90 dark:hover:bg-primary/90 h-12 sm:h-14 px-8 sm:px-12 shadow-[0_12px_24px_-8px_rgba(0,0,0,0.3)] disabled:opacity-50 group whitespace-nowrap"
+                    >
+                        {saving ? (
+                            <><Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin mr-3" /> {t('users.edit.btn_submitting')}</>
+                        ) : (
+                            <><Save className="h-4 w-4 sm:h-5 sm:w-5 mr-3 group-hover:scale-110 transition-transform" /> {t('users.edit.btn_submit')}</>
+                        )}
+                    </button>
                 </div>
             </div>
         </div>

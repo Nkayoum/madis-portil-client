@@ -84,24 +84,22 @@ export default function CreateProject() {
     const ic = "flex h-12 w-full rounded-2xl border-none bg-black/[0.03] px-4 py-3 text-[12px] font-bold outline-none ring-0 placeholder:text-muted-foreground focus:bg-black/[0.05] transition-all duration-300";
 
     return (
-        <div className="max-w-4xl mx-auto py-12 px-6 animate-fade-in pb-32">
-            <div className="flex items-center justify-between mb-16">
-                <div className="flex items-center gap-6">
-                    <Link
-                        to={propertyId ? `/dashboard/properties/${propertyId}` : "/dashboard/projects"}
-                        className="p-3.5 bg-black text-white rounded-2xl shadow-xl hover:scale-110 active:scale-95 transition-all"
-                    >
-                        <ArrowLeft className="h-6 w-6" />
-                    </Link>
-                    <div>
-                        <h1 className="text-4xl font-black tracking-tighter uppercase leading-none">Nouveau Projet</h1>
-                        <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-30 mt-2">Configuration technique du chantier</p>
-                    </div>
+        <div className="max-w-4xl mx-auto py-8 sm:py-12 px-4 sm:px-6 animate-fade-in pb-32">
+            <div className="flex items-center gap-4 sm:gap-6 mb-8 sm:mb-16">
+                <Link
+                    to={propertyId ? `/dashboard/properties/${propertyId}` : "/dashboard/projects"}
+                    className="p-3 bg-black text-white rounded-2xl shadow-xl hover:scale-110 active:scale-95 transition-all shrink-0"
+                >
+                    <ArrowLeft className="h-5 w-5 sm:h-6 sm:w-6" />
+                </Link>
+                <div>
+                    <h1 className="text-2xl sm:text-4xl font-black tracking-tighter uppercase leading-none">Nouveau Projet</h1>
+                    <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] opacity-30 mt-1 sm:mt-2">Configuration technique du chantier</p>
                 </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-10">
-                <div className="solaris-glass rounded-[2.5rem] p-10 border-none shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] space-y-10">
+            <div className="solaris-glass rounded-[2.5rem] border-none shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] overflow-hidden">
+                <form id="create-project-form" onSubmit={handleSubmit} className="p-6 sm:p-10 space-y-10">
                     <div className="grid gap-10 md:grid-cols-2">
                         <div className="space-y-8">
                             {/* Project Name */}
@@ -114,7 +112,7 @@ export default function CreateProject() {
                                         name="name"
                                         required
                                         className={cn(ic, "pl-11")}
-                                        placeholder="Ex: Rénovation Cuisine, Réparation Toiture..."
+                                        placeholder="Ex: Rénovation Cuisine..."
                                         value={formData.name}
                                         onChange={handleChange}
                                     />
@@ -218,9 +216,10 @@ export default function CreateProject() {
                             </div>
                         </div>
                     </div>
-                </div>
+                </form>
 
-                <div className="flex justify-end items-center gap-8 pt-4">
+                {/* Sticky Footer */}
+                <div className="sticky bottom-0 flex items-center justify-between p-4 sm:p-6 border-t border-black/5 bg-white/80 dark:bg-zinc-900/90 backdrop-blur-md z-30">
                     <Link
                         to={propertyId ? `/dashboard/properties/${propertyId}` : "/dashboard/projects"}
                         className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-black transition-all px-4"
@@ -228,9 +227,10 @@ export default function CreateProject() {
                         Annuler
                     </Link>
                     <button
+                        form="create-project-form"
                         type="submit"
                         disabled={loading}
-                        className="inline-flex items-center justify-center rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all bg-black text-white hover:bg-black/90 h-14 px-12 shadow-[0_12px_24px_-8px_rgba(0,0,0,0.3)] disabled:opacity-50 group"
+                        className="inline-flex items-center justify-center rounded-2xl text-[10px] sm:text-[11px] font-black uppercase tracking-widest transition-all bg-black text-white hover:bg-black/90 h-12 sm:h-14 px-8 sm:px-12 shadow-[0_12px_24px_-8px_rgba(0,0,0,0.3)] disabled:opacity-50 group whitespace-nowrap"
                     >
                         {loading ? (
                             <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> Création...</>
@@ -239,7 +239,8 @@ export default function CreateProject() {
                         )}
                     </button>
                 </div>
-            </form>
+            </div>
         </div>
     );
 }
+

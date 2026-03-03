@@ -129,22 +129,22 @@ export default function CreateConstructionSite() {
     };
 
     return (
-        <div className="max-w-[1000px] mx-auto py-12 px-6 animate-fade-in pb-20">
-            <div className="flex items-center gap-6 mb-12">
-                <Link to="/dashboard/construction" className="p-3 hover:bg-black hover:text-white dark:hover:bg-primary dark:hover:text-white rounded-2xl transition-all shadow-sm border border-black/5 dark:border-white/5 bg-white dark:bg-white/5 group">
-                    <ArrowLeft className="h-5 w-5 group-hover:-translate-x-1 transition-transform" />
+        <div className="max-w-[1000px] mx-auto py-8 sm:py-12 px-4 sm:px-6 animate-fade-in pb-32">
+            <div className="flex items-center gap-4 sm:gap-6 mb-8 sm:mb-12">
+                <Link to="/dashboard/construction" className="p-3 bg-black text-white rounded-2xl shadow-xl hover:scale-110 active:scale-95 transition-all shrink-0">
+                    <ArrowLeft className="h-5 w-5 sm:h-6 sm:w-6" />
                 </Link>
                 <div>
-                    <h1 className="text-4xl font-black tracking-tighter uppercase leading-none mb-2">
-                        Nouveau <span className="text-red-600">Chantier</span>
+                    <h1 className="text-2xl sm:text-4xl font-black tracking-tighter uppercase leading-none mb-1 sm:mb-2 text-foreground">
+                        Nouveau <span className="text-primary italic">Chantier</span>
                     </h1>
-                    <p className="text-[11px] font-bold uppercase tracking-wider opacity-60">Initialisation d'un nouveau suivi opérationnel ou intervention.</p>
+                    <p className="text-[9px] sm:text-[11px] font-bold uppercase tracking-wider opacity-60">Initialisation d'un nouveau suivi opérationnel.</p>
                 </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-10">
-                <div className="solaris-glass rounded-[2.5rem] p-10 border-none shadow-xl space-y-10 dark:bg-black/60">
-                    <div className="space-y-3">
+            <div className="solaris-glass rounded-[2.5rem] border-none shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] overflow-hidden">
+                <form id="create-construction-site-form" onSubmit={handleSubmit} className="p-6 sm:p-10 space-y-10">
+                    <div className="space-y-4">
                         <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1 flex items-center gap-2">
                             <HardHat className="h-3.5 w-3.5" />
                             Désignation du Chantier *
@@ -154,14 +154,14 @@ export default function CreateConstructionSite() {
                             name="name"
                             required
                             placeholder="Ex: Rénovation Façade Sud"
-                            className="ic w-full p-4 rounded-2xl bg-black/[0.01] border-black/5 focus:bg-white transition-all text-[12px] font-bold"
+                            className="ic w-full p-4 rounded-2xl bg-black/[0.01] dark:bg-white/[0.02] border-black/5 dark:border-white/5 focus:bg-white dark:focus:bg-white/10 transition-all text-[12px] font-bold"
                             value={formData.name}
                             onChange={handleChange}
                         />
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div className="space-y-3">
+                        <div className="space-y-4">
                             <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1 flex items-center gap-2">
                                 <Building2 className="h-3.5 w-3.5" />
                                 Bien Immobilier Associé *
@@ -170,7 +170,7 @@ export default function CreateConstructionSite() {
                                 name="property"
                                 required
                                 disabled={!!propertyId || !!projectId}
-                                className="ic w-full p-4 rounded-2xl bg-black/[0.01] border-black/5 focus:bg-white transition-all text-[12px] font-bold disabled:opacity-50"
+                                className="ic w-full p-4 rounded-2xl bg-black/[0.01] dark:bg-white/[0.02] border-black/5 dark:border-white/5 focus:bg-white dark:focus:bg-white/10 transition-all text-[12px] font-bold disabled:opacity-50 appearance-none"
                                 value={formData.property}
                                 onChange={handleChange}
                             >
@@ -180,7 +180,7 @@ export default function CreateConstructionSite() {
                                 ))}
                             </select>
                         </div>
-                        <div className="space-y-3">
+                        <div className="space-y-4">
                             <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1 flex items-center gap-2">
                                 <Briefcase className="h-3.5 w-3.5" />
                                 Projet de Référence (Optionnel)
@@ -188,7 +188,7 @@ export default function CreateConstructionSite() {
                             <select
                                 name="project"
                                 disabled={!!projectId}
-                                className="ic w-full p-4 rounded-2xl bg-black/[0.01] border-black/5 focus:bg-white transition-all text-[12px] font-bold disabled:opacity-50"
+                                className="ic w-full p-4 rounded-2xl bg-black/[0.01] dark:bg-white/[0.02] border-black/5 dark:border-white/5 focus:bg-white dark:focus:bg-white/10 transition-all text-[12px] font-bold disabled:opacity-50 appearance-none"
                                 value={formData.project}
                                 onChange={handleChange}
                             >
@@ -204,7 +204,7 @@ export default function CreateConstructionSite() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div className="space-y-3">
+                        <div className="space-y-4">
                             <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1 flex items-center gap-2">
                                 <User className="h-3.5 w-3.5" />
                                 Chef de Chantier Responsable *
@@ -212,7 +212,7 @@ export default function CreateConstructionSite() {
                             <select
                                 name="chef_de_chantier"
                                 required
-                                className="ic w-full p-4 rounded-2xl bg-black/[0.01] dark:bg-white/5 border border-black/5 dark:border-white/10 focus:bg-white dark:focus:bg-white/10 transition-all text-[12px] font-bold dark:text-white dark:[color-scheme:dark]"
+                                className="ic w-full p-4 rounded-2xl bg-black/[0.01] dark:bg-white/5 border border-black/5 dark:border-white/10 focus:bg-white dark:focus:bg-white/10 transition-all text-[12px] font-bold dark:text-white dark:[color-scheme:dark] appearance-none"
                                 value={formData.chef_de_chantier}
                                 onChange={handleChange}
                             >
@@ -224,7 +224,7 @@ export default function CreateConstructionSite() {
                                 ))}
                             </select>
                         </div>
-                        <div className="space-y-3">
+                        <div className="space-y-4">
                             <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1 flex items-center gap-2">
                                 <FileText className="h-3.5 w-3.5" />
                                 Budget Prévisionnel (€)
@@ -240,40 +240,40 @@ export default function CreateConstructionSite() {
                         </div>
                     </div>
 
-                    <div className="space-y-8 pt-6 border-t border-black/5">
+                    <div className="space-y-8 pt-6 border-t border-black/5 dark:border-white/5">
                         <h3 className="text-[10px] font-black uppercase tracking-[0.2em] opacity-30">Localisation Technique</h3>
 
-                        <div className="space-y-3">
+                        <div className="space-y-4">
                             <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Adresse de l'Intervention</label>
                             <input
                                 type="text"
                                 name="address"
                                 placeholder="Numéro et nom de rue"
-                                className="ic w-full p-4 rounded-2xl bg-black/[0.01] border-black/5 focus:bg-white transition-all text-[12px] font-bold"
+                                className="ic w-full p-4 rounded-2xl bg-black/[0.01] dark:bg-white/[0.02] border-black/5 dark:border-white/5 focus:bg-white dark:focus:bg-white/10 transition-all text-[12px] font-bold"
                                 value={formData.address}
                                 onChange={handleChange}
                             />
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div className="space-y-3">
+                            <div className="space-y-4">
                                 <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Ville</label>
                                 <input
                                     type="text"
                                     name="city"
                                     placeholder="Ville"
-                                    className="ic w-full p-4 rounded-2xl bg-black/[0.01] border-black/5 focus:bg-white transition-all text-[12px] font-bold"
+                                    className="ic w-full p-4 rounded-2xl bg-black/[0.01] dark:bg-white/[0.02] border-black/5 dark:border-white/5 focus:bg-white dark:focus:bg-white/10 transition-all text-[12px] font-bold"
                                     value={formData.city}
                                     onChange={handleChange}
                                 />
                             </div>
-                            <div className="space-y-3">
+                            <div className="space-y-4">
                                 <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Code Postal</label>
                                 <input
                                     type="text"
                                     name="postal_code"
                                     placeholder="CP"
-                                    className="ic w-full p-4 rounded-2xl bg-black/[0.01] border-black/5 focus:bg-white transition-all text-[12px] font-bold font-mono"
+                                    className="ic w-full p-4 rounded-2xl bg-black/[0.01] dark:bg-white/[0.02] border-black/5 dark:border-white/5 focus:bg-white dark:focus:bg-white/10 transition-all text-[12px] font-bold font-mono"
                                     value={formData.postal_code}
                                     onChange={handleChange}
                                 />
@@ -282,7 +282,7 @@ export default function CreateConstructionSite() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div className="space-y-3">
+                        <div className="space-y-4">
                             <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1 flex items-center gap-2">
                                 <Calendar className="h-3.5 w-3.5" />
                                 Date de Lancement *
@@ -291,12 +291,12 @@ export default function CreateConstructionSite() {
                                 type="date"
                                 name="start_date"
                                 required
-                                className="ic w-full p-4 rounded-2xl bg-black/[0.01] border-black/5 focus:bg-white transition-all text-[12px] font-bold font-mono"
+                                className="ic w-full p-4 rounded-2xl bg-black/[0.01] dark:bg-white/[0.02] border-black/5 dark:border-white/5 focus:bg-white dark:focus:bg-white/10 transition-all text-[12px] font-bold font-mono dark:[color-scheme:dark]"
                                 value={formData.start_date}
                                 onChange={handleChange}
                             />
                         </div>
-                        <div className="space-y-3">
+                        <div className="space-y-4">
                             <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1 flex items-center gap-2">
                                 <Calendar className="h-3.5 w-3.5" />
                                 Livraison Estimée
@@ -304,14 +304,14 @@ export default function CreateConstructionSite() {
                             <input
                                 type="date"
                                 name="end_date"
-                                className="ic w-full p-4 rounded-2xl bg-black/[0.01] border-black/5 focus:bg-white transition-all text-[12px] font-bold font-mono"
+                                className="ic w-full p-4 rounded-2xl bg-black/[0.01] dark:bg-white/[0.02] border-black/5 dark:border-white/5 focus:bg-white dark:focus:bg-white/10 transition-all text-[12px] font-bold font-mono dark:[color-scheme:dark]"
                                 value={formData.end_date}
                                 onChange={handleChange}
                             />
                         </div>
                     </div>
 
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                         <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1 flex items-center gap-2">
                             <Layout className="h-3.5 w-3.5" />
                             Notes de Chantier & Cahier des Charges
@@ -320,27 +320,30 @@ export default function CreateConstructionSite() {
                             name="description"
                             rows="5"
                             placeholder="Détails techniques, contraintes, objectifs..."
-                            className="ic w-full p-4 rounded-2xl bg-black/[0.01] border-black/5 focus:bg-white transition-all text-[12px] font-bold resize-none"
+                            className="ic w-full p-4 rounded-2xl bg-black/[0.01] dark:bg-white/[0.02] border-black/5 dark:border-white/5 focus:bg-white dark:focus:bg-white/10 transition-all text-[12px] font-bold resize-none leading-relaxed"
                             value={formData.description}
                             onChange={handleChange}
                         ></textarea>
                     </div>
-                </div>
+                </form>
 
-                <div className="flex flex-col-reverse sm:flex-row justify-center gap-4">
-                    <Link to="/dashboard/construction" className="inline-flex items-center justify-center rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all bg-white dark:bg-white/5 border border-black/5 dark:border-white/5 shadow-sm hover:bg-black/5 dark:hover:bg-white/10 h-14 px-10">
+                {/* Sticky Footer */}
+                <div className="sticky bottom-0 flex items-center justify-between p-4 sm:p-6 border-t border-black/5 bg-white/80 dark:bg-zinc-900/90 backdrop-blur-md z-30">
+                    <Link to="/dashboard/construction" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-black dark:hover:text-white transition-all px-4">
                         Annuler
                     </Link>
                     <button
+                        form="create-construction-site-form"
                         type="submit"
                         disabled={loading}
-                        className="inline-flex items-center justify-center rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all bg-black dark:bg-primary text-white hover:bg-black/90 dark:hover:bg-primary/90 h-14 px-12 disabled:opacity-50 shadow-xl shadow-black/10 dark:shadow-primary/20 group whitespace-nowrap"
+                        className="inline-flex items-center justify-center rounded-2xl text-[10px] sm:text-[11px] font-black uppercase tracking-widest transition-all bg-black dark:bg-primary text-white hover:bg-black/90 dark:hover:bg-primary/90 h-12 sm:h-14 px-8 sm:px-12 shadow-[0_12px_24px_-8px_rgba(0,0,0,0.3)] disabled:opacity-50 group whitespace-nowrap"
                     >
                         {loading ? <Loader2 className="h-5 w-5 animate-spin mr-3" /> : <Save className="h-5 w-5 mr-3 group-hover:scale-110 transition-transform" />}
                         Déployer le Chantier
                     </button>
                 </div>
-            </form>
+            </div>
         </div>
     );
 }
+

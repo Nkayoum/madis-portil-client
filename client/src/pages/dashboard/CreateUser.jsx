@@ -46,35 +46,26 @@ export default function CreateUser() {
     const ic = "h-14 w-full rounded-2xl solaris-glass border border-white/20 bg-white/40 px-6 text-[10px] font-black uppercase tracking-widest placeholder:text-muted-foreground/40 focus:bg-white focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-sm";
 
     return (
-        <div className="max-w-3xl mx-auto space-y-12 pb-8 animate-fade-in">
-            <Link
-                to="/dashboard/users"
-                className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-all group"
-            >
-                <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-                {t('users.create.back')}
-            </Link>
-
-            <div className="solaris-glass rounded-[3rem] border border-white/20 overflow-hidden shadow-2xl">
-                <div className="p-12 border-b border-black/5 bg-black/[0.02]">
-                    <div className="flex items-center gap-4">
-                        <div className="h-12 w-12 rounded-2xl bg-zinc-900 flex items-center justify-center text-white shadow-xl">
-                            <UserPlus className="h-6 w-6" />
-                        </div>
-                        <div>
-                            <div className="flex items-center gap-2 mb-1">
-                                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">{t('users.create.pre_title')}</span>
-                            </div>
-                            <h1 className="text-4xl font-black tracking-tighter">
-                                {t('users.create.title')} <span className="opacity-40">{t('users.create.subtitle')}</span>
-                            </h1>
-                        </div>
-                    </div>
+        <div className="max-w-3xl mx-auto py-8 sm:py-12 px-4 sm:px-6 animate-fade-in pb-32">
+            <div className="flex items-center gap-4 sm:gap-6 mb-8 sm:mb-12">
+                <Link
+                    to="/dashboard/users"
+                    className="p-3 bg-black text-white rounded-2xl shadow-xl hover:scale-110 active:scale-95 transition-all shrink-0"
+                >
+                    <ArrowLeft className="h-5 w-5 sm:h-6 sm:w-6" />
+                </Link>
+                <div>
+                    <h1 className="text-2xl sm:text-4xl font-black tracking-tighter uppercase leading-none mb-1 sm:mb-2 text-foreground">
+                        Nouveau <span className="text-primary italic">Utilisateur</span>
+                    </h1>
+                    <p className="text-[9px] sm:text-[11px] font-bold uppercase tracking-wider opacity-60">Initialisation d'un nouveau compte d'accès.</p>
                 </div>
+            </div>
 
-                <form onSubmit={handleSubmit} className="p-12 space-y-10">
+            <div className="solaris-glass rounded-[2.5rem] border-none shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] overflow-hidden">
+                <form id="create-user-form" onSubmit={handleSubmit} className="p-6 sm:p-12 space-y-10">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div className="space-y-3">
+                        <div className="space-y-4">
                             <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-2 px-1">
                                 <User className="h-3.5 w-3.5" />
                                 {t('users.create.first_name')}
@@ -89,7 +80,7 @@ export default function CreateUser() {
                                 onChange={handleChange}
                             />
                         </div>
-                        <div className="space-y-3">
+                        <div className="space-y-4">
                             <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-2 px-1">
                                 <User className="h-3.5 w-3.5" />
                                 {t('users.create.last_name')}
@@ -106,7 +97,7 @@ export default function CreateUser() {
                         </div>
                     </div>
 
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                         <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-2 px-1">
                             <Mail className="h-3.5 w-3.5" />
                             {t('users.create.email')}
@@ -122,7 +113,7 @@ export default function CreateUser() {
                         />
                     </div>
 
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                         <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-2 px-1">
                             <Lock className="h-3.5 w-3.5" />
                             {t('users.create.password')}
@@ -140,14 +131,14 @@ export default function CreateUser() {
                         <p className="text-[9px] font-black uppercase tracking-[0.1em] text-muted-foreground/40 px-1">{t('users.create.password_hint')}</p>
                     </div>
 
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                         <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-2 px-1">
                             <Shield className="h-3.5 w-3.5" />
                             {t('users.create.role')}
                         </label>
                         <select
                             name="role"
-                            className={ic}
+                            className={cn(ic, "appearance-none")}
                             value={formData.role}
                             onChange={handleChange}
                         >
@@ -156,27 +147,29 @@ export default function CreateUser() {
                             <option value="ADMIN_MADIS">{t('users.create.role_admin')}</option>
                         </select>
                     </div>
-
-                    <div className="flex flex-col-reverse sm:flex-row items-center justify-center gap-4 pt-10 border-t border-black/5">
-                        <Link
-                            to="/dashboard/users"
-                            className="h-14 px-10 rounded-2xl solaris-glass border border-slate-200 text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all flex items-center justify-center shadow-sm"
-                        >
-                            {t('users.create.btn_cancel')}
-                        </Link>
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="h-14 px-12 rounded-2xl bg-black text-white text-[10px] font-black uppercase tracking-widest hover:bg-zinc-800 transition-all flex items-center justify-center gap-2 shadow-2xl disabled:opacity-50 whitespace-nowrap"
-                        >
-                            {loading ? (
-                                <><Loader2 className="h-4 w-4 animate-spin" /> {t('users.create.btn_submitting')}</>
-                            ) : (
-                                <><UserPlus className="h-4 w-4" /> {t('users.create.btn_submit')}</>
-                            )}
-                        </button>
-                    </div>
                 </form>
+
+                {/* Sticky Footer */}
+                <div className="sticky bottom-0 flex items-center justify-between p-4 sm:p-6 border-t border-black/5 bg-white/80 dark:bg-zinc-900/90 backdrop-blur-md z-30">
+                    <Link
+                        to="/dashboard/users"
+                        className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-black dark:hover:text-white transition-all px-4"
+                    >
+                        {t('users.create.btn_cancel')}
+                    </Link>
+                    <button
+                        form="create-user-form"
+                        type="submit"
+                        disabled={loading}
+                        className="inline-flex items-center justify-center rounded-2xl text-[10px] sm:text-[11px] font-black uppercase tracking-widest transition-all bg-black dark:bg-primary text-white hover:bg-black/90 dark:hover:bg-primary/90 h-12 sm:h-14 px-8 sm:px-12 shadow-[0_12px_24px_-8px_rgba(0,0,0,0.3)] disabled:opacity-50 group whitespace-nowrap"
+                    >
+                        {loading ? (
+                            <><Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin mr-3" /> {t('users.create.btn_submitting')}</>
+                        ) : (
+                            <><UserPlus className="h-4 w-4 sm:h-5 sm:w-5 mr-3 group-hover:scale-110 transition-transform" /> {t('users.create.btn_submit')}</>
+                        )}
+                    </button>
+                </div>
             </div>
         </div>
     );
