@@ -25,7 +25,10 @@
         "back": "Précédent",
         "next": "Suivant",
         "return": "Retour",
-        "proof": "Justificatif"
+        "proof": "Justificatif",
+        "saving": "Sauvegarde...",
+        "uploading": "Transfert...",
+        "error_required_fields": "Champs obligatoires manquants"
     },
     "dashboard": {
         "title": "Finance & Rendement",
@@ -141,6 +144,7 @@
         "add_transaction": {
             "title": "Enregistrer une <span className=\"text-primary\">Transaction</span>",
             "subtitle": "Protocole de saisie financière • Mouvement manuel",
+            "currency": "Devise",
             "property": "Bien immobilier concerné",
             "select_property": "Sélectionnez un actif...",
             "flow_type": "Nature du flux",
@@ -211,6 +215,8 @@
         }
     },
     "properties": {
+        "property_singular": "Bien Immobilier",
+        "create_subtitle": "Ajouter une nouvelle propriété au portefeuille MaDis",
         "list_title": "Portfolio Immobilier",
         "list_subtitle": "Gestion des actifs MaDis",
         "filter_all": "Tous",
@@ -229,7 +235,7 @@
         "sold_out": "Sold Out",
         "construction": "Chantier",
         "location_unavailable": "Localisation non disponible",
-        "details": "Détails",
+        "details_label": "Détails",
         "price": "Prix",
         "rent": "Loyer",
         "active_project": "PROJET ACTIF",

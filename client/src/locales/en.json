@@ -25,7 +25,10 @@
         "back": "Previous",
         "next": "Next",
         "return": "Back",
-        "proof": "Proof"
+        "proof": "Proof",
+        "saving": "Saving...",
+        "uploading": "Uploading...",
+        "error_required_fields": "Missing required fields"
     },
     "dashboard": {
         "title": "Finance & Yield",
@@ -141,6 +144,7 @@
         "add_transaction": {
             "title": "Record a <span className=\"text-primary\">Transaction</span>",
             "subtitle": "Financial entry protocol • Manual flow",
+            "currency": "Currency",
             "property": "Concerned real estate property",
             "select_property": "Select an asset...",
             "flow_type": "Flow nature",
@@ -211,6 +215,8 @@
         }
     },
     "properties": {
+        "property_singular": "Real Estate Property",
+        "create_subtitle": "Add a new property to the MaDis portfolio",
         "list_title": "Real Estate Portfolio",
         "list_subtitle": "MaDis Asset Management",
         "filter_all": "All",
@@ -229,7 +235,7 @@
         "sold_out": "Sold Out",
         "construction": "Construction",
         "location_unavailable": "Location unavailable",
-        "details": "Details",
+        "details_label": "Details",
         "price": "Price",
         "rent": "Rent",
         "active_project": "ACTIVE PROJECT",
@@ -311,7 +317,7 @@
         "nightly_rate": "Nightly rate",
         "tabs": {
             "back": "Back to Portfolio",
-            "details": "Details",
+            "details_label": "Details",
             "projects": "Projects",
             "maintenance": "Maintenance",
             "pipeline": "Pipeline",
