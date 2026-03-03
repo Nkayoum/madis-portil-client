@@ -92,11 +92,11 @@ export default function UsersList() {
     return (
         <div className="space-y-12 pb-24 animate-fade-in">
             {/* Standard Solaris Header Area */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 pb-8 border-b border-black/5 dark:border-white/5">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-8 pb-6 md:pb-8 border-b border-black/5 dark:border-white/5 px-4 md:px-0">
                 <div>
                     <div className="flex items-center gap-2 mb-2">
                         <Users className="h-4 w-4 text-primary" />
-                        <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-primary">{t('users.list.overview')}</span>
+                        <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.3em] text-primary">{t('users.list.overview')}</span>
                     </div>
                     <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-tight md:leading-none">
                         {t('users.list.title')} <span className="opacity-40">{t('users.list.subtitle')}</span>
@@ -104,7 +104,7 @@ export default function UsersList() {
                 </div>
                 <Link
                     to="/dashboard/users/new"
-                    className="h-10 px-6 rounded-2xl bg-primary text-white text-[10px] font-bold uppercase tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-2xl shadow-primary/20"
+                    className="h-11 px-6 rounded-2xl bg-primary text-white text-[10px] font-bold uppercase tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-2xl shadow-primary/20 w-fit"
                 >
                     <Plus className="h-4 w-4" />
                     {t('users.list.btn_new')}
@@ -112,22 +112,88 @@ export default function UsersList() {
             </div>
 
             {/* Solaris Search Bar */}
-            <div className="max-w-xl">
+            <div className="max-w-xl px-4 md:px-0">
                 <div className="relative group">
                     <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground dark:text-white/20 transition-colors group-focus-within:text-primary" />
                     <input
                         type="text"
                         placeholder={t('users.list.search_placeholder')}
-                        className="h-16 w-full rounded-[1.25rem] solaris-glass border border-white/20 dark:border-white/5 bg-white/40 dark:bg-black/60 px-6 pl-16 text-[10px] font-bold uppercase tracking-widest placeholder:text-muted-foreground/40 focus:bg-white dark:focus:bg-white/10 focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-sm"
+                        className="h-14 md:h-16 w-full rounded-2xl md:rounded-[1.25rem] solaris-glass border border-white/20 dark:border-white/5 bg-white/40 dark:bg-black/60 px-6 pl-16 text-[10px] md:text-[11px] font-bold uppercase tracking-widest placeholder:text-muted-foreground/40 focus:bg-white dark:focus:bg-white/10 focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-sm"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                     />
                 </div>
             </div>
 
-            {/* Solaris Data Grid */}
-            <div className="solaris-glass rounded-[3rem] border border-white/20 dark:border-white/5 overflow-hidden shadow-2xl dark:bg-black/40">
-                <div className="overflow-x-auto">
+            {/* Solaris Data Container */}
+            <div className="solaris-glass rounded-[2rem] md:rounded-[3rem] border border-white/20 dark:border-white/5 overflow-hidden shadow-2xl dark:bg-black/40 mx-4 md:mx-0">
+                {/* Mobile View: Cards */}
+                <div className="md:hidden divide-y divide-black/5 dark:divide-white/5">
+                    {filteredUsers.length > 0 ? (
+                        filteredUsers.map((user) => (
+                            <div key={user.id} className="p-6 space-y-6">
+                                <div className="flex items-center gap-4">
+                                    <div className="h-14 w-14 rounded-2xl bg-zinc-900 dark:bg-white/10 flex items-center justify-center text-white text-sm font-bold shadow-lg">
+                                        {user.first_name?.[0]}{user.last_name?.[0]}
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <div className="text-base font-bold tracking-tight truncate">
+                                            {user.first_name} {user.last_name}
+                                        </div>
+                                        <div className="text-[10px] font-semibold text-muted-foreground uppercase opacity-60 font-mono tracking-tight truncate">
+                                            {user.email}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-2 gap-4 pt-1">
+                                    <div className="space-y-1">
+                                        <span className="text-[7px] font-bold uppercase tracking-widest opacity-30">{t('users.list.col_role')}</span>
+                                        <div className="flex">{getRoleBadge(user.role)}</div>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <span className="text-[7px] font-bold uppercase tracking-widest opacity-30">{t('users.list.col_status')}</span>
+                                        <div>
+                                            {user.is_active ? (
+                                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-500/10 text-green-600 text-[8px] font-bold uppercase tracking-widest border border-green-200/20">
+                                                    <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                                                    {t('users.list.status_active')}
+                                                </span>
+                                            ) : (
+                                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-500/10 text-rose-600 text-[8px] font-bold uppercase tracking-widest border border-rose-200/20">
+                                                    <span className="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                                                    {t('users.list.status_suspended')}
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="flex gap-2 pt-2">
+                                    <Link
+                                        to={`/dashboard/users/${user.id}/edit`}
+                                        className="flex-1 h-11 flex items-center justify-center gap-2 rounded-xl bg-white dark:bg-white/5 border dark:border-white/10 text-[9px] font-black uppercase tracking-widest"
+                                    >
+                                        <Pencil className="h-3.5 w-3.5" />
+                                        {t('users.list.btn_edit')}
+                                    </Link>
+                                    <button
+                                        onClick={() => handleDelete(user.id)}
+                                        className="h-11 px-6 rounded-xl bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white transition-all shadow-sm"
+                                    >
+                                        <Trash2 className="h-4 w-4" />
+                                    </button>
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        <div className="py-20 text-center opacity-20">
+                            <Users className="h-10 w-10 mx-auto mb-4" />
+                            <p className="text-[10px] font-black uppercase tracking-widest">{t('users.list.empty_desc')}</p>
+                        </div>
+                    )}
+                </div>
+
+                {/* Desktop View: Table */}
+                <div className="hidden md:block overflow-x-auto">
                     <table className="w-full border-collapse">
                         <thead>
                             <tr className="border-b border-black/5 dark:border-white/5 bg-black/[0.02] dark:bg-white/5">

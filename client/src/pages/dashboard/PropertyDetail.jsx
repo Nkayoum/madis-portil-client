@@ -66,10 +66,10 @@ export default function PropertyDetail() {
     const [isSelectionMode, setIsSelectionMode] = useState(false);
 
     const TX_STATUSES = [
-        { value: 'DISPONIBLE', label: 'Disponible', color: 'bg-blue-500', icon: Tag },
-        { value: 'NEGOCIATION', label: 'En négociation', color: 'bg-amber-500', icon: MessageSquare },
-        { value: 'SIGNE', label: 'Signé / Conclu', color: 'bg-emerald-500', icon: CheckCircle },
-        { value: 'ANNULE', label: 'Annulé', color: 'bg-red-500', icon: XCircle },
+        { value: 'DISPONIBLE', label: t('property_detail.pipeline.offers'), color: 'bg-blue-500', icon: Tag },
+        { value: 'NEGOCIATION', label: t('property_detail.pipeline.negotiations'), color: 'bg-amber-500', icon: MessageSquare },
+        { value: 'SIGNE', label: t('property_detail.pipeline.signed'), color: 'bg-emerald-500', icon: CheckCircle },
+        { value: 'ANNULE', label: t('property_detail.pipeline.cancelled'), color: 'bg-red-500', icon: XCircle },
     ];
 
     const fetchCurrencyRate = async (targetCurrency) => {
@@ -97,9 +97,8 @@ export default function PropertyDetail() {
             console.error('Property fetch error:', err);
             const status = err.response?.status;
             const message = status === 404
-                ? `Le bien immobilier (ID: ${id}) n'a pas été trouvé.`
-                : 'Impossible de charger le bien immobilier.';
-
+                ? t('property_detail.errors.id_not_found', { id })
+                : t('common.error');
             setError(message);
 
             // If client and 404, redirect after a short delay or allow them to see the error
@@ -191,28 +190,28 @@ export default function PropertyDetail() {
     };
 
     const handleDeleteDocument = async (docId) => {
-        if (!window.confirm('Êtes-vous sûr de vouloir supprimer ce document ?')) return;
+        if (!window.confirm(t('property_detail.errors.confirm_doc_delete'))) return;
         try {
-            await api.delete(`/documents/${docId}/`);
-            showToast({ message: 'Document supprimé avec succès', type: 'success' });
+            await api.delete(`/documents/${docId}//`);
+            showToast({ message: t('documents.list.delete_success'), type: 'success' });
             fetchDocuments();
         } catch (err) {
             console.error('Failed to delete document', err);
-            showToast({ message: 'Erreur lors de la suppression', type: 'error' });
+            showToast({ message: t('documents.list.delete_error'), type: 'error' });
         }
     };
 
     const handleDeleteSelectedDocuments = async () => {
-        if (!window.confirm(`Voulez-vous supprimer les ${selectedDocuments.length} documents sélectionnés ?`)) return;
+        if (!window.confirm(t('property_detail.errors.bulk_doc_delete', { count: selectedDocuments.length }))) return;
         try {
             await Promise.all(selectedDocuments.map(docId => api.delete(`/documents/${docId}/`)));
-            showToast({ message: `${selectedDocuments.length} documents supprimés`, type: 'success' });
+            showToast({ message: t('property_detail.errors.bulk_doc_delete_success', { count: selectedDocuments.length }), type: 'success' });
             setSelectedDocuments([]);
             setIsSelectionMode(false);
             fetchDocuments();
         } catch (err) {
             console.error('Failed to delete some documents', err);
-            showToast({ message: 'Erreur lors de la suppression de certains documents', type: 'error' });
+            showToast({ message: t('properties.bulk_delete_error'), type: 'error' });
         }
     };
 
@@ -242,7 +241,7 @@ export default function PropertyDetail() {
             if (window.refreshWallet) window.refreshWallet();
         } catch (err) {
             console.error('Failed to update operation status', err);
-            alert('Erreur lors de la mise à jour du statut.');
+            alert(t('property_detail.errors.status_update_fail'));
         }
     };
 
@@ -269,10 +268,10 @@ export default function PropertyDetail() {
             fetchOperations();
             fetchPerfData();
             if (window.refreshWallet) window.refreshWallet();
-            showToast({ message: 'Opération confirmée avec succès', type: 'success' });
+            showToast({ message: t('finance.add_transaction.errors.success'), type: 'success' });
         } catch (err) {
             console.error('Failed to confirm operation with proof', err);
-            const errorMsg = err.response?.data ? JSON.stringify(err.response.data) : 'Erreur lors de la confirmation.';
+            const errorMsg = err.response?.data ? JSON.stringify(err.response.data) : t('property_detail.errors.create_fail');
             showToast({ message: errorMsg, type: 'error' });
         }
     };
@@ -321,9 +320,9 @@ export default function PropertyDetail() {
                 // Handle dict of errors (Django Rest Framework style)
                 const errorData = err.response.data;
                 const messages = Object.values(errorData).flat().join('\n');
-                alert(messages || 'Erreur lors de la création de la transaction.');
+                alert(messages || t('property_detail.errors.create_fail'));
             } else {
-                alert('Erreur lors de la création de la transaction.');
+                alert(t('property_detail.errors.create_fail'));
             }
         } finally {
             setTxLoading(false);
@@ -363,7 +362,7 @@ export default function PropertyDetail() {
         }
     };
     const deleteTx = async (txId) => {
-        if (!window.confirm('Supprimer cette transaction ?')) return;
+        if (!window.confirm(t('property_detail.pipeline.confirm_delete'))) return;
         try {
             await api.delete(`/transactions/${txId}/`);
             fetchProperty();
@@ -388,10 +387,10 @@ export default function PropertyDetail() {
             <div className="space-y-4">
                 <Link to="/dashboard/properties" className="flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
                     <ArrowLeft className="mr-2 h-4 w-4" />
-                    Retour aux biens
+                    {t('property_detail.tabs.back')}
                 </Link>
                 <div className="p-4 rounded-lg bg-destructive/10 text-destructive border border-destructive/20">
-                    {error || "Bien non trouvé."}
+                    {error || t('property_detail.errors.not_found')}
                 </div>
             </div>
         );
@@ -449,57 +448,57 @@ export default function PropertyDetail() {
                         )}
 
                         {/* Property Brand Info Overlay */}
-                        <div className="absolute bottom-6 left-6 right-6 md:left-8 md:right-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+                        <div className="absolute inset-x-0 bottom-0 p-6 md:p-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
                             <div className="space-y-3 pointer-events-none">
                                 <div className="flex flex-wrap items-center gap-2">
                                     <span className={cn(
-                                        "px-2.5 py-1 rounded-full text-[8px] font-bold uppercase tracking-widest backdrop-blur-md border",
+                                        "px-2 px-1.5 rounded-full text-[7px] font-bold uppercase tracking-widest backdrop-blur-md border shadow-sm",
                                         property.category === 'RESIDENTIEL' ? "bg-white/90 text-black border-white" :
                                             property.category === 'COMMERCIAL' ? "bg-amber-400/90 text-black border-amber-300" : "bg-blue-400/90 text-black border-blue-300"
                                     )}>
                                         {property.category_display}
                                     </span>
-                                    <span className="px-2.5 py-1 rounded-full bg-black/60 text-white text-[8px] font-bold uppercase tracking-widest backdrop-blur-md border border-white/20">
-                                        {property.management_type === 'CONSTRUCTION' ? "Chantier" : property.transaction_nature_display}
+                                    <span className="px-2 px-1.5 rounded-full bg-black/60 text-white text-[7px] font-bold uppercase tracking-widest backdrop-blur-md border border-white/20 shadow-sm">
+                                        {property.management_type === 'CONSTRUCTION' ? t('properties.construction') : property.transaction_nature_display}
                                     </span>
                                     <span className={cn(
-                                        "px-2.5 py-1 rounded-full text-[8px] font-bold uppercase tracking-widest backdrop-blur-md border",
+                                        "px-2 px-1.5 rounded-full text-[7px] font-bold uppercase tracking-widest backdrop-blur-md border shadow-sm",
                                         property.status === 'DISPONIBLE' ? "bg-emerald-400/90 text-black border-emerald-300" :
                                             property.status === 'VENDU' ? "bg-black text-white border-white/20" : "bg-amber-400/90 text-black border-amber-300"
                                     )}>
                                         {property.status_display}
                                     </span>
                                     {property.is_foncier_verified && (
-                                        <span className="px-2.5 py-1 rounded-full bg-white/90 text-emerald-600 text-[8px] font-bold uppercase tracking-widest backdrop-blur-md border border-white flex items-center gap-1.5">
+                                        <span className="px-2 px-1.5 rounded-full bg-white/90 text-emerald-600 text-[7px] font-bold uppercase tracking-widest backdrop-blur-md border border-white flex items-center gap-1 shadow-sm">
                                             <ShieldCheck className="h-2.5 w-2.5" />
-                                            Vérifié
+                                            {t('property_detail.details.land_verification')}
                                         </span>
                                     )}
                                 </div>
-                                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white tracking-tight drop-shadow-xl leading-none">
+                                <h1 className="text-xl sm:text-2xl md:text-4xl font-bold text-white tracking-tight drop-shadow-2xl leading-tight">
                                     {property.name}
                                 </h1>
-                                <div className="flex items-center gap-2 text-white/80 font-bold uppercase tracking-widest text-[8px] md:text-[9px]">
-                                    <MapPin className="h-3 w-3 text-primary" />
-                                    {property.address}, {property.city}
+                                <div className="flex items-center gap-1.5 text-white/90 font-bold uppercase tracking-widest text-[8px] md:text-[9px]">
+                                    <MapPin className="h-3 w-3 text-primary shrink-0" />
+                                    <span className="truncate">{property.address}, {property.city}</span>
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-3 pointer-events-auto">
+                            <div className="flex items-center gap-2.5 pointer-events-auto mt-2 md:mt-0">
                                 {isAdmin && (
                                     <>
                                         <button
                                             onClick={handleDelete}
-                                            className="h-9 md:h-10 px-4 md:px-6 bg-white/10 text-white rounded-lg md:rounded-xl text-[8px] md:text-[10px] font-bold uppercase tracking-widest backdrop-blur-xl border border-white/10 hover:bg-rose-500 hover:border-rose-400 transition-all flex items-center gap-2"
+                                            className="flex-1 md:flex-none h-10 md:h-11 px-4 md:px-6 bg-white/10 text-white rounded-xl text-[8px] md:text-[10px] font-bold uppercase tracking-widest backdrop-blur-xl border border-white/10 hover:bg-rose-500 hover:border-rose-400 transition-all flex items-center justify-center gap-2 active:scale-95 shadow-lg"
                                         >
-                                            <Trash2 className="h-3 w-3 md:h-3.5 md:w-3.5" />
-                                            <span className="hidden sm:inline">{t('property_detail.delete_button')}</span>
+                                            <Trash2 className="h-3.5 w-3.5" />
+                                            <span className="sm:inline">{t('property_detail.delete_button')}</span>
                                         </button>
                                         <Link
                                             to={`/dashboard/properties/${id}/edit`}
-                                            className="h-9 md:h-10 px-5 md:px-8 bg-white text-black rounded-lg md:rounded-xl text-[8px] md:text-[10px] font-bold uppercase tracking-widest shadow-lg hover:bg-slate-100 transition-all flex items-center gap-2"
+                                            className="flex-1 md:flex-none h-10 md:h-11 px-5 md:px-8 bg-white text-black rounded-xl text-[8px] md:text-[10px] font-bold uppercase tracking-widest shadow-xl hover:bg-slate-100 transition-all flex items-center justify-center gap-2 active:scale-95"
                                         >
-                                            <Edit className="h-3 w-3 md:h-3.5 md:w-3.5" />
+                                            <Edit className="h-3.5 w-3.5" />
                                             {t('property_detail.edit_button')}
                                         </Link>
                                     </>
@@ -569,7 +568,7 @@ export default function PropertyDetail() {
                 property.devise_origine !== 'EUR' && (
                     <div className="flex items-center justify-end gap-2 text-[10px] text-muted-foreground -mt-4 italic">
                         <Globe className="h-3 w-3" />
-                        Affichage principal en Euro (€). Conversion {property.devise_origine} à titre indicatif.
+                        {t('property_detail.modals.currency_info', { currency: property.devise_origine })}
                     </div>
                 )
             }
@@ -753,21 +752,19 @@ export default function PropertyDetail() {
                                         </div>
                                         <h3 className="text-sm font-bold mb-2 flex items-center gap-2">
                                             <ShieldCheck className="h-4 w-4 text-emerald-600" />
-                                            À propos de la Gestion Mandat
+                                            {t('property_detail.finance.wallet_info_title')}
                                         </h3>
                                         <p className="text-sm text-muted-foreground leading-relaxed relative z-10">
-                                            Ce solde représente les fonds actuellement détenus par MaDis pour la gestion de votre bien.
-                                            Il est alimenté par vos <strong>Appels de fonds</strong> et les <strong>loyers perçus</strong>,
-                                            et débité lors des <strong>dépenses de maintenance</strong> ou de vos <strong>reversements</strong>.
+                                            {t('property_detail.finance.wallet_info_desc')}
                                         </p>
                                         <div className="mt-4 flex flex-wrap gap-4 relative z-10">
                                             <div className="flex items-center gap-2 text-[10px] font-bold uppercase text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20 px-2 py-1 rounded">
                                                 <div className="h-1 w-1 rounded-full bg-emerald-600" />
-                                                Mandat Certifié MaDis
+                                                {t('dashboard.treasury.mandate')}
                                             </div>
                                             <div className="flex items-center gap-2 text-[10px] font-bold uppercase text-primary bg-primary/5 px-2 py-1 rounded">
                                                 <div className="h-1 w-1 rounded-full bg-primary" />
-                                                Flux Financiers Sécurisés
+                                                {t('dashboard.stats.secure_data')}
                                             </div>
                                         </div>
                                     </div>
@@ -990,7 +987,8 @@ export default function PropertyDetail() {
                                                                     tick={{ fontSize: 9, fontWeight: 700, fill: '#64748b' }}
                                                                     tickFormatter={str => {
                                                                         const [y, m] = str.split('-');
-                                                                        return new Date(y, m - 1).toLocaleString('fr-FR', { month: 'short' }).toUpperCase();
+                                                                        const date = new Date(y, m - 1);
+                                                                        return date.toLocaleString(t('i18n.language') === 'fr' ? 'fr-FR' : 'en-US', { month: 'short' }).toUpperCase();
                                                                     }}
                                                                 />
                                                                 <YAxis
@@ -1008,7 +1006,7 @@ export default function PropertyDetail() {
                                                                             return (
                                                                                 <div className="solaris-glass rounded-2xl shadow-xl p-4 text-[10px] space-y-2.5 min-w-[180px] border-none backdrop-blur-xl">
                                                                                     <p className="font-bold border-b border-black/5 pb-1.5 mb-1.5 uppercase tracking-widest text-muted-foreground opacity-60">
-                                                                                        {dateObj.toLocaleString('fr-FR', { month: 'long', year: 'numeric' })}
+                                                                                        {dateObj.toLocaleString(t('i18n.language') === 'fr' ? 'fr-FR' : 'en-US', { month: 'long', year: 'numeric' })}
                                                                                     </p>
                                                                                     {property.management_type === 'CONSTRUCTION' ? (
                                                                                         <div className="flex justify-between items-center gap-3">
@@ -1045,7 +1043,7 @@ export default function PropertyDetail() {
                                                                 {perfData?.expected_monthly_rent > 0 && (
                                                                     <ReferenceLine
                                                                         y={perfData.expected_monthly_rent}
-                                                                        label={{ position: 'top', value: `OBJ : ${perfData.expected_monthly_rent}€`, fontSize: 8, fill: '#000000', fontWeight: 700, tracking: '0.1em' }}
+                                                                        label={{ position: 'top', value: `${t('property_detail.finance.objective')} : ${perfData.expected_monthly_rent}€`, fontSize: 8, fill: '#000000', fontWeight: 700, tracking: '0.1em' }}
                                                                         stroke="#000000"
                                                                         strokeDasharray="5 5"
                                                                         strokeOpacity={0.2}
@@ -1122,7 +1120,111 @@ export default function PropertyDetail() {
                                                     {t('property_detail.operations.in_progress')}
                                                 </div>
                                             </div>
-                                            <div className="overflow-x-auto">
+                                            <div className="md:hidden divide-y divide-black/5 bg-white/20">
+                                                {[
+                                                    ...cashCalls.filter(cc => cc.status !== 'PAID' && cc.status !== 'CANCELLED').map(cc => ({ ...cc, _type: 'CASH_CALL' })),
+                                                    ...settlements.filter(s => s.status !== 'PAID' && s.status !== 'CANCELLED').map(s => ({ ...s, _type: 'SETTLEMENT' }))
+                                                ].length > 0 ? (
+                                                    [
+                                                        ...cashCalls.filter(cc => cc.status !== 'PAID' && cc.status !== 'CANCELLED').map(cc => ({ ...cc, _type: 'CASH_CALL' })),
+                                                        ...settlements.filter(s => s.status !== 'PAID' && s.status !== 'CANCELLED').map(s => ({ ...s, _type: 'SETTLEMENT' }))
+                                                    ].map((op) => (
+                                                        <div key={`${op._type}-${op.id}`} className="p-5 space-y-4">
+                                                            <div className="flex justify-between items-start">
+                                                                <span className={cn(
+                                                                    "font-bold text-[8px] uppercase tracking-widest px-3 py-1 rounded-full",
+                                                                    op._type === 'CASH_CALL' ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
+                                                                )}>
+                                                                    {op._type === 'CASH_CALL' ? t('property_detail.operations.call') : t('property_detail.operations.transfer')}
+                                                                </span>
+                                                                <div className="text-right">
+                                                                    <div className={cn("text-base font-bold tracking-tight", op._type === 'SETTLEMENT' ? "text-rose-600" : "text-black")}>
+                                                                        {Number(op.amount).toLocaleString('fr-FR')} €
+                                                                    </div>
+                                                                    <div className="text-[7px] text-muted-foreground uppercase font-bold tracking-widest opacity-40">#{op.id.toString().padStart(6, '0')}</div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div className="space-y-1">
+                                                                <div className="text-[10px] font-bold tracking-tight opacity-70">
+                                                                    {op._type === 'CASH_CALL' ? op.reason : `${format(new Date(op.period_start), 'dd/MM/yy')} - ${format(new Date(op.period_end), 'dd/MM/yy')}`}
+                                                                </div>
+                                                                <span className={cn(
+                                                                    "inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[7px] font-bold uppercase tracking-widest",
+                                                                    op.status === 'SENT' ? "bg-blue-500 text-white" :
+                                                                        op.status === 'PENDING' ? "bg-amber-500 text-white" :
+                                                                            op.status === 'REJECTED' ? "bg-rose-500 text-white" :
+                                                                                "bg-black text-white"
+                                                                )}>
+                                                                    {op.status_display || op.status}
+                                                                </span>
+                                                            </div>
+
+                                                            <div className="pt-2">
+                                                                {op._type === 'CASH_CALL' ? (
+                                                                    <div className="flex gap-2">
+                                                                        {(op.status === 'SENT' || op.status === 'REJECTED') && !isAdmin && (
+                                                                            <button
+                                                                                onClick={() => updateOpStatus('CASH_CALL', op.id, 'PENDING')}
+                                                                                className="flex-1 h-10 bg-black text-white rounded-xl text-[8px] font-bold uppercase tracking-widest shadow-md"
+                                                                            >
+                                                                                {t('property_detail.operations.pay')}
+                                                                            </button>
+                                                                        )}
+                                                                        {op.status === 'PENDING' && isAdmin && (
+                                                                            <>
+                                                                                {op.proof && (
+                                                                                    <a
+                                                                                        href={op.proof}
+                                                                                        target="_blank"
+                                                                                        rel="noopener noreferrer"
+                                                                                        className="flex-1 h-10 bg-black/5 text-black rounded-xl flex items-center justify-center gap-2 text-[8px] font-bold uppercase tracking-widest border border-black/5"
+                                                                                    >
+                                                                                        <FileText className="h-3.5 w-3.5" />
+                                                                                        {t('property_detail.modals.upload_proof')}
+                                                                                    </a>
+                                                                                )}
+                                                                                <div className="flex gap-2 w-full">
+                                                                                    <button
+                                                                                        onClick={() => updateOpStatus('CASH_CALL', op.id, 'PAID')}
+                                                                                        className="flex-1 h-10 bg-emerald-500 text-white rounded-xl text-[8px] font-bold uppercase tracking-widest shadow-lg"
+                                                                                    >
+                                                                                        {t('common.validate')}
+                                                                                    </button>
+                                                                                    <button
+                                                                                        onClick={() => {
+                                                                                            if (window.confirm(t('property_detail.errors.confirm_reject_proof'))) {
+                                                                                                updateOpStatus('CASH_CALL', op.id, 'REJECTED');
+                                                                                            }
+                                                                                        }}
+                                                                                        className="h-10 px-4 bg-rose-500 text-white rounded-xl"
+                                                                                    >
+                                                                                        <XCircle className="h-4 w-4" />
+                                                                                    </button>
+                                                                                </div>
+                                                                            </>
+                                                                        )}
+                                                                    </div>
+                                                                ) : (
+                                                                    <button
+                                                                        onClick={() => updateOpStatus('SETTLEMENT', op.id, 'PAID')}
+                                                                        className="w-full h-10 bg-black text-white rounded-xl text-[8px] font-bold uppercase tracking-widest shadow-md"
+                                                                    >
+                                                                        {t('property_detail.operations.validate')}
+                                                                    </button>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    ))
+                                                ) : (
+                                                    <div className="text-center py-20 opacity-20">
+                                                        <History className="h-10 w-10 mx-auto mb-4" />
+                                                        <p className="text-[9px] font-bold uppercase tracking-widest">{t('property_detail.finance.no_data_chart')}</p>
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            <div className="hidden md:block overflow-x-auto">
                                                 <table className="w-full">
                                                     <thead>
                                                         <tr className="bg-black text-[9px] font-bold uppercase tracking-widest text-white/60">
@@ -1182,18 +1284,18 @@ export default function PropertyDetail() {
                                                                                 <button
                                                                                     onClick={() => updateOpStatus('CASH_CALL', cc.id, 'PAID')}
                                                                                     className="p-1.5 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-all shadow-md"
-                                                                                    title="Valider"
+                                                                                    title={t('common.validate')}
                                                                                 >
                                                                                     <CheckCircle2 className="h-3.5 w-3.5" />
                                                                                 </button>
                                                                                 <button
                                                                                     onClick={() => {
-                                                                                        if (window.confirm('Voulez-vous rejeter ce justificatif ?')) {
+                                                                                        if (window.confirm(t('property_detail.errors.confirm_reject_proof'))) {
                                                                                             updateOpStatus('CASH_CALL', cc.id, 'REJECTED');
                                                                                         }
                                                                                     }}
                                                                                     className="p-1.5 bg-rose-500 text-white rounded-lg hover:bg-rose-600 transition-all shadow-md"
-                                                                                    title="Rejeter"
+                                                                                    title={t('common.reject')}
                                                                                 >
                                                                                     <XCircle className="h-3.5 w-3.5" />
                                                                                 </button>
@@ -1256,7 +1358,46 @@ export default function PropertyDetail() {
                                             <p className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60 ml-0 md:ml-11">{t('property_detail.history.subtitle')}</p>
                                         </div>
                                     </div>
-                                    <div className="overflow-x-auto">
+                                    <div className="md:hidden divide-y divide-black/5 bg-white/20">
+                                        {perfData?.recent_transactions?.length > 0 ? (
+                                            perfData.recent_transactions.map((tx) => (
+                                                <div key={tx.id} className="p-5 space-y-3">
+                                                    <div className="flex justify-between items-start">
+                                                        <div className="space-y-1">
+                                                            <span className={cn(
+                                                                "px-2.5 py-0.5 rounded-full text-[7px] font-bold uppercase tracking-widest",
+                                                                tx.type === 'INFLOW' ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
+                                                            )}>
+                                                                {tx.type === 'INFLOW' ? t('property_detail.history.income') : t('property_detail.history.expense')}
+                                                            </span>
+                                                            <div className="text-[10px] font-bold tracking-tight uppercase">{tx.category}</div>
+                                                        </div>
+                                                        <div className={cn("text-base font-bold tracking-tight", tx.type === 'INFLOW' ? "text-emerald-500" : "text-rose-500")}>
+                                                            {tx.type === 'INFLOW' ? '+' : '-'}{Number(tx.amount).toLocaleString('fr-FR')} €
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex justify-between items-center text-[8px] font-bold uppercase tracking-[0.05em] opacity-40">
+                                                        <div className="flex items-center gap-1.5">
+                                                            <Calendar className="h-2.5 w-2.5" />
+                                                            {tx.period_month && tx.period_year ? (
+                                                                `${new Date(2000, tx.period_month - 1).toLocaleString(navigator.language, { month: 'short' }).toUpperCase()} ${tx.period_year}`
+                                                            ) : (
+                                                                t('property_detail.operations.regulation')
+                                                            )}
+                                                        </div>
+                                                        <div className="font-mono">{format(new Date(tx.date), 'dd MMM yy', { locale: fr }).toUpperCase()}</div>
+                                                    </div>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <div className="text-center py-12 opacity-20">
+                                                <Activity className="h-8 w-8 mx-auto mb-2" />
+                                                <p className="text-[9px] font-bold uppercase tracking-widest">{t('property_detail.finance.no_data_chart')}</p>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div className="hidden md:block overflow-x-auto">
                                         <table className="w-full">
                                             <thead>
                                                 <tr className="bg-black text-[9px] font-bold uppercase tracking-widest text-white/60">
@@ -1335,10 +1476,10 @@ export default function PropertyDetail() {
                                     <div className="p-2 rounded-lg bg-black text-white shadow-md">
                                         <HardHat className="h-4 w-4" />
                                     </div>
-                                    {property.management_type === 'GESTION' ? 'Entretien & Maintenance' : 'Suivi des Projets'}
+                                    {property.management_type === 'GESTION' ? t('projects.maintenance_title') : t('projects.title')}
                                 </h3>
                                 <p className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60 ml-0 md:ml-12">
-                                    {property.management_type === 'GESTION' ? 'Interventions techniques et maintenance' : 'Projets de développement et travaux'}
+                                    {property.management_type === 'GESTION' ? t('projects.maintenance_subtitle') : t('projects.subtitle')}
                                 </p>
                             </div>
                             {user?.role === 'ADMIN_MADIS' && (
@@ -1401,13 +1542,13 @@ export default function PropertyDetail() {
                                             </div>
 
                                             <p className="text-[9px] md:text-[10px] font-medium text-muted-foreground line-clamp-2 mb-4 leading-relaxed opacity-70">
-                                                {project.description || "Aucune description détaillée."}
+                                                {project.description || t('property_detail.details.no_description')}
                                             </p>
 
                                             <div className="mt-auto pt-4 border-t border-black/5 flex items-center justify-between">
                                                 <div className="flex items-center gap-3">
                                                     <div className="flex flex-col gap-0.5">
-                                                        <span className="text-[7px] md:text-[8px] font-bold uppercase tracking-widest opacity-40">Budget</span>
+                                                        <span className="text-[7px] md:text-[8px] font-bold uppercase tracking-widest opacity-40">{t('property_detail.details.total_budget')}</span>
                                                         <div className="flex items-center gap-1 font-bold text-[9px] md:text-xs tracking-tight">
                                                             <Euro className="h-2.5 w-2.5 text-emerald-500" />
                                                             <span>{project.budget ? `${Number(project.budget).toLocaleString('fr-FR')} €` : 'N/A'}</span>
@@ -1768,7 +1909,7 @@ export default function PropertyDetail() {
                                         <Users className="absolute left-3 top-2 h-3.5 w-3.5 text-muted-foreground" />
                                         <input
                                             type="text"
-                                            placeholder="Nom..."
+                                            placeholder={t('property_detail.modals.placeholder_name')}
                                             value={txForm.buyer_tenant}
                                             onChange={e => setTxForm({ ...txForm, buyer_tenant: e.target.value })}
                                             className="w-full pl-9 pr-3 py-1.5 rounded-lg border bg-background text-xs focus:outline-none focus:ring-1 focus:ring-black/5"
@@ -1847,7 +1988,7 @@ export default function PropertyDetail() {
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setShowFinalPriceModal(false)}>
                         <div className="bg-card border rounded-xl shadow-2xl w-full max-w-sm mx-4 animate-fade-in" onClick={e => e.stopPropagation()}>
                             <div className="flex items-center justify-between p-5 border-b">
-                                <h3 className="text-base font-bold uppercase tracking-tight">Conclusion Vente</h3>
+                                <h3 className="text-base font-bold uppercase tracking-tight">{t('property_detail.modals.sale_conclusion')}</h3>
                                 <button onClick={() => setShowFinalPriceModal(false)} className="p-1 rounded-full hover:bg-muted transition-colors">
                                     <X className="h-4 w-4" />
                                 </button>
@@ -1855,11 +1996,11 @@ export default function PropertyDetail() {
                             <div className="p-5 space-y-4">
                                 <div className="p-3 bg-emerald-50 text-emerald-800 rounded-lg text-[10px] md:text-xs flex gap-3">
                                     <CheckCircle className="h-4 w-4 shrink-0" />
-                                    <p>Validation finale de la transaction.</p>
+                                    <p>{t('property_detail.modals.final_validation')}</p>
                                 </div>
                                 <div>
                                     <label className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground mb-1 block">
-                                        Prix Final Acté (€)
+                                        {t('property_detail.modals.final_price')}
                                     </label>
                                     <input
                                         type="number"
@@ -1871,20 +2012,20 @@ export default function PropertyDetail() {
                                         autoFocus
                                     />
                                     <p className="text-[7px] text-muted-foreground mt-1 uppercase font-bold tracking-widest opacity-40">
-                                        Montant de vente définitif.
+                                        {t('property_detail.modals.final_price_help')}
                                     </p>
                                 </div>
                             </div>
                             <div className="flex items-center justify-end gap-2 p-5 border-t bg-muted/5">
                                 <button onClick={() => setShowFinalPriceModal(false)} className="px-4 py-1.5 text-[9px] font-bold uppercase tracking-widest rounded-lg border hover:bg-muted transition-colors">
-                                    Annuler
+                                    {t('property_detail.modals.cancel')}
                                 </button>
                                 <button
                                     onClick={confirmFinalPrice}
                                     className="inline-flex items-center gap-2 px-5 py-1.5 bg-emerald-600 text-white rounded-lg text-[9px] font-bold uppercase tracking-widest hover:bg-emerald-700 transition-colors shadow-md"
                                 >
                                     <Check className="h-3.5 w-3.5" />
-                                    Signer
+                                    {t('property_detail.modals.sign')}
                                 </button>
                             </div>
                         </div>
@@ -1899,7 +2040,7 @@ export default function PropertyDetail() {
                             <div className="p-5 border-b flex items-center justify-between">
                                 <h3 className="font-bold text-sm uppercase tracking-tight flex items-center gap-2">
                                     <Upload className="h-3.5 w-3.5 text-black" />
-                                    Justificatif
+                                    {t('property_detail.modals.upload_proof')}
                                 </h3>
                                 <button onClick={() => setShowProofModal(false)} className="text-muted-foreground hover:text-foreground">
                                     <X className="h-4 w-4" />
@@ -1908,8 +2049,8 @@ export default function PropertyDetail() {
                             <div className="p-6 space-y-4">
                                 <p className="text-sm text-muted-foreground leading-relaxed">
                                     {proofOp?.newStatus === 'PENDING'
-                                        ? "Le téléchargement d'une preuve de paiement est obligatoire pour valider votre demande."
-                                        : "Veuillez joindre une preuve du transfert ou de la réception pour confirmer cette opération."
+                                        ? t('property_detail.modals.proof_payment_req')
+                                        : t('property_detail.modals.proof_transfer_req')
                                     }
                                 </p>
                                 <input
@@ -1929,7 +2070,7 @@ export default function PropertyDetail() {
                                         onClick={() => confirmOpWithProof(null)}
                                         className="px-4 py-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
                                     >
-                                        Continuer sans fichier
+                                        {t('property_detail.modals.continue_no_file')}
                                     </button>
                                 </div>
                             )}

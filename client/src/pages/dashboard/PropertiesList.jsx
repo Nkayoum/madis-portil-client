@@ -325,7 +325,7 @@ export default function PropertiesList() {
 
                                     <div className="flex items-center justify-between group/link">
                                         <div className="h-8 md:h-9 px-4 md:px-5 rounded-xl bg-primary text-white flex items-center justify-center gap-2 text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all hover:gap-4 shadow-md">
-                                            {t('properties.details')}
+                                            {t('properties.details_btn')}
                                             <ArrowRight className="h-3 w-3 transition-transform" />
                                         </div>
                                         {property.property_stats && <div className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-30 text-right">

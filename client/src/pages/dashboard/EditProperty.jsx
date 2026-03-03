@@ -9,71 +9,73 @@ import {
     Calendar, Wrench, Sofa, ShieldCheck, Globe, Coins, Hash, Bed,
     Building2, Warehouse, Store, Trees, Hotel
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '../../lib/utils';
 
-const PROPERTY_CATEGORIES = [
-    { value: 'RESIDENTIEL', label: 'Résidentiel', icon: Building },
-    { value: 'COMMERCIAL', label: 'Commercial', icon: ShoppingBag },
-    { value: 'PROFESSIONNEL', label: 'Professionnel', icon: Briefcase },
+const PROPERTY_CATEGORIES = (t) => [
+    { value: 'RESIDENTIEL', label: t('properties.category.residentiel'), icon: Building },
+    { value: 'COMMERCIAL', label: t('properties.category.commercial'), icon: ShoppingBag },
+    { value: 'PROFESSIONNEL', label: t('properties.category.professionnel'), icon: Briefcase },
 ];
 
-const MAIN_CATEGORIES = [
+const MAIN_CATEGORIES = (t) => [
     {
         value: 'MANAGED',
-        label: 'Gestion de Patrimoine',
+        label: t('properties.main_categories.managed'),
         icon: ShieldCheck,
-        description: 'Actifs immobiliers sous gestion (Vente ou Location).',
+        description: t('properties.main_categories.managed_desc'),
         color: 'blue',
     },
     {
         value: 'CONSTRUCTION',
-        label: 'Suivi de chantier',
+        label: t('properties.main_categories.construction'),
         icon: HardHat,
-        description: 'Bien avec un projet de construction en cours.',
+        description: t('properties.main_categories.construction_desc'),
         color: 'rose',
     },
 ];
 
-const MANAGEMENT_TYPES = [
+const MANAGEMENT_TYPES = (t) => [
     {
         value: 'MANDAT',
-        label: 'À Vendre (Mandat)',
+        label: t('properties.management_types.sale'),
         icon: Tag,
-        description: 'Mandat MaDis pour la vente du bien.',
+        description: t('properties.management_types.sale_desc'),
     },
     {
         value: 'GESTION',
-        label: 'À Louer (Gestion)',
+        label: t('properties.management_types.rent'),
         icon: Home,
-        description: 'Confier le bien pour la gestion locative.',
+        description: t('properties.management_types.rent_desc'),
     },
 ];
 
-const PROPERTY_TYPES_BY_CATEGORY = {
+const PROPERTY_TYPES_BY_CATEGORY = (t) => ({
     RESIDENTIEL: [
-        { value: 'APPARTEMENT', label: 'Appartement' },
-        { value: 'MAISON', label: 'Maison' },
-        { value: 'VILLA', label: 'Villa' },
+        { value: 'APPARTEMENT', label: t('properties.property_type.appartement') },
+        { value: 'MAISON', label: t('properties.property_type.maison') },
+        { value: 'VILLA', label: t('properties.property_type.villa') },
     ],
     COMMERCIAL: [
-        { value: 'BOUTIQUE', label: 'Boutique / Commerce' },
-        { value: 'ENTREPOT', label: 'Entrepôt' },
-        { value: 'LOCAL_ACTIVITE', label: "Local d'activité" },
+        { value: 'BOUTIQUE', label: t('properties.property_type.boutique') },
+        { value: 'ENTREPOT', label: t('properties.property_type.entrepot') },
+        { value: 'LOCAL_ACTIVITE', label: t('properties.property_type.local_activite') },
     ],
     PROFESSIONNEL: [
-        { value: 'BUREAU', label: 'Bureau' },
-        { value: 'LOCAL_ACTIVITE', label: "Local d'activité" },
+        { value: 'BUREAU', label: t('properties.property_type.bureau') },
+        { value: 'LOCAL_ACTIVITE', label: t('properties.property_type.local_activite') },
     ],
     GLOBAL: [
-        { value: 'TERRAIN', label: 'Terrain' },
-        { value: 'IMMEUBLE', label: 'Immeuble' },
-        { value: 'AUTRE', label: 'Autre' },
+        { value: 'TERRAIN', label: t('properties.property_type.terrain') },
+        { value: 'IMMEUBLE', label: t('properties.property_type.immeuble') },
+        { value: 'AUTRE', label: t('properties.property_type.autre') },
     ]
-};
+});
 
 export default function EditProperty() {
     const { id } = useParams();
     const navigate = useNavigate();
+    const { t } = useTranslation();
     const { showToast } = useToast();
 
     const [loading, setLoading] = useState(false);
@@ -86,10 +88,10 @@ export default function EditProperty() {
     const [activeTab, setActiveTab] = useState('INFO'); // INFO, SPECS, FINANCE, MEDIA
 
     const TABS = [
-        { id: 'INFO', label: '1. Informations', icon: User },
-        { id: 'SPECS', label: '2. Caractéristiques', icon: Ruler },
-        { id: 'FINANCE', label: '3. Finance & Description', icon: Euro },
-        { id: 'MEDIA', label: '4. Médias', icon: ImageIcon },
+        { id: 'INFO', label: t('properties.form_tabs.info'), shortLabel: t('properties.form_tabs.info_short'), icon: User },
+        { id: 'SPECS', label: t('properties.form_tabs.specs'), shortLabel: t('properties.form_tabs.specs_short'), icon: Ruler },
+        { id: 'FINANCE', label: t('properties.form_tabs.finance'), shortLabel: t('properties.form_tabs.finance_short'), icon: Euro },
+        { id: 'MEDIA', label: t('properties.form_tabs.media'), shortLabel: t('properties.form_tabs.media_short'), icon: ImageIcon },
     ];
 
     const [formData, setFormData] = useState({
@@ -194,10 +196,10 @@ export default function EditProperty() {
     const handleChange = (e) => {
         const { name, value } = e.target;
         if (name === 'category') {
-            const compat = [...(PROPERTY_TYPES_BY_CATEGORY[value] || []).map(t => t.value), ...PROPERTY_TYPES_BY_CATEGORY.GLOBAL.map(t => t.value)];
+            const compat = [...(PROPERTY_TYPES_BY_CATEGORY(t)[value] || []).map(t => t.value), ...PROPERTY_TYPES_BY_CATEGORY(t).GLOBAL.map(t => t.value)];
             const update = { [name]: value };
             if (!compat.includes(formData.property_type)) {
-                update.property_type = PROPERTY_TYPES_BY_CATEGORY[value]?.[0]?.value || 'AUTRE';
+                update.property_type = PROPERTY_TYPES_BY_CATEGORY(t)[value]?.[0]?.value || 'AUTRE';
             }
             setFormData(prev => ({ ...prev, ...update }));
         } else if (name === 'management_type') {
@@ -266,17 +268,17 @@ export default function EditProperty() {
 
         if (missingFields.length > 0) {
             const fieldLabels = {
-                name: 'Nom du bien',
-                owner: 'Propriétaire',
-                address: 'Adresse',
-                city: 'Ville',
-                surface: 'Surface',
-                prix_vente: 'Prix de vente',
-                loyer_mensuel: 'Loyer mensuel'
+                name: t('properties.details.name') || 'Nom du bien',
+                owner: t('properties.owner') || 'Propriétaire',
+                address: t('property_detail.details.address') || 'Adresse',
+                city: t('property_detail.details.city') || 'Ville',
+                surface: t('property_detail.details.surface') || 'Surface',
+                prix_vente: t('property_detail.details.sale_price') || 'Prix de vente',
+                loyer_mensuel: t('property_detail.details.rent') || 'Loyer mensuel'
             };
             const labels = missingFields.map(f => fieldLabels[f]).join(', ');
             showToast({
-                message: `Champs obligatoires manquants : ${labels}`,
+                message: `${t('common.error_required_fields') || 'Champs obligatoires manquants'} : ${labels}`,
                 type: 'error'
             });
             return false;
@@ -312,13 +314,31 @@ export default function EditProperty() {
             await api.patch(`/properties/${id}/`, data, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
-            showToast({ message: 'Bien mis à jour avec succès !', type: 'success' });
+            showToast({ message: t('properties.messages.update_success') || 'Bien mis à jour avec succès !', type: 'success' });
             navigate(`/dashboard/properties/${id}`);
         } catch (err) {
             console.error(err);
             showToast({ message: 'Erreur lors de la mise à jour.', type: 'error' });
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleNextTab = () => {
+        if (validateStep(activeTab)) {
+            const currentIndex = TABS.findIndex(t => t.id === activeTab);
+            if (currentIndex < TABS.length - 1) {
+                setActiveTab(TABS[currentIndex + 1].id);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+    };
+
+    const handlePrevTab = () => {
+        const currentIndex = TABS.findIndex(t => t.id === activeTab);
+        if (currentIndex > 0) {
+            setActiveTab(TABS[currentIndex - 1].id);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     };
 
@@ -344,8 +364,8 @@ export default function EditProperty() {
                 </button>
                 <div>
                     <h1 className="text-4xl font-black tracking-tight text-foreground">
-                        Modifier <span className="text-primary relative inline-block">
-                            {formData.name || 'Bien Immobilier'}
+                        {t('common.edit') || 'Modifier'} <span className="text-primary relative inline-block">
+                            {formData.name || t('properties.property_singular') || 'Bien Immobilier'}
                             <svg className="absolute -bottom-2 left-0 w-full h-2 text-primary/20" viewBox="0 0 100 10" preserveAspectRatio="none">
                                 <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="2" fill="none" />
                             </svg>
@@ -353,7 +373,7 @@ export default function EditProperty() {
                     </h1>
                     <p className="text-muted-foreground font-medium mt-2 flex items-center gap-2">
                         <span className="w-8 h-[2px] bg-primary/50 rounded-full inline-block"></span>
-                        Mettre à jour les informations du bien
+                        {t('properties.update_subtitle') || 'Mettre à jour les informations du bien'}
                     </p>
                 </div>
             </div>
@@ -401,14 +421,17 @@ export default function EditProperty() {
                                 )}>
                                     <Icon className="h-4 w-4" />
                                 </div>
-                                <span>{tab.label}</span>
+                                <span>
+                                    <span className="hidden sm:inline">{tab.label}</span>
+                                    <span className="sm:hidden">{tab.shortLabel}</span>
+                                </span>
                                 {isActive && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary shadow-[0_-2px_10px_rgba(var(--primary),0.5)]" />}
                             </button>
                         );
                     })}
                 </div>
 
-                <div className="p-8 lg:p-12 min-h-[600px] flex flex-col">
+                <div className="p-4 sm:p-8 lg:p-12 min-h-[500px] sm:min-h-[600px] flex flex-col">
                     <form id="edit-property-form" onSubmit={handleSubmit} className="h-full flex flex-col">
                         <div className="flex-1">
                             {activeTab === 'INFO' && (
@@ -417,10 +440,10 @@ export default function EditProperty() {
                                     <div className="space-y-6">
                                         <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/70 flex items-center gap-3">
                                             <span className="p-1.5 bg-primary/10 rounded-md"><Settings className="h-3.5 w-3.5 text-primary" /></span>
-                                            Nature du Projet
+                                            {t('properties.project_nature') || 'Nature du Projet'}
                                         </h3>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            {MAIN_CATEGORIES.map(cat => {
+                                            {MAIN_CATEGORIES(t).map(cat => {
                                                 const isActive = mainCategory === cat.value;
                                                 const activeStyle = cat.color === 'blue'
                                                     ? "border-blue-500/50 bg-blue-500/5 ring-2 ring-blue-500/20"
@@ -456,7 +479,7 @@ export default function EditProperty() {
 
                                         {mainCategory === 'MANAGED' && (
                                             <div className="flex flex-wrap gap-4 pt-2">
-                                                {MANAGEMENT_TYPES.map(mt => {
+                                                {MANAGEMENT_TYPES(t).map(mt => {
                                                     const isActive = formData.management_type === mt.value;
                                                     return (
                                                         <button
@@ -512,7 +535,7 @@ export default function EditProperty() {
                                                             value={formData.owner}
                                                             onChange={handleChange}
                                                         >
-                                                            <option value="">Sélectionner un client...</option>
+                                                            <option value="">{t('properties.select_client') || 'Sélectionner un client...'}</option>
                                                             {users.filter(u => u.role === 'CLIENT').map(u => (
                                                                 <option key={u.id} value={u.id}>{u.last_name?.toUpperCase()} {u.first_name} ({u.email})</option>
                                                             ))}
@@ -526,14 +549,14 @@ export default function EditProperty() {
                                                 <div className="grid gap-6 relative z-10">
                                                     <div className="grid gap-3">
                                                         <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-                                                            <Tag className="h-3 w-3 text-primary" /> Nom du bien <span className="text-primary">*</span>
+                                                            <Tag className="h-3 w-3 text-primary" /> {t('properties.details.name') || 'Nom du bien'} <span className="text-primary">*</span>
                                                         </label>
-                                                        <input type="text" name="name" required className={inputClasses} placeholder="Ex: Résidence Les Lilas..." value={formData.name} onChange={handleChange} />
+                                                        <input type="text" name="name" required className={inputClasses} placeholder={t('properties.details.name_ph') || "Ex: Résidence Les Lilas..."} value={formData.name} onChange={handleChange} />
                                                     </div>
 
                                                     <div className="grid gap-3">
                                                         <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-                                                            <Coins className="h-3 w-3 text-primary" /> Devise
+                                                            <Coins className="h-3 w-3 text-primary" /> {t('finance.add_transaction.currency') || 'Devise'}
                                                         </label>
                                                         <div className="grid grid-cols-4 gap-3">
                                                             {['EUR', 'USD', 'GNF', 'XAF', 'AED', 'CNY', 'GBP'].map((curr) => (
@@ -561,7 +584,7 @@ export default function EditProperty() {
                                         <div className="space-y-6">
                                             <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/70 flex items-center gap-3">
                                                 <span className="p-1.5 bg-primary/10 rounded-md"><MapPin className="h-3.5 w-3.5 text-primary" /></span>
-                                                Localisation
+                                                {t('construction.detail.overview.location') || 'Localisation'}
                                             </h3>
 
                                             <div className="bg-muted/10 rounded-3xl p-8 space-y-6 border border-border/50 relative overflow-hidden group hover:border-primary/20 transition-colors">
@@ -569,23 +592,23 @@ export default function EditProperty() {
 
                                                 <div className="grid gap-3 relative z-10">
                                                     <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-                                                        <MapPin className="h-3 w-3 text-primary" /> Adresse Complète <span className="text-primary">*</span>
+                                                        <MapPin className="h-3 w-3 text-primary" /> {t('construction_modal.label_address')} <span className="text-primary">*</span>
                                                     </label>
-                                                    <input type="text" name="address" required className={inputClasses} placeholder="N° Rue, Quartier..." value={formData.address} onChange={handleChange} />
+                                                    <input type="text" name="address" required className={inputClasses} placeholder={t('construction_modal.ph_address')} value={formData.address} onChange={handleChange} />
                                                 </div>
 
                                                 <div className="grid grid-cols-2 gap-5 relative z-10">
                                                     <div className="grid gap-3">
                                                         <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-                                                            <Building className="h-3 w-3 text-primary" /> Ville <span className="text-primary">*</span>
+                                                            <Building className="h-3 w-3 text-primary" /> {t('construction_modal.label_city')} <span className="text-primary">*</span>
                                                         </label>
-                                                        <input type="text" name="city" required className={inputClasses} placeholder="Conakry" value={formData.city} onChange={handleChange} />
+                                                        <input type="text" name="city" required className={inputClasses} placeholder={t('construction_modal.ph_city')} value={formData.city} onChange={handleChange} />
                                                     </div>
                                                     <div className="grid gap-3">
                                                         <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-                                                            <Hash className="h-3 w-3 text-primary" /> Code Postal
+                                                            <Hash className="h-3 w-3 text-primary" /> {t('construction_modal.label_postal')}
                                                         </label>
-                                                        <input type="text" name="postal_code" className={inputClasses} placeholder="00000" value={formData.postal_code} onChange={handleChange} />
+                                                        <input type="text" name="postal_code" className={inputClasses} placeholder={t('construction_modal.ph_postal')} value={formData.postal_code} onChange={handleChange} />
                                                     </div>
                                                 </div>
                                             </div>
@@ -600,14 +623,14 @@ export default function EditProperty() {
                                         <div className="space-y-8">
                                             <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/70 flex items-center gap-3">
                                                 <span className="p-1.5 bg-primary/10 rounded-md"><Ruler className="h-3.5 w-3.5 text-primary" /></span>
-                                                Spécifications
+                                                {t('property_detail.tabs.details') || 'Spécifications'}
                                             </h3>
 
                                             <div className="space-y-6">
                                                 <div className="grid gap-3">
-                                                    <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Catégorie</label>
+                                                    <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">{t('properties.category_label') || 'Catégorie'}</label>
                                                     <div className="grid grid-cols-3 gap-3">
-                                                        {PROPERTY_CATEGORIES.map(cat => (
+                                                        {PROPERTY_CATEGORIES(t).map(cat => (
                                                             <button
                                                                 key={cat.value}
                                                                 type="button"
@@ -628,15 +651,15 @@ export default function EditProperty() {
 
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                     <div className="grid gap-3">
-                                                        <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Surface (m²) <span className="text-primary">*</span></label>
+                                                        <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">{t('property_detail.details.surface')} (m²) <span className="text-primary">*</span></label>
                                                         <input type="number" name="surface" required className={inputClasses} placeholder="0.00" value={formData.surface} onChange={handleChange} />
                                                     </div>
                                                 </div>
 
                                                 <div className="grid gap-3">
-                                                    <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Type de bien</label>
+                                                    <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">{t('property_detail.details.type') || 'Type de bien'}</label>
                                                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-                                                        {[...(PROPERTY_TYPES_BY_CATEGORY[formData.category] || []), ...PROPERTY_TYPES_BY_CATEGORY.GLOBAL].map(t => {
+                                                        {[...(PROPERTY_TYPES_BY_CATEGORY(t)[formData.category] || []), ...PROPERTY_TYPES_BY_CATEGORY(t).GLOBAL].map(t => {
                                                             const Icon = {
                                                                 APPARTEMENT: Building2,
                                                                 MAISON: Home,
@@ -687,17 +710,17 @@ export default function EditProperty() {
                                         <div className="space-y-8">
                                             <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/70 flex items-center gap-3">
                                                 <span className="p-1.5 bg-primary/10 rounded-md"><Bed className="h-3.5 w-3.5 text-primary" /></span>
-                                                Agencement
+                                                {t('property_detail.tabs.photos') || 'Médias'}
                                             </h3>
 
                                             <div className="space-y-6">
                                                 <div className="grid grid-cols-2 gap-6">
                                                     <div className="grid gap-3">
-                                                        <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Pièces (Total)</label>
+                                                        <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">{t('property_detail.details.rooms') || 'Pièces (Total)'}</label>
                                                         <input type="number" name="room_count" className={inputClasses} placeholder="0" value={formData.room_count} onChange={handleChange} />
                                                     </div>
                                                     <div className="grid gap-3">
-                                                        <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Chambres</label>
+                                                        <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">{t('property_detail.details.bedrooms') || 'Chambres'}</label>
                                                         <input type="number" name="bedroom_count" className={inputClasses} placeholder="0" value={formData.bedroom_count} onChange={handleChange} />
                                                     </div>
                                                 </div>
@@ -715,8 +738,8 @@ export default function EditProperty() {
                                                         <ShieldCheck className="h-6 w-6" />
                                                     </div>
                                                     <div className="flex-1">
-                                                        <div className={cn("text-sm font-black uppercase tracking-wide", formData.is_verified_fonciere ? "text-emerald-500" : "text-foreground")}>Vérification Foncière</div>
-                                                        <div className="text-xs text-muted-foreground mt-0.5">Le titre foncier a été vérifié par MaDis</div>
+                                                        <div className={cn("text-sm font-black uppercase tracking-wide", formData.is_verified_fonciere ? "text-emerald-500" : "text-foreground")}>{t('property_detail.details.land_verification') || 'Vérification Foncière'}</div>
+                                                        <div className="text-xs text-muted-foreground mt-0.5">{t('property_detail.details.land_verification_desc') || 'Le titre foncier a été vérifié par MaDis'}</div>
                                                     </div>
                                                     <input
                                                         type="checkbox"
@@ -737,14 +760,14 @@ export default function EditProperty() {
                                         <div className="space-y-8">
                                             <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/70 flex items-center gap-3">
                                                 <span className="p-1.5 bg-primary/10 rounded-md"><Euro className="h-3.5 w-3.5 text-primary" /></span>
-                                                Données Financières
+                                                {t('property_detail.tabs.finance') || 'Données Financières'}
                                             </h3>
 
                                             <div className="bg-muted/10 rounded-3xl p-8 border border-border/50">
                                                 {formData.management_type === 'CONSTRUCTION' ? (
                                                     <div className="grid gap-6">
                                                         <div className="grid gap-3">
-                                                            <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Budget Travaux (Estimé)</label>
+                                                            <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">{t('property_detail.details.budget_travaux') || 'Budget Travaux (Estimé)'}</label>
                                                             <div className="relative">
                                                                 <input type="number" name="budget_total" className={cn(inputClasses, "pl-12 text-lg font-bold shadow-inner")} placeholder="0.00" value={formData.budget_total} onChange={handleChange} />
                                                                 <div className="absolute left-4 top-1/2 -translate-y-1/2 font-black text-primary text-sm flex items-center gap-1">
@@ -754,23 +777,23 @@ export default function EditProperty() {
                                                         </div>
                                                         <div className="grid grid-cols-2 gap-6">
                                                             <div className="grid gap-3">
-                                                                <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Date Début</label>
+                                                                <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">{t('property_detail.details.date_start') || 'Date Début'}</label>
                                                                 <input type="date" name="date_debut_travaux" className={inputClasses} value={formData.date_debut_travaux} onChange={handleChange} />
                                                             </div>
                                                             <div className="grid gap-3">
-                                                                <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Fin Prévue</label>
+                                                                <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">{t('property_detail.details.date_end_est') || 'Fin Prévue'}</label>
                                                                 <input type="date" name="date_fin_prevue" className={inputClasses} value={formData.date_fin_prevue} onChange={handleChange} />
                                                             </div>
                                                         </div>
                                                         <div className="grid gap-3">
-                                                            <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Entrepreneur Principal</label>
-                                                            <input type="text" name="nom_entrepreneur" className={inputClasses} placeholder="Nom de l'entreprise ou de l'entrepreneur" value={formData.nom_entrepreneur} onChange={handleChange} />
+                                                            <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">{t('property_detail.details.contractor') || 'Entrepreneur Principal'}</label>
+                                                            <input type="text" name="nom_entrepreneur" className={inputClasses} placeholder={t('property_detail.details.contractor_ph') || "Nom de l'entreprise ou de l'entrepreneur"} value={formData.nom_entrepreneur} onChange={handleChange} />
                                                         </div>
                                                     </div>
                                                 ) : formData.transaction_nature === 'VENTE' ? (
                                                     <div className="grid gap-6">
                                                         <div className="grid gap-3">
-                                                            <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Prix de vente <span className="text-primary">*</span></label>
+                                                            <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">{t('property_detail.details.sale_price')} <span className="text-primary">*</span></label>
                                                             <div className="relative">
                                                                 <input type="number" name="prix_vente" required className={cn(inputClasses, "pl-12 text-lg font-bold shadow-inner")} placeholder="0.00" value={formData.prix_vente} onChange={handleChange} />
                                                                 <div className="absolute left-4 top-1/2 -translate-y-1/2 font-black text-primary text-sm flex items-center gap-1">
@@ -780,13 +803,13 @@ export default function EditProperty() {
                                                         </div>
                                                         <label className="flex items-center gap-3 p-4 rounded-xl border border-border/50 hover:bg-muted/20 cursor-pointer group transition-all">
                                                             <input type="checkbox" checked={formData.negociable} onChange={e => setFormData(p => ({ ...p, negociable: e.target.checked }))} className="accent-primary h-5 w-5 rounded" />
-                                                            <span className="text-xs font-black uppercase tracking-wider group-hover:text-primary transition-colors">Prix négociable</span>
+                                                            <span className="text-xs font-black uppercase tracking-wider group-hover:text-primary transition-colors">{t('property_detail.details.negotiable') || 'Prix négociable'}</span>
                                                         </label>
                                                     </div>
                                                 ) : (
                                                     <div className="grid gap-6">
                                                         <div className="grid gap-3">
-                                                            <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Loyer Mensuel <span className="text-primary">*</span></label>
+                                                            <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">{t('property_detail.details.rent')} <span className="text-primary">*</span></label>
                                                             <div className="relative">
                                                                 <input type="number" name="loyer_mensuel" required className={cn(inputClasses, "pl-12 text-lg font-bold shadow-inner")} placeholder="0.00" value={formData.loyer_mensuel} onChange={handleChange} />
                                                                 <div className="absolute left-4 top-1/2 -translate-y-1/2 font-black text-primary text-sm flex items-center gap-1">
@@ -795,7 +818,7 @@ export default function EditProperty() {
                                                             </div>
                                                         </div>
                                                         <div className="grid gap-3">
-                                                            <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Prix Nuitée (Optionnel)</label>
+                                                            <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">{t('property_detail.details.night_price') || 'Prix Nuitée (Optionnel)'}</label>
                                                             <div className="relative">
                                                                 <input type="number" name="prix_nuitee" className={cn(inputClasses, "pl-12")} placeholder="0.00" value={formData.prix_nuitee} onChange={handleChange} />
                                                                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground text-sm flex items-center gap-1">
@@ -811,13 +834,13 @@ export default function EditProperty() {
                                         <div className="space-y-8">
                                             <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/70 flex items-center gap-3">
                                                 <span className="p-1.5 bg-primary/10 rounded-md"><Percent className="h-3.5 w-3.5 text-primary" /></span>
-                                                Commission MaDis
+                                                {t('property_detail.details.commission') || 'Commission MaDis'}
                                             </h3>
 
                                             <div className="bg-muted/10 rounded-3xl p-8 border border-border/50 space-y-6">
                                                 <div className="p-1 bg-background border border-border/50 rounded-xl flex gap-1">
-                                                    <button type="button" onClick={() => setFormData(p => ({ ...p, commission_type: 'POURCENTAGE' }))} className={cn("flex-1 py-2.5 rounded-lg text-[10px] font-black tracking-widest uppercase transition-all", formData.commission_type === 'POURCENTAGE' ? "bg-primary text-white shadow-md" : "text-muted-foreground hover:bg-muted")}>Pourcentage</button>
-                                                    <button type="button" onClick={() => setFormData(p => ({ ...p, commission_type: 'FIXE' }))} className={cn("flex-1 py-2.5 rounded-lg text-[10px] font-black tracking-widest uppercase transition-all", formData.commission_type === 'FIXE' ? "bg-primary text-white shadow-md" : "text-muted-foreground hover:bg-muted")}>Montant Fixe</button>
+                                                    <button type="button" onClick={() => setFormData(p => ({ ...p, commission_type: 'POURCENTAGE' }))} className={cn("flex-1 py-2.5 rounded-lg text-[10px] font-black tracking-widest uppercase transition-all", formData.commission_type === 'POURCENTAGE' ? "bg-primary text-white shadow-md" : "text-muted-foreground hover:bg-muted")}>{t('property_detail.details.percentage') || 'Pourcentage'}</button>
+                                                    <button type="button" onClick={() => setFormData(p => ({ ...p, commission_type: 'FIXE' }))} className={cn("flex-1 py-2.5 rounded-lg text-[10px] font-black tracking-widest uppercase transition-all", formData.commission_type === 'FIXE' ? "bg-primary text-white shadow-md" : "text-muted-foreground hover:bg-muted")}>{t('property_detail.details.fixed_amount') || 'Montant Fixe'}</button>
                                                 </div>
 
                                                 {formData.commission_type === 'POURCENTAGE' ? (
@@ -838,9 +861,9 @@ export default function EditProperty() {
                                     <div className="pt-8 border-t border-border/50 space-y-4">
                                         <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/70 flex items-center gap-3">
                                             <span className="p-1.5 bg-primary/10 rounded-md"><Tag className="h-3.5 w-3.5 text-primary" /></span>
-                                            Présentation Commerciale
+                                            {t('property_detail.details.commercial_presentation') || 'Présentation Commerciale'}
                                         </h3>
-                                        <textarea name="description" rows="6" className={cn(inputClasses, "h-auto py-4 leading-relaxed resize-none")} placeholder="Rédigez une description captivante pour les futurs acquéreurs ou locataires..." value={formData.description} onChange={handleChange} />
+                                        <textarea name="description" rows="6" className={cn(inputClasses, "h-auto py-4 leading-relaxed resize-none")} placeholder={t('property_detail.details.commercial_desc_ph') || "Rédigez une description captivante pour les futurs acquéreurs ou locataires..."} value={formData.description} onChange={handleChange} />
                                     </div>
                                 </div>
                             )}
@@ -857,7 +880,7 @@ export default function EditProperty() {
                                             <div className="h-20 w-20 bg-background rounded-full shadow-lg flex items-center justify-center mx-auto mb-6 group-hover:shadow-primary/20">
                                                 <ImageIcon className="h-8 w-8 text-primary" />
                                             </div>
-                                            <span className="text-lg font-black text-foreground uppercase tracking-widest block">Glisser-déposer vos photos</span>
+                                            <span className="text-lg font-black text-foreground uppercase tracking-widest block">{t('property_detail.details.drag_drop_photos') || 'Glisser-déposer vos photos'}</span>
                                             <span className="text-xs text-muted-foreground font-medium mt-3 block px-4 py-1.5 bg-background/50 rounded-full border border-border/50 inline-block">JPG, PNG, WEBP • Max 10MB</span>
                                         </div>
                                     </div>
@@ -892,47 +915,40 @@ export default function EditProperty() {
                     </form>
                 </div>
 
-                {/* Footer Navigation */}
-                <div className="flex items-center justify-between p-6 border-t border-border/50 bg-muted/10 backdrop-blur-sm">
+                {/* Footer Navigation - Sticky on mobile */}
+                <div className="sticky bottom-0 flex items-center justify-between p-4 sm:p-6 border-t border-border/50 bg-background/80 dark:bg-zinc-900/90 backdrop-blur-md z-30">
                     <div>
                         {activeTab !== 'INFO' && (
                             <button
                                 type="button"
-                                onClick={() => {
-                                    const currentIndex = TABS.findIndex(t => t.id === activeTab);
-                                    setActiveTab(TABS[currentIndex - 1].id);
-                                }}
-                                className="inline-flex items-center justify-center rounded-xl text-xs font-black uppercase tracking-widest bg-background border border-input shadow-sm hover:bg-accent hover:text-accent-foreground transition-all h-12 px-8"
+                                onClick={handlePrevTab}
+                                className="inline-flex items-center justify-center rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest bg-background border border-input shadow-sm hover:bg-accent hover:text-accent-foreground transition-all h-10 sm:h-12 px-4 sm:px-8"
                             >
-                                Précédent
+                                <ArrowLeft className="h-4 w-4 mr-2 sm:hidden" />
+                                <span className="hidden sm:inline">{t('common.back') || 'Précédent'}</span>
+                                <span className="sm:hidden">{t('common.return') || 'Retour'}</span>
                             </button>
                         )}
                     </div>
-                    <div className="flex gap-4">
+                    <div className="flex gap-2 sm:gap-4">
                         <button
                             type="button"
                             onClick={() => navigate('/dashboard/properties')}
-                            className="inline-flex items-center justify-center rounded-xl text-xs font-black uppercase tracking-widest text-muted-foreground hover:text-foreground hover:bg-muted transition-all h-12 px-6"
+                            className="hidden sm:inline-flex items-center justify-center rounded-xl text-xs font-black uppercase tracking-widest text-muted-foreground hover:text-foreground hover:bg-muted transition-all h-12 px-6"
                         >
-                            Annuler
+                            {t('common.cancel') || 'Annuler'}
                         </button>
                         {activeTab !== 'MEDIA' ? (
                             <button
                                 type="button"
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    if (validateStep(activeTab)) {
-                                        const currentIndex = TABS.findIndex(t => t.id === activeTab);
-                                        setActiveTab(TABS[currentIndex + 1].id);
-                                    }
-                                }}
-                                className="inline-flex items-center justify-center rounded-xl text-xs font-black uppercase tracking-widest bg-foreground text-background hover:bg-foreground/90 shadow-lg hover:shadow-xl hover:translate-y-[-2px] transition-all h-12 px-10"
+                                onClick={handleNextTab}
+                                className="inline-flex items-center justify-center rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest bg-foreground text-background dark:bg-primary dark:text-white hover:bg-foreground/90 shadow-lg hover:shadow-xl hover:translate-y-[-2px] transition-all h-10 sm:h-12 px-6 sm:px-10"
                             >
-                                Suivant
+                                {t('common.next') || 'Suivant'}
                             </button>
                         ) : (
-                            <button form="edit-property-form" type="submit" disabled={loading} className="inline-flex items-center justify-center rounded-xl text-xs font-black uppercase tracking-widest bg-primary text-white shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:bg-primary/90 hover:translate-y-[-2px] transition-all h-12 px-12 disabled:opacity-50 disabled:translate-y-0">
-                                {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Transfert...</> : <><Save className="mr-2 h-4 w-4" /> Enregistrer</>}
+                            <button form="edit-property-form" type="submit" disabled={loading} className="inline-flex items-center justify-center rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest bg-primary text-white shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:bg-primary/90 hover:translate-y-[-2px] transition-all h-10 sm:h-12 px-6 sm:px-12 disabled:opacity-50 disabled:translate-y-0">
+                                {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('common.uploading') || 'Transfert...'}</> : <><Save className="mr-2 h-4 w-4" /> {t('common.save') || 'Enregistrer'}</>}
                             </button>
                         )}
                     </div>

@@ -9,69 +9,71 @@ import {
     User, Calendar, Wrench, Sofa, Shield, Check,
     ShieldCheck, Globe, Coins, Building2, Warehouse, Store, Trees, Hotel
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '../../lib/utils';
 
-const PROPERTY_CATEGORIES = [
-    { value: 'RESIDENTIEL', label: 'Résidentiel', icon: Building },
-    { value: 'COMMERCIAL', label: 'Commercial', icon: ShoppingBag },
-    { value: 'PROFESSIONNEL', label: 'Professionnel', icon: Briefcase },
+const PROPERTY_CATEGORIES = (t) => [
+    { value: 'RESIDENTIEL', label: t('properties.category.residentiel'), icon: Building },
+    { value: 'COMMERCIAL', label: t('properties.category.commercial'), icon: ShoppingBag },
+    { value: 'PROFESSIONNEL', label: t('properties.category.professionnel'), icon: Briefcase },
 ];
 
-const MAIN_CATEGORIES = [
+const MAIN_CATEGORIES = (t) => [
     {
         value: 'MANAGED',
-        label: 'Gestion de Patrimoine',
+        label: t('properties.main_categories.managed'),
         icon: ShieldCheck,
-        description: 'Actifs immobiliers sous gestion (Vente ou Location).',
+        description: t('properties.main_categories.managed_desc'),
         color: 'blue',
     },
     {
         value: 'CONSTRUCTION',
-        label: 'Suivi de chantier',
+        label: t('properties.main_categories.construction'),
         icon: HardHat,
-        description: 'Bien avec un projet de construction en cours.',
+        description: t('properties.main_categories.construction_desc'),
         color: 'rose',
     },
 ];
 
-const MANAGEMENT_TYPES = [
+const MANAGEMENT_TYPES = (t) => [
     {
         value: 'MANDAT',
-        label: 'À Vendre (Mandat)',
+        label: t('properties.management_types.sale'),
         icon: Tag,
-        description: 'Mandat MaDis pour la vente du bien.',
+        description: t('properties.management_types.sale_desc'),
     },
     {
         value: 'GESTION',
-        label: 'À Louer (Gestion)',
+        label: t('properties.management_types.rent'),
         icon: Home,
-        description: 'Confier le bien pour la gestion locative.',
+        description: t('properties.management_types.rent_desc'),
     },
 ];
 
-const PROPERTY_TYPES_BY_CATEGORY = {
+const PROPERTY_TYPES_BY_CATEGORY = (t) => ({
     RESIDENTIEL: [
-        { value: 'APPARTEMENT', label: 'Appartement' },
-        { value: 'MAISON', label: 'Maison' },
-        { value: 'VILLA', label: 'Villa' },
+        { value: 'APPARTEMENT', label: t('properties.property_type.appartement') },
+        { value: 'MAISON', label: t('properties.property_type.maison') },
+        { value: 'VILLA', label: t('properties.property_type.villa') },
     ],
     COMMERCIAL: [
-        { value: 'BOUTIQUE', label: 'Boutique / Commerce' },
-        { value: 'ENTREPOT', label: 'Entrepôt' },
-        { value: 'LOCAL_ACTIVITE', label: "Local d'activité" },
+        { value: 'BOUTIQUE', label: t('properties.property_type.boutique') },
+        { value: 'ENTREPOT', label: t('properties.property_type.entrepot') },
+        { value: 'LOCAL_ACTIVITE', label: t('properties.property_type.local_activite') },
     ],
     PROFESSIONNEL: [
-        { value: 'BUREAU', label: 'Bureau' },
-        { value: 'LOCAL_ACTIVITE', label: "Local d'activité" },
+        { value: 'BUREAU', label: t('properties.property_type.bureau') },
+        { value: 'LOCAL_ACTIVITE', label: t('properties.property_type.local_activite') },
     ],
     GLOBAL: [
-        { value: 'TERRAIN', label: 'Terrain' },
-        { value: 'IMMEUBLE', label: 'Immeuble' },
-        { value: 'AUTRE', label: 'Autre' },
+        { value: 'TERRAIN', label: t('properties.property_type.terrain') },
+        { value: 'IMMEUBLE', label: t('properties.property_type.immeuble') },
+        { value: 'AUTRE', label: t('properties.property_type.autre') },
     ]
-};
+});
 
 export default function CreateProperty() {
+    const { t } = useTranslation();
     const { showToast } = useToast();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
@@ -82,10 +84,10 @@ export default function CreateProperty() {
     const [activeTab, setActiveTab] = useState('INFO'); // INFO, SPECS, FINANCE, MEDIA
 
     const TABS = [
-        { id: 'INFO', label: '1. Informations', icon: User },
-        { id: 'SPECS', label: '2. Caractéristiques', icon: Ruler },
-        { id: 'FINANCE', label: '3. Finance & Description', icon: Euro },
-        { id: 'MEDIA', label: '4. Médias', icon: ImageIcon },
+        { id: 'INFO', label: t('properties.form_tabs.info'), shortLabel: t('properties.form_tabs.info_short'), icon: User },
+        { id: 'SPECS', label: t('properties.form_tabs.specs'), shortLabel: t('properties.form_tabs.specs_short'), icon: Ruler },
+        { id: 'FINANCE', label: t('properties.form_tabs.finance'), shortLabel: t('properties.form_tabs.finance_short'), icon: Euro },
+        { id: 'MEDIA', label: t('properties.form_tabs.media'), shortLabel: t('properties.form_tabs.media_short'), icon: ImageIcon },
     ];
 
     const [formData, setFormData] = useState({
@@ -140,7 +142,7 @@ export default function CreateProperty() {
     const handleChange = (e) => {
         const { name, value } = e.target;
         if (name === 'category') {
-            const firstType = PROPERTY_TYPES_BY_CATEGORY[value]?.[0]?.value || 'AUTRE';
+            const firstType = PROPERTY_TYPES_BY_CATEGORY(t)[value]?.[0]?.value || 'AUTRE';
             setFormData(prev => ({ ...prev, [name]: value, property_type: firstType }));
         } else if (name === 'management_type') {
             const isVente = value === 'MANDAT';
@@ -206,17 +208,17 @@ export default function CreateProperty() {
 
         if (missingFields.length > 0) {
             const fieldLabels = {
-                name: 'Nom du bien',
-                owner: 'Propriétaire',
-                address: 'Adresse',
-                city: 'Ville',
-                surface: 'Surface',
-                prix_vente: 'Prix de vente',
-                loyer_mensuel: 'Loyer mensuel'
+                name: t('properties.details.name') || 'Nom du bien',
+                owner: t('properties.owner') || 'Propriétaire',
+                address: t('property_detail.details.address') || 'Adresse',
+                city: t('property_detail.details.city') || 'Ville',
+                surface: t('property_detail.details.surface') || 'Surface',
+                prix_vente: t('property_detail.details.sale_price') || 'Prix de vente',
+                loyer_mensuel: t('property_detail.details.rent') || 'Loyer mensuel'
             };
             const labels = missingFields.map(f => fieldLabels[f]).join(', ');
             showToast({
-                message: `Champs obligatoires manquants : ${labels}`,
+                message: `${t('common.error_required_fields') || 'Champs obligatoires manquants'} : ${labels}`,
                 type: 'error'
             });
             return false;
@@ -261,17 +263,17 @@ export default function CreateProperty() {
             const projectId = response.data.first_project_id;
             const siteId = response.data.first_site_id;
 
-            let successMessage = 'Bien immobilier créé avec succès !';
+            let successMessage = t('properties.messages.create_success') || 'Bien immobilier créé avec succès !';
             let targetPath = `/dashboard/properties/${newId}`;
 
             if (formData.management_type === 'GESTION') {
-                successMessage = 'Bien créé ! Un compte mandat et un projet d\'entretien ont été générés.';
+                successMessage = t('properties.messages.create_success_mgmt') || 'Bien créé ! Un compte mandat et un projet d\'entretien ont été générés.';
                 if (projectId) targetPath = `/dashboard/projects/${projectId}`;
             } else if (formData.management_type === 'CONSTRUCTION') {
-                successMessage = 'Bien créé ! Un compte mandat, un projet et un chantier ont été générés.';
+                successMessage = t('properties.messages.create_success_const') || 'Bien créé ! Un compte mandat, un projet et un chantier ont été générés.';
                 if (siteId) targetPath = `/dashboard/construction/${siteId}`;
             } else {
-                successMessage = 'Bien créé ! Un compte mandat a été initialisé.';
+                successMessage = t('properties.messages.create_success_sale') || 'Bien créé ! Un compte mandat a été initialisé.';
             }
 
             showToast({ message: successMessage, type: 'success' });
@@ -282,7 +284,7 @@ export default function CreateProperty() {
                 ? Object.entries(err.response.data)
                     .map(([key, value]) => `${key}: ${value}`)
                     .join(', ')
-                : 'Impossible de créer le bien immobilier.';
+                : t('properties.messages.create_error') || 'Impossible de créer le bien immobilier.';
             showToast({ message: errorMessage, type: 'error' });
         } finally {
             setLoading(false);
@@ -303,8 +305,8 @@ export default function CreateProperty() {
                 </button>
                 <div>
                     <h1 className="text-4xl font-black tracking-tight text-foreground">
-                        Nouveau <span className="text-primary relative inline-block">
-                            Bien Immobilier
+                        {t('common.new')} <span className="text-primary relative inline-block">
+                            {t('properties.property_singular') || 'Bien Immobilier'}
                             <svg className="absolute -bottom-2 left-0 w-full h-2 text-primary/20" viewBox="0 0 100 10" preserveAspectRatio="none">
                                 <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="2" fill="none" />
                             </svg>
@@ -312,7 +314,7 @@ export default function CreateProperty() {
                     </h1>
                     <p className="text-muted-foreground font-medium mt-2 flex items-center gap-2">
                         <span className="w-8 h-[2px] bg-primary/50 rounded-full inline-block"></span>
-                        Ajouter une nouvelle propriété au portefeuille MaDis
+                        {t('properties.create_subtitle') || 'Ajouter une nouvelle propriété au portefeuille MaDis'}
                     </p>
                 </div>
             </div>
@@ -358,14 +360,17 @@ export default function CreateProperty() {
                                 )}>
                                     <Icon className="h-4 w-4" />
                                 </div>
-                                <span>{tab.label}</span>
+                                <span>
+                                    <span className="hidden sm:inline">{tab.label}</span>
+                                    <span className="sm:hidden">{tab.shortLabel}</span>
+                                </span>
                                 {isActive && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary shadow-[0_-2px_10px_rgba(var(--primary),0.5)]" />}
                             </button>
                         );
                     })}
                 </div>
 
-                <div className="p-8 lg:p-12 min-h-[600px] flex flex-col">
+                <div className="p-4 sm:p-8 lg:p-12 min-h-[500px] sm:min-h-[600px] flex flex-col">
                     <form id="create-property-form" onSubmit={handleSubmit} className="h-full flex flex-col">
                         <div className="flex-1">
                             {activeTab === 'INFO' && (
@@ -374,10 +379,10 @@ export default function CreateProperty() {
                                     <div className="space-y-6">
                                         <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/70 flex items-center gap-3">
                                             <span className="p-1.5 bg-primary/10 rounded-md"><Settings className="h-3.5 w-3.5 text-primary" /></span>
-                                            Nature du Projet
+                                            {t('properties.project_nature') || 'Nature du Projet'}
                                         </h3>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            {MAIN_CATEGORIES.map(cat => {
+                                            {MAIN_CATEGORIES(t).map(cat => {
                                                 const isActive = mainCategory === cat.value;
                                                 const activeStyle = cat.color === 'blue'
                                                     ? "border-blue-500/50 bg-blue-500/5 ring-2 ring-blue-500/20"
@@ -413,7 +418,7 @@ export default function CreateProperty() {
 
                                         {mainCategory === 'MANAGED' && (
                                             <div className="flex flex-wrap gap-4 pt-2">
-                                                {MANAGEMENT_TYPES.map(mt => {
+                                                {MANAGEMENT_TYPES(t).map(mt => {
                                                     const isActive = formData.management_type === mt.value;
                                                     return (
                                                         <button
@@ -444,7 +449,7 @@ export default function CreateProperty() {
                                         <div className="space-y-6">
                                             <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/70 flex items-center gap-3">
                                                 <span className="p-1.5 bg-primary/10 rounded-md"><User className="h-3.5 w-3.5 text-primary" /></span>
-                                                Identification
+                                                {t('property_detail.tabs.details') || 'Identification'}
                                             </h3>
 
                                             <div className="bg-muted/10 dark:bg-white/[0.02] rounded-3xl p-8 space-y-8 border border-border/50 dark:border-white/5 relative overflow-hidden group hover:border-primary/20 transition-colors">
@@ -453,7 +458,7 @@ export default function CreateProperty() {
                                                 {/* Owner Selection - Premium Card Style */}
                                                 <div className="relative z-10">
                                                     <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2 mb-3">
-                                                        <User className="h-3 w-3 text-primary" /> Propriétaire <span className="text-primary">*</span>
+                                                        <User className="h-3 w-3 text-primary" /> {t('properties.owner')} <span className="text-primary">*</span>
                                                     </label>
                                                     <div className="relative group/select">
                                                         <div className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary z-20 pointer-events-none group-focus-within/select:bg-primary group-focus-within/select:text-white transition-colors">
@@ -469,7 +474,7 @@ export default function CreateProperty() {
                                                             value={formData.owner}
                                                             onChange={handleChange}
                                                         >
-                                                            <option value="">Sélectionner un client...</option>
+                                                            <option value="">{t('properties.select_client') || 'Sélectionner un client...'}</option>
                                                             {users.filter(u => u.role === 'CLIENT').map(u => (
                                                                 <option key={u.id} value={u.id}>{u.last_name?.toUpperCase()} {u.first_name} ({u.email})</option>
                                                             ))}
@@ -483,14 +488,14 @@ export default function CreateProperty() {
                                                 <div className="grid gap-6 relative z-10">
                                                     <div className="grid gap-3">
                                                         <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-                                                            <Tag className="h-3 w-3 text-primary" /> Nom du bien <span className="text-primary">*</span>
+                                                            <Tag className="h-3 w-3 text-primary" /> {t('properties.details.name') || 'Nom du bien'} <span className="text-primary">*</span>
                                                         </label>
-                                                        <input type="text" name="name" required className={inputClasses} placeholder="Ex: Résidence Les Lilas..." value={formData.name} onChange={handleChange} />
+                                                        <input type="text" name="name" required className={inputClasses} placeholder={t('properties.details.name_ph') || "Ex: Résidence Les Lilas..."} value={formData.name} onChange={handleChange} />
                                                     </div>
 
                                                     <div className="grid gap-3">
                                                         <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-                                                            <Coins className="h-3 w-3 text-primary" /> Devise
+                                                            <Coins className="h-3 w-3 text-primary" /> {t('finance.add_transaction.currency') || 'Devise'}
                                                         </label>
                                                         <div className="grid grid-cols-4 gap-3">
                                                             {['EUR', 'USD', 'GNF', 'XAF', 'AED', 'CNY', 'GBP'].map((curr) => (
@@ -518,7 +523,7 @@ export default function CreateProperty() {
                                         <div className="space-y-6">
                                             <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/70 flex items-center gap-3">
                                                 <span className="p-1.5 bg-primary/10 rounded-md"><MapPin className="h-3.5 w-3.5 text-primary" /></span>
-                                                Localisation
+                                                {t('construction.detail.overview.location') || 'Localisation'}
                                             </h3>
 
                                             <div className="bg-muted/10 dark:bg-white/[0.02] rounded-3xl p-8 space-y-6 border border-border/50 dark:border-white/5 relative overflow-hidden group hover:border-primary/20 transition-colors">
@@ -526,23 +531,23 @@ export default function CreateProperty() {
 
                                                 <div className="grid gap-3 relative z-10">
                                                     <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-                                                        <MapPin className="h-3 w-3 text-primary" /> Adresse Complète <span className="text-primary">*</span>
+                                                        <MapPin className="h-3 w-3 text-primary" /> {t('construction_modal.label_address')} <span className="text-primary">*</span>
                                                     </label>
-                                                    <input type="text" name="address" required className={inputClasses} placeholder="N° Rue, Quartier..." value={formData.address} onChange={handleChange} />
+                                                    <input type="text" name="address" required className={inputClasses} placeholder={t('construction_modal.ph_address')} value={formData.address} onChange={handleChange} />
                                                 </div>
 
                                                 <div className="grid grid-cols-2 gap-5 relative z-10">
                                                     <div className="grid gap-3">
                                                         <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-                                                            <Building className="h-3 w-3 text-primary" /> Ville <span className="text-primary">*</span>
+                                                            <Building className="h-3 w-3 text-primary" /> {t('construction_modal.label_city')} <span className="text-primary">*</span>
                                                         </label>
-                                                        <input type="text" name="city" required className={inputClasses} placeholder="Conakry" value={formData.city} onChange={handleChange} />
+                                                        <input type="text" name="city" required className={inputClasses} placeholder={t('construction_modal.ph_city')} value={formData.city} onChange={handleChange} />
                                                     </div>
                                                     <div className="grid gap-3">
                                                         <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-                                                            <Hash className="h-3 w-3 text-primary" /> Code Postal
+                                                            <Hash className="h-3 w-3 text-primary" /> {t('construction_modal.label_postal')}
                                                         </label>
-                                                        <input type="text" name="postal_code" className={inputClasses} placeholder="00000" value={formData.postal_code} onChange={handleChange} />
+                                                        <input type="text" name="postal_code" className={inputClasses} placeholder={t('construction_modal.ph_postal')} value={formData.postal_code} onChange={handleChange} />
                                                     </div>
                                                 </div>
                                             </div>
@@ -557,14 +562,14 @@ export default function CreateProperty() {
                                         <div className="space-y-8">
                                             <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/70 flex items-center gap-3">
                                                 <span className="p-1.5 bg-primary/10 rounded-md"><Ruler className="h-3.5 w-3.5 text-primary" /></span>
-                                                Spécifications
+                                                {t('property_detail.tabs.details')}
                                             </h3>
 
                                             <div className="space-y-6">
                                                 <div className="grid gap-3">
-                                                    <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Catégorie</label>
+                                                    <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">{t('properties.category_label') || 'Catégorie'}</label>
                                                     <div className="grid grid-cols-3 gap-3">
-                                                        {PROPERTY_CATEGORIES.map(cat => (
+                                                        {PROPERTY_CATEGORIES(t).map(cat => (
                                                             <button
                                                                 key={cat.value}
                                                                 type="button"
@@ -585,15 +590,16 @@ export default function CreateProperty() {
 
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                     <div className="grid gap-3">
-                                                        <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Surface (m²) <span className="text-primary">*</span></label>
+                                                        <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">{t('property_detail.details.surface')} (m²) <span className="text-primary">*</span></label>
                                                         <input type="number" name="surface" required className={inputClasses} placeholder="0.00" value={formData.surface} onChange={handleChange} />
                                                     </div>
                                                 </div>
 
                                                 <div className="grid gap-3">
-                                                    <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Type de bien</label>
+                                                    <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">{t('property_detail.details.type')}</label>
                                                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-                                                        {(PROPERTY_TYPES_BY_CATEGORY[formData.category] || []).map(t => {
+                                                        {(PROPERTY_TYPES_BY_CATEGORY(t)[formData.category] || []).map(t => {
+                                                            const isSelected = formData.property_type === t.value;
                                                             const Icon = {
                                                                 APPARTEMENT: Building2,
                                                                 MAISON: Home,
@@ -607,7 +613,6 @@ export default function CreateProperty() {
                                                                 AUTRE: Settings
                                                             }[t.value] || Building;
 
-                                                            const isSelected = formData.property_type === t.value;
 
                                                             return (
                                                                 <button
@@ -643,20 +648,25 @@ export default function CreateProperty() {
 
                                         <div className="space-y-8">
                                             <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/70 flex items-center gap-3">
-                                                <span className="p-1.5 bg-primary/10 rounded-md"><Bed className="h-3.5 w-3.5 text-primary" /></span>
-                                                Agencement
+                                                <span className="p-1.5 bg-primary/10 rounded-md"><ImageIcon className="h-3.5 w-3.5 text-primary" /></span>
+                                                {t('property_detail.tabs.photos') || 'Médias'}
                                             </h3>
 
                                             <div className="space-y-6">
                                                 <div className="grid grid-cols-2 gap-6">
                                                     <div className="grid gap-3">
-                                                        <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Pièces (Total)</label>
+                                                        <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">{t('property_detail.details.rooms') || 'Pièces (Total)'}</label>
                                                         <input type="number" name="room_count" className={inputClasses} placeholder="0" value={formData.room_count} onChange={handleChange} />
                                                     </div>
                                                     <div className="grid gap-3">
-                                                        <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Chambres</label>
+                                                        <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">{t('property_detail.details.bedrooms') || 'Chambres'}</label>
                                                         <input type="number" name="bedroom_count" className={inputClasses} placeholder="0" value={formData.bedroom_count} onChange={handleChange} />
                                                     </div>
+                                                </div>
+
+                                                <div className="grid gap-3">
+                                                    <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">{t('property_detail.details.description') || 'Description'}</label>
+                                                    <textarea name="description" className={cn(inputClasses, "min-h-[160px] resize-none py-4")} placeholder={t('property_detail.details.desc_ph') || "Détails supplémentaires..."} value={formData.description} onChange={handleChange}></textarea>
                                                 </div>
 
                                                 <label className={cn(
@@ -672,8 +682,8 @@ export default function CreateProperty() {
                                                         <ShieldCheck className="h-6 w-6" />
                                                     </div>
                                                     <div className="flex-1">
-                                                        <div className={cn("text-sm font-black uppercase tracking-wide", formData.is_verified_fonciere ? "text-emerald-500" : "text-foreground")}>Vérification Foncière</div>
-                                                        <div className="text-xs text-muted-foreground mt-0.5">Le titre foncier a été vérifié par MaDis</div>
+                                                        <div className={cn("text-sm font-black uppercase tracking-wide", formData.is_verified_fonciere ? "text-emerald-500" : "text-foreground")}>{t('property_detail.details.land_verification') || 'Vérification Foncière'}</div>
+                                                        <div className="text-xs text-muted-foreground mt-0.5">{t('property_detail.details.land_verification_desc') || 'Le titre foncier a été vérifié par MaDis'}</div>
                                                     </div>
                                                     <input
                                                         type="checkbox"
@@ -694,7 +704,7 @@ export default function CreateProperty() {
                                         <div className="space-y-8">
                                             <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/70 flex items-center gap-3">
                                                 <span className="p-1.5 bg-primary/10 rounded-md"><Euro className="h-3.5 w-3.5 text-primary" /></span>
-                                                Données Financières
+                                                {t('property_detail.tabs.finance') || 'Données Financières'}
                                             </h3>
 
                                             <div className="bg-muted/10 dark:bg-black/60 rounded-3xl p-8 border border-border/50 dark:border-white/5">
@@ -839,47 +849,40 @@ export default function CreateProperty() {
                     </form>
                 </div>
 
-                {/* Footer Navigation */}
-                <div className="flex items-center justify-between p-6 border-t border-border/50 bg-muted/10 backdrop-blur-sm">
+                {/* Footer Navigation - Sticky on mobile */}
+                <div className="sticky bottom-0 flex items-center justify-between p-4 sm:p-6 border-t border-border/50 bg-background/80 dark:bg-zinc-900/90 backdrop-blur-md z-30">
                     <div>
                         {activeTab !== 'INFO' && (
                             <button
                                 type="button"
-                                onClick={() => {
-                                    const currentIndex = TABS.findIndex(t => t.id === activeTab);
-                                    setActiveTab(TABS[currentIndex - 1].id);
-                                }}
-                                className="inline-flex items-center justify-center rounded-xl text-xs font-black uppercase tracking-widest bg-background border border-input shadow-sm hover:bg-accent hover:text-accent-foreground transition-all h-12 px-8"
+                                onClick={handlePrevTab}
+                                className="inline-flex items-center justify-center rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest bg-background border border-input shadow-sm hover:bg-accent hover:text-accent-foreground transition-all h-10 sm:h-12 px-4 sm:px-8"
                             >
-                                Précédent
+                                <ArrowLeft className="h-4 w-4 mr-2 sm:hidden" />
+                                <span className="hidden sm:inline">{t('common.back') || 'Précédent'}</span>
+                                <span className="sm:hidden">{t('common.return') || 'Retour'}</span>
                             </button>
                         )}
                     </div>
-                    <div className="flex gap-4">
+                    <div className="flex gap-2 sm:gap-4">
                         <button
                             type="button"
                             onClick={() => navigate('/dashboard/properties')}
-                            className="inline-flex items-center justify-center rounded-xl text-xs font-black uppercase tracking-widest text-muted-foreground hover:text-foreground hover:bg-muted transition-all h-12 px-6"
+                            className="hidden sm:inline-flex items-center justify-center rounded-xl text-xs font-black uppercase tracking-widest text-muted-foreground hover:text-foreground hover:bg-muted transition-all h-12 px-6"
                         >
-                            Annuler
+                            {t('common.cancel') || 'Annuler'}
                         </button>
                         {activeTab !== 'MEDIA' ? (
                             <button
                                 type="button"
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    if (validateStep(activeTab)) {
-                                        const currentIndex = TABS.findIndex(t => t.id === activeTab);
-                                        setActiveTab(TABS[currentIndex + 1].id);
-                                    }
-                                }}
-                                className="inline-flex items-center justify-center rounded-xl text-xs font-black uppercase tracking-widest bg-foreground text-background hover:bg-foreground/90 shadow-lg hover:shadow-xl hover:translate-y-[-2px] transition-all h-12 px-10"
+                                onClick={handleNextTab}
+                                className="inline-flex items-center justify-center rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest bg-foreground text-background dark:bg-primary dark:text-white hover:bg-foreground/90 shadow-lg hover:shadow-xl hover:translate-y-[-2px] transition-all h-10 sm:h-12 px-6 sm:px-10"
                             >
-                                Suivant
+                                {t('common.next') || 'Suivant'}
                             </button>
                         ) : (
-                            <button form="create-property-form" type="submit" disabled={loading} className="inline-flex items-center justify-center rounded-xl text-xs font-black uppercase tracking-widest bg-primary text-white shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:bg-primary/90 hover:translate-y-[-2px] transition-all h-12 px-12 disabled:opacity-50 disabled:translate-y-0">
-                                {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Transfert...</> : <><Save className="mr-2 h-4 w-4" /> Enregistrer</>}
+                            <button type="submit" disabled={loading} className="inline-flex items-center justify-center rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest bg-primary text-white shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:bg-primary/90 hover:translate-y-[-2px] transition-all h-10 sm:h-12 px-6 sm:px-12 disabled:opacity-50 disabled:translate-y-0">
+                                {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('common.saving') || 'Sauvegarde...'}</> : <><Save className="mr-2 h-4 w-4" /> {t('common.save') || 'Enregistrer'}</>}
                             </button>
                         )}
                     </div>

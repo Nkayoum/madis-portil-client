@@ -21,7 +21,11 @@
         "new": "Nouveau",
         "add": "Ajouter",
         "welcome": "Bienvenue",
-        "admin": "Administrateur"
+        "admin": "Administrateur",
+        "back": "Précédent",
+        "next": "Suivant",
+        "return": "Retour",
+        "proof": "Justificatif"
     },
     "dashboard": {
         "title": "Finance & Rendement",
@@ -111,7 +115,8 @@
                 "asset_desc": "Actif / Descriptif analytique",
                 "classification": "Classification",
                 "amount": "Montant (EUR)",
-                "registry": "Registre"
+                "registry": "Registre",
+                "proof": "Justificatif"
             },
             "archive": "ARCHIVE",
             "no_desc": "AUCUNE DESCRIPTION",
@@ -239,6 +244,28 @@
             "professionnel": "PROFESSIONNEL",
             "global": "GLOBAL"
         },
+        "form_tabs": {
+            "info": "Informations",
+            "info_short": "Info",
+            "specs": "Caractéristiques",
+            "specs_short": "Specs",
+            "finance": "Finance & Description",
+            "finance_short": "Finance",
+            "media": "Médias",
+            "media_short": "Média"
+        },
+        "main_categories": {
+            "managed": "Gestion de Patrimoine",
+            "managed_desc": "Actifs immobiliers sous gestion (Vente ou Location).",
+            "construction": "Suivi de chantier",
+            "construction_desc": "Bien avec un projet de construction en cours."
+        },
+        "management_types": {
+            "sale": "À Vendre (Mandat)",
+            "sale_desc": "Mandat MaDis pour la vente du bien.",
+            "rent": "À Louer (Gestion)",
+            "rent_desc": "Confier le bien pour la gestion locative."
+        },
         "property_type": {
             "appartement": "Appartement",
             "maison": "Maison",
@@ -255,6 +282,23 @@
             "vente": "VENTE",
             "location": "LOCATION",
             "location_vente": "LOCATION VENTE"
+        },
+        "update_subtitle": "Mettre à jour les informations du bien",
+        "category_label": "Catégorie",
+        "project_nature": "Nature du Projet",
+        "select_client": "Sélectionner un client...",
+        "details": {
+            "name": "Nom du bien",
+            "name_ph": "Ex: Résidence Les Lilas..."
+        },
+        "messages": {
+            "create_success": "Le bien a été ajouté à votre portfolio.",
+            "create_success_mgmt": "Le mandat de gestion a été initialisé avec succès.",
+            "create_success_const": "L'unité de chantier a été créée et indexée.",
+            "create_success_sale": "Le mandat de vente a été enregistré.",
+            "create_error": "Une erreur est survenue lors de la création.",
+            "update_success": "Les informations du bien ont été mises à jour.",
+            "update_error": "Erreur lors de la mise à jour."
         }
     },
     "property_detail": {
@@ -266,6 +310,7 @@
         "monthly_rent": "Loyer mensuel",
         "nightly_rate": "Nuitée",
         "tabs": {
+            "back": "Retour au Portfolio",
             "details": "Détails",
             "projects": "Projets",
             "maintenance": "Maintenance",
@@ -294,7 +339,21 @@
             "charges": "Charges",
             "deposit": "Garantie",
             "construction": "Chantier",
-            "total_budget": "Budget Global"
+            "total_budget": "Budget Global",
+            "land_verification": "Vérification Foncière",
+            "land_verification_desc": "Le titre foncier a été vérifié par MaDis",
+            "budget_travaux": "Budget Travaux (Estimé)",
+            "date_start": "Date Début",
+            "date_end_est": "Fin Prévue",
+            "contractor": "Entrepreneur Principal",
+            "contractor_ph": "Nom de l'entreprise ou de l'entrepreneur",
+            "night_price": "Prix Nuitée (Optionnel)",
+            "commission": "Commission MaDis",
+            "percentage": "Pourcentage",
+            "fixed_amount": "Montant Fixe",
+            "commercial_presentation": "Présentation Commerciale",
+            "commercial_desc_ph": "Rédigez une description captivante pour les futurs acquéreurs ou locataires...",
+            "drag_drop_photos": "Glisser-déposer vos photos"
         },
         "finance": {
             "no_data": "Pas encore de données de performance",
@@ -327,7 +386,15 @@
             "rate": "Taux",
             "initializing": "Initialisation...",
             "distribution": "Répartition",
-            "no_data_chart": "Aucune donnée"
+            "no_data_chart": "Aucune donnée",
+            "wallet_info_title": "À propos de la Gestion Mandat",
+            "wallet_info_desc": "Ce solde représente les fonds actuellement détenus par MaDis pour le compte de ce bien (loyers collectés moins charges et honoraires).",
+            "treasury_balance": "Solde Trésorerie",
+            "treasury_balance_desc": "Montant cumulé des fonds disponibles pour ce bien.",
+            "withdrawals": "Retraits",
+            "withdrawals_desc": "Fonds transférés vers vos comptes.",
+            "deposits": "Dépôts",
+            "deposits_desc": "Apports en capital et loyers collectés."
         },
         "operations": {
             "title_sale": "Opérations",
@@ -387,7 +454,8 @@
             "final": "Final:",
             "delete": "Supprimer",
             "no_transaction": "Aucune transaction",
-            "no_transaction_desc": "Il n'y a pas encore d'offres ou de transactions pour ce bien."
+            "no_transaction_desc": "Il n'y a pas encore d'offres ou de transactions pour ce bien.",
+            "confirm_delete": "Supprimer cette transaction ?"
         },
         "documents": {
             "title": "Coffre-Fort Numérique",
@@ -413,10 +481,36 @@
             "amount": "Montant (€)",
             "notes": "Notes",
             "cancel": "Annuler",
-            "save": "Enregistrer"
+            "save": "Enregistrer",
+            "payment_proof": "Preuve de paiement",
+            "upload_proof": "Justificatif",
+            "placeholder_name": "Nom...",
+            "sale_conclusion": "Conclusion Vente",
+            "final_validation": "Validation finale de la transaction.",
+            "final_price": "Prix Final Acté (€)",
+            "final_price_help": "Montant de vente définitif.",
+            "sign": "Signer",
+            "proof_payment_req": "Le téléchargement d'une preuve de paiement est obligatoire pour valider votre demande.",
+            "proof_transfer_req": "Veuillez joindre une preuve du transfert ou de la réception pour confirmer cette opération.",
+            "continue_no_file": "Continuer sans fichier",
+            "currency_info": "Affichage principal en Euro (€). Conversion {{currency}} à titre indicatif."
+        },
+        "errors": {
+            "not_found": "Bien non trouvé.",
+            "id_not_found": "Le bien immobilier (ID: {{id}}) n'a pas été trouvé.",
+            "create_fail": "Erreur lors de la création.",
+            "confirm_doc_delete": "Supprimer ce document ?",
+            "bulk_doc_delete": "Voulez-vous supprimer les {{count}} documents sélectionnés ?",
+            "bulk_doc_delete_success": "{{count}} documents supprimés",
+            "status_update_fail": "Erreur lors de la mise à jour du statut.",
+            "confirm_reject_proof": "Voulez-vous rejeter ce justificatif ?"
         }
     },
     "projects": {
+        "title": "Suivi des Projets",
+        "subtitle": "Projets de développement et travaux",
+        "maintenance_title": "Entretien & Maintenance",
+        "maintenance_subtitle": "Interventions techniques et maintenance",
         "list_title_construction": "Projets",
         "list_title_maintenance": "Maintenance",
         "list_subtitle_construction": "Suivi de vos projets immobiliers.",

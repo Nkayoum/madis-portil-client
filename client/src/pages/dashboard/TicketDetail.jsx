@@ -160,7 +160,7 @@ export default function TicketDetail() {
     const statusConfig = getStatusConfig(ticket.status);
 
     return (
-        <div className="max-w-[1600px] mx-auto flex flex-col h-[calc(100vh-8rem)] animate-fade-in px-4 md:px-10">
+        <div className="max-w-[1600px] mx-auto flex flex-col h-[calc(100vh-7rem)] md:h-[calc(100vh-8rem)] animate-fade-in px-2 sm:px-4 md:px-10">
             <div className="mb-3 md:mb-5">
                 <Link to="/dashboard/tickets" className="inline-flex items-center text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-black dark:hover:text-white transition-all group">
                     <ArrowLeft className="mr-2 h-3.5 w-3.5 group-hover:-translate-x-1 transition-transform" />
@@ -169,8 +169,8 @@ export default function TicketDetail() {
             </div>
 
             {/* Ticket Header Solaris Style */}
-            <div className="solaris-glass rounded-[1.5rem] md:rounded-[2rem] border-none shadow-sm overflow-hidden z-20 relative mb-4 md:mb-6">
-                <div className="p-5 md:p-8 flex flex-col lg:flex-row lg:items-center justify-between gap-5 md:gap-8">
+            <div className="solaris-glass rounded-[1.25rem] md:rounded-[2rem] border-none shadow-sm overflow-hidden z-20 relative mb-3 md:mb-6">
+                <div className="p-4 md:p-8 flex flex-col lg:flex-row lg:items-center justify-between gap-4 md:gap-8">
                     <div>
                         <div className="flex flex-wrap items-center gap-2 md:gap-4 mb-3 md:mb-4">
                             <h1 className="text-xl md:text-2xl font-bold tracking-tight uppercase leading-tight">{ticket.subject}</h1>
@@ -267,7 +267,7 @@ export default function TicketDetail() {
             <div className="flex-1 overflow-y-auto py-6 md:py-10 space-y-6 md:space-y-10 pr-2 md:pr-4 no-scrollbar [&::-webkit-scrollbar]:hidden" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                 {/* Initial Ticket Description */}
                 <div className="flex justify-start">
-                    <div className="max-w-[95%] md:max-w-[85%] rounded-[1rem] md:rounded-[1.5rem] rounded-tl-none px-4 py-3 md:px-6 md:py-4 bg-white dark:bg-white/5 border border-black/5 dark:border-white/5 shadow-md relative group">
+                    <div className="max-w-[98%] sm:max-w-[90%] md:max-w-[85%] rounded-[1rem] md:rounded-[1.5rem] rounded-tl-none px-3.5 py-2.5 md:px-6 md:py-4 bg-white dark:bg-white/5 border border-black/5 dark:border-white/5 shadow-md relative group">
                         <div className="flex items-center gap-2 md:gap-3 mb-2 md:mb-3">
                             <div className="h-6 w-6 md:h-7 md:w-7 rounded-lg bg-black flex items-center justify-center text-[8px] md:text-[9px] font-bold text-white transition-transform group-hover:scale-110">
                                 {ticket.creator_name?.[0] || 'V'}
@@ -296,7 +296,7 @@ export default function TicketDetail() {
                     return (
                         <div key={msg.id} className={cn("flex group", isMe ? 'justify-end' : 'justify-start')}>
                             <div className={cn(
-                                "max-w-[95%] md:max-w-[85%] rounded-[1rem] md:rounded-[1.5rem] px-4 py-3 md:px-6 md:py-4 shadow-md border transition-all duration-500",
+                                "max-w-[98%] sm:max-w-[90%] md:max-w-[85%] rounded-[1rem] md:rounded-[1.5rem] px-3.5 py-2.5 md:px-6 md:py-4 shadow-md border transition-all duration-500",
                                 isInternalNote
                                     ? 'bg-red-50/80 dark:bg-red-900/20 border-red-200 dark:border-red-800/30 rounded-tl-none'
                                     : isMe
@@ -433,7 +433,7 @@ export default function TicketDetail() {
 
                             <div className="flex-1 relative">
                                 <textarea
-                                    className="w-full min-h-[36px] md:min-h-[40px] max-h-24 py-2 px-4 rounded-xl bg-black/[0.01] dark:bg-white/[0.02] border border-black/5 dark:border-white/5 focus:bg-white transition-all text-[11px] md:text-[12px] font-semibold resize-none scrollbar-none"
+                                    className="w-full min-h-[44px] md:min-h-[40px] max-h-32 py-3 px-4 rounded-xl bg-black/[0.01] dark:bg-white/[0.02] border border-black/5 dark:border-white/5 focus:bg-white transition-all text-[12px] md:text-[13px] font-semibold resize-none scrollbar-none"
                                     placeholder={ticket.status === 'CLOSED' ? t('messaging.detail.closed') : t('messaging.detail.placeholder')}
                                     value={newMessage}
                                     onChange={(e) => {
@@ -455,7 +455,7 @@ export default function TicketDetail() {
                             <button
                                 type="submit"
                                 disabled={sending || (!newMessage.trim() && !selectedFile) || ticket.status === 'CLOSED'}
-                                className="h-9 w-9 md:h-10 md:w-10 flex items-center justify-center bg-black text-white dark:bg-white dark:text-black rounded-xl hover:scale-105 disabled:opacity-30 transition-all shadow-sm flex-shrink-0"
+                                className="h-11 w-11 md:h-10 md:w-10 flex items-center justify-center bg-black text-white dark:bg-white dark:text-black rounded-xl hover:scale-105 disabled:opacity-30 transition-all shadow-sm flex-shrink-0"
                             >
                                 {sending ? (
                                     <Loader2 className="h-4 w-4 animate-spin" />

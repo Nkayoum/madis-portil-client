@@ -133,10 +133,14 @@ export default function ProjectDetail() {
             </Link>
 
             <div className="solaris-glass rounded-[1.5rem] p-5 sm:p-8 border-none shadow-lg relative overflow-hidden w-full">
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-                    <div className="space-y-3">
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-                            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight uppercase leading-tight break-words max-w-full">{project.name}</h1>
+                {/* Subtle Background Pattern */}
+                <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none">
+                    <HardHat className="h-32 w-32 rotate-12" />
+                </div>
+
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
+                    <div className="space-y-4">
+                        <div className="space-y-2">
                             <span className={cn(
                                 "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest shadow-md whitespace-nowrap w-fit",
                                 getStatusColor(project.status)
@@ -144,31 +148,34 @@ export default function ProjectDetail() {
                                 {getStatusIcon(project.status)}
                                 {project.status_display || project.status}
                             </span>
+                            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight uppercase leading-tight break-words max-w-full text-black">
+                                {project.name}
+                            </h1>
                         </div>
                         <Link
                             to={`/dashboard/properties/${project.property}`}
-                            className="flex items-center gap-2.5 text-muted-foreground hover:text-black transition-all group bg-black/5 hover:bg-black/10 px-3 py-1.5 rounded-lg border border-black/5 w-fit max-w-full overflow-hidden"
+                            className="flex items-center gap-2.5 text-muted-foreground hover:text-black transition-all group bg-black/5 hover:bg-black/10 px-3 py-2 rounded-xl border border-black/5 w-fit max-w-full overflow-hidden"
                         >
                             <Building2 className="h-3.5 w-3.5 opacity-40 group-hover:opacity-100" />
                             <span className="text-[9px] font-bold uppercase tracking-widest truncate">{t('project_detail.associated_property')} {project.property_name}</span>
                         </Link>
                     </div>
                     {user?.role === 'ADMIN_MADIS' && (
-                        <div className="flex flex-wrap gap-3">
-                            <button
-                                onClick={handleDelete}
-                                className="inline-flex items-center justify-center rounded-xl text-[9px] font-bold uppercase tracking-widest transition-all border border-rose-500/20 text-rose-600 bg-rose-500/5 shadow-sm hover:bg-rose-600 hover:text-white h-10 px-5 shadow-rose-500/10"
-                            >
-                                <Trash2 className="mr-2 h-3.5 w-3.5" />
-                                {t('project_detail.delete_button')}
-                            </button>
+                        <div className="flex flex-col sm:flex-row gap-3">
                             <Link
                                 to={`/dashboard/projects/${id}/edit`}
-                                className="inline-flex items-center justify-center rounded-xl text-[9px] font-bold uppercase tracking-widest transition-all border border-black/10 bg-black text-white shadow-lg hover:bg-zinc-800 h-10 px-6"
+                                className="flex-1 sm:flex-none inline-flex items-center justify-center rounded-xl text-[9px] font-bold uppercase tracking-widest transition-all bg-black text-white shadow-lg hover:bg-zinc-800 h-11 px-8 active:scale-95"
                             >
                                 <Edit className="mr-2 h-3.5 w-3.5" />
                                 {t('project_detail.edit_button')}
                             </Link>
+                            <button
+                                onClick={handleDelete}
+                                className="flex-1 sm:flex-none inline-flex items-center justify-center rounded-xl text-[9px] font-bold uppercase tracking-widest transition-all border border-rose-500/10 text-rose-600 bg-rose-500/5 hover:bg-rose-500 hover:text-white h-11 px-5 active:scale-95"
+                            >
+                                <Trash2 className="mr-2 h-3.5 w-3.5" />
+                                {t('project_detail.delete_button')}
+                            </button>
                         </div>
                     )}
                 </div>
@@ -288,39 +295,66 @@ export default function ProjectDetail() {
                                 <p className="text-[11px] font-black uppercase tracking-widest">{t('project_detail.no_transaction')}</p>
                             </div>
                         ) : (
-                            <div className="w-full overflow-x-auto no-scrollbar rounded-xl border border-black/5 shadow-inner bg-white/10">
-                                <table className="w-full min-w-[400px]">
-                                    <thead>
-                                        <tr className="border-b border-black/5 text-left bg-black/[0.02]">
-                                            <th className="px-4 py-3 text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-40">{t('project_detail.date_col')}</th>
-                                            <th className="px-4 py-3 text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-40">{t('project_detail.label_col')}</th>
-                                            <th className="px-4 py-3 text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-40 text-right">{t('project_detail.amount_col')}</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-black/5 bg-white/20">
-                                        {transactions.slice(0, 5).map((tx) => (
-                                            <tr key={tx.id} className="hover:bg-black/[0.02] transition-colors group">
-                                                <td className="px-4 py-2.5 whitespace-nowrap text-[10px] font-bold font-mono opacity-60">
-                                                    {format(new Date(tx.date), 'dd/MM/yyyy')}
-                                                </td>
-                                                <td className="px-4 py-2.5">
-                                                    <div className="flex flex-col">
-                                                        <span className="text-[11px] md:text-[12px] font-bold leading-tight group-hover:text-primary transition-colors truncate max-w-[150px] md:max-w-[200px]">{tx.description || tx.category_display}</span>
-                                                        <span className="text-[7px] md:text-[8px] font-bold uppercase tracking-widest opacity-30">{tx.category_display}</span>
-                                                    </div>
-                                                </td>
-                                                <td className={cn(
-                                                    "px-4 py-2.5 text-right font-bold text-xs tracking-tight",
-                                                    tx.type === 'INFLOW' ? 'text-emerald-600' : 'text-rose-600'
-                                                )}>
-                                                    <span className="whitespace-nowrap">{tx.type === 'INFLOW' ? '+' : '-'}{formatCurrency(tx.amount)}</span>
-                                                </td>
+                            <div className="w-full">
+                                <div className="md:hidden space-y-4">
+                                    {transactions.slice(0, 5).map((tx) => (
+                                        <div key={tx.id} className="solaris-glass bg-white/40 p-4 rounded-xl border-none shadow-sm space-y-3">
+                                            <div className="flex justify-between items-start">
+                                                <div className="space-y-1">
+                                                    <span className={cn(
+                                                        "px-2 px-1.5 rounded-full text-[7px] font-bold uppercase tracking-widest",
+                                                        tx.type === 'INFLOW' ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
+                                                    )}>
+                                                        {tx.type === 'INFLOW' ? 'Entrée' : 'Sortie'}
+                                                    </span>
+                                                    <div className="text-[11px] font-bold tracking-tight text-black line-clamp-1">{tx.description || tx.category_display}</div>
+                                                    <div className="text-[7px] font-bold uppercase tracking-widest opacity-30">{tx.category_display}</div>
+                                                </div>
+                                                <div className={cn("text-xs font-bold tracking-tight", tx.type === 'INFLOW' ? "text-emerald-600" : "text-rose-600")}>
+                                                    {tx.type === 'INFLOW' ? '+' : '-'}{formatCurrency(tx.amount)}
+                                                </div>
+                                            </div>
+                                            <div className="flex justify-between items-center text-[8px] font-bold uppercase tracking-widest opacity-40 font-mono">
+                                                <span>{format(new Date(tx.date), 'dd/MM/yyyy')}</span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="hidden md:block overflow-x-auto no-scrollbar rounded-xl border border-black/5 shadow-inner bg-white/10">
+                                    <table className="w-full min-w-[400px]">
+                                        <thead>
+                                            <tr className="border-b border-black/5 text-left bg-black/[0.02]">
+                                                <th className="px-4 py-3 text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-40">{t('project_detail.date_col')}</th>
+                                                <th className="px-4 py-3 text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-40">{t('project_detail.label_col')}</th>
+                                                <th className="px-4 py-3 text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-40 text-right">{t('project_detail.amount_col')}</th>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody className="divide-y divide-black/5 bg-white/20">
+                                            {transactions.slice(0, 5).map((tx) => (
+                                                <tr key={tx.id} className="hover:bg-black/[0.02] transition-colors group">
+                                                    <td className="px-4 py-2.5 whitespace-nowrap text-[10px] font-bold font-mono opacity-60">
+                                                        {format(new Date(tx.date), 'dd/MM/yyyy')}
+                                                    </td>
+                                                    <td className="px-4 py-2.5">
+                                                        <div className="flex flex-col">
+                                                            <span className="text-[11px] md:text-[12px] font-bold leading-tight group-hover:text-primary transition-colors truncate max-w-[150px] md:max-w-[200px]">{tx.description || tx.category_display}</span>
+                                                            <span className="text-[7px] md:text-[8px] font-bold uppercase tracking-widest opacity-30">{tx.category_display}</span>
+                                                        </div>
+                                                    </td>
+                                                    <td className={cn(
+                                                        "px-4 py-2.5 text-right font-bold text-xs tracking-tight",
+                                                        tx.type === 'INFLOW' ? 'text-emerald-600' : 'text-rose-600'
+                                                    )}>
+                                                        <span className="whitespace-nowrap">{tx.type === 'INFLOW' ? '+' : '-'}{formatCurrency(tx.amount)}</span>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
                                 {transactions.length > 5 && (
-                                    <div className="p-4 text-center bg-black/[0.01] border-t border-black/5">
+                                    <div className="p-4 text-center bg-black/[0.01] border-t border-black/5 mt-2 md:mt-0">
                                         <Link to="/dashboard/finance/transactions" className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-black hover:text-primary transition-all flex items-center justify-center gap-2">
                                             {t('project_detail.full_statement')} <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
                                         </Link>

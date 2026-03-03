@@ -21,7 +21,11 @@
         "new": "New",
         "add": "Add",
         "welcome": "Welcome",
-        "admin": "Administrator"
+        "admin": "Administrator",
+        "back": "Previous",
+        "next": "Next",
+        "return": "Back",
+        "proof": "Proof"
     },
     "dashboard": {
         "title": "Finance & Yield",
@@ -111,7 +115,8 @@
                 "asset_desc": "Asset / Analytic Description",
                 "classification": "Classification",
                 "amount": "Amount (EUR)",
-                "registry": "Registry"
+                "registry": "Registry",
+                "proof": "Proof Document"
             },
             "archive": "ARCHIVE",
             "no_desc": "NO DESCRIPTION",
@@ -239,6 +244,28 @@
             "professionnel": "PROFESSIONAL",
             "global": "GLOBAL"
         },
+        "form_tabs": {
+            "info": "Information",
+            "info_short": "Info",
+            "specs": "Specifications",
+            "specs_short": "Specs",
+            "finance": "Finance & Description",
+            "finance_short": "Finance",
+            "media": "Media",
+            "media_short": "Media"
+        },
+        "main_categories": {
+            "managed": "Wealth Management",
+            "managed_desc": "Real estate assets under management (Sale or Rental).",
+            "construction": "Construction Tracking",
+            "construction_desc": "Property with an ongoing construction project."
+        },
+        "management_types": {
+            "sale": "For Sale (Mandate)",
+            "sale_desc": "MaDis mandate for property sale.",
+            "rent": "For Rent (Management)",
+            "rent_desc": "Entrust property for rental management."
+        },
         "property_type": {
             "appartement": "Apartment",
             "maison": "House",
@@ -255,6 +282,23 @@
             "vente": "SALE",
             "location": "RENT",
             "location_vente": "RENT TO OWN"
+        },
+        "update_subtitle": "Update property information",
+        "category_label": "Category",
+        "project_nature": "Project Nature",
+        "select_client": "Select a client...",
+        "details": {
+            "name": "Property Name",
+            "name_ph": "Ex: Lilac Residence..."
+        },
+        "messages": {
+            "create_success": "The property has been added to your portfolio.",
+            "create_success_mgmt": "Management mandate successfully initialized.",
+            "create_success_const": "Construction unit created and indexed.",
+            "create_success_sale": "Sale mandate registered.",
+            "create_error": "An error occurred during creation.",
+            "update_success": "Property information updated successfully.",
+            "update_error": "Error during update."
         }
     },
     "property_detail": {
@@ -266,6 +310,7 @@
         "monthly_rent": "Monthly rent",
         "nightly_rate": "Nightly rate",
         "tabs": {
+            "back": "Back to Portfolio",
             "details": "Details",
             "projects": "Projects",
             "maintenance": "Maintenance",
@@ -294,7 +339,21 @@
             "charges": "Charges",
             "deposit": "Deposit",
             "construction": "Construction",
-            "total_budget": "Total Budget"
+            "total_budget": "Total Budget",
+            "land_verification": "Land Verification",
+            "land_verification_desc": "The land title has been verified by MaDis",
+            "budget_travaux": "Work Budget (Estimated)",
+            "date_start": "Start Date",
+            "date_end_est": "Planned End",
+            "contractor": "Main Contractor",
+            "contractor_ph": "Company or contractor name",
+            "night_price": "Nightly Price (Optional)",
+            "commission": "MaDis Commission",
+            "percentage": "Percentage",
+            "fixed_amount": "Fixed Amount",
+            "commercial_presentation": "Commercial Presentation",
+            "commercial_desc_ph": "Write a captivating description for future buyers or tenants...",
+            "drag_drop_photos": "Drag and drop your photos"
         },
         "finance": {
             "no_data": "No performance data yet",
@@ -327,7 +386,15 @@
             "rate": "Rate",
             "initializing": "Initializing...",
             "distribution": "Distribution",
-            "no_data_chart": "No data"
+            "no_data_chart": "No data",
+            "wallet_info_title": "About Mandate Management",
+            "wallet_info_desc": "This balance represents the funds currently held by MaDis on behalf of this property (collected rents minus charges and fees).",
+            "treasury_balance": "Treasury Balance",
+            "treasury_balance_desc": "Cumulative amount of funds available for this property.",
+            "withdrawals": "Withdrawals",
+            "withdrawals_desc": "Funds transferred to your accounts.",
+            "deposits": "Deposits",
+            "deposits_desc": "Capital contributions and collected rents."
         },
         "operations": {
             "title_sale": "Operations",
@@ -387,7 +454,8 @@
             "final": "Final:",
             "delete": "Delete",
             "no_transaction": "No transaction",
-            "no_transaction_desc": "There are no offers or transactions for this property yet."
+            "no_transaction_desc": "There are no offers or transactions for this property yet.",
+            "confirm_delete": "Delete this transaction?"
         },
         "documents": {
             "title": "Digital Safe",
@@ -413,10 +481,36 @@
             "amount": "Amount (€)",
             "notes": "Notes",
             "cancel": "Cancel",
-            "save": "Save"
+            "payment_proof": "Proof of payment",
+            "upload_proof": "Proof of payment",
+            "placeholder_name": "Name...",
+            "save": "Save",
+            "sale_conclusion": "Sale Conclusion",
+            "final_validation": "Final validation of the transaction.",
+            "final_price": "Final Price Agreed (€)",
+            "final_price_help": "Definitive sale amount.",
+            "sign": "Sign",
+            "proof_payment_req": "Uploading a proof of payment is mandatory to validate your request.",
+            "proof_transfer_req": "Please attach a proof of transfer or receipt to confirm this operation.",
+            "continue_no_file": "Continue without file",
+            "currency_info": "Main display in Euro (€). {{currency}} conversion for information purposes."
+        },
+        "errors": {
+            "not_found": "Property not found.",
+            "id_not_found": "The real estate property (ID: {{id}}) was not found.",
+            "create_fail": "Error during creation.",
+            "confirm_doc_delete": "Delete this document?",
+            "bulk_doc_delete": "Do you want to delete the {{count}} selected documents?",
+            "bulk_doc_delete_success": "{{count}} documents deleted",
+            "status_update_fail": "Error updating status.",
+            "confirm_reject_proof": "Do you want to reject this proof?"
         }
     },
     "projects": {
+        "title": "Project Tracking",
+        "subtitle": "Development projects and work",
+        "maintenance_title": "Maintenance & Upkeep",
+        "maintenance_subtitle": "Technical interventions and maintenance",
         "list_title_construction": "Projects",
         "list_title_maintenance": "Maintenance",
         "list_subtitle_construction": "Tracking your real estate projects.",

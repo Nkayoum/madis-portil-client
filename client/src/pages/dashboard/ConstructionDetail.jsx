@@ -750,96 +750,170 @@ export default function ConstructionDetail() {
                                     {t('construction.detail.finance.financial_flows')}
                                 </h3>
                             </div>
-                            <div className="overflow-x-auto no-scrollbar">
-                                <table className="w-full text-left min-w-[600px] md:min-w-full">
-                                    <thead className="bg-black/[0.02] dark:bg-white/5 text-muted-foreground uppercase text-[7px] md:text-[8px] font-bold tracking-widest">
-                                        <tr>
-                                            <th className="px-5 md:px-6 py-3.5">{t('construction.detail.finance.col_date')}</th>
-                                            <th className="px-5 md:px-6 py-3.5">{t('construction.detail.finance.col_category')}</th>
-                                            <th className="px-5 md:px-6 py-3.5">{t('construction.detail.finance.col_description')}</th>
-                                            <th className="px-5 md:px-6 py-3.5 text-right">{t('construction.detail.finance.col_amount')}</th>
-                                            <th className="px-5 md:px-6 py-3.5 text-right">{t('construction.detail.finance.col_actions')}</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-black/[0.03] dark:divide-white/5">
-                                        {transactions.length > 0 ? (
-                                            transactions.map((tx) => (
-                                                <tr key={tx.id} className="hover:bg-black/[0.01] dark:hover:bg-white/[0.03] transition-colors group">
-                                                    <td className="px-5 md:px-6 py-3.5 whitespace-nowrap text-[9px] md:text-[10px] font-bold font-mono opacity-60">
-                                                        {format(new Date(tx.date), 'dd/MM/yyyy')}
-                                                    </td>
-                                                    <td className="px-5 md:px-6 py-3.5">
-                                                        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[7px] md:text-[8px] font-bold uppercase tracking-widest bg-black text-white">
+                            <div className="w-full">
+                                <div className="md:hidden divide-y divide-black/[0.03] dark:divide-white/5 px-4">
+                                    {transactions.length > 0 ? (
+                                        transactions.map((tx) => (
+                                            <div key={tx.id} className="py-4 space-y-3">
+                                                <div className="flex justify-between items-start">
+                                                    <div className="space-y-1">
+                                                        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[7px] font-bold uppercase tracking-widest bg-black text-white">
                                                             {tx.category_display || tx.category}
                                                         </span>
-                                                    </td>
-                                                    <td className="px-5 md:px-6 py-3.5 text-[9px] md:text-[10px] font-bold text-muted-foreground opacity-40 max-w-[150px] md:max-w-xs truncate uppercase">
-                                                        {tx.description || '-'}
-                                                    </td>
-                                                    <td className="px-5 md:px-6 py-3.5 text-right font-bold text-[10px] md:text-[11px] tracking-tight">
-                                                        {formatCurrency(tx.amount, true)}
-                                                    </td>
-                                                    <td className="px-5 md:px-6 py-3.5 text-right">
-                                                        <div className="flex items-center justify-end gap-2 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
-                                                            {tx.invoice && (
-                                                                <a
-                                                                    href={tx.invoice}
-                                                                    target="_blank"
-                                                                    rel="noopener noreferrer"
-                                                                    title={t('construction.detail.finance.btn_view_proof')}
-                                                                    className="p-2 bg-black/[0.03] dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 rounded-xl transition-all shadow-sm group/btn"
-                                                                >
-                                                                    <Eye className="h-3.5 w-3.5 text-primary group-hover/btn:scale-110 transition-transform" />
-                                                                </a>
-                                                            )}
-
-                                                            {/* Only ADMIN_MADIS can edit transactions */}
-                                                            {user?.role === 'ADMIN_MADIS' && (
-                                                                <button
-                                                                    onClick={() => {
-                                                                        setSelectedTransactionId(tx.id);
-                                                                        setIsEditTransactionModalOpen(true);
-                                                                    }}
-                                                                    className="p-1.5 md:p-2 bg-black/[0.03] dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 rounded-xl transition-all shadow-sm group/btn"
-                                                                    title={t('construction.detail.btn_edit')}
-                                                                >
-                                                                    <Edit className="h-3.5 w-3.5 text-black dark:text-white group-hover/btn:scale-110 transition-transform" />
-                                                                </button>
-                                                            )}
-
-                                                            {/* Both ADMIN_MADIS and CHEF_CHANTIER can delete transactions */}
-                                                            {(user?.role === 'ADMIN_MADIS' || user?.role === 'CHEF_CHANTIER') && (
-                                                                <button
-                                                                    onClick={async () => {
-                                                                        if (!window.confirm(t('construction.detail.finance.confirm_delete_tx'))) return;
-                                                                        try {
-                                                                            await api.delete(`/finance/transactions/${tx.id}/`);
-                                                                            showToast({ message: t('construction.detail.finance.msg_delete_tx_success'), type: 'success' });
-                                                                            fetchSiteDetails();
-                                                                        } catch (err) {
-                                                                            console.error(err);
-                                                                            showToast({ message: t('construction.detail.finance.msg_delete_tx_error'), type: 'error' });
-                                                                        }
-                                                                    }}
-                                                                    className="p-1.5 md:p-2 bg-red-50 dark:bg-red-900/10 hover:bg-red-100 dark:hover:bg-red-900/20 rounded-xl transition-all shadow-sm group/btn"
-                                                                    title={t('construction.detail.btn_delete')}
-                                                                >
-                                                                    <Trash2 className="h-3.5 w-3.5 text-red-500 group-hover/btn:scale-110 transition-transform" />
-                                                                </button>
-                                                            )}
+                                                        <div className="text-[11px] font-bold tracking-tight text-black dark:text-white uppercase line-clamp-2">
+                                                            {tx.description || '-'}
                                                         </div>
+                                                    </div>
+                                                    <div className="text-xs font-bold tracking-tight text-black dark:text-white">
+                                                        {formatCurrency(tx.amount, true)}
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex justify-between items-center text-[8px] font-bold uppercase tracking-widest opacity-40 font-mono">
+                                                    <span>{format(new Date(tx.date), 'dd/MM/yyyy')}</span>
+
+                                                    <div className="flex items-center gap-2">
+                                                        {tx.invoice && (
+                                                            <a
+                                                                href={tx.invoice}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="text-primary hover:underline"
+                                                            >
+                                                                {t('construction.detail.finance.btn_view_proof')}
+                                                            </a>
+                                                        )}
+
+                                                        {user?.role === 'ADMIN_MADIS' && (
+                                                            <button
+                                                                onClick={() => {
+                                                                    setSelectedTransactionId(tx.id);
+                                                                    setIsEditTransactionModalOpen(true);
+                                                                }}
+                                                                className="text-black dark:text-white"
+                                                            >
+                                                                {t('construction.detail.btn_edit')}
+                                                            </button>
+                                                        )}
+
+                                                        {(user?.role === 'ADMIN_MADIS' || user?.role === 'CHEF_CHANTIER') && (
+                                                            <button
+                                                                onClick={async () => {
+                                                                    if (!window.confirm(t('construction.detail.finance.confirm_delete_tx'))) return;
+                                                                    try {
+                                                                        await api.delete(`/finance/transactions/${tx.id}/`);
+                                                                        showToast({ message: t('construction.detail.finance.msg_delete_tx_success'), type: 'success' });
+                                                                        fetchSiteDetails();
+                                                                    } catch (err) {
+                                                                        console.error(err);
+                                                                        showToast({ message: t('construction.detail.finance.msg_delete_tx_error'), type: 'error' });
+                                                                    }
+                                                                }}
+                                                                className="text-rose-500"
+                                                            >
+                                                                {t('construction.detail.btn_delete')}
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )
+                                        )) : (
+                                        <div className="py-20 text-center">
+                                            <p className="text-[10px] font-black uppercase tracking-widest opacity-20">{t('construction.detail.finance.empty_tx')}</p>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="hidden md:block overflow-x-auto no-scrollbar">
+                                    <table className="w-full text-left min-w-[600px] md:min-w-full">
+                                        <thead className="bg-black/[0.02] dark:bg-white/5 text-muted-foreground uppercase text-[7px] md:text-[8px] font-bold tracking-widest">
+                                            <tr>
+                                                <th className="px-5 md:px-6 py-3.5">{t('construction.detail.finance.col_date')}</th>
+                                                <th className="px-5 md:px-6 py-3.5">{t('construction.detail.finance.col_category')}</th>
+                                                <th className="px-5 md:px-6 py-3.5">{t('construction.detail.finance.col_description')}</th>
+                                                <th className="px-5 md:px-6 py-3.5 text-right">{t('construction.detail.finance.col_amount')}</th>
+                                                <th className="px-5 md:px-6 py-3.5 text-right">{t('construction.detail.finance.col_actions')}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-black/[0.03] dark:divide-white/5">
+                                            {transactions.length > 0 ? (
+                                                transactions.map((tx) => (
+                                                    <tr key={tx.id} className="hover:bg-black/[0.01] dark:hover:bg-white/[0.03] transition-colors group">
+                                                        <td className="px-5 md:px-6 py-3.5 whitespace-nowrap text-[9px] md:text-[10px] font-bold font-mono opacity-60">
+                                                            {format(new Date(tx.date), 'dd/MM/yyyy')}
+                                                        </td>
+                                                        <td className="px-5 md:px-6 py-3.5">
+                                                            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[7px] md:text-[8px] font-bold uppercase tracking-widest bg-black text-white">
+                                                                {tx.category_display || tx.category}
+                                                            </span>
+                                                        </td>
+                                                        <td className="px-5 md:px-6 py-3.5 text-[9px] md:text-[10px] font-bold text-muted-foreground opacity-40 max-w-[150px] md:max-w-xs truncate uppercase">
+                                                            {tx.description || '-'}
+                                                        </td>
+                                                        <td className="px-5 md:px-6 py-3.5 text-right font-bold text-[10px] md:text-[11px] tracking-tight">
+                                                            {formatCurrency(tx.amount, true)}
+                                                        </td>
+                                                        <td className="px-5 md:px-6 py-3.5 text-right">
+                                                            <div className="flex items-center justify-end gap-2 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
+                                                                {tx.invoice && (
+                                                                    <a
+                                                                        href={tx.invoice}
+                                                                        target="_blank"
+                                                                        rel="noopener noreferrer"
+                                                                        title={t('construction.detail.finance.btn_view_proof')}
+                                                                        className="p-2 bg-black/[0.03] dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 rounded-xl transition-all shadow-sm group/btn"
+                                                                    >
+                                                                        <Eye className="h-3.5 w-3.5 text-primary group-hover/btn:scale-110 transition-transform" />
+                                                                    </a>
+                                                                )}
+
+                                                                {user?.role === 'ADMIN_MADIS' && (
+                                                                    <button
+                                                                        onClick={() => {
+                                                                            setSelectedTransactionId(tx.id);
+                                                                            setIsEditTransactionModalOpen(true);
+                                                                        }}
+                                                                        className="p-1.5 md:p-2 bg-black/[0.03] dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 rounded-xl transition-all shadow-sm group/btn"
+                                                                        title={t('construction.detail.btn_edit')}
+                                                                    >
+                                                                        <Edit className="h-3.5 w-3.5 text-black dark:text-white group-hover/btn:scale-110 transition-transform" />
+                                                                    </button>
+                                                                )}
+
+                                                                {(user?.role === 'ADMIN_MADIS' || user?.role === 'CHEF_CHANTIER') && (
+                                                                    <button
+                                                                        onClick={async () => {
+                                                                            if (!window.confirm(t('construction.detail.finance.confirm_delete_tx'))) return;
+                                                                            try {
+                                                                                await api.delete(`/finance/transactions/${tx.id}/`);
+                                                                                showToast({ message: t('construction.detail.finance.msg_delete_tx_success'), type: 'success' });
+                                                                                fetchSiteDetails();
+                                                                            } catch (err) {
+                                                                                console.error(err);
+                                                                                showToast({ message: t('construction.detail.finance.msg_delete_tx_error'), type: 'error' });
+                                                                            }
+                                                                        }}
+                                                                        className="p-1.5 md:p-2 bg-red-50 dark:bg-red-900/10 hover:bg-red-100 dark:hover:bg-red-900/20 rounded-xl transition-all shadow-sm group/btn"
+                                                                        title={t('construction.detail.btn_delete')}
+                                                                    >
+                                                                        <Trash2 className="h-3.5 w-3.5 text-red-500 group-hover/btn:scale-110 transition-transform" />
+                                                                    </button>
+                                                                )}
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                ))
+                                            ) : (
+                                                <tr>
+                                                    <td colSpan="5" className="px-8 py-20 text-center">
+                                                        <p className="text-[10px] font-black uppercase tracking-widest opacity-20">{t('construction.detail.finance.empty_tx')}</p>
                                                     </td>
                                                 </tr>
-                                            ))
-                                        ) : (
-                                            <tr>
-                                                <td colSpan="5" className="px-8 py-20 text-center">
-                                                    <p className="text-[10px] font-black uppercase tracking-widest opacity-20">{t('construction.detail.finance.empty_tx')}</p>
-                                                </td>
-                                            </tr>
-                                        )}
-                                    </tbody>
-                                </table>
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
