@@ -10,7 +10,7 @@ import {
     AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine
 } from 'recharts';
 import { format } from 'date-fns';
-import { fr } from 'date-fns/locale';
+import { fr, enUS } from 'date-fns/locale';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { cn, formatCurrency } from '../../lib/utils';
@@ -24,7 +24,9 @@ export default function PropertyDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
     const { user } = useAuth();
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
+    const currentLocale = i18n.language === 'fr' ? fr : enUS;
+    const localeString = i18n.language === 'fr' ? 'fr-FR' : 'en-US';
     const isAdmin = user?.role === 'ADMIN_MADIS';
     const { showToast } = useToast();
     const [property, setProperty] = useState(null);
@@ -988,7 +990,7 @@ export default function PropertyDetail() {
                                                                     tickFormatter={str => {
                                                                         const [y, m] = str.split('-');
                                                                         const date = new Date(y, m - 1);
-                                                                        return date.toLocaleString(t('i18n.language') === 'fr' ? 'fr-FR' : 'en-US', { month: 'short' }).toUpperCase();
+                                                                        return date.toLocaleString(localeString, { month: 'short' }).toUpperCase();
                                                                     }}
                                                                 />
                                                                 <YAxis
@@ -1006,22 +1008,22 @@ export default function PropertyDetail() {
                                                                             return (
                                                                                 <div className="solaris-glass rounded-2xl shadow-xl p-4 text-[10px] space-y-2.5 min-w-[180px] border-none backdrop-blur-xl">
                                                                                     <p className="font-bold border-b border-black/5 pb-1.5 mb-1.5 uppercase tracking-widest text-muted-foreground opacity-60">
-                                                                                        {dateObj.toLocaleString(t('i18n.language') === 'fr' ? 'fr-FR' : 'en-US', { month: 'long', year: 'numeric' })}
+                                                                                        {dateObj.toLocaleString(localeString, { month: 'long', year: 'numeric' })}
                                                                                     </p>
                                                                                     {property.management_type === 'CONSTRUCTION' ? (
                                                                                         <div className="flex justify-between items-center gap-3">
                                                                                             <span className="font-bold uppercase tracking-widest opacity-60">{t('property_detail.finance.expenses')}</span>
-                                                                                            <span className="font-bold text-rose-500 text-base tracking-tight">{d.expenses.toLocaleString()}€</span>
+                                                                                            <span className="font-bold text-rose-500 text-base tracking-tight">{formatCurrency(d.expenses, true)}</span>
                                                                                         </div>
                                                                                     ) : (
                                                                                         <>
                                                                                             <div className="flex justify-between items-center gap-3">
                                                                                                 <span className="font-bold uppercase tracking-widest opacity-60 text-emerald-600">{t('property_detail.finance.revenues')}</span>
-                                                                                                <span className="font-bold text-emerald-600 text-base tracking-tight">{d.revenues.toLocaleString()}€</span>
+                                                                                                <span className="font-bold text-emerald-600 text-base tracking-tight">{formatCurrency(d.revenues, true)}</span>
                                                                                             </div>
                                                                                             <div className="flex justify-between items-center gap-3">
                                                                                                 <span className="font-bold uppercase tracking-widest opacity-40">{t('property_detail.finance.rents')}</span>
-                                                                                                <span className="font-bold text-black/40 text-xs tracking-tight">{d.actual_rent.toLocaleString()}€</span>
+                                                                                                <span className="font-bold text-black/40 text-xs tracking-tight">{formatCurrency(d.actual_rent, true)}</span>
                                                                                             </div>
                                                                                             <div className="flex justify-between items-center gap-3 border-t border-black/5 pt-2 mt-1 underline-offset-4 decoration-2">
                                                                                                 <span className="font-bold uppercase tracking-widest opacity-60">{t('property_detail.finance.rate')}</span>
@@ -1082,7 +1084,7 @@ export default function PropertyDetail() {
                                                         <div key={cat.category} className="space-y-2">
                                                             <div className="flex justify-between items-end">
                                                                 <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">{cat.label || cat.category}</span>
-                                                                <span className="font-bold tracking-tight text-xs">{Number(cat.total).toLocaleString()}€</span>
+                                                                <span className="font-bold tracking-tight text-xs">{formatCurrency(cat.total, true)}</span>
                                                             </div>
                                                             <div className="h-1.5 w-full bg-black/5 rounded-full overflow-hidden">
                                                                 <div
@@ -1139,7 +1141,7 @@ export default function PropertyDetail() {
                                                                 </span>
                                                                 <div className="text-right">
                                                                     <div className={cn("text-base font-bold tracking-tight", op._type === 'SETTLEMENT' ? "text-rose-600" : "text-black")}>
-                                                                        {Number(op.amount).toLocaleString('fr-FR')} €
+                                                                        {formatCurrency(op.amount, true)}
                                                                     </div>
                                                                     <div className="text-[7px] text-muted-foreground uppercase font-bold tracking-widest opacity-40">#{op.id.toString().padStart(6, '0')}</div>
                                                                 </div>
@@ -1147,7 +1149,7 @@ export default function PropertyDetail() {
 
                                                             <div className="space-y-1">
                                                                 <div className="text-[10px] font-bold tracking-tight opacity-70">
-                                                                    {op._type === 'CASH_CALL' ? op.reason : `${format(new Date(op.period_start), 'dd/MM/yy')} - ${format(new Date(op.period_end), 'dd/MM/yy')}`}
+                                                                    {op._type === 'CASH_CALL' ? op.reason : `${format(new Date(op.period_start), 'dd/MM/yy', { locale: currentLocale })} - ${format(new Date(op.period_end), 'dd/MM/yy', { locale: currentLocale })}`}
                                                                 </div>
                                                                 <span className={cn(
                                                                     "inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[7px] font-bold uppercase tracking-widest",
@@ -1245,7 +1247,7 @@ export default function PropertyDetail() {
                                                                     <div className="font-bold text-xs tracking-tight">{cc.reason}</div>
                                                                     <div className="text-[8px] text-muted-foreground uppercase font-bold tracking-widest mt-0.5 opacity-40">#{cc.id.toString().padStart(6, '0')}</div>
                                                                 </td>
-                                                                <td className="px-6 py-5 font-bold text-base tracking-tight">{Number(cc.amount).toLocaleString('fr-FR')} €</td>
+                                                                <td className="px-6 py-5 font-bold text-base tracking-tight">{formatCurrency(cc.amount, true)}</td>
                                                                 <td className="px-6 py-5">
                                                                     <span className={cn(
                                                                         "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[8px] font-bold uppercase tracking-widest",
@@ -1311,10 +1313,10 @@ export default function PropertyDetail() {
                                                                     <span className="font-bold text-[9px] uppercase tracking-widest text-rose-500 block px-3 py-1 rounded-full bg-rose-50 w-fit">{t('property_detail.operations.transfer')}</span>
                                                                 </td>
                                                                 <td className="px-6 py-5">
-                                                                    <div className="font-bold text-xs tracking-tight">{format(new Date(s.period_start), 'dd/MM/yy')} - {format(new Date(s.period_end), 'dd/MM/yy')}</div>
+                                                                    <div className="font-bold text-xs tracking-tight">{format(new Date(s.period_start), 'dd/MM/yy', { locale: currentLocale })} - {format(new Date(s.period_end), 'dd/MM/yy', { locale: currentLocale })}</div>
                                                                     <div className="text-[8px] text-muted-foreground uppercase font-bold tracking-widest mt-0.5 opacity-40">{t('property_detail.operations.regulation')}</div>
                                                                 </td>
-                                                                <td className="px-6 py-5 font-bold text-base tracking-tight text-rose-600">{Number(s.amount).toLocaleString('fr-FR')} €</td>
+                                                                <td className="px-6 py-5 font-bold text-base tracking-tight text-rose-600">{formatCurrency(s.amount, true)}</td>
                                                                 <td className="px-6 py-5">
                                                                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500 text-white text-[8px] font-bold uppercase tracking-widest">
                                                                         <div className="w-1 h-1 rounded-full bg-white animate-pulse" />
@@ -1373,19 +1375,19 @@ export default function PropertyDetail() {
                                                             <div className="text-[10px] font-bold tracking-tight uppercase">{tx.category}</div>
                                                         </div>
                                                         <div className={cn("text-base font-bold tracking-tight", tx.type === 'INFLOW' ? "text-emerald-500" : "text-rose-500")}>
-                                                            {tx.type === 'INFLOW' ? '+' : '-'}{Number(tx.amount).toLocaleString('fr-FR')} €
+                                                            {tx.type === 'INFLOW' ? '+' : '-'}{formatCurrency(tx.amount, true)}
                                                         </div>
                                                     </div>
                                                     <div className="flex justify-between items-center text-[8px] font-bold uppercase tracking-[0.05em] opacity-40">
                                                         <div className="flex items-center gap-1.5">
                                                             <Calendar className="h-2.5 w-2.5" />
                                                             {tx.period_month && tx.period_year ? (
-                                                                `${new Date(2000, tx.period_month - 1).toLocaleString(navigator.language, { month: 'short' }).toUpperCase()} ${tx.period_year}`
+                                                                `${new Date(2000, tx.period_month - 1).toLocaleString(localeString, { month: 'short' }).toUpperCase()} ${tx.period_year}`
                                                             ) : (
                                                                 t('property_detail.operations.regulation')
                                                             )}
                                                         </div>
-                                                        <div className="font-mono">{format(new Date(tx.date), 'dd MMM yy', { locale: fr }).toUpperCase()}</div>
+                                                        <div className="font-mono">{format(new Date(tx.date), 'dd MMM yy', { locale: currentLocale }).toUpperCase()}</div>
                                                     </div>
                                                 </div>
                                             ))
@@ -1424,17 +1426,17 @@ export default function PropertyDetail() {
                                                             "px-6 py-4 font-bold text-base tracking-tight",
                                                             tx.type === 'INFLOW' ? "text-emerald-500" : "text-rose-500"
                                                         )}>
-                                                            {tx.type === 'INFLOW' ? '+' : '-'}{Number(tx.amount).toLocaleString('fr-FR')} €
+                                                            {tx.type === 'INFLOW' ? '+' : '-'}{formatCurrency(tx.amount, true)}
                                                         </td>
                                                         <td className="px-6 py-4 font-bold text-[9px] uppercase tracking-widest text-muted-foreground opacity-60">
                                                             {tx.period_month && tx.period_year ? (
-                                                                `${new Date(2000, tx.period_month - 1).toLocaleString(navigator.language, { month: 'short' }).toUpperCase()} ${tx.period_year}`
+                                                                `${new Date(2000, tx.period_month - 1).toLocaleString(localeString, { month: 'short' }).toUpperCase()} ${tx.period_year}`
                                                             ) : (
                                                                 t('property_detail.operations.regulation')
                                                             )}
                                                         </td>
                                                         <td className="px-6 py-4 text-right font-bold text-[10px] tracking-tight">
-                                                            {format(new Date(tx.date), 'dd MMM yy', { locale: fr }).toUpperCase()}
+                                                            {format(new Date(tx.date), 'dd MMM yy', { locale: currentLocale }).toUpperCase()}
                                                         </td>
                                                     </tr>
                                                 ))}
@@ -1551,14 +1553,14 @@ export default function PropertyDetail() {
                                                         <span className="text-[7px] md:text-[8px] font-bold uppercase tracking-widest opacity-40">{t('property_detail.details.total_budget')}</span>
                                                         <div className="flex items-center gap-1 font-bold text-[9px] md:text-xs tracking-tight">
                                                             <Euro className="h-2.5 w-2.5 text-emerald-500" />
-                                                            <span>{project.budget ? `${Number(project.budget).toLocaleString('fr-FR')} €` : 'N/A'}</span>
+                                                            <span>{project.budget ? formatCurrency(project.budget, true) : 'N/A'}</span>
                                                         </div>
                                                     </div>
                                                     <div className="flex flex-col gap-0.5">
                                                         <span className="text-[7px] md:text-[8px] font-bold uppercase tracking-widest opacity-40">{t('property_detail.projects.start')}</span>
                                                         <div className="flex items-center gap-1 font-bold text-[9px] md:text-xs tracking-tight">
                                                             <Clock className="h-2.5 w-2.5 text-blue-500" />
-                                                            <span>{project.start_date ? format(new Date(project.start_date), 'd MMM yy', { locale: fr }).toUpperCase() : 'N/A'}</span>
+                                                            <span>{project.start_date ? format(new Date(project.start_date), 'd MMM yy', { locale: currentLocale }).toUpperCase() : 'N/A'}</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1649,7 +1651,7 @@ export default function PropertyDetail() {
                                                             </div>
                                                             <div className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60 flex items-center gap-1.5 mt-1">
                                                                 <Clock className="h-2.5 w-2.5" />
-                                                                {format(new Date(tx.created_at), 'dd/MM/yy')}
+                                                                {format(new Date(tx.created_at), 'dd/MM/yy', { locale: currentLocale })}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1657,9 +1659,9 @@ export default function PropertyDetail() {
                                                     <div className="flex flex-row md:items-center justify-between lg:justify-end gap-6 md:gap-8">
                                                         <div className="text-left md:text-right">
                                                             <div className="text-[7px] md:text-[8px] font-bold uppercase tracking-widest opacity-40 mb-0.5">{t('property_detail.pipeline.offer')}</div>
-                                                            <div className="text-lg md:text-xl font-bold tracking-tight text-black">{Number(tx.asking_price).toLocaleString('fr-FR')} €</div>
+                                                            <div className="text-lg md:text-xl font-bold tracking-tight text-black">{formatCurrency(tx.asking_price, true)}</div>
                                                             {tx.final_price && tx.status === 'SIGNE' && (
-                                                                <div className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-emerald-600 mt-0.5">{t('property_detail.pipeline.final')} {Number(tx.final_price).toLocaleString('fr-FR')} €</div>
+                                                                <div className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-emerald-600 mt-0.5">{t('property_detail.pipeline.final')} {formatCurrency(tx.final_price, true)}</div>
                                                             )}
                                                         </div>
 
@@ -1872,7 +1874,7 @@ export default function PropertyDetail() {
                                             </div>
                                         </div>
                                         <div className="mt-auto pt-4 border-t border-black/5 flex items-center justify-between">
-                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-40">{format(new Date(doc.uploaded_at || new Date()), 'dd/MM/yy')}</span>
+                                            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest opacity-40">{format(new Date(doc.uploaded_at || new Date()), 'dd/MM/yy', { locale: currentLocale })}</span>
                                             <a
                                                 href={doc.file}
                                                 target="_blank"

@@ -8,7 +8,7 @@ import {
     Euro, CheckCircle, ArrowRight, Eye, Phone, Mail, User, MessageSquare,
     ShieldCheck, FileText, Download
 } from 'lucide-react';
-import { cn } from '../../lib/utils';
+import { cn, formatCurrency } from '../../lib/utils';
 
 const API = 'http://172.20.10.2:8000/api/v1';
 
@@ -95,9 +95,9 @@ export default function Marketplace() {
 
     const getPrice = (p) => {
         if (p.transaction_nature === 'VENTE' && p.prix_vente)
-            return `${Number(p.prix_vente).toLocaleString('fr-FR')} €`;
+            return formatCurrency(p.prix_vente, true);
         if (p.transaction_nature === 'LOCATION' && p.loyer_mensuel)
-            return `${Number(p.loyer_mensuel).toLocaleString('fr-FR')} €/mois`;
+            return `${formatCurrency(p.loyer_mensuel, true)}/mois`;
         return null;
     };
 
@@ -348,7 +348,7 @@ export default function Marketplace() {
                                     </div>
                                     {selectedProp.prix_nuitee && selectedProp.transaction_nature === 'LOCATION' && (
                                         <div className="absolute top-8 left-8 px-4 py-2 rounded-xl bg-white/90 backdrop-blur-md shadow-lg border border-white/10">
-                                            <span className="text-sm font-black text-foreground uppercase tracking-tight">{Number(selectedProp.prix_nuitee).toLocaleString('fr-FR')} €/nuit</span>
+                                            <span className="text-sm font-black text-foreground uppercase tracking-tight">{formatCurrency(selectedProp.prix_nuitee, true)}/nuit</span>
                                         </div>
                                     )}
                                 </div>

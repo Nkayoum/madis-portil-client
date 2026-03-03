@@ -338,6 +338,7 @@
             "no_description": "Aucune description détaillée.",
             "sale": "Vente",
             "asking_price": "Mise en vente",
+            "sale_price": "Prix de vente",
             "fees": "Honoraires/Frais",
             "negotiable": "Négociable",
             "rental": "Location",
@@ -359,7 +360,8 @@
             "fixed_amount": "Montant Fixe",
             "commercial_presentation": "Présentation Commerciale",
             "commercial_desc_ph": "Rédigez une description captivante pour les futurs acquéreurs ou locataires...",
-            "drag_drop_photos": "Glisser-déposer vos photos"
+            "drag_drop_photos": "Glisser-déposer vos photos",
+            "upload_info": "JPG, PNG, WEBP • Max 10MB"
         },
         "finance": {
             "no_data": "Pas encore de données de performance",
@@ -1318,9 +1320,13 @@
         "label_name": "Nom du chantier *",
         "ph_name": "Ex: Rénovation Bâtiment A",
         "label_budget": "Budget estimé (€)",
+        "ph_budget": "Ex: 50000",
         "label_address": "Adresse *",
+        "ph_address": "Numéro et nom de rue",
         "label_city": "Ville *",
+        "ph_city": "Ville",
         "label_postal": "CP *",
+        "ph_postal": "Code postal",
         "label_start": "Début",
         "label_end": "Fin (Est.)",
         "label_desc": "Description",

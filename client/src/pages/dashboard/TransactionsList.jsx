@@ -10,7 +10,7 @@ import {
 import { format } from 'date-fns';
 import { fr, enUS } from 'date-fns/locale';
 import { useAuth } from '../../context/AuthContext';
-import { cn } from '../../lib/utils';
+import { cn, formatCurrency } from '../../lib/utils';
 import { useTranslation } from 'react-i18next';
 
 export default function TransactionsList() {
@@ -186,7 +186,7 @@ export default function TransactionsList() {
                                         <div className="space-y-1">
                                             <div className="text-[10px] font-black uppercase tracking-tighter opacity-60">
                                                 {txn.period_month && txn.period_year ? (
-                                                    `${new Date(2000, txn.period_month - 1).toLocaleString(i18n.language === 'fr' ? 'fr-FR' : 'en-US', { month: 'short' })} ${txn.period_year}`
+                                                    `${new Date(2000, txn.period_month - 1).toLocaleString(i18n.language === 'fr' ? 'fr-FR' : 'en-US', { month: 'short' }).toUpperCase()} ${txn.period_year}`
                                                 ) : (
                                                     t('finance.transactions_list.archive')
                                                 )}
@@ -201,7 +201,7 @@ export default function TransactionsList() {
                                                 "text-lg font-black tracking-tighter",
                                                 txn.type === 'INFLOW' ? 'text-emerald-500' : 'text-[#ff0048]'
                                             )}>
-                                                {txn.type === 'INFLOW' ? '+' : '-'}{Number(txn.amount).toLocaleString(i18n.language === 'fr' ? 'fr-FR' : 'en-US', { minimumFractionDigits: 2 })}€
+                                                {txn.type === 'INFLOW' ? '+' : '-'}{formatCurrency(txn.amount, true)}
                                             </div>
                                             <span className={cn(
                                                 "inline-block px-2 py-0.5 rounded-md text-[7px] font-black uppercase tracking-widest mt-1",
@@ -262,7 +262,7 @@ export default function TransactionsList() {
                                     <td className="px-10 py-6 whitespace-nowrap">
                                         <div className="text-[12px] font-black uppercase tracking-tighter opacity-80">
                                             {txn.period_month && txn.period_year ? (
-                                                `${new Date(2000, txn.period_month - 1).toLocaleString(i18n.language === 'fr' ? 'fr-FR' : 'en-US', { month: 'short' })} ${txn.period_year}`
+                                                `${new Date(2000, txn.period_month - 1).toLocaleString(i18n.language === 'fr' ? 'fr-FR' : 'en-US', { month: 'short' }).toUpperCase()} ${txn.period_year}`
                                             ) : (
                                                 t('finance.transactions_list.archive')
                                             )}
@@ -300,7 +300,7 @@ export default function TransactionsList() {
                                                 "text-[18px] font-black tracking-tighter",
                                                 txn.type === 'INFLOW' ? 'text-emerald-600' : 'text-rose-600'
                                             )}>
-                                                {txn.type === 'INFLOW' ? '+' : '-'}{Number(txn.amount).toLocaleString(i18n.language === 'fr' ? 'fr-FR' : 'en-US', { minimumFractionDigits: 2 })}€
+                                                {txn.type === 'INFLOW' ? '+' : '-'}{formatCurrency(txn.amount, true)}
                                             </span>
                                         </div>
                                     </td>

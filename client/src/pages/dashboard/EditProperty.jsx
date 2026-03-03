@@ -786,8 +786,8 @@ export default function EditProperty() {
                                                             </div>
                                                         </div>
                                                         <div className="grid gap-3">
-                                                            <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">{t('property_detail.details.contractor') || 'Entrepreneur Principal'}</label>
-                                                            <input type="text" name="nom_entrepreneur" className={inputClasses} placeholder={t('property_detail.details.contractor_ph') || "Nom de l'entreprise ou de l'entrepreneur"} value={formData.nom_entrepreneur} onChange={handleChange} />
+                                                            <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">{t('property_detail.details.contractor')}</label>
+                                                            <input type="text" name="nom_entrepreneur" className={inputClasses} placeholder={t('property_detail.details.contractor_ph')} value={formData.nom_entrepreneur} onChange={handleChange} />
                                                         </div>
                                                     </div>
                                                 ) : formData.transaction_nature === 'VENTE' ? (
@@ -803,13 +803,13 @@ export default function EditProperty() {
                                                         </div>
                                                         <label className="flex items-center gap-3 p-4 rounded-xl border border-border/50 hover:bg-muted/20 cursor-pointer group transition-all">
                                                             <input type="checkbox" checked={formData.negociable} onChange={e => setFormData(p => ({ ...p, negociable: e.target.checked }))} className="accent-primary h-5 w-5 rounded" />
-                                                            <span className="text-xs font-black uppercase tracking-wider group-hover:text-primary transition-colors">{t('property_detail.details.negotiable') || 'Prix négociable'}</span>
+                                                            <span className="text-xs font-black uppercase tracking-wider group-hover:text-primary transition-colors">{t('property_detail.details.negotiable')}</span>
                                                         </label>
                                                     </div>
                                                 ) : (
                                                     <div className="grid gap-6">
                                                         <div className="grid gap-3">
-                                                            <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">{t('property_detail.details.rent')} <span className="text-primary">*</span></label>
+                                                            <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">{t('property_detail.details.monthly_rent')} <span className="text-primary">*</span></label>
                                                             <div className="relative">
                                                                 <input type="number" name="loyer_mensuel" required className={cn(inputClasses, "pl-12 text-lg font-bold shadow-inner")} placeholder="0.00" value={formData.loyer_mensuel} onChange={handleChange} />
                                                                 <div className="absolute left-4 top-1/2 -translate-y-1/2 font-black text-primary text-sm flex items-center gap-1">
@@ -818,7 +818,7 @@ export default function EditProperty() {
                                                             </div>
                                                         </div>
                                                         <div className="grid gap-3">
-                                                            <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">{t('property_detail.details.night_price') || 'Prix Nuitée (Optionnel)'}</label>
+                                                            <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">{t('property_detail.details.night_price')}</label>
                                                             <div className="relative">
                                                                 <input type="number" name="prix_nuitee" className={cn(inputClasses, "pl-12")} placeholder="0.00" value={formData.prix_nuitee} onChange={handleChange} />
                                                                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground text-sm flex items-center gap-1">
@@ -834,13 +834,13 @@ export default function EditProperty() {
                                         <div className="space-y-8">
                                             <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/70 flex items-center gap-3">
                                                 <span className="p-1.5 bg-primary/10 rounded-md"><Percent className="h-3.5 w-3.5 text-primary" /></span>
-                                                {t('property_detail.details.commission') || 'Commission MaDis'}
+                                                {t('property_detail.details.commission')}
                                             </h3>
 
                                             <div className="bg-muted/10 rounded-3xl p-8 border border-border/50 space-y-6">
                                                 <div className="p-1 bg-background border border-border/50 rounded-xl flex gap-1">
-                                                    <button type="button" onClick={() => setFormData(p => ({ ...p, commission_type: 'POURCENTAGE' }))} className={cn("flex-1 py-2.5 rounded-lg text-[10px] font-black tracking-widest uppercase transition-all", formData.commission_type === 'POURCENTAGE' ? "bg-primary text-white shadow-md" : "text-muted-foreground hover:bg-muted")}>{t('property_detail.details.percentage') || 'Pourcentage'}</button>
-                                                    <button type="button" onClick={() => setFormData(p => ({ ...p, commission_type: 'FIXE' }))} className={cn("flex-1 py-2.5 rounded-lg text-[10px] font-black tracking-widest uppercase transition-all", formData.commission_type === 'FIXE' ? "bg-primary text-white shadow-md" : "text-muted-foreground hover:bg-muted")}>{t('property_detail.details.fixed_amount') || 'Montant Fixe'}</button>
+                                                    <button type="button" onClick={() => setFormData(p => ({ ...p, commission_type: 'POURCENTAGE' }))} className={cn("flex-1 py-2.5 rounded-lg text-[10px] font-black tracking-widest uppercase transition-all", formData.commission_type === 'POURCENTAGE' ? "bg-primary text-white shadow-md" : "text-muted-foreground hover:bg-muted")}>{t('property_detail.details.percentage')}</button>
+                                                    <button type="button" onClick={() => setFormData(p => ({ ...p, commission_type: 'FIXE' }))} className={cn("flex-1 py-2.5 rounded-lg text-[10px] font-black tracking-widest uppercase transition-all", formData.commission_type === 'FIXE' ? "bg-primary text-white shadow-md" : "text-muted-foreground hover:bg-muted")}>{t('property_detail.details.fixed_amount')}</button>
                                                 </div>
 
                                                 {formData.commission_type === 'POURCENTAGE' ? (
@@ -861,9 +861,9 @@ export default function EditProperty() {
                                     <div className="pt-8 border-t border-border/50 space-y-4">
                                         <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/70 flex items-center gap-3">
                                             <span className="p-1.5 bg-primary/10 rounded-md"><Tag className="h-3.5 w-3.5 text-primary" /></span>
-                                            {t('property_detail.details.commercial_presentation') || 'Présentation Commerciale'}
+                                            {t('property_detail.details.commercial_presentation')}
                                         </h3>
-                                        <textarea name="description" rows="6" className={cn(inputClasses, "h-auto py-4 leading-relaxed resize-none")} placeholder={t('property_detail.details.commercial_desc_ph') || "Rédigez une description captivante pour les futurs acquéreurs ou locataires..."} value={formData.description} onChange={handleChange} />
+                                        <textarea name="description" rows="6" className={cn(inputClasses, "h-auto py-4 leading-relaxed resize-none")} placeholder={t('property_detail.details.commercial_desc_ph')} value={formData.description} onChange={handleChange} />
                                     </div>
                                 </div>
                             )}
@@ -880,8 +880,8 @@ export default function EditProperty() {
                                             <div className="h-20 w-20 bg-background rounded-full shadow-lg flex items-center justify-center mx-auto mb-6 group-hover:shadow-primary/20">
                                                 <ImageIcon className="h-8 w-8 text-primary" />
                                             </div>
-                                            <span className="text-lg font-black text-foreground uppercase tracking-widest block">{t('property_detail.details.drag_drop_photos') || 'Glisser-déposer vos photos'}</span>
-                                            <span className="text-xs text-muted-foreground font-medium mt-3 block px-4 py-1.5 bg-background/50 rounded-full border border-border/50 inline-block">JPG, PNG, WEBP • Max 10MB</span>
+                                            <span className="text-lg font-black text-foreground uppercase tracking-widest block">{t('property_detail.details.drag_drop_photos')}</span>
+                                            <span className="text-xs text-muted-foreground font-medium mt-3 block px-4 py-1.5 bg-background/50 rounded-full border border-border/50 inline-block">{t('property_detail.details.upload_info') || 'JPG, PNG, WEBP • Max 10MB'}</span>
                                         </div>
                                     </div>
 

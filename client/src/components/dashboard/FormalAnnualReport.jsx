@@ -123,7 +123,7 @@ export default function FormalAnnualReport({ data, selectedYear, letterheadUrl, 
                             {revenueCategories.map(cat => (
                                 <tr key={cat.category} style={{ borderBottom: '1px solid #eee' }}>
                                     <td style={{ padding: '6px 8px', borderRight: '1px solid #ddd' }}>{cat.label}</td>
-                                    <td style={{ padding: '6px 8px', textAlign: 'right', fontWeight: 700 }}>{cat.total.toLocaleString()} €</td>
+                                    <td style={{ padding: '6px 8px', textAlign: 'right', fontWeight: 700 }}>{formatCurrency(cat.total, true)}</td>
                                 </tr>
                             ))}
                             {revenueCategories.length === 0 && (
@@ -131,7 +131,7 @@ export default function FormalAnnualReport({ data, selectedYear, letterheadUrl, 
                             )}
                             <tr style={{ background: '#f9fafb', fontWeight: 900, fontStyle: 'italic' }}>
                                 <td style={{ padding: '6px 8px', textAlign: 'right', borderRight: '1px solid #ddd' }}>SOUS-TOTAL RECETTES</td>
-                                <td style={{ padding: '6px 8px', textAlign: 'right', color: '#047857', textDecoration: 'underline' }}>{totalRevenue.toLocaleString()} €</td>
+                                <td style={{ padding: '6px 8px', textAlign: 'right', color: '#047857', textDecoration: 'underline' }}>{formatCurrency(totalRevenue, true)}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -151,7 +151,7 @@ export default function FormalAnnualReport({ data, selectedYear, letterheadUrl, 
                             {expenseCategories.map(cat => (
                                 <tr key={cat.category} style={{ borderBottom: '1px solid #eee' }}>
                                     <td style={{ padding: '6px 8px', borderRight: '1px solid #ddd' }}>{cat.label}</td>
-                                    <td style={{ padding: '6px 8px', textAlign: 'right', fontWeight: 700 }}>{cat.total.toLocaleString()} €</td>
+                                    <td style={{ padding: '6px 8px', textAlign: 'right', fontWeight: 700 }}>{formatCurrency(cat.total, true)}</td>
                                 </tr>
                             ))}
                             {expenseCategories.length === 0 && (
@@ -159,7 +159,7 @@ export default function FormalAnnualReport({ data, selectedYear, letterheadUrl, 
                             )}
                             <tr style={{ background: '#f9fafb', fontWeight: 900, fontStyle: 'italic' }}>
                                 <td style={{ padding: '6px 8px', textAlign: 'right', borderRight: '1px solid #ddd' }}>SOUS-TOTAL DÉPENSES</td>
-                                <td style={{ padding: '6px 8px', textAlign: 'right', color: '#be123c', textDecoration: 'underline' }}>{totalExpense.toLocaleString()} €</td>
+                                <td style={{ padding: '6px 8px', textAlign: 'right', color: '#be123c', textDecoration: 'underline' }}>{formatCurrency(totalExpense, true)}</td>
                             </tr>
                         </tbody>
                     </table>
