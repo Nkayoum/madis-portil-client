@@ -29,11 +29,6 @@ export default function TicketDetail() {
     const messagesEndRef = useRef(null);
     const fileInputRef = useRef(null);
 
-    useEffect(() => {
-        fetchTicketData();
-        markNotificationsAsRead();
-    }, [fetchTicketData, markNotificationsAsRead]);
-
     const markNotificationsAsRead = useCallback(async () => {
         try {
             await api.post('/notifications/mark_as_read_by_link/', {
@@ -59,6 +54,11 @@ export default function TicketDetail() {
             setLoading(false);
         }
     }, [id, t]);
+
+    useEffect(() => {
+        fetchTicketData();
+        markNotificationsAsRead();
+    }, [fetchTicketData, markNotificationsAsRead]);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

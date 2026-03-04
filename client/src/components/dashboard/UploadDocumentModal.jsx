@@ -141,11 +141,23 @@ export default function UploadDocumentModal({ isOpen, onClose, propertyId, siteI
                     </div>
 
                     <div className="flex justify-end gap-3 pt-4 border-t border-black/5 dark:border-white/[0.06]">
-                        <button type="button" onClick={onClose} className="inline-flex items-center justify-center rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border border-black/5 dark:border-white/10 bg-white dark:bg-white/10 shadow-sm hover:bg-black/5 dark:hover:bg-white/20 h-11 px-6 dark:text-white">
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="inline-flex items-center justify-center rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border border-black/5 dark:border-white/10 bg-white dark:bg-white/10 shadow-sm hover:bg-black/5 dark:hover:bg-white/20 h-11 px-6 dark:text-white active:scale-95 transition-all"
+                        >
                             {t('upload_document_modal.btn_cancel')}
                         </button>
-                        <button type="submit" disabled={loading} className="inline-flex items-center justify-center rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all bg-primary text-white shadow-lg shadow-primary/20 dark:shadow-[0_0_20px_rgba(236,72,153,0.3)] hover:shadow-xl h-11 px-8 disabled:opacity-50">
-                            {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('upload_document_modal.btn_sending')}</> : <><Upload className="mr-2 h-4 w-4" /> {t('upload_document_modal.btn_send')}</>}
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="inline-flex items-center justify-center rounded-xl text-[10px] font-black uppercase tracking-widest transition-all bg-black text-white shadow-lg hover:bg-zinc-800 h-11 px-8 disabled:opacity-50 active:scale-95 transition-all"
+                        >
+                            {loading ? (
+                                <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('upload_document_modal.btn_sending')}</>
+                            ) : (
+                                <><Upload className="mr-2 h-4 w-4" /> {t('upload_document_modal.btn_send')}</>
+                            )}
                         </button>
                     </div>
                 </form>

@@ -256,11 +256,11 @@ export default function UploadDocument() {
                         </div>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row gap-4 pt-12 mt-12 border-t border-black/5 dark:border-white/5">
+                    <div className="flex items-center justify-end gap-3 pt-8 mt-8 border-t border-black/5 dark:border-white/5">
                         <button
                             type="button"
                             onClick={() => navigate(propertyId ? `/dashboard/properties/${propertyId}` : "/dashboard/documents")}
-                            className="flex-1 h-16 rounded-2xl bg-black/5 dark:bg-white/5 text-black dark:text-white font-black uppercase tracking-widest text-[11px] hover:bg-black/10 dark:hover:bg-white/10 transition-all"
+                            className="inline-flex items-center justify-center rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border border-black/5 dark:border-white/10 bg-white dark:bg-white/10 shadow-sm hover:bg-black/5 dark:hover:bg-white/20 h-11 px-6 dark:text-white active:scale-95"
                         >
                             {t('documents.upload.btn_cancel')}
                         </button>
@@ -268,8 +268,8 @@ export default function UploadDocument() {
                             type="submit"
                             disabled={loading}
                             className={cn(
-                                "flex-[2] h-16 rounded-2xl bg-black dark:bg-white text-white dark:text-black font-black uppercase tracking-widest text-[11px] flex items-center justify-center transition-all group hover:scale-[1.02] active:scale-[0.98] shadow-xl",
-                                loading ? "opacity-70 cursor-not-allowed" : "hover:shadow-2xl hover:shadow-primary/20"
+                                "inline-flex items-center justify-center rounded-xl text-[10px] font-black uppercase tracking-widest transition-all bg-black text-white shadow-lg shadow-black/10 dark:shadow-white/5 hover:bg-zinc-800 h-11 px-8 active:scale-95 transition-all group",
+                                loading && "opacity-70 cursor-not-allowed"
                             )}
                         >
                             {loading ? (
@@ -279,7 +279,7 @@ export default function UploadDocument() {
                                 </>
                             ) : (
                                 <>
-                                    <Upload className="mr-3 h-4 w-4 group-hover:-translate-y-1 transition-transform" />
+                                    <Upload className="mr-2.5 h-3.5 w-3.5 group-hover:-translate-y-0.5 transition-transform" />
                                     {t('documents.upload.btn_submit')}
                                 </>
                             )}

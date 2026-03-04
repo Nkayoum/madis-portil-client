@@ -96,7 +96,7 @@ export default function UsersList() {
                         <Users className="h-4 w-4 text-primary" />
                         <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.3em] text-primary">{t('users.list.overview')}</span>
                     </div>
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-tight md:leading-none">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-tight md:leading-none">
                         {t('users.list.title')} <span className="opacity-40">{t('users.list.subtitle')}</span>
                     </h1>
                 </div>

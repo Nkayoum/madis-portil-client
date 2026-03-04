@@ -94,7 +94,7 @@ export default function PropertiesList() {
         <div className="space-y-6 animate-fade-in p-4 md:p-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6">
                 <div>
-                    <h1 className="text-xl md:text-2xl font-bold tracking-tight mb-0.5 uppercase">{t('properties.list_title')}</h1>
+                    <h1 className="text-xl md:text-2xl font-black tracking-tight mb-0.5 uppercase">{t('properties.list_title')}</h1>
                     <p className="text-[9px] text-muted-foreground font-semibold uppercase tracking-widest opacity-40">{t('properties.list_subtitle')}</p>
                 </div>
                 <div className="flex flex-col md:flex-row items-start md:items-center gap-3">

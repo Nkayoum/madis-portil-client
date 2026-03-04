@@ -478,7 +478,7 @@ export default function PropertyDetail() {
                                         </span>
                                     )}
                                 </div>
-                                <h1 className="text-xl sm:text-2xl md:text-4xl font-bold text-white tracking-tight drop-shadow-2xl leading-tight">
+                                <h1 className="text-xl sm:text-2xl md:text-4xl font-black text-white tracking-tight drop-shadow-2xl leading-tight">
                                     {property.name}
                                 </h1>
                                 <div className="flex items-center gap-1.5 text-white/90 font-bold uppercase tracking-widest text-[8px] md:text-[9px]">
@@ -487,25 +487,27 @@ export default function PropertyDetail() {
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-2.5 pointer-events-auto mt-2 md:mt-0">
-                                {isAdmin && (
-                                    <>
-                                        <button
-                                            onClick={handleDelete}
-                                            className="flex-1 md:flex-none h-10 md:h-11 px-4 md:px-6 bg-white/10 text-white rounded-xl text-[8px] md:text-[10px] font-bold uppercase tracking-widest backdrop-blur-xl border border-white/10 hover:bg-rose-500 hover:border-rose-400 transition-all flex items-center justify-center gap-2 active:scale-95 shadow-lg"
-                                        >
-                                            <Trash2 className="h-3.5 w-3.5" />
-                                            <span className="sm:inline">{t('property_detail.delete_button')}</span>
-                                        </button>
-                                        <Link
-                                            to={`/dashboard/properties/${id}/edit`}
-                                            className="flex-1 md:flex-none h-10 md:h-11 px-5 md:px-8 bg-white text-black rounded-xl text-[8px] md:text-[10px] font-bold uppercase tracking-widest shadow-xl hover:bg-slate-100 transition-all flex items-center justify-center gap-2 active:scale-95"
-                                        >
-                                            <Edit className="h-3.5 w-3.5" />
-                                            {t('property_detail.edit_button')}
-                                        </Link>
-                                    </>
-                                )}
+                            <div className="flex items-center justify-start lg:justify-end w-full lg:w-auto mt-2 pointer-events-auto">
+                                <div className="solaris-glass p-1.5 md:p-2 rounded-[2rem] border border-white/20 dark:border-white/10 shadow-2xl flex flex-row items-center gap-2 overflow-x-auto no-scrollbar max-w-full w-fit">
+                                    {isAdmin && (
+                                        <>
+                                            <Link
+                                                to={`/dashboard/properties/${id}/edit`}
+                                                className="inline-flex items-center justify-center rounded-xl text-[9px] font-bold uppercase tracking-widest transition-all bg-black text-white shadow-lg hover:bg-zinc-800 h-11 px-8 active:scale-95 whitespace-nowrap shrink-0"
+                                            >
+                                                <Edit className="mr-2 h-3.5 w-3.5" />
+                                                {t('property_detail.edit_button')}
+                                            </Link>
+                                            <button
+                                                onClick={handleDelete}
+                                                className="inline-flex items-center justify-center rounded-xl text-[9px] font-bold uppercase tracking-widest transition-all border border-rose-500/10 text-rose-600 bg-rose-500/5 hover:bg-rose-500 hover:text-white h-11 px-5 active:scale-95 shrink-0"
+                                            >
+                                                <Trash2 className="h-3.5 w-3.5 mr-2" />
+                                                {t('property_detail.delete_button')}
+                                            </button>
+                                        </>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -552,14 +554,14 @@ export default function PropertyDetail() {
                             className={cn(
                                 "flex items-center gap-2.5 pb-4 border-b-2 transition-all group relative",
                                 activeTab === tab.id
-                                    ? "border-black text-black"
-                                    : "border-transparent text-muted-foreground hover:text-black"
+                                    ? "border-black text-black dark:border-white dark:text-white"
+                                    : "border-transparent text-muted-foreground hover:text-black dark:hover:text-white"
                             )}
                         >
                             <tab.icon className={cn("h-3.5 w-3.5 shrink-0", activeTab === tab.id ? "text-primary" : "text-muted-foreground opacity-40 group-hover:opacity-100")} />
                             <span className="text-[10px] font-bold uppercase tracking-widest whitespace-nowrap">{tab.label}</span>
                             {activeTab === tab.id && (
-                                <div className="absolute bottom-[-2px] left-0 right-0 h-0.5 bg-black" />
+                                <div className="absolute bottom-[-2px] left-0 right-0 h-0.5 bg-black dark:bg-white" />
                             )}
                         </button>
                     ))}
@@ -1108,7 +1110,7 @@ export default function PropertyDetail() {
                                 {
                                     (user?.role === 'ADMIN_MADIS' || cashCalls.length > 0 || settlements.length > 0) && (
                                         <div className="solaris-glass rounded-[1.5rem] overflow-hidden border-none shadow-lg">
-                                            <div className="p-5 md:p-6 border-b border-black/5 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white/30 backdrop-blur-md">
+                                            <div className="p-5 md:p-6 border-b border-black/5 dark:border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white/30 dark:bg-black/60 backdrop-blur-md">
                                                 <div className="space-y-0.5">
                                                     <h3 className="font-bold text-base md:text-lg flex items-center gap-3 uppercase tracking-tight">
                                                         <div className="p-2 rounded-lg bg-black text-white shadow-md">
@@ -1123,7 +1125,7 @@ export default function PropertyDetail() {
                                                     {t('property_detail.operations.in_progress')}
                                                 </div>
                                             </div>
-                                            <div className="md:hidden divide-y divide-black/5 bg-white/20">
+                                            <div className="md:hidden divide-y divide-black/5 dark:divide-white/5 bg-white/20 dark:bg-black/40">
                                                 {[
                                                     ...cashCalls.filter(cc => cc.status !== 'PAID' && cc.status !== 'CANCELLED').map(cc => ({ ...cc, _type: 'CASH_CALL' })),
                                                     ...settlements.filter(s => s.status !== 'PAID' && s.status !== 'CANCELLED').map(s => ({ ...s, _type: 'SETTLEMENT' }))
@@ -1141,7 +1143,7 @@ export default function PropertyDetail() {
                                                                     {op._type === 'CASH_CALL' ? t('property_detail.operations.call') : t('property_detail.operations.transfer')}
                                                                 </span>
                                                                 <div className="text-right">
-                                                                    <div className={cn("text-base font-bold tracking-tight", op._type === 'SETTLEMENT' ? "text-rose-600" : "text-black")}>
+                                                                    <div className={cn("text-base font-bold tracking-tight", op._type === 'SETTLEMENT' ? "text-rose-600" : "text-black dark:text-white")}>
                                                                         {formatCurrency(op.amount, true)}
                                                                     </div>
                                                                     <div className="text-[7px] text-muted-foreground uppercase font-bold tracking-widest opacity-40">#{op.id.toString().padStart(6, '0')}</div>
@@ -1157,7 +1159,7 @@ export default function PropertyDetail() {
                                                                     op.status === 'SENT' ? "bg-blue-500 text-white" :
                                                                         op.status === 'PENDING' ? "bg-amber-500 text-white" :
                                                                             op.status === 'REJECTED' ? "bg-rose-500 text-white" :
-                                                                                "bg-black text-white"
+                                                                                "bg-black dark:bg-white/10 text-white"
                                                                 )}>
                                                                     {op.status_display || op.status}
                                                                 </span>
@@ -1181,7 +1183,7 @@ export default function PropertyDetail() {
                                                                                         href={op.proof}
                                                                                         target="_blank"
                                                                                         rel="noopener noreferrer"
-                                                                                        className="flex-1 h-10 bg-black/5 text-black rounded-xl flex items-center justify-center gap-2 text-[8px] font-bold uppercase tracking-widest border border-black/5"
+                                                                                        className="flex-1 h-10 bg-black/5 dark:bg-white/5 text-black dark:text-white rounded-xl flex items-center justify-center gap-2 text-[8px] font-bold uppercase tracking-widest border border-black/5 dark:border-white/5"
                                                                                     >
                                                                                         <FileText className="h-3.5 w-3.5" />
                                                                                         {t('property_detail.modals.upload_proof')}
@@ -1230,7 +1232,7 @@ export default function PropertyDetail() {
                                             <div className="hidden md:block overflow-x-auto">
                                                 <table className="w-full">
                                                     <thead>
-                                                        <tr className="bg-black text-[9px] font-bold uppercase tracking-widest text-white/60">
+                                                        <tr className="bg-black dark:bg-zinc-900 text-[9px] font-bold uppercase tracking-widest text-white/60">
                                                             <th className="px-6 py-4 text-left font-bold">{t('property_detail.operations.flow')}</th>
                                                             <th className="px-6 py-4 text-left font-bold">{t('property_detail.operations.label')}</th>
                                                             <th className="px-6 py-4 text-left font-bold text-white">{t('property_detail.operations.amount')}</th>
@@ -1240,9 +1242,9 @@ export default function PropertyDetail() {
                                                     </thead>
                                                     <tbody className="divide-y divide-black/5">
                                                         {cashCalls.filter(cc => cc.status !== 'PAID' && cc.status !== 'CANCELLED').map((cc) => (
-                                                            <tr key={`cc-${cc.id}`} className="hover:bg-white/50 transition-colors group">
+                                                            <tr key={`cc-${cc.id}`} className="hover:bg-black/5 dark:hover:bg-white/5 transition-colors group">
                                                                 <td className="px-6 py-5">
-                                                                    <span className="font-bold text-[9px] uppercase tracking-widest text-emerald-600 block px-3 py-1 rounded-full bg-emerald-50 w-fit">{t('property_detail.operations.call')}</span>
+                                                                    <span className="font-bold text-[9px] uppercase tracking-widest text-emerald-600 dark:text-emerald-400 block px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-500/10 w-fit">{t('property_detail.operations.call')}</span>
                                                                 </td>
                                                                 <td className="px-6 py-5">
                                                                     <div className="font-bold text-xs tracking-tight">{cc.reason}</div>
@@ -1278,7 +1280,7 @@ export default function PropertyDetail() {
                                                                                         href={cc.proof}
                                                                                         target="_blank"
                                                                                         rel="noopener noreferrer"
-                                                                                        className="p-1.5 bg-black/5 text-black rounded-lg hover:bg-black hover:text-white transition-all shadow-sm"
+                                                                                        className="p-1.5 bg-black/5 dark:bg-white/5 text-black dark:text-white rounded-lg hover:bg-black dark:hover:bg-white transition-all shadow-sm"
                                                                                         title={t('property_detail.operations.view_proof')}
                                                                                     >
                                                                                         <FileText className="h-3.5 w-3.5" />
@@ -1350,7 +1352,7 @@ export default function PropertyDetail() {
 
                                 {/* Financial Flows Solaris Style */}
                                 <div className="solaris-glass rounded-[1.5rem] overflow-hidden border-none shadow-lg mt-6">
-                                    <div className="p-5 md:p-6 border-b border-black/5 bg-white/30 backdrop-blur-md">
+                                    <div className="p-5 md:p-6 border-b border-black/5 dark:border-white/5 bg-white/30 dark:bg-black/60 backdrop-blur-md">
                                         <div className="space-y-0.5">
                                             <h3 className="font-bold text-base md:text-lg flex items-center gap-3 uppercase tracking-tight">
                                                 <div className="p-2 rounded-lg bg-black text-white shadow-md">
@@ -1361,7 +1363,7 @@ export default function PropertyDetail() {
                                             <p className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60 ml-0 md:ml-11">{t('property_detail.history.subtitle')}</p>
                                         </div>
                                     </div>
-                                    <div className="md:hidden divide-y divide-black/5 bg-white/20">
+                                    <div className="md:hidden divide-y divide-black/5 dark:divide-white/5 bg-white/20 dark:bg-black/40">
                                         {perfData?.recent_transactions?.length > 0 ? (
                                             perfData.recent_transactions.map((tx) => (
                                                 <div key={tx.id} className="p-5 space-y-3">
@@ -1403,7 +1405,7 @@ export default function PropertyDetail() {
                                     <div className="hidden md:block overflow-x-auto">
                                         <table className="w-full">
                                             <thead>
-                                                <tr className="bg-black text-[9px] font-bold uppercase tracking-widest text-white/60">
+                                                <tr className="bg-black dark:bg-zinc-900 text-[9px] font-bold uppercase tracking-widest text-white/60">
                                                     <th className="px-6 py-4 text-left font-bold">{t('property_detail.operations.flow')}</th>
                                                     <th className="px-6 py-4 text-left font-bold">{t('property_detail.history.category')}</th>
                                                     <th className="px-6 py-4 text-left font-bold text-white">{t('property_detail.operations.amount')}</th>
@@ -1411,9 +1413,9 @@ export default function PropertyDetail() {
                                                     <th className="px-6 py-4 text-right font-bold">{t('property_detail.history.date')}</th>
                                                 </tr>
                                             </thead>
-                                            <tbody className="divide-y divide-black/5">
+                                            <tbody className="divide-y divide-black/5 dark:divide-white/5">
                                                 {perfData?.recent_transactions?.map((tx) => (
-                                                    <tr key={tx.id} className="hover:bg-white/50 transition-colors group">
+                                                    <tr key={tx.id} className="hover:bg-black/5 dark:hover:bg-white/5 transition-colors group">
                                                         <td className="px-6 py-4">
                                                             <span className={cn(
                                                                 "inline-flex items-center px-3 py-1 rounded-full text-[8px] font-bold uppercase tracking-widest",
@@ -1454,12 +1456,12 @@ export default function PropertyDetail() {
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div className="p-6 bg-black/5 border-t border-black/5 flex flex-col sm:flex-row items-center justify-between gap-4">
+                                    <div className="p-6 bg-black/5 dark:bg-white/5 border-t border-black/5 dark:border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
                                         <div className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-60 max-w-[400px]">
                                             {t('property_detail.history.export_note')}
                                         </div>
                                         <div className="flex flex-wrap items-center gap-4">
-                                            <Link to="/dashboard/finance/transactions" className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-black hover:underline underline-offset-2 decoration-2">
+                                            <Link to="/dashboard/finance/transactions" className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-black dark:text-white hover:underline underline-offset-2 decoration-2">
                                                 {t('property_detail.history.finance_module')}
                                             </Link>
                                         </div>

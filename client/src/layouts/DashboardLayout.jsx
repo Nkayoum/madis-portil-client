@@ -171,8 +171,8 @@ export default function DashboardLayout() {
                 </main>
 
                 {/* Mobile Bottom Navigation - Premium Solaris Style */}
-                <div className="lg:hidden fixed bottom-0 left-0 w-full p-4 z-[150] pointer-events-none">
-                    <div className="max-w-md mx-auto h-20 solaris-glass rounded-[2.5rem] border border-white/40 dark:border-white/10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.3)] flex items-center justify-around px-4 pointer-events-auto">
+                <div className="lg:hidden fixed bottom-0 left-0 w-full p-6 pb-8 z-[150] pointer-events-none">
+                    <div className="max-w-md mx-auto h-20 solaris-glass rounded-[2.5rem] border border-white/40 dark:border-white/20 shadow-[0_32px_80px_-16px_rgba(0,0,0,0.6)] flex items-center justify-around px-4 pointer-events-auto ring-1 ring-black/5 dark:ring-white/5">
                         {filteredNavigation.slice(0, 4).map((item) => {
                             const isActive = item.href === '/dashboard'
                                 ? location.pathname === '/dashboard'

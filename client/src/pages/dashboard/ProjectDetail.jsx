@@ -148,7 +148,7 @@ export default function ProjectDetail() {
                                 {getStatusIcon(project.status)}
                                 {project.status_display || project.status}
                             </span>
-                            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight uppercase leading-tight break-words max-w-full text-black">
+                            <h1 className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight uppercase leading-tight break-words max-w-full text-black">
                                 {project.name}
                             </h1>
                         </div>
@@ -161,21 +161,23 @@ export default function ProjectDetail() {
                         </Link>
                     </div>
                     {user?.role === 'ADMIN_MADIS' && (
-                        <div className="flex flex-col sm:flex-row gap-3">
-                            <Link
-                                to={`/dashboard/projects/${id}/edit`}
-                                className="flex-1 sm:flex-none inline-flex items-center justify-center rounded-xl text-[9px] font-bold uppercase tracking-widest transition-all bg-black text-white shadow-lg hover:bg-zinc-800 h-11 px-8 active:scale-95"
-                            >
-                                <Edit className="mr-2 h-3.5 w-3.5" />
-                                {t('project_detail.edit_button')}
-                            </Link>
-                            <button
-                                onClick={handleDelete}
-                                className="flex-1 sm:flex-none inline-flex items-center justify-center rounded-xl text-[9px] font-bold uppercase tracking-widest transition-all border border-rose-500/10 text-rose-600 bg-rose-500/5 hover:bg-rose-500 hover:text-white h-11 px-5 active:scale-95"
-                            >
-                                <Trash2 className="mr-2 h-3.5 w-3.5" />
-                                {t('project_detail.delete_button')}
-                            </button>
+                        <div className="flex flex-col sm:flex-row items-start lg:items-end w-full lg:w-auto mt-2">
+                            <div className="solaris-glass p-1.5 md:p-2 rounded-[2rem] border border-white/20 dark:border-white/10 shadow-2xl flex flex-row items-center gap-2 overflow-x-auto no-scrollbar max-w-full w-fit">
+                                <Link
+                                    to={`/dashboard/projects/${id}/edit`}
+                                    className="inline-flex items-center justify-center rounded-xl text-[9px] font-bold uppercase tracking-widest transition-all bg-black text-white shadow-lg hover:bg-zinc-800 h-11 px-8 active:scale-95 whitespace-nowrap shrink-0"
+                                >
+                                    <Edit className="mr-2 h-3.5 w-3.5" />
+                                    {t('project_detail.edit_button')}
+                                </Link>
+                                <button
+                                    onClick={handleDelete}
+                                    className="inline-flex items-center justify-center rounded-xl text-[9px] font-bold uppercase tracking-widest transition-all border border-rose-500/10 text-rose-600 bg-rose-500/5 hover:bg-rose-500 hover:text-white h-11 px-5 active:scale-95 shrink-0"
+                                >
+                                    <Trash2 className="mr-2 h-3.5 w-3.5" />
+                                    {t('project_detail.delete_button')}
+                                </button>
+                            </div>
                         </div>
                     )}
                 </div>

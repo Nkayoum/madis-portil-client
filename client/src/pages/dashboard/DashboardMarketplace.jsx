@@ -42,10 +42,6 @@ export default function DashboardMarketplace() {
     const [sending, setSending] = useState(false);
     const [offerForm, setOfferForm] = useState({ asking_price: '', notes: '' });
 
-    useEffect(() => {
-        fetchProperties();
-    }, [fetchProperties]);
-
     const fetchProperties = useCallback(async () => {
         setLoading(true);
         try {
@@ -61,6 +57,10 @@ export default function DashboardMarketplace() {
             setLoading(false);
         }
     }, [category, nature, search]);
+
+    useEffect(() => {
+        fetchProperties();
+    }, [fetchProperties]);
 
     const submitOffer = async () => {
         if (!offerForm.asking_price) return;

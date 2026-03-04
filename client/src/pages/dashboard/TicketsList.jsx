@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { cn } from '../../lib/utils';
 
 export default function TicketsList() {
+    console.log('TicketsList rendering...');
     const [tickets, setTickets] = useState([]);
     const [loading, setLoading] = useState(true);
     const [, setError] = useState(null);
@@ -24,19 +25,6 @@ export default function TicketsList() {
         property: '',
         created_by: ''
     });
-
-    useEffect(() => {
-        if (user?.role === 'ADMIN_MADIS') {
-            fetchFilterData();
-        }
-    }, [user, fetchFilterData]);
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            fetchTickets();
-        }, 300);
-        return () => clearTimeout(timer);
-    }, [fetchTickets]);
 
     const fetchFilterData = useCallback(async () => {
         try {
@@ -70,6 +58,19 @@ export default function TicketsList() {
             setLoading(false);
         }
     }, [filters, search, t]);
+
+    useEffect(() => {
+        if (user?.role === 'ADMIN_MADIS') {
+            fetchFilterData();
+        }
+    }, [user, fetchFilterData]);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            fetchTickets();
+        }, 300);
+        return () => clearTimeout(timer);
+    }, [fetchTickets]);
 
     const handleFilterChange = (e) => {
         const { name, value } = e.target;

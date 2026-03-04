@@ -130,8 +130,8 @@ export default function AdminDashboard() {
                         <Activity className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
                         <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">{t('admin_dashboard.pre_title')}</span>
                     </div>
-                    <h1 className="text-2xl sm:text-2xl md:text-3xl font-bold tracking-tight leading-tight md:leading-none">
-                        {t('admin_dashboard.title')} <br className="sm:hidden" /> <span className="opacity-40">{t('admin_dashboard.subtitle')}</span>
+                    <h1 className="text-2xl sm:text-2xl md:text-3xl font-black tracking-tight leading-tight md:leading-none">
+                        {t('admin_dashboard.title')} <span className="opacity-40">{t('admin_dashboard.subtitle')}</span>
                     </h1>
                 </div>
                 <div className="grid grid-cols-1 sm:flex sm:flex-row gap-3 sm:gap-4">

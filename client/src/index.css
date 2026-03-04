@@ -56,8 +56,8 @@
 
 [data-theme='madisThemeDark'],
 .dark {
-  --solaris-bg: rgba(2, 4, 10, 0.98);
-  --solaris-border: rgba(255, 255, 255, 0.03);
+  --solaris-bg: rgba(0, 0, 0, 0.8);
+  --solaris-border: rgba(255, 255, 255, 0.08);
 }
 
 @plugin "daisyui/theme" {
@@ -166,23 +166,23 @@
   --shadow-solaris: 0 10px 40px -10px rgba(0, 0, 0, 0.05), 0 20px 25px -5px rgba(255, 0, 72, 0.02);
   --neon-blue: #00f2ff;
   --neon-pink: #ff00e5;
-  --spatial-black: #02040a;
+  --spatial-black: #000000;
 }
 
 .dark {
   --background: var(--spatial-black);
   --foreground: #f8fafc;
 
-  --card: #050a14;
+  --card: #000000;
   --card-foreground: #f8fafc;
 
-  --popover: #050a14;
+  --popover: #000000;
   --popover-foreground: #f8fafc;
 
   --primary: #ff0048;
   --primary-foreground: #ffffff;
 
-  --secondary: #0d121f;
+  --secondary: #050505;
   --secondary-foreground: #f8fafc;
 
   --muted: #0d121f;
@@ -271,9 +271,9 @@
 
   .dark .card,
   .dark .glass-card {
-    background: rgba(2, 4, 10, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.03);
-    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.9);
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 1);
   }
 
   /* Neon Neon Accents */
