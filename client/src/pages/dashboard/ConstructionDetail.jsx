@@ -201,9 +201,9 @@ export default function ConstructionDetail() {
                                 {site.status === 'EN_COURS' && (
                                     <button
                                         onClick={() => setIsSuspensionModalOpen(true)}
-                                        className="inline-flex items-center justify-center rounded-lg md:rounded-xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 hover:bg-amber-200 dark:hover:bg-amber-900/50 h-8 md:h-9 px-3 md:px-4 shadow-sm whitespace-nowrap"
+                                        className="inline-flex items-center justify-center rounded-xl text-[9px] font-bold uppercase tracking-widest transition-all bg-amber-500/10 text-amber-600 hover:bg-amber-500 hover:text-white h-11 px-6 shadow-sm whitespace-nowrap active:scale-95"
                                     >
-                                        <Pause className="mr-1.5 h-3 w-3" /> {t('construction.detail.btn_suspend')}
+                                        <Pause className="mr-2 h-3.5 w-3.5" /> {t('construction.detail.btn_suspend')}
                                     </button>
                                 )}
                                 {(site.status === 'SUSPENDU' || site.status === 'PREPARATION') && (
@@ -212,9 +212,9 @@ export default function ConstructionDetail() {
                                             await api.patch(`/construction/sites/${id}/`, { status: 'EN_COURS' });
                                             fetchSiteDetails();
                                         }}
-                                        className="inline-flex items-center justify-center rounded-lg md:rounded-xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 h-8 md:h-9 px-3 md:px-4 shadow-sm whitespace-nowrap"
+                                        className="inline-flex items-center justify-center rounded-xl text-[9px] font-bold uppercase tracking-widest transition-all bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500 hover:text-white h-11 px-6 shadow-sm whitespace-nowrap active:scale-95"
                                     >
-                                        <Clock className="mr-1.5 h-3 w-3" /> {t('construction.detail.btn_resume')}
+                                        <Clock className="mr-2 h-3.5 w-3.5" /> {t('construction.detail.btn_resume')}
                                     </button>
                                 )}
 
@@ -222,9 +222,9 @@ export default function ConstructionDetail() {
                                     <>
                                         <Link
                                             to={`/dashboard/construction/${id}/edit`}
-                                            className="inline-flex items-center justify-center rounded-lg md:rounded-xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all bg-white dark:bg-white/10 border border-black/5 dark:border-white/10 shadow-sm hover:bg-black/5 dark:hover:bg-white/20 h-8 md:h-9 px-3 md:px-4 dark:text-white whitespace-nowrap"
+                                            className="inline-flex items-center justify-center rounded-xl text-[9px] font-bold uppercase tracking-widest transition-all bg-black text-white shadow-lg hover:bg-zinc-800 h-11 px-8 active:scale-95 whitespace-nowrap"
                                         >
-                                            <Edit className="mr-1.5 h-3 w-3" /> {t('construction.detail.btn_edit')}
+                                            <Edit className="mr-2 h-3.5 w-3.5" /> {t('construction.detail.btn_edit')}
                                         </Link>
                                         <button
                                             onClick={async () => {
@@ -234,9 +234,9 @@ export default function ConstructionDetail() {
                                                     navigate('/dashboard/construction');
                                                 }
                                             }}
-                                            className="inline-flex items-center justify-center rounded-lg md:rounded-xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all bg-red-500 text-white hover:bg-red-600 h-8 md:h-9 px-3 md:px-4 shadow-md whitespace-nowrap"
+                                            className="inline-flex items-center justify-center rounded-xl text-[9px] font-bold uppercase tracking-widest transition-all border border-rose-500/10 text-rose-600 bg-rose-500/5 hover:bg-rose-500 hover:text-white h-11 px-5 shadow-sm whitespace-nowrap active:scale-95"
                                         >
-                                            <Trash2 className="mr-1.5 h-3 w-3" /> {t('construction.detail.btn_delete')}
+                                            <Trash2 className="mr-2 h-3.5 w-3.5" /> {t('construction.detail.btn_delete')}
                                         </button>
                                     </>
                                 )}

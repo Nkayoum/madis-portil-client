@@ -162,7 +162,7 @@ export default function CreateUser() {
                         form="create-user-form"
                         type="submit"
                         disabled={loading}
-                        className="inline-flex items-center justify-center rounded-2xl text-[10px] sm:text-[11px] font-black uppercase tracking-widest transition-all bg-black dark:bg-primary text-white hover:bg-black/90 dark:hover:bg-primary/90 h-12 sm:h-14 px-8 sm:px-12 shadow-[0_12px_24px_-8px_rgba(0,0,0,0.3)] disabled:opacity-50 group whitespace-nowrap"
+                        className="inline-flex items-center justify-center rounded-2xl text-[10px] sm:text-[11px] font-black uppercase tracking-widest transition-all bg-black dark:bg-primary text-white hover:bg-black/90 dark:hover:bg-primary/90 h-11 px-8 sm:px-12 shadow-[0_12px_24px_-8px_rgba(0,0,0,0.3)] disabled:opacity-50 group whitespace-nowrap active:scale-95"
                     >
                         {loading ? (
                             <><Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin mr-3" /> {t('users.create.btn_submitting')}</>

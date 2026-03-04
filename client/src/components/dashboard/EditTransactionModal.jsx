@@ -29,12 +29,6 @@ export default function EditTransactionModal({ isOpen, onClose, transactionId, o
         invoice: null
     });
 
-    useEffect(() => {
-        if (isOpen && transactionId) {
-            fetchData();
-        }
-    }, [isOpen, transactionId, fetchData]);
-
     const fetchData = useCallback(async () => {
         setLoading(true);
         try {
@@ -68,6 +62,12 @@ export default function EditTransactionModal({ isOpen, onClose, transactionId, o
             setLoading(false);
         }
     }, [transactionId, t, showToast, onClose]);
+
+    useEffect(() => {
+        if (isOpen && transactionId) {
+            fetchData();
+        }
+    }, [isOpen, transactionId, fetchData]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;

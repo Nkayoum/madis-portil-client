@@ -34,12 +34,6 @@ export default function EditJournalEntryModal({ isOpen, onClose, entryId, onSucc
         workers_count: 1,
     });
 
-    useEffect(() => {
-        if (isOpen && entryId) {
-            fetchData();
-        }
-    }, [isOpen, entryId, fetchData]);
-
     const fetchData = useCallback(async () => {
         setFetching(true);
         try {
@@ -63,6 +57,12 @@ export default function EditJournalEntryModal({ isOpen, onClose, entryId, onSucc
             onClose();
         }
     }, [entryId, t, showToast, onClose]);
+
+    useEffect(() => {
+        if (isOpen && entryId) {
+            fetchData();
+        }
+    }, [isOpen, entryId, fetchData]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
