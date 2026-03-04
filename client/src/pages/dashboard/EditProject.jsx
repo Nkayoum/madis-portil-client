@@ -89,7 +89,7 @@ export default function EditProject() {
     }
 
     return (
-        <div className="max-w-4xl mx-auto py-8 sm:py-12 px-4 sm:px-6 animate-fade-in pb-32">
+        <div className="max-w-4xl mx-auto py-8 sm:py-12 px-4 sm:px-6 animate-fade-in">
             <div className="flex items-center gap-4 sm:gap-6 mb-8 sm:mb-16">
                 <Link
                     to={`/dashboard/projects/${id}`}
@@ -220,8 +220,8 @@ export default function EditProject() {
                     </div>
                 </form>
 
-                {/* Sticky Footer */}
-                <div className="sticky bottom-0 flex items-center justify-between p-4 sm:p-6 border-t border-black/5 bg-white/80 dark:bg-zinc-900/90 backdrop-blur-md z-30">
+                {/* Action Footer - Glassmorphism style without sticky behavior */}
+                <div className="flex items-center justify-between p-4 sm:p-6 border-t border-black/5 bg-white/40 dark:bg-black/20 backdrop-blur-md">
                     <Link
                         to={`/dashboard/projects/${id}`}
                         className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-black transition-all px-4"

@@ -47,7 +47,7 @@ export default function CreateUser() {
     const ic = "h-14 w-full rounded-2xl solaris-glass border border-white/20 bg-white/40 px-6 text-[10px] font-black uppercase tracking-widest placeholder:text-muted-foreground/40 focus:bg-white focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-sm";
 
     return (
-        <div className="max-w-3xl mx-auto py-8 sm:py-12 px-4 sm:px-6 animate-fade-in pb-32">
+        <div className="max-w-3xl mx-auto py-8 sm:py-12 px-4 sm:px-6 animate-fade-in">
             <div className="flex items-center gap-4 sm:gap-6 mb-8 sm:mb-12">
                 <Link
                     to="/dashboard/users"
@@ -150,8 +150,8 @@ export default function CreateUser() {
                     </div>
                 </form>
 
-                {/* Sticky Footer */}
-                <div className="sticky bottom-0 flex items-center justify-between p-4 sm:p-6 border-t border-black/5 bg-white/80 dark:bg-zinc-900/90 backdrop-blur-md z-30">
+                {/* Action Footer - Glassmorphism style without sticky behavior */}
+                <div className="flex items-center justify-between p-4 sm:p-6 border-t border-black/5 bg-white/40 dark:bg-black/20 backdrop-blur-md">
                     <Link
                         to="/dashboard/users"
                         className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-black dark:hover:text-white transition-all px-4"
