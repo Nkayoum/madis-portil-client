@@ -46,10 +46,6 @@ export default function Marketplace() {
         notes: '',
     });
 
-    useEffect(() => {
-        fetchProperties();
-    }, [fetchProperties]);
-
     const fetchProperties = useCallback(async () => {
         setLoading(true);
         try {
@@ -65,6 +61,11 @@ export default function Marketplace() {
             setLoading(false);
         }
     }, [category, nature, search]);
+
+    useEffect(() => {
+        fetchProperties();
+    }, [fetchProperties]);
+
 
     const submitOffer = async () => {
         if (!offerForm.asking_price || !offerForm.prospect_name) return;
@@ -121,24 +122,24 @@ export default function Marketplace() {
                             <Building className="h-3.5 w-3.5" />
                             Marketplace Immobilier
                         </div>
-                        <h1 className="text-4xl md:text-6xl xl:text-7xl font-black tracking-tighter uppercase leading-[0.9] mb-6">
-                            Trouvez votre <br />
+                        <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tighter uppercase leading-[0.9] mb-6 px-2">
+                            Trouvez votre <br className="hidden sm:block" />
                             <span className="text-primary italic">bien idéal</span>
                         </h1>
-                        <p className="text-xl text-muted-foreground/60 mb-12 max-w-2xl mx-auto font-medium tracking-tight">
+                        <p className="text-base sm:text-xl text-muted-foreground/60 mb-8 sm:mb-12 max-w-2xl mx-auto font-medium tracking-tight px-4">
                             Parcourez nos biens disponibles et faites une offre directement en ligne via notre plateforme sécurisée.
                         </p>
 
                         {/* Search Bar */}
-                        <div className="max-w-2xl mx-auto p-2 solaris-glass rounded-full shadow-2xl">
-                            <div className="flex items-center bg-foreground/5 dark:bg-white/5 rounded-full border border-foreground/10 dark:border-white/5 px-6 py-2">
-                                <Search className="h-5 w-5 text-muted-foreground/60 mr-4" />
+                        <div className="max-w-2xl mx-auto p-1 sm:p-2 solaris-glass rounded-3xl sm:rounded-full shadow-2xl mx-4 sm:mx-auto">
+                            <div className="flex items-center bg-foreground/5 dark:bg-white/5 rounded-2xl sm:rounded-full border border-foreground/10 dark:border-white/5 px-4 sm:px-6 py-1 sm:py-2">
+                                <Search className="h-5 w-5 text-muted-foreground/60 mr-3 sm:mr-4 shrink-0" />
                                 <input
                                     type="text"
-                                    placeholder="Rechercher par ville, nom, adresse..."
+                                    placeholder="Rechercher..."
                                     value={search}
                                     onChange={e => setSearch(e.target.value)}
-                                    className="flex-1 h-12 bg-transparent text-sm font-medium outline-none placeholder:text-muted-foreground/40"
+                                    className="flex-1 h-10 sm:h-12 bg-transparent text-sm font-medium outline-none placeholder:text-muted-foreground/40 min-w-0"
                                 />
                             </div>
                         </div>
@@ -149,46 +150,50 @@ export default function Marketplace() {
             {/* Filters + Grid */}
             <section className="container mx-auto px-4 pb-32">
                 {/* Filter Bar */}
-                <div className="flex flex-wrap items-center justify-between gap-6 mb-12">
-                    <div className="flex items-center gap-4">
-                        <div className="flex p-1.5 solaris-glass rounded-2xl shadow-lg">
-                            {CATEGORIES.map(c => {
-                                const Icon = c.icon;
-                                return (
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 overflow-hidden">
+                        <div className="flex p-1.5 solaris-glass rounded-2xl shadow-lg max-w-full overflow-x-auto no-scrollbar scroll-smooth">
+                            <div className="flex min-w-max">
+                                {CATEGORIES.map(c => {
+                                    const Icon = c.icon;
+                                    return (
+                                        <button
+                                            key={c.value}
+                                            onClick={() => setCategory(c.value)}
+                                            className={cn(
+                                                "flex items-center gap-2 px-4 py-2 text-[10px] font-black uppercase tracking-[0.2em] rounded-xl transition-all whitespace-nowrap",
+                                                category === c.value
+                                                    ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-105"
+                                                    : "text-muted-foreground hover:text-foreground hover:bg-white/10"
+                                            )}
+                                        >
+                                            <Icon className="h-3.5 w-3.5" />
+                                            {c.label}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                        <div className="flex p-1.5 solaris-glass rounded-2xl shadow-lg max-w-full overflow-x-auto no-scrollbar scroll-smooth">
+                            <div className="flex min-w-max">
+                                {NATURES.map(n => (
                                     <button
-                                        key={c.value}
-                                        onClick={() => setCategory(c.value)}
+                                        key={n.value}
+                                        onClick={() => setNature(n.value)}
                                         className={cn(
-                                            "flex items-center gap-2 px-4 py-2 text-[10px] font-black uppercase tracking-[0.2em] rounded-xl transition-all",
-                                            category === c.value
-                                                ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-105"
+                                            "px-4 py-2 text-[10px] font-black uppercase tracking-[0.2em] rounded-xl transition-all whitespace-nowrap",
+                                            nature === n.value
+                                                ? "bg-black text-white shadow-lg scale-105"
                                                 : "text-muted-foreground hover:text-foreground hover:bg-white/10"
                                         )}
                                     >
-                                        <Icon className="h-3.5 w-3.5" />
-                                        {c.label}
+                                        {n.label}
                                     </button>
-                                );
-                            })}
-                        </div>
-                        <div className="flex p-1.5 solaris-glass rounded-2xl shadow-lg">
-                            {NATURES.map(n => (
-                                <button
-                                    key={n.value}
-                                    onClick={() => setNature(n.value)}
-                                    className={cn(
-                                        "px-4 py-2 text-[10px] font-black uppercase tracking-[0.2em] rounded-xl transition-all",
-                                        nature === n.value
-                                            ? "bg-black text-white shadow-lg scale-105"
-                                            : "text-muted-foreground hover:text-foreground hover:bg-white/10"
-                                    )}
-                                >
-                                    {n.label}
-                                </button>
-                            ))}
+                                ))}
+                            </div>
                         </div>
                     </div>
-                    <div className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40">
+                    <div className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 px-2">
                         {properties.length} bien{properties.length > 1 ? 's' : ''} répertorié{properties.length > 1 ? 's' : ''}
                     </div>
                 </div>
@@ -356,7 +361,7 @@ export default function Marketplace() {
                                 </div>
 
                                 {/* Content Section */}
-                                <div className="lg:w-1/2 p-10 space-y-8 overflow-y-auto max-h-[80vh] custom-scrollbar">
+                                <div className="lg:w-1/2 p-6 sm:p-10 space-y-8 overflow-y-auto max-h-[70vh] lg:max-h-[80vh] custom-scrollbar">
                                     <div className="space-y-4">
                                         <div className="flex items-center gap-3">
                                             <span className={cn("px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest",
