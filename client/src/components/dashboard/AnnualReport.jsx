@@ -13,7 +13,7 @@ export default function AnnualReport({ data, selectedYear }) {
     const [generating, setGenerating] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [letterheadUrl, setLetterheadUrl] = useState(null);
-    const BACKEND_URL = 'http://172.20.10.2:8000'; // Base URL for media files
+    const BACKEND_URL = 'http://192.168.31.85:8000'; // Base URL for media files
     const reportRef = useRef(null);
     const fileInputRef = useRef(null);
 
