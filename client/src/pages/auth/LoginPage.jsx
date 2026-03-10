@@ -140,30 +140,22 @@ export default function LoginPage() {
 
                 <div className="bg-foreground/5 rounded-3xl p-4 sm:p-6 border border-foreground/5 flex flex-col gap-3 sm:gap-4">
                     <p className="text-[8px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 mb-1">{t('auth.demo_title')}</p>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
                         <button
                             type="button"
-                            onClick={() => fillDemo('harisfares4@gmail.com')}
+                            onClick={() => fillDemo('admin@madis.fr')}
                             className="text-left p-3 sm:p-4 rounded-xl bg-background/50 border border-foreground/10 hover:border-primary/50 hover:bg-primary/5 transition-all group"
                         >
                             <p className="text-[8px] sm:text-[9px] font-black text-primary uppercase tracking-tighter mb-1 transition-transform group-hover:translate-x-1">{t('auth.demo_admin')}</p>
-                            <p className="text-[9px] sm:text-[10px] font-bold text-muted-foreground truncate">harisfares4@gmail.com</p>
+                            <p className="text-[9px] sm:text-[10px] font-bold text-muted-foreground truncate">admin@madis.fr</p>
                         </button>
                         <button
                             type="button"
-                            onClick={() => fillDemo('ivanmpondo9@gmail.com')}
+                            onClick={() => fillDemo('fodjoarmal@gmail.com')}
                             className="text-left p-3 sm:p-4 rounded-xl bg-background/50 border border-foreground/10 hover:border-primary/50 hover:bg-primary/5 transition-all group"
                         >
-                            <p className="text-[8px] sm:text-[9px] font-black text-primary uppercase tracking-tighter mb-1 transition-transform group-hover:translate-x-1">{t('auth.demo_client')}</p>
-                            <p className="text-[9px] sm:text-[10px] font-bold text-muted-foreground truncate">ivanmpondo9@gmail.com</p>
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => fillDemo('osg@test.fr')}
-                            className="text-left p-3 sm:p-4 rounded-xl bg-background/50 border border-foreground/10 hover:border-primary/50 hover:bg-primary/5 transition-all group"
-                        >
-                            <p className="text-[8px] sm:text-[9px] font-black text-primary uppercase tracking-tighter mb-1 transition-transform group-hover:translate-x-1">{t('auth.demo_chef')}</p>
-                            <p className="text-[9px] sm:text-[10px] font-bold text-muted-foreground truncate">osg@test.fr</p>
+                            <p className="text-[8px] sm:text-[9px] font-black text-primary uppercase tracking-tighter mb-1 transition-transform group-hover:translate-x-1">Propriétaire (Client)</p>
+                            <p className="text-[9px] sm:text-[10px] font-bold text-muted-foreground truncate">fodjoarmal@gmail.com</p>
                         </button>
                     </div>
                 </div>
