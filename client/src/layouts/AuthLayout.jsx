@@ -19,8 +19,8 @@ export default function AuthLayout() {
                     <Outlet />
                 </div>
 
-                <div className="mt-12 text-center">
-                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground opacity-40">
+                <div className="mt-12 text-center notranslate">
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-muted-foreground opacity-40">
                         &copy; {new Date().getFullYear()} MaDis Gestion Immobilière &bull; Solaris Horizon 2.0
                     </p>
                 </div>
