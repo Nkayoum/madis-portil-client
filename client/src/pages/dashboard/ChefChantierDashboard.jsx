@@ -1,28 +1,23 @@
 import { useEffect, useState } from 'react';
 import api from '../../lib/axios';
-import {
-    HardHat,
-    Calendar,
-    MessageSquare,
-    Clock,
-    ArrowRight,
-    Activity,
-    CheckCircle2,
-    AlertCircle,
-    Loader2
-} from 'lucide-react';
+import { Plus, Construction, HardHat, Calendar, ClipboardList, Clock, ArrowRight, Loader2, LayoutDashboard, History, MoreHorizontal, Camera, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { cn } from '../../lib/utils';
-import { formatDistanceToNow } from 'date-fns';
-import { fr } from 'date-fns/locale';
+import { format } from 'date-fns';
+import { fr, enUS } from 'date-fns/locale';
+import { useTranslation, Trans } from 'react-i18next';
+import { useAuth } from '../../context/AuthContext';
 
 export default function ChefChantierDashboard() {
+    const { user } = useAuth();
+    const { t, i18n } = useTranslation();
+    const [sites, setSites] = useState([]);
+    const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [data, setData] = useState({
-        sites: [],
-        upcomingMilestones: [],
-        recentLogs: []
-    });
+    const [milestones, setMilestones] = useState([]);
+    const [recentLogs, setRecentLogs] = useState([]);
+
+    const dateLocale = i18n.language === 'fr' ? fr : enUS;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -38,13 +33,12 @@ export default function ChefChantierDashboard() {
                 const milestonesData = milestonesRes.status === 'fulfilled' ? (milestonesRes.value.data.results || []) : [];
                 const logsData = logsRes.status === 'fulfilled' ? (logsRes.value.data.results || []) : [];
 
-                setData({
-                    sites: sitesData,
-                    upcomingMilestones: milestonesData
-                        .sort((a, b) => new Date(a.end_date || a.start_date) - new Date(b.end_date || b.start_date))
-                        .slice(0, 5),
-                    recentLogs: logsData.slice(0, 5)
-                });
+                setSites(sitesData);
+                setMilestones(milestonesData
+                    .sort((a, b) => new Date(a.end_date || a.start_date) - new Date(b.end_date || b.start_date))
+                    .slice(0, 5));
+                setRecentLogs(logsData.slice(0, 5));
+
             } catch (err) {
                 console.error("Failed to fetch Chef Chantier data", err);
             } finally {
@@ -57,9 +51,14 @@ export default function ChefChantierDashboard() {
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center py-24">
-                <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
-                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground animate-pulse">Synchronisation Opérationnelle...</p>
+            <div className="flex h-[60vh] flex-col items-center justify-center gap-4 animate-in fade-in duration-700">
+                <div className="relative">
+                    <Loader2 className="h-10 w-10 animate-spin text-primary" />
+                    <div className="absolute inset-0 blur-xl bg-primary/20 animate-pulse rounded-full" />
+                </div>
+                <p className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground animate-pulse">
+                    {t('common.sync_ops')}
+                </p>
             </div>
         );
     }
@@ -69,13 +68,31 @@ export default function ChefChantierDashboard() {
             {/* Sites Overview */}
             <div className="grid gap-6 md:grid-cols-3">
                 <div className="md:col-span-2 space-y-6">
-                    <h3 className="text-xl font-black tracking-tighter flex items-center gap-3 px-2">
-                        <HardHat className="h-5 w-5 text-primary" />
-                        MES CHANTIERS ACTIFS
-                    </h3>
+                    <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-2 border-b border-black/5 dark:border-white/5 animate-slide-up">
+                        <div>
+                            <h1 className="text-xl md:text-2xl font-black tracking-tight uppercase leading-none mb-1.5">
+                                {t('construction.foreman.active_sites')}
+                            </h1>
+                            <div className="flex items-center gap-2">
+                                <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                                <span className="text-[9px] font-bold uppercase tracking-widest opacity-40">
+                                    {sites.length} {t('construction.active_sites_count', { count: sites.length })}
+                                </span>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <Link
+                                to="/dashboard/construction/new"
+                                className="h-9 px-5 rounded-xl bg-black text-white dark:bg-primary dark:solaris-neon-pink text-[9px] font-bold uppercase tracking-widest flex items-center gap-2 transition-all hover:scale-105 active:scale-95 shadow-lg"
+                            >
+                                <Plus className="h-3.5 w-3.5" />
+                                {t('construction.list.new_construction')}
+                            </Link>
+                        </div>
+                    </div>
                     <div className="grid gap-6 sm:grid-cols-2">
-                        {data.sites.length > 0 ? (
-                            data.sites.map(site => (
+                        {sites.length > 0 ? (
+                            sites.map(site => (
                                 <Link
                                     key={site.id}
                                     to={`/dashboard/construction/${site.id}`}
@@ -97,9 +114,9 @@ export default function ChefChantierDashboard() {
                                 </Link>
                             ))
                         ) : (
-                            <div className="col-span-full py-12 solaris-glass rounded-[2rem] border border-dashed border-black/10 flex flex-col items-center justify-center text-muted-foreground">
-                                <Activity className="h-8 w-8 mb-3 opacity-20" />
-                                <p className="text-[10px] font-black uppercase tracking-widest">Aucun chantier assigné</p>
+                            <div className="flex flex-col items-center justify-center py-16 opacity-20">
+                                <Construction className="h-10 w-10 mb-3" />
+                                <p className="text-[9px] font-bold uppercase tracking-widest">{t('construction.foreman.no_active_sites')}</p>
                             </div>
                         )}
                     </div>
@@ -108,11 +125,11 @@ export default function ChefChantierDashboard() {
                 <div className="space-y-6">
                     <h3 className="text-xl font-black tracking-tighter flex items-center gap-3 px-2">
                         <Calendar className="h-5 w-5 text-primary" />
-                        PROCHAINS JALONS
+                        {t('construction.foreman.upcoming_milestones')}
                     </h3>
                     <div className="solaris-glass rounded-[2.5rem] border border-white/20 dark:border-white/5 p-6 space-y-4">
-                        {data.upcomingMilestones.length > 0 ? (
-                            data.upcomingMilestones.map(milestone => {
+                        {milestones.length > 0 ? (
+                            milestones.map(milestone => {
                                 const date = milestone.end_date || milestone.start_date;
                                 const isOverdue = date && new Date(date) < new Date();
                                 return (
@@ -126,17 +143,17 @@ export default function ChefChantierDashboard() {
                                         <div className="min-w-0">
                                             <p className="font-black text-xs uppercase tracking-tight truncate">{milestone.description}</p>
                                             <p className="text-[10px] font-bold text-muted-foreground">
-                                                {date ? new Date(date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }) : 'Date non définie'}
+                                                {date ? format(new Date(date), 'dd MMM', { locale: dateLocale }) : t('common.date_undefined')}
                                             </p>
                                         </div>
                                     </div>
                                 );
                             })
                         ) : (
-                            <p className="text-[10px] font-black uppercase tracking-widest text-center py-8 opacity-40">Tout est à jour</p>
+                            <p className="text-[10px] font-black uppercase tracking-widest text-center py-8 opacity-40">{t('construction.foreman.all_up_to_date')}</p>
                         )}
                         <Link to="/dashboard/construction" className="block text-center text-[10px] font-black uppercase tracking-widest text-primary hover:underline pt-2">
-                            Voir tout le planning
+                            {t('construction.foreman.view_all_planning')}
                         </Link>
                     </div>
                 </div>
@@ -146,20 +163,22 @@ export default function ChefChantierDashboard() {
             <div className="space-y-6">
                 <h3 className="text-xl font-black tracking-tighter flex items-center gap-3 px-2">
                     <MessageSquare className="h-5 w-5 text-primary" />
-                    DERNIÈRES ENTRÉES DU JOURNAL
+                    {t('construction.foreman.recent_journal_entries')}
                 </h3>
                 <div className="solaris-glass rounded-[3rem] border border-white/20 dark:border-white/5 overflow-hidden divide-y divide-black/5 dark:divide-white/5">
-                    {data.recentLogs.length > 0 ? (
-                        data.recentLogs.map(log => (
+                    {recentLogs.length > 0 ? (
+                        recentLogs.map(log => (
                             <div key={log.id} className="p-8 hover:bg-white/40 dark:hover:bg-white/5 transition-colors group">
                                 <div className="flex justify-between items-start mb-4">
                                     <div className="flex items-center gap-3">
                                         <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                                            <CheckCircle2 className="h-5 w-5" />
+                                            <ClipboardList className="h-5 w-5" />
                                         </div>
                                         <div>
                                             <p className="text-[10px] font-black uppercase tracking-widest text-primary">{log.site_name}</p>
-                                            <p className="text-[10px] font-bold text-muted-foreground uppercase">{formatDistanceToNow(new Date(log.created_at), { addSuffix: true, locale: fr })}</p>
+                                            <p className="text-[10px] font-bold text-muted-foreground uppercase">
+                                                {format(new Date(log.created_at), 'PPP', { locale: dateLocale })}
+                                            </p>
                                         </div>
                                     </div>
                                     <Link to={`/dashboard/construction/${log.site}/journal`} className="opacity-0 group-hover:opacity-100 transition-opacity">
@@ -173,8 +192,8 @@ export default function ChefChantierDashboard() {
                         ))
                     ) : (
                         <div className="py-24 text-center opacity-30">
-                            <Clock className="h-12 w-12 mx-auto mb-4" />
-                            <p className="text-[10px] font-black uppercase tracking-widest">Aucune activité récente</p>
+                            <History className="h-12 w-12 mx-auto mb-4" />
+                            <p className="text-[10px] font-black uppercase tracking-widest">{t('construction.foreman.no_recent_activity')}</p>
                         </div>
                     )}
                 </div>

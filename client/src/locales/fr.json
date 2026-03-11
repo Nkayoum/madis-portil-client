@@ -9,6 +9,8 @@
         "construction": "Chantiers",
         "marketplace": "Marché",
         "clients": "Clients",
+        "theme_toggle": "Changer le thème",
+        "menu": "Menu",
         "logout": "Déconnexion"
     },
     "common": {
@@ -28,7 +30,14 @@
         "proof": "Justificatif",
         "saving": "Sauvegarde...",
         "uploading": "Transfert...",
-        "error_required_fields": "Champs obligatoires manquants"
+        "error_required_fields": "Champs obligatoires manquants",
+        "initialization": "Initialisation...",
+        "sync_ops": "Synchronisation Opérationnelle...",
+        "system": "Système",
+        "invest": "Investir",
+        "report": "Signaler",
+        "date_not_defined": "Date non définie",
+        "date_undefined": "Date non définie"
     },
     "dashboard": {
         "title": "Finance & Rendement",
@@ -88,6 +97,40 @@
             "access_property": "Accéder à la gestion du bien",
             "filter_stats": "Filtrer Stats",
             "no_wallets": "Aucun portefeuille de régie trouvé."
+        },
+        "home": {
+            "hero": {
+                "title_wealth": "Votre <span className=\"text-primary\">Patrimoine</span>",
+                "welcome": "Bienvenue, <br className=\"sm:hidden\" /> <span className=\"text-primary\">{{name}}</span>",
+                "subtitle_realtime": "Analyse en temps réel de vos actifs immobiliers et de la performance de vos investissements MaDis.",
+                "subtitle_ready": "Votre écosystème immobilier MaDis est prêt. Voici l'état actuel de vos futures opérations.",
+                "help_btn": "Assistance Directe"
+            },
+            "no_assets": {
+                "title": "Portfolio en attente",
+                "desc": "Votre espace est prêt, mais aucun actif n'est encore lié à votre compte. Parcourez nos opportunités ou contactez-nous pour l'intégration de vos mandats."
+            },
+            "tabs": {
+                "overview": "Vue d'ensemble",
+                "finance": "Finance"
+            },
+            "activity": {
+                "title": "Activité Récente",
+                "empty": "Aucune activité",
+                "ago": "Il y a {{time}}"
+            },
+            "help": {
+                "title": "Assistance",
+                "question": "Besoin d'expertise ?",
+                "desc": "Un conseiller MaDis est prêt à vous accompagner.",
+                "btn": "Ouvrir un ticket",
+                "eta": "Réponse estimée : < 2h"
+            },
+            "finance": {
+                "badge": "Intelligence MaDis",
+                "title": "Analyse Financière",
+                "subtitle": "Performance temps réel de votre portfolio consolidé."
+            }
         }
     },
     "finance": {
@@ -572,11 +615,14 @@
     "construction": {
         "list": {
             "title_construction": "Suivi de Chantier",
-            "title_maintenance": "Interventions",
-            "subtitle_construction": "Visualisation de l'avancement des développements opérationnels.",
-            "subtitle_maintenance": "Gestion centralisée des interventions de maintenance.",
+            "title_maintenance": "Maintenance Madis",
+            "subtitle_construction": "Suivi opérationnel et avancement technique de vos constructions.",
+            "subtitle_maintenance": "Gestion technique et interventions d'entretien régulier.",
             "new_construction": "Nouveau Chantier",
             "new_maintenance": "Nouvelle Intervention",
+            "active_sites_count": "Opérations en cours",
+            "active_sites_count_plural": "Opérations en cours",
+            "date_undefined": "Non définie",
             "tabs": {
                 "construction": "Chantiers",
                 "maintenance": "Maintenance"
@@ -743,6 +789,17 @@
                 "title": "Planning Vierge",
                 "desc": "Définissez les phases critiques du chantier pour une gestion optimale."
             }
+        },
+        "foreman": {
+            "active_sites": "MES CHANTIERS ACTIFS",
+            "no_active_sites": "Aucun chantier assigné",
+            "upcoming_milestones": "PROCHAINS JALONS",
+            "view_planning": "Voir tout le planning",
+            "latest_logs": "DERNIÈRES ENTRÉES DU JOURNAL",
+            "no_recent_activity": "Aucune activité récente",
+            "all_up_to_date": "Tout est à jour",
+            "view_all_planning": "Voir tout le planning",
+            "recent_journal_entries": "DERNIÈRES ENTRÉES DU JOURNAL"
         }
     },
     "messaging": {

@@ -156,7 +156,7 @@ export default function DashboardLayout() {
                         <button
                             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                             className="p-2 md:p-2.5 rounded-2xl bg-white/40 dark:bg-white/5 border border-white/50 dark:border-white/10 text-muted-foreground hover:text-primary hover:bg-white dark:hover:bg-white/10 transition-all shadow-sm"
-                            title="Changer le thème"
+                            title={t('nav.theme_toggle')}
                         >
                             {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
                         </button>
@@ -196,7 +196,7 @@ export default function DashboardLayout() {
                             className="flex flex-col items-center justify-center gap-1.5 p-2 text-muted-foreground"
                         >
                             <Menu className="h-5 w-5" />
-                            <span className="text-[8px] font-black uppercase tracking-widest">Menu</span>
+                            <span className="text-[8px] font-black uppercase tracking-widest">{t('nav.menu')}</span>
                         </button>
                     </div>
                 </div>

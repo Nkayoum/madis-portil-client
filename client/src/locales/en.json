@@ -9,7 +9,9 @@
         "construction": "Construction",
         "marketplace": "Marketplace",
         "clients": "Clients",
-        "logout": "Logout"
+        "logout": "Logout",
+        "theme_toggle": "Toggle theme",
+        "menu": "Menu"
     },
     "common": {
         "loading": "Loading...",
@@ -28,7 +30,14 @@
         "proof": "Proof",
         "saving": "Saving...",
         "uploading": "Uploading...",
-        "error_required_fields": "Missing required fields"
+        "error_required_fields": "Missing required fields",
+        "initialization": "Initialization...",
+        "sync_ops": "Operational Synchronization...",
+        "system": "System",
+        "invest": "Invest",
+        "report": "Report",
+        "date_not_defined": "Date not defined",
+        "date_undefined": "Date not defined"
     },
     "dashboard": {
         "title": "Finance & Yield",
@@ -88,6 +97,40 @@
             "access_property": "Access property management",
             "filter_stats": "Filter Stats",
             "no_wallets": "No mandate portfolios found."
+        },
+        "home": {
+            "hero": {
+                "title_wealth": "Your <span className=\"text-primary\">Wealth</span>",
+                "welcome": "Welcome, <br className=\"sm:hidden\" /> <span className=\"text-primary\">{{name}}</span>",
+                "subtitle_realtime": "Real-time analysis of your real estate assets and MaDis investment performance.",
+                "subtitle_ready": "Your MaDis real estate ecosystem is ready. Here is the current status of your future operations.",
+                "help_btn": "Direct Support"
+            },
+            "no_assets": {
+                "title": "Portfolio Pending",
+                "desc": "Your space is ready, but no assets are linked to your account yet. Browse our opportunities or contact us for mandate integration."
+            },
+            "tabs": {
+                "overview": "Overview",
+                "finance": "Finance"
+            },
+            "activity": {
+                "title": "Recent Activity",
+                "empty": "No activity",
+                "ago": "{{time}} ago"
+            },
+            "help": {
+                "title": "Support",
+                "question": "Need expertise?",
+                "desc": "A MaDis advisor is ready to accompany you.",
+                "btn": "Open a ticket",
+                "eta": "Estimated response: < 2h"
+            },
+            "finance": {
+                "badge": "MaDis Intelligence",
+                "title": "Financial Analysis",
+                "subtitle": "Real-time performance of your consolidated portfolio."
+            }
         }
     },
     "finance": {
@@ -593,6 +636,11 @@
             "subtitle_construction": "Visualization of operational development progress.",
             "subtitle_maintenance": "Centralized management of maintenance interventions.",
             "new_construction": "New Construction",
+            "active_sites_count": "Ongoing operation",
+            "active_sites_count_plural": "Ongoing operations",
+            "dates": {
+                "date_undefined": "Undefined"
+            },
             "new_maintenance": "New Intervention",
             "tabs": {
                 "construction": "Sites",
@@ -760,6 +808,17 @@
                 "title": "Empty Planning",
                 "desc": "Define critical project phases for optimal management."
             }
+        },
+        "foreman": {
+            "active_sites": "MY ACTIVE SITES",
+            "no_active_sites": "No sites assigned",
+            "upcoming_milestones": "UPCOMING MILESTONES",
+            "view_planning": "View full schedule",
+            "latest_logs": "LATEST JOURNAL ENTRIES",
+            "no_recent_activity": "No recent activity",
+            "all_up_to_date": "Everything is up to date",
+            "view_all_planning": "View full schedule",
+            "recent_journal_entries": "LATEST JOURNAL ENTRIES"
         }
     },
     "messaging": {
