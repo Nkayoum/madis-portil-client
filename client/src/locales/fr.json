@@ -71,6 +71,7 @@
             "invested": "Capital Investi",
             "marge": "Marge Nette",
             "roi": "ROI Projet",
+            "documents": "Documents",
             "secure_data": "Données sécurisées MaDis",
             "optimal_performance": "Performance Optimale"
         },
@@ -114,17 +115,17 @@
                 "overview": "Vue d'ensemble",
                 "finance": "Finance"
             },
-            "activity": {
+            "recent_activity": {
                 "title": "Activité Récente",
-                "empty": "Aucune activité",
+                "no_activity": "Aucune activité",
                 "ago": "Il y a {{time}}"
             },
-            "help": {
+            "assistance": {
                 "title": "Assistance",
-                "question": "Besoin d'expertise ?",
-                "desc": "Un conseiller MaDis est prêt à vous accompagner.",
-                "btn": "Ouvrir un ticket",
-                "eta": "Réponse estimée : < 2h"
+                "need_expertise": "Besoin d'expertise ?",
+                "description": "Un conseiller MaDis est prêt à vous accompagner.",
+                "open_ticket_btn": "Ouvrir un ticket",
+                "estimated_response": "Réponse estimée : < 2h"
             },
             "finance": {
                 "badge": "Intelligence MaDis",
@@ -258,6 +259,8 @@
         }
     },
     "properties": {
+        "add_new": "Nouveau Bien",
+        "details_btn": "Détails",
         "property_singular": "Bien Immobilier",
         "create_subtitle": "Ajouter une nouvelle propriété au portefeuille MaDis",
         "list_title": "Portfolio Immobilier",

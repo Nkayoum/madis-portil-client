@@ -71,6 +71,7 @@
             "invested": "Capital Invested",
             "marge": "Net Margin",
             "roi": "Project ROI",
+            "documents": "Documents",
             "secure_data": "Secure MaDis Data",
             "optimal_performance": "Optimal Performance"
         },
@@ -114,17 +115,17 @@
                 "overview": "Overview",
                 "finance": "Finance"
             },
-            "activity": {
+            "recent_activity": {
                 "title": "Recent Activity",
-                "empty": "No activity",
+                "no_activity": "No activity",
                 "ago": "{{time}} ago"
             },
-            "help": {
+            "assistance": {
                 "title": "Support",
-                "question": "Need expertise?",
-                "desc": "A MaDis advisor is ready to accompany you.",
-                "btn": "Open a ticket",
-                "eta": "Estimated response: < 2h"
+                "need_expertise": "Need expertise?",
+                "description": "A MaDis advisor is ready to accompany you.",
+                "open_ticket_btn": "Open a ticket",
+                "estimated_response": "Estimated response: < 2h"
             },
             "finance": {
                 "badge": "MaDis Intelligence",
@@ -258,6 +259,8 @@
         }
     },
     "properties": {
+        "add_new": "New Property",
+        "details_btn": "Details",
         "property_singular": "Real Estate Property",
         "create_subtitle": "Add a new property to the MaDis portfolio",
         "list_title": "Real Estate Portfolio",
