@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../../lib/axios';
-import { Plus, Construction, HardHat, Calendar, ClipboardList, Clock, ArrowRight, Loader2, LayoutDashboard, History, MoreHorizontal, Camera, MapPin } from 'lucide-react';
+import { Plus, Construction, HardHat, Calendar, ClipboardList, Clock, ArrowRight, Loader2, LayoutDashboard, History, MoreHorizontal, Camera, MapPin, AlertCircle, MessageSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { cn } from '../../lib/utils';
 import { format } from 'date-fns';

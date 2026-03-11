@@ -4,12 +4,12 @@ import api from '../../lib/axios';
 import AdminDashboard from './AdminDashboard';
 import ChefChantierDashboard from './ChefChantierDashboard';
 import {
-    Building, TrendingUp, HelpCircle, ArrowRight, Loader2, Plus, LayoutDashboard, ShoppingBag, FolderOpen, MessagingCircle, Construction, History, MoreHorizontal, Landmark, Wallet, Globe, Sparkles
+    Building, TrendingUp, HelpCircle, ArrowRight, Loader2, Plus, LayoutDashboard, ShoppingBag, FolderOpen, MessageSquare, Construction, History, MoreHorizontal, Landmark, Wallet, Globe, Sparkles, Activity, Clock
 } from 'lucide-react';
 import { cn, formatCurrency } from '../../lib/utils';
 import { useTranslation, Trans } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow, isValid } from 'date-fns';
 import { fr, enUS } from 'date-fns/locale';
 import DecisionModal from '../../components/dashboard/DecisionModal';
 import FinancialDashboard from '../../components/dashboard/FinancialDashboard';
@@ -24,12 +24,6 @@ export default function DashboardHome() {
     const [showDecisionModal, setShowDecisionModal] = useState(false);
 
     const dateLocale = i18n.language === 'fr' ? fr : enUS;
-    const [statsData, setStatsData] = useState({
-        propertiesCount: 0,
-        documentsCount: 0,
-        ticketsCount: 0,
-        constructionCount: 0
-    });
     const [recentActivity, setRecentActivity] = useState([]);
 
     useEffect(() => {
@@ -63,7 +57,7 @@ export default function DashboardHome() {
                         id: `ticket-${t.id}`,
                         title: `Ticket "${t.subject}" mis à jour`,
                         rawDate: t.updated_at || t.created_at,
-                        icon: MessagingCircle,
+                        icon: MessageSquare,
                         color: 'text-orange-500',
                         bg: 'bg-orange-100 dark:bg-orange-900/20'
                     });
@@ -136,12 +130,6 @@ export default function DashboardHome() {
         return <ChefChantierDashboard />;
     }
 
-    const statsCards = [
-        { label: 'Mes Biens', value: statsData.propertiesCount, icon: Building, color: 'text-primary', bg: 'bg-primary/10 dark:bg-primary/20', link: '/dashboard/properties' },
-        { label: 'Documents', value: statsData.documentsCount, icon: FolderOpen, color: 'text-primary', bg: 'bg-primary/10 dark:bg-primary/20', link: '/dashboard/documents' },
-        { label: 'Tickets', value: statsData.ticketsCount, icon: MessagingCircle, color: 'text-orange-500', bg: 'bg-orange-100 dark:bg-orange-900/40', link: '/dashboard/tickets' },
-        { label: 'Chantiers', value: statsData.constructionCount, icon: Construction, color: 'text-yellow-500', bg: 'bg-yellow-100 dark:bg-yellow-900/40', link: '/dashboard/construction' },
-    ];
 
     return (
         <div className="space-y-8 md:space-y-10 pb-16 animate-fade-in">
@@ -190,7 +178,7 @@ export default function DashboardHome() {
             </div>
 
             {/* No Properties Alert for Clients (High Fidelity) */}
-            {user?.role === 'CLIENT' && statsData.propertiesCount === 0 && (
+            {user?.role === 'CLIENT' && properties.length === 0 && (
                 <div className="text-center py-20 px-6 solaris-glass rounded-[3rem] border-dashed flex flex-col items-center justify-center animate-in fade-in zoom-in-95 duration-700">
                     <div className="h-20 w-20 rounded-full bg-primary/5 flex items-center justify-center mb-8 relative">
                         <LayoutDashboard className="h-10 w-10 text-primary/40" />
@@ -250,7 +238,7 @@ export default function DashboardHome() {
                         {[
                             { label: t('nav.properties'), value: properties.length, icon: Building, color: 'text-primary' },
                             { label: t('dashboard.stats.documents'), value: stats?.docs_count || 0, icon: FolderOpen, color: 'text-amber-500' },
-                            { label: t('nav.messaging'), value: stats?.tickets_count || 0, icon: MessagingCircle, color: 'text-blue-500' },
+                            { label: t('nav.messaging'), value: stats?.tickets_count || 0, icon: MessageSquare, color: 'text-blue-500' },
                             { label: t('nav.construction'), value: properties.filter(p => p.management_type === 'CONSTRUCTION').length, icon: Construction, color: 'text-emerald-500' },
                         ].map((item, i) => (
                             <div key={i} className="solaris-glass p-5 md:p-6 rounded-[2rem] border-white/10 relative group overflow-hidden transition-all hover:scale-[1.02]">
@@ -309,11 +297,11 @@ export default function DashboardHome() {
                             <h3 className="text-lg font-bold tracking-tight px-1 uppercase">{t('dashboard.home.assistance.title')}</h3>
                             <div className="solaris-glass rounded-[1.5rem] border border-white/20 dark:border-white/5 dark:bg-zinc-900 shadow-sm flex flex-col items-center text-center justify-center p-6 relative overflow-hidden group">
                                 <div className="absolute top-0 right-0 p-6 opacity-10 rotate-12 group-hover:scale-110 transition-transform duration-700 pointer-events-none">
-                                    <MessagingCircle className="h-20 w-20" />
+                                    <MessageSquare className="h-20 w-20" />
                                 </div>
 
                                 <div className="h-14 w-14 rounded-xl bg-primary/10 flex items-center justify-center mb-5 border border-primary/20">
-                                    <MessagingCircle className="h-6 w-6 text-primary" />
+                                    <MessageSquare className="h-6 w-6 text-primary" />
                                 </div>
                                 <h3 className="text-xl font-bold tracking-tight mb-3 relative z-10 dark:text-white">{t('dashboard.home.assistance.need_expertise')}</h3>
                                 <p className="text-[13px] text-muted-foreground font-medium mb-6 leading-relaxed relative z-10">
