@@ -213,6 +213,8 @@
       radial-gradient(at 0% 0%, rgba(255, 0, 72, 0.05) 0px, transparent 40%),
       radial-gradient(at 100% 100%, rgba(255, 0, 72, 0.03) 0px, transparent 40%);
     min-height: 100vh;
+    touch-action: manipulation;
+    /* Prevents double-tap zoom and pinch-zoom */
     @apply transition-colors duration-500;
   }
 
@@ -299,6 +301,9 @@
   select,
   textarea {
     @apply transition-all duration-200 focus:ring-4 focus:ring-primary/10 border-transparent bg-white/50 backdrop-blur-sm shadow-sm;
+    font-size: 16px !important;
+    /* Forces iOS not to zoom on focus */
+    touch-action: manipulation;
   }
 
   .dark input,
