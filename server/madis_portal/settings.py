@@ -17,6 +17,7 @@ ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,192.168.31.
 
 # Application definition
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
     'backoffice.apps.BackofficeConfig',
     'finance',
     'axes',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -87,6 +89,14 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 WSGI_APPLICATION = 'madis_portal.wsgi.application'
+ASGI_APPLICATION = 'madis_portal.asgi.application'
+
+# Channel Layers setup for WebSockets
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
 
 # Database — PostgreSQL
 DATABASES = {

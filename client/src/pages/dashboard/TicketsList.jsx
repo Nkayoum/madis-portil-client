@@ -140,9 +140,9 @@ export default function TicketsList() {
                     <MessageSquare className="h-3.5 w-3.5" />
                     {t('messaging.list.search_console')}
                 </div>
-                <div className="flex flex-wrap items-center gap-3 md:gap-4 lg:gap-6">
+                <div className="flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center gap-4 lg:gap-6 w-full">
                     {/* Search Field */}
-                    <div className="flex items-center gap-2 flex-grow min-w-[200px]">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-2 w-full sm:w-auto sm:flex-grow sm:min-w-[200px]">
                         <label className="text-[8px] font-bold uppercase tracking-widest opacity-40 shrink-0">{t('messaging.list.search_label')}</label>
                         <input
                             type="text"
@@ -154,7 +154,7 @@ export default function TicketsList() {
                     </div>
 
                     {/* Status Select */}
-                    <div className="flex items-center gap-2 min-w-[140px]">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-2 w-full sm:w-auto sm:min-w-[140px]">
                         <label className="text-[8px] font-bold uppercase tracking-widest opacity-40 shrink-0">{t('messaging.list.status_label')}</label>
                         <select
                             name="status"
@@ -170,7 +170,7 @@ export default function TicketsList() {
                     </div>
 
                     {/* Priority Select */}
-                    <div className="flex items-center gap-2 min-w-[140px]">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-2 w-full sm:w-auto sm:min-w-[140px]">
                         <label className="text-[8px] font-bold uppercase tracking-widest opacity-40 shrink-0">{t('messaging.list.priority_label')}</label>
                         <select
                             name="priority"
@@ -187,7 +187,7 @@ export default function TicketsList() {
                     </div>
 
                     {/* Property Select */}
-                    <div className="flex items-center gap-2 min-w-[180px]">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-2 w-full sm:w-auto sm:min-w-[180px]">
                         <label className="text-[8px] font-bold uppercase tracking-widest opacity-40 shrink-0">{t('messaging.list.property_label')}</label>
                         <select
                             name="property"
@@ -205,7 +205,7 @@ export default function TicketsList() {
                     {/* Reset Button */}
                     <button
                         onClick={resetFilters}
-                        className="px-4 h-9 rounded-xl bg-white dark:bg-white/10 border border-black/5 dark:border-white/10 shadow-sm hover:bg-black hover:text-white transition-all text-[8px] font-bold uppercase tracking-widest dark:text-white shrink-0 ml-auto"
+                        className="px-4 h-9 rounded-xl bg-white dark:bg-white/10 border border-black/5 dark:border-white/10 shadow-sm hover:bg-black hover:text-white transition-all text-[8px] font-bold uppercase tracking-widest dark:text-white shrink-0 mt-2 sm:mt-0 w-full sm:w-auto sm:ml-auto"
                     >
                         {t('messaging.list.btn_reset')}
                     </button>
@@ -265,22 +265,22 @@ export default function TicketsList() {
                                             {ticket.last_message || t('messaging.list.waiting_comm')}
                                         </p>
 
-                                        <div className="flex flex-wrap items-center gap-4">
-                                            <div className="flex items-center gap-1.5 bg-black/[0.03] dark:bg-white/5 px-2 py-1 rounded-lg border border-black/5 dark:border-white/5">
+                                        <div className="flex items-center flex-wrap gap-2 sm:gap-4 mt-1">
+                                            <div className="flex items-center gap-1.5 bg-black/[0.03] dark:bg-white/5 px-2 py-1 rounded-lg border border-black/5 dark:border-white/5 whitespace-nowrap">
                                                 <span className="text-[8px] font-bold uppercase tracking-widest opacity-30">{t('messaging.list.id')}</span>
                                                 <span className="text-[10px] font-bold font-mono">#{ticket.id}</span>
                                             </div>
 
                                             {ticket.property_name && (
-                                                <div className="flex items-center gap-1.5 opacity-60">
-                                                    <AlertCircle className="h-3 w-3" />
-                                                    <span className="text-[9px] font-semibold uppercase tracking-widest">{ticket.property_name}</span>
+                                                <div className="flex items-center gap-1.5 opacity-60 bg-black/[0.02] dark:bg-white/5 px-2 py-1 rounded-lg border border-transparent whitespace-nowrap truncate max-w-[120px] sm:max-w-[200px]">
+                                                    <AlertCircle className="h-3 w-3 shrink-0" />
+                                                    <span className="text-[8px] sm:text-[9px] font-semibold uppercase tracking-widest truncate">{ticket.property_name}</span>
                                                 </div>
                                             )}
 
-                                            <div className="flex items-center gap-1.5 opacity-60">
-                                                <Clock className="h-3 w-3" />
-                                                <span className="text-[9px] font-semibold uppercase tracking-widest">
+                                            <div className="flex items-center gap-1.5 opacity-60 bg-black/[0.02] dark:bg-white/5 px-2 py-1 rounded-lg border border-transparent whitespace-nowrap">
+                                                <Clock className="h-3 w-3 shrink-0" />
+                                                <span className="text-[8px] sm:text-[9px] font-semibold uppercase tracking-widest">
                                                     {format(new Date(ticket.created_at), 'd MMM yyyy', { locale: dateLocale })}
                                                 </span>
                                             </div>

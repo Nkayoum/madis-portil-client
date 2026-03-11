@@ -60,6 +60,36 @@ export default function TicketDetail() {
         markNotificationsAsRead();
     }, [fetchTicketData, markNotificationsAsRead]);
 
+    // WebSocket Integration for Real-Time Messages
+    useEffect(() => {
+        if (!ticket) return;
+
+        let ws;
+        try {
+            const wsUrl = `ws://192.168.31.85:8000/ws/tickets/${id}/`;
+            ws = new WebSocket(wsUrl);
+
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                if (data.type === 'chat_message' && data.message) {
+                    setMessages(prev => {
+                        // Avoid duplicates if we just sent it via REST
+                        if (prev.some(m => m.id === data.message.id)) {
+                            return prev;
+                        }
+                        return [...prev, data.message];
+                    });
+                }
+            };
+        } catch (err) {
+            console.error('WebSocket connection failed:', err);
+        }
+
+        return () => {
+            if (ws) ws.close();
+        };
+    }, [id, ticket]);
+
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
@@ -160,7 +190,7 @@ export default function TicketDetail() {
     const statusConfig = getStatusConfig(ticket.status);
 
     return (
-        <div className="max-w-[1600px] mx-auto flex flex-col h-[calc(100vh-7rem)] md:h-[calc(100vh-8rem)] animate-fade-in px-2 sm:px-4 md:px-10">
+        <div className="max-w-[1600px] mx-auto flex flex-col h-[calc(100dvh-15rem)] md:h-[calc(100dvh-16rem)] animate-fade-in px-2 sm:px-4 md:px-10">
             <div className="mb-3 md:mb-5">
                 <Link to="/dashboard/tickets" className="inline-flex items-center text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-black dark:hover:text-white transition-all group">
                     <ArrowLeft className="mr-2 h-3.5 w-3.5 group-hover:-translate-x-1 transition-transform" />
