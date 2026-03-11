@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../../lib/axios';
 import { useToast } from '../../context/ToastContext';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 import {
     Wallet, ArrowLeft, Loader2, Save,
     Building2, Euro, Calendar, FileText,
@@ -189,7 +189,9 @@ export default function AddTransaction() {
                     <ArrowLeft className="h-5 w-5 group-hover:-translate-x-1 transition-transform" />
                 </Link>
                 <div className="min-w-0">
-                    <h1 className="text-2xl sm:text-3xl md:text-5xl font-black tracking-tighter uppercase leading-none mb-2" dangerouslySetInnerHTML={{ __html: t('finance.add_transaction.title') }}></h1>
+                    <h1 className="text-2xl sm:text-3xl md:text-5xl font-black tracking-tighter uppercase leading-none mb-2">
+                        <Trans i18nKey="finance.add_transaction.title" components={{ primary: <span className="text-primary" /> }} />
+                    </h1>
                     <p className="text-[10px] md:text-[11px] font-black uppercase tracking-widest opacity-40">{t('finance.add_transaction.subtitle')}</p>
                 </div>
             </div>

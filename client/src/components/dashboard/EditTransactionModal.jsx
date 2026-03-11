@@ -6,7 +6,7 @@ import {
     Euro, Calendar, FileText, TrendingUp,
     TrendingDown, HardHat, Wallet
 } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 
 export default function EditTransactionModal({ isOpen, onClose, transactionId, onSuccess }) {
     const { showToast } = useToast();
@@ -135,7 +135,9 @@ export default function EditTransactionModal({ isOpen, onClose, transactionId, o
                             <div className="p-2 bg-primary/10 rounded-xl">
                                 <Wallet className="h-5 w-5 text-primary" />
                             </div>
-                            <h2 className="text-2xl md:text-3xl font-black tracking-tighter uppercase" dangerouslySetInnerHTML={{ __html: t('finance.edit_transaction.title') }}></h2>
+                            <h2 className="text-2xl md:text-3xl font-black tracking-tighter uppercase">
+                                <Trans i18nKey="finance.edit_transaction.title" components={{ primary: <span className="text-primary" /> }} />
+                            </h2>
                         </div>
                         <p className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-40 ml-1">{t('finance.edit_transaction.subtitle')}</p>
                     </div>

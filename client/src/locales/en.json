@@ -100,8 +100,8 @@
         },
         "home": {
             "hero": {
-                "title_wealth": "Your <span className=\"text-primary\">Wealth</span>",
-                "welcome": "Welcome, <br className=\"sm:hidden\" /> <span className=\"text-primary\">{{name}}</span>",
+                "title_wealth": "Your <primary>Wealth</primary>",
+                "welcome": "Welcome, <br /> <primary>{{name}}</primary>",
                 "subtitle_realtime": "Real-time analysis of your real estate assets and MaDis investment performance.",
                 "subtitle_ready": "Your MaDis real estate ecosystem is ready. Here is the current status of your future operations.",
                 "help_btn": "Direct Support"
@@ -185,7 +185,7 @@
             "learn_more": "Learn more"
         },
         "add_transaction": {
-            "title": "Record a <span className=\"text-primary\">Transaction</span>",
+            "title": "Record a <primary>Transaction</primary>",
             "subtitle": "Financial entry protocol • Manual flow",
             "currency": "Currency",
             "property": "Concerned real estate property",
@@ -230,7 +230,7 @@
             }
         },
         "edit_transaction": {
-            "title": "Edit <span className=\"text-primary italic\">Transaction</span>",
+            "title": "Edit <primary>Transaction</primary>",
             "subtitle": "Updating financial flows.",
             "loading": "Loading data...",
             "property": "Real estate property *",

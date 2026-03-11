@@ -149,12 +149,19 @@ export default function DashboardHome() {
                         </div>
 
                         <h1 className="text-4xl md:text-5xl lg:text-7xl font-black tracking-tight leading-[0.9] mb-4 md:mb-6 animate-slide-up">
-                            <Trans i18nKey="dashboard.home.hero.title_wealth" />
+                            <Trans i18nKey="dashboard.home.hero.title_wealth" components={{ primary: <span className="text-primary" /> }} />
                         </h1>
 
                         <div className="max-w-2xl animate-slide-up [animation-delay:200ms]">
                             <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-4">
-                                <Trans i18nKey="dashboard.home.hero.welcome" values={{ name: user?.first_name }} />
+                                <Trans
+                                    i18nKey="dashboard.home.hero.welcome"
+                                    values={{ name: user?.first_name }}
+                                    components={{
+                                        br: <br className="sm:hidden" />,
+                                        primary: <span className="text-primary" />
+                                    }}
+                                />
                             </h2>
                             <p className="text-base md:text-lg text-muted-foreground leading-relaxed font-medium">
                                 {properties.length > 0

@@ -100,8 +100,8 @@
         },
         "home": {
             "hero": {
-                "title_wealth": "Votre <span className=\"text-primary\">Patrimoine</span>",
-                "welcome": "Bienvenue, <br className=\"sm:hidden\" /> <span className=\"text-primary\">{{name}}</span>",
+                "title_wealth": "Votre <primary>Patrimoine</primary>",
+                "welcome": "Bienvenue, <br /> <primary>{{name}}</primary>",
                 "subtitle_realtime": "Analyse en temps réel de vos actifs immobiliers et de la performance de vos investissements MaDis.",
                 "subtitle_ready": "Votre écosystème immobilier MaDis est prêt. Voici l'état actuel de vos futures opérations.",
                 "help_btn": "Assistance Directe"
@@ -185,7 +185,7 @@
             "learn_more": "En savoir plus"
         },
         "add_transaction": {
-            "title": "Enregistrer une <span className=\"text-primary\">Transaction</span>",
+            "title": "Enregistrer une <primary>Transaction</primary>",
             "subtitle": "Protocole de saisie financière • Mouvement manuel",
             "currency": "Devise",
             "property": "Bien immobilier concerné",
@@ -230,7 +230,7 @@
             }
         },
         "edit_transaction": {
-            "title": "Modifier <span className=\"text-primary italic\">Transaction</span>",
+            "title": "Modifier <primary>Transaction</primary>",
             "subtitle": "Mise à jour des flux financiers.",
             "loading": "Chargement des données...",
             "property": "Bien immobilier *",
